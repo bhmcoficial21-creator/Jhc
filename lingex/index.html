@@ -2181,7 +2181,7 @@
   // ---------------------------------------------------------------------
   var intro = (function(){
     var api = {phase: "load", t: 0, onDone: null};   // load | play | done | off (falhou/desligada)
-    var DUR = 4.1, FPS = 24, NF = 100, NN = 32, NV = 637, NI = 3456;
+    var DUR = 4.1667, FPS = 24, NF = 100, NN = 32, NV = 637, NI = 3456;
     if (reduceMotion){ api.phase = "off"; return api; }
     var cv = document.createElement("canvas");
     var gl = null;
@@ -2296,7 +2296,7 @@
     api.frame = function(dt, cw, ch, W, H, cx, cy, radius){
       if (api.phase !== "play") return null;
       api.t += dt/1000;
-      var t = api.t * 1.2;                           // um pouco mais rápido que o modelo original
+      var t = api.t;                                 // mesmo ritmo do arquivo original (24 quadros/s)
       if (t >= DUR){ finish(); return null; }
       if (!maskCv){ maskCv = document.createElement("canvas"); mctx = maskCv.getContext("2d"); }
       if (maskCv.width !== cw || maskCv.height !== ch){ maskCv.width = cw; maskCv.height = ch; }
