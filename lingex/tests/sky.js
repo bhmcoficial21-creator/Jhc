@@ -41,6 +41,22 @@ async function stats(page){
     ok(sizes.sw<=sizes.iw&&sizes.iw===390,'sem estouro horizontal: '+JSON.stringify(sizes));
     ok(errs.length===0,'WebGL: sem erros JS '+JSON.stringify(errs));
   }
+  { // entrada do planeta (Cycle): arquivos pedidos, planeta nasce escondido e o fluxo segue para as boas-vindas
+    const ctx=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    const page=await ctx.newPage(); const errs=[], reqs=[];
+    page.on('pageerror',e=>errs.push(e.message)); page.on('console',m=>{if(m.type()==='error'&&!/Failed to load resource/.test(m.text()))errs.push(m.text())});
+    await page.route('https://lingex.test/**',async r=>{let u=new URL(r.request().url()).pathname; reqs.push(u); if(u==='/')u='/index.html';
+      const f=path.join(ROOT,u); if(fs.existsSync(f)&&u!=='/nexus_proxy.php') return r.fulfill({path:f}); return r.fulfill({status:404,body:''});});
+    await page.goto('https://lingex.test/'); await page.waitForTimeout(400);
+    ok(reqs.some(u=>/cycle\.bin$/.test(u))&&reqs.some(u=>/cycle-mask\.png$/.test(u)),'intro pediu cycle.bin e cycle-mask.png');
+    const early=await page.screenshot({clip:{x:0,y:100,width:390,height:300}});
+    await page.waitForSelector('#welcome.visible',{timeout:12000});
+    ok(true,'intro termina e leva às boas-vindas');
+    await page.waitForTimeout(600);
+    const late=await page.screenshot({clip:{x:0,y:100,width:390,height:300}});
+    ok(!early.equals(late),'planeta mudou entre o início e o fim da intro');
+    ok(errs.length===0,'intro: sem erros JS '+JSON.stringify(errs));
+  }
   { // sem WebGL: cai no fundo 2D antigo e o app continua
     const {page,errs}=await open(b,{webgl:false}); await page.waitForTimeout(800);
     const s0=await stats(page); ok(s0.mean>2,'fallback 2D pinta o fundo (brilho '+s0.mean.toFixed(1)+')');
