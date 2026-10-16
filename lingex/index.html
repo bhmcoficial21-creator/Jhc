@@ -1919,6 +1919,8 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
   var idleDrawn = false;
+  var skyOn = false;                                   // universo 3D só na entrada
+  var ENTRANCE_SCENES = {splash:1, welcome:1, destino:1};
   window.addEventListener("resize", function(){ idleDrawn = false; });
   window.addEventListener("resize", resize);
   resize();
@@ -2164,6 +2166,7 @@
     return api;
   })();
 
+  var skyEl = document.getElementById("sky");
   sky.onLost = function(){ idleDrawn = false; };
 
   // ---------------------------------------------------------------------
@@ -2197,7 +2200,7 @@
   }
 
   function drawBackground(){
-    if (sky.ok) return; // universo 3D (WebGL) já pinta o fundo
+    if (skyOn) return; // universo 3D (WebGL) já pinta o fundo da entrada
     var g = ctx.createRadialGradient(W/2, H*0.38, 0, W/2, H*0.38, Math.max(W,H)*0.75);
     g.addColorStop(0, "#0a2038");
     g.addColorStop(0.5, "#050f1e");
@@ -2481,7 +2484,7 @@
 
     // Home: globo some (raio 0) e o céu é estático. Desenha uma vez e descansa
     // (evita ~60 redesenhos/s de gradientes gastando bateria sem mudar nada).
-    if (state.scene === "home" && state.radius < 0.5 && idleDrawn && sky.settled()){
+    if (state.scene === "home" && state.radius < 0.5 && idleDrawn){
       requestAnimationFrame(frame);
       return;
     }
@@ -2520,7 +2523,9 @@
 
     var c = centerFor(state.scene);
 
-    sky.render(Math.min(dt, 64), state.scene, reduceMotion); // aba voltou do fundo: o céu não "pula"
+    skyOn = sky.ok && ENTRANCE_SCENES[state.scene] === 1;
+    if (skyOn) sky.render(Math.min(dt, 64), state.scene, reduceMotion); // aba voltou do fundo: o céu não "pula"
+    skyEl.style.visibility = skyOn ? "visible" : "hidden";
     ctx.clearRect(0, 0, W, H);
     drawBackground();
     drawAtmosphere(c.x, c.y, state.radius, state.ambient);
