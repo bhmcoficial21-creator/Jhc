@@ -2655,11 +2655,11 @@
 
   function planetRadiusFor(scene){
     var base = Math.min(W, H);
-    if (scene === "splash") return base * 0.30;
-    if (scene === "destino") return base * 0.44;
+    if (scene === "splash") return Math.min(base * 0.30, H * 0.2);
+    if (scene === "destino") return Math.min(base * 0.44, H * 0.235);
     if (scene === "objetivo" || scene === "nivel" || scene === "resumo") return base * 0.22;
     if (scene === "home") return 0;
-    return base * 0.42;
+    return Math.min(base * 0.42, H * 0.2);
   }
 
   function centerFor(scene){
@@ -3558,12 +3558,9 @@
     var tip;
     switch (next.id){
       case "primeira": tip = firstOpen ? "abra “" + firstOpen.title + "”, ouça as falas e passe no teste." : next.desc + "."; break;
-      case "ouvido":   tip = "toque em 🔊 Ouvir nas falas — faltam " + missing(10, counters.listens) + "."; break;
-      case "sempressa":tip = "use o 🐢 Devagar nas falas — faltam " + missing(5, counters.slow) + "."; break;
-      case "minhavoz": tip = "numa fala sua, toque em 🎙️ e grave sua voz."; break;
-      case "curioso":  tip = "toque em “Tirar dúvida” e pergunte algo à Nexus."; break;
-      case "treino":   tip = "abra Praticar e responda o treino — faltam " + missing(5, counters.quizAsked) + "."; break;
-      case "afiado":   tip = "acerte mais " + missing(5, counters.quizRight) + " no treino de escuta."; break;
+      case "ouvido":   tip = "abra Praticar e faça a provinha de escuta — precisa acertar 80% pra passar."; break;
+      case "treino":   tip = "passe em mais " + missing(3, counters.quizPass) + " provinha(s) de escuta em Praticar."; break;
+      case "afiado":   tip = "faça uma provinha de escuta em Praticar sem errar nenhuma."; break;
       case "tudo":     tip = "faltam " + (SITUATIONS.length - SITUATIONS.filter(function(s){ return completedSituations[s.id]; }).length) + " situações."; break;
       case "segredo":  tip = "conclua as " + SITUATIONS.length + " situações pra liberar a secreta."; break;
       default:
@@ -4610,7 +4607,7 @@
     return !!situ && situ.free !== true && situ.id !== BONUS_META.id;
   }
   // Bônus (tudo derivado de ações reais da pessoa):
-  var counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0};
+  var counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0, quizPass:0, quizPerfect:0};
   var earnedBadges = {};      // id da conquista -> true
   var reviewLines = {};       // "situId:índice" -> true  (frases que ainda não acertou no treino)
   var daysPracticed = {};     // "AAAA-MM-DD" -> true     (dias distintos; sem punição por faltar)
@@ -4745,12 +4742,10 @@
     var done = SITUATIONS.filter(function(s){ return completedSituations[s.id]; }).length;
     var defs = [
       {id:"primeira",  emoji:"🌱", title:"Primeira conversa", desc:"Conclua sua primeira situação", ok: done >= 1},
-      {id:"ouvido",    emoji:"🎧", title:"Ouvido treinado",   desc:"Ouça frases 10 vezes", ok: counters.listens >= 10},
-      {id:"sempressa", emoji:"🐢", title:"Sem pressa",        desc:"Ouça 5 vezes no modo devagar", ok: counters.slow >= 5},
-      {id:"minhavoz",  emoji:"🎙️", title:"Minha voz",         desc:"Grave sua voz uma vez", ok: counters.records >= 1},
-      {id:"curioso",   emoji:"💬", title:"Curioso",           desc:"Tire uma dúvida com a Nexus", ok: counters.nexus >= 1},
-      {id:"treino",    emoji:"🎯", title:"Treino feito",      desc:"Responda 5 perguntas do treino de escuta", ok: counters.quizAsked >= 5},
-      {id:"afiado",    emoji:"✨", title:"Ouvido afiado",     desc:"Acerte 5 perguntas do treino", ok: counters.quizRight >= 5}
+      // desbloquear exige PROVA: provinha de escuta com 80%+ de acerto (nada se ganha só clicando)
+      {id:"ouvido",    emoji:"🎧", title:"Ouvido treinado",   desc:"Passe numa provinha de escuta (80% ou mais)", ok: counters.quizPass >= 1},
+      {id:"treino",    emoji:"🎯", title:"Treino feito",      desc:"Passe em 3 provinhas de escuta", ok: counters.quizPass >= 3},
+      {id:"afiado",    emoji:"✨", title:"Ouvido afiado",     desc:"Acerte tudo numa provinha de escuta", ok: counters.quizPerfect >= 1}
     ];
     var GROUP_EMOJI = {"Comer e beber":"🥂", "Viagem":"🧳", "Na cidade":"🏙️", "Pessoas":"🤝", "Saúde":"🩹"};
     SITU_GROUP_ORDER.forEach(function(g, gi){
@@ -5594,12 +5589,18 @@
     treinoProgress.textContent = "";
     treinoSummary.style.display = "block";
     treinoSummary.innerHTML = "";
+    var qTot = quiz.items.length;
+    var qPassed = qTot >= 3 && quiz.right/qTot >= 0.8, qPerfect = qTot >= 3 && quiz.right === qTot;
+    if (qPassed) counters.quizPass++;
+    if (qPerfect) counters.quizPerfect++;
+    updateProgressUI();                      // confere se a prova destravou alguma conquista
     var big = document.createElement("p"); big.className = "ts-big";
-    big.textContent = "Você acertou " + quiz.right + " de " + quiz.items.length + ".";
+    big.textContent = (qPassed ? "✓ Provinha aprovada! " : "") + "Você acertou " + quiz.right + " de " + qTot + ".";
     var sub = document.createElement("p"); sub.className = "ts-sub";
     sub.textContent = (quiz.missed
         ? quiz.missed + (quiz.missed === 1 ? " frase foi" : " frases foram") + " pra “Pra rever”, na aba Praticar."
         : "Nenhuma frase pra rever agora.") +
+      (qPassed ? " Essa prova conta pras conquistas." : " Pra passar na provinha e contar pras conquistas, acerte pelo menos 80%.") +
       " O treino serve pra você se testar — não é uma nota de nível.";
     var again = document.createElement("button"); again.type = "button"; again.className = "cta"; again.textContent = "Treinar de novo";
     again.addEventListener("click", startQuiz);
@@ -5984,7 +5985,7 @@
       totalActivities = (typeof o.activities === "number" && o.activities >= 0 && o.activities < 100000) ? Math.floor(o.activities) : 0;
 
       // dados do bônus: cada campo é validado; nada é confiado como veio
-      counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0};
+      counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0, quizPass:0, quizPerfect:0};
       var sc = (o.counters && typeof o.counters === "object") ? o.counters : {};
       Object.keys(counters).forEach(function(k){
         var v = sc[k];
@@ -5996,10 +5997,7 @@
       (Array.isArray(o.days) ? o.days : []).slice(-400).forEach(function(d){
         if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) daysPracticed[d] = true;
       });
-      var knownBadges = Object.create(null);
-      badgeDefs().forEach(function(b){ knownBadges[b.id] = true; });
-      earnedBadges = {};
-      (Array.isArray(o.badges) ? o.badges : []).forEach(function(id){ if (typeof id === "string" && knownBadges[id] === true) earnedBadges[id] = true; });
+      earnedBadges = {};          // nunca confia no salvo: só vale o que a prova atual confirma
       evaluateBadges(true);      // conquistas já merecidas entram em silêncio
       return true;
     } catch (err){
@@ -6023,7 +6021,7 @@
     // isPremium NÃO reseta aqui: é um plano pago de verdade, preso ao e-mail,
     // não ao destino escolhido. Trocar de país não pode derrubar quem já pagou.
     completedSituations = {}; viewedSituations = {}; totalActivities = 0;
-    counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0};
+    counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0, quizPass:0, quizPerfect:0};
     earnedBadges = {}; reviewLines = {}; daysPracticed = {};
     treinoEl.classList.remove("visible");
     SKILL_NAMES.forEach(function(k){ skillPoints[k] = 0; });
