@@ -2046,8 +2046,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
   var idleDrawn = false;
-  var skyOn = false;                                   // universo 3D só na entrada
-  var ENTRANCE_SCENES = {splash:1, welcome:1, destino:1};
+  var skyOn = false;
   window.addEventListener("resize", function(){ idleDrawn = false; });
   window.addEventListener("resize", resize);
   resize();
@@ -2276,7 +2275,7 @@
         if (bh.anim >= 0) bh.anim = -1;
         bh.x = BH_REST.x; bh.y = BH_REST.y; bh.r = BH_REST.r;
         var kT = scene === "destino" ? 1 : 0;
-        bh.k += (kT - bh.k) * Math.min(1, ds*2.5);
+        bh.k += (kT - bh.k) * Math.min(1, ds*(kT ? 2.5 : 6));
         if (Math.abs(kT - bh.k) < 5e-3) bh.k = kT;
       }
       bh.time += ds;
@@ -2961,7 +2960,7 @@
 
     // Home: globo some (raio 0) e o céu é estático. Desenha uma vez e descansa
     // (evita ~60 redesenhos/s de gradientes gastando bateria sem mudar nada).
-    if (state.scene === "home" && state.radius < 0.5 && idleDrawn){
+    if (state.scene === "home" && state.radius < 0.5 && idleDrawn && sky.settled()){
       requestAnimationFrame(frame);
       return;
     }
@@ -3000,7 +2999,7 @@
 
     var c = centerFor(state.scene);
 
-    skyOn = sky.ok && ENTRANCE_SCENES[state.scene] === 1;
+    skyOn = sky.ok;                                  // universo 3D em todas as telas (na Home fica escurecido e parado)
     if (skyOn) sky.render(Math.min(dt, 64), state.scene, reduceMotion); // aba voltou do fundo: o céu não "pula"
     skyEl.style.visibility = skyOn ? "visible" : "hidden";
     ctx.clearRect(0, 0, W, H);
