@@ -139,11 +139,17 @@
     left:0;
     right:0;
     text-align:center;
-    font-size:14px;
-    letter-spacing:0.5em;
-    padding-left:0.5em;
+    font-size:30px;
+    font-weight:600;
+    letter-spacing:0.42em;
+    padding-left:0.42em;
     color:var(--ink-dim);
   }
+  .wm-host{ color:transparent !important; }
+  .welcome-brand.wm-host{ position:absolute; }
+  .brand.wm-host{ position:relative; }
+  canvas.wordmark-cv{ position:absolute; pointer-events:none; }
+  @media (max-width:360px){ .welcome-brand{ font-size:24px; } }
   .headline{
     font-size:34px;
     line-height:1.15;
@@ -1988,10 +1994,26 @@
     try {
       skyProg = prog(
         "attribute vec2 p;varying vec2 v;void main(){v=p;gl_Position=vec4(p,0.0,1.0);}",
-        "precision highp float;varying vec2 v;uniform sampler2D uTex;uniform float uBright;uniform float uT;\n" + VIEW + "\n" +
+        "precision highp float;varying vec2 v;uniform sampler2D uTex;uniform float uBright;uniform float uT;uniform vec4 uBH;uniform float uTime;\n" + VIEW + "\n" +
         "float h(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}\n" +
         "void main(){\n" +
-        " vec2 s=scl();vec3 d=normalize(vec3(v.x*s.x,v.y*s.y,-1.0));\n" +
+        " float asp=uRes.x/uRes.y;vec2 vv=v;float bm=1.0;vec3 bg=vec3(0.0);\n" +
+        " if(uBH.w>0.01&&uBH.z>0.001){\n" +
+        "  vec2 P=vec2(v.x*asp,v.y),C=vec2(uBH.x*asp,uBH.y);vec2 dd=P-C;float r=max(length(dd),1e-4);float rs=uBH.z*uBH.w;\n" +
+        "  float pull=rs*rs*1.5/(r*r+rs*rs*0.35);vec2 P2=C+dd*(1.0-min(pull,0.92));vv=vec2(P2.x/asp,P2.y);\n" +
+        "  bm=smoothstep(rs*0.96,rs*1.08,r);\n" +
+        "  float ring=exp(-pow((r-rs*1.2)/(rs*0.045),2.0));\n" +
+        "  vec2 q=vec2(dd.x,dd.y/0.17);float rd=length(q);float inn=rs*1.5,out_=rs*4.6;\n" +
+        "  float disk=smoothstep(inn,inn*1.15,rd)*(1.0-smoothstep(out_*0.55,out_,rd));\n" +
+        "  float phi=atan(q.y,q.x);\n" +
+        "  float sw=0.55+0.45*sin(phi*5.0-rd/rs*6.0+uTime*2.2)*sin(phi*2.0+rd/rs*3.0-uTime*1.1);\n" +
+        "  if(q.y>0.0)disk*=bm;\n" +
+        "  vec3 hot=mix(vec3(1.0,0.8,0.5),vec3(0.3,0.72,1.0),smoothstep(inn,out_*0.8,rd));\n" +
+        "  float dop=0.7+0.5*cos(phi-0.5);\n" +
+        "  float halo=exp(-pow((r-rs*1.9)/(rs*0.5),2.0))*smoothstep(-0.1,0.7,dd.y/rs);\n" +
+        "  bg=(hot*disk*sw*dop*1.7+vec3(0.9,0.96,1.0)*ring*0.95+vec3(0.35,0.65,1.0)*halo*0.55)*uBH.w;\n" +
+        " }\n" +
+        " vec2 s=scl();vec3 d=normalize(vec3(vv.x*s.x,vv.y*s.y,-1.0));\n" +
         " float cp=cos(uPitch),sp=sin(uPitch);d=vec3(d.x,d.y*cp-d.z*sp,d.y*sp+d.z*cp);\n" +
         " float cy=cos(uYaw),sy=sin(uYaw);d=vec3(d.x*cy+d.z*sy,d.y,-d.x*sy+d.z*cy);\n" +
         " float zz=-d.z;float az;\n" +
@@ -2000,6 +2022,7 @@
         " vec3 c=texture2D(uTex,uv).rgb;\n" +
         " c=pow(c,vec3(0.92))*uBright;\n" +
         " float vg=1.0-0.55*dot(v,v)*0.5;c*=vg;\n" +
+        " c=c*bm+bg;\n" +
         " c+=(h(gl_FragCoord.xy+uT)-0.5)/255.0;\n" +
         " gl_FragColor=vec4(c,1.0);}"
       );
@@ -2086,6 +2109,18 @@
       home:     {fov: 1.10, bright: 0.34, drift: 0.000, pitch: 0.08,  fly: 0.00}
     };
     var cam = {yaw: 0.35, pitch: 0.05, fov: 1.25, bright: 0, travel: 0};
+    // buraco negro da escolha de destino: pousa embaixo do globo; "hole()" faz a travessia ao tocar Começar
+    var BH_REST = {x: 0.0, y: -0.62, r: 0.2};
+    var bh = {x: BH_REST.x, y: BH_REST.y, r: BH_REST.r, k: 0, anim: -1, time: 0};
+    var bhState = function(){
+      var T = bh.anim;
+      if (T < 0) return;
+      var e1 = Math.min(1, T/0.6), e2 = Math.max(0, Math.min(1, (T - 0.6)/0.9));
+      if (T < 0.6){ var a = e1*e1; bh.x = 0; bh.y = 0.04; bh.r = 1.7*a; bh.k = 1; }
+      else { var b = 1 - Math.pow(1 - e2, 3); bh.x = BH_REST.x*b; bh.y = 0.04 + (BH_REST.y - 0.04)*b; bh.r = 1.7 + (BH_REST.r - 1.7)*b; bh.k = 1; }
+      if (T >= 1.5){ bh.anim = -1; bh.x = BH_REST.x; bh.y = BH_REST.y; bh.r = BH_REST.r; }
+    };
+    api.hole = function(){ bh.anim = 0; api.dirty = true; };
     var yawV = 0, pitchOff = 0, diving = 0, lastRes = "";
     var dpr = 1, cw = 0, ch = 0;
 
@@ -2115,9 +2150,18 @@
       yawV *= Math.pow(0.04, ds);
       if (Math.abs(yawV) < 1e-4) yawV = 0;
       cam.travel += (still ? 0 : (diving ? 2.4 : tgt.fly)) * ds;
+      if (bh.anim >= 0 && !still){ bh.anim += ds; bhState(); }
+      else {
+        if (bh.anim >= 0) bh.anim = -1;
+        bh.x = BH_REST.x; bh.y = BH_REST.y; bh.r = BH_REST.r;
+        var kT = scene === "destino" ? 1 : 0;
+        bh.k += (kT - bh.k) * Math.min(1, ds*2.5);
+        if (Math.abs(kT - bh.k) < 5e-3) bh.k = kT;
+      }
+      bh.time += ds;
 
       var moving = !still && (drift > 0 || tgt.fly > 0) || yawV !== 0 || Math.abs(pitchOff) > 1e-3 ||
-        Math.abs(cam.fov - fovT) > 5e-4 || Math.abs(cam.bright - brightT) > 5e-4 || Math.abs(cam.pitch - pT) > 5e-4;
+        Math.abs(cam.fov - fovT) > 5e-4 || Math.abs(cam.bright - brightT) > 5e-4 || Math.abs(cam.pitch - pT) > 5e-4 || bh.anim >= 0 || (bh.k > 0.01 && !still);
       api.dirty = moving;
 
       // tamanho vem do CSS (100% do palco), nunca de volta pro CSS: evita laço de feedback
@@ -2146,6 +2190,8 @@
       gl.uniform1f(gl.getUniformLocation(skyProg, "uFov"), cam.fov);
       gl.uniform1f(gl.getUniformLocation(skyProg, "uBright"), cam.bright);
       gl.uniform1f(gl.getUniformLocation(skyProg, "uT"), (cam.travel*97.0) % 13.0);
+      gl.uniform4f(gl.getUniformLocation(skyProg, "uBH"), bh.x, bh.y, bh.r, bh.k);
+      gl.uniform1f(gl.getUniformLocation(skyProg, "uTime"), bh.time % 600.0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       gl.enable(gl.BLEND);
@@ -2344,6 +2390,140 @@
     };
     return api;
   })();
+
+  // ---------------------------------------------------------------------
+  // Escrita LINGEX viva: o texto é feito de partículas que fogem do dedo/
+  // cursor e voltam pro lugar (mola). Nasce espalhada e se monta sozinha.
+  // O texto original continua no HTML (transparente) para leitores de tela.
+  // ---------------------------------------------------------------------
+  var wordmarks = [];
+  var wmPointer = {x: -9999, y: -9999, on: false};
+  function wmMove(e){ wmPointer.x = e.clientX; wmPointer.y = e.clientY; wmPointer.on = true; }
+  window.addEventListener("pointermove", wmMove, {passive: true});
+  window.addEventListener("pointerdown", wmMove, {passive: true});
+  window.addEventListener("pointerup", function(e){ if (e.pointerType !== "mouse") wmPointer.on = false; }, {passive: true});
+  window.addEventListener("pointercancel", function(){ wmPointer.on = false; }, {passive: true});
+  document.addEventListener("pointerleave", function(){ wmPointer.on = false; });
+
+  function makeWordmark(host){
+    var cs = getComputedStyle(host);
+    var text = (host.textContent || "").trim();
+    if (!text) return null;
+    var screenEl = host.closest(".screen");
+    var cv = document.createElement("canvas");
+    cv.className = "wordmark-cv";
+    cv.setAttribute("aria-hidden", "true");
+    host.classList.add("wm-host");
+    host.appendChild(cv);
+    var cx2 = cv.getContext("2d");
+    var wm = {parts: [], t0: performance.now(), w: 0, h: 0, ready: false, cleared: false};
+    var PAD = 46;
+
+    function build(){
+      var r = host.getBoundingClientRect();
+      var fs = parseFloat(cs.fontSize) || 30;
+      var ls = parseFloat(cs.letterSpacing) || 0;
+      var w = Math.ceil(r.width + PAD*2), h = Math.ceil(fs*1.5 + PAD*2);
+      wm.w = w; wm.h = h;
+      cv.style.width = w + "px"; cv.style.height = h + "px";
+      cv.style.left = (-PAD) + "px";
+      cv.style.top = (r.height/2 - h/2) + "px";
+      var d = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(w*d); cv.height = Math.round(h*d);
+      cx2.setTransform(d, 0, 0, d, 0, 0);
+      // texto em canvas auxiliar, letra a letra (o espaçamento do CSS não vale no canvas)
+      var off = document.createElement("canvas");
+      off.width = w; off.height = h;
+      var oc = off.getContext("2d");
+      oc.font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
+      oc.textBaseline = "middle"; oc.fillStyle = "#fff";
+      var adv = [], total = 0;
+      for (var i = 0; i < text.length; i++){ var a = oc.measureText(text[i]).width; adv.push(a); total += a + (i < text.length - 1 ? ls : 0); }
+      var x = w/2 - total/2;
+      for (var j = 0; j < text.length; j++){ oc.fillText(text[j], x, h/2); x += adv[j] + ls; }
+      var data = oc.getImageData(0, 0, w, h).data;
+      var step = Math.max(2, Math.round(fs/13));
+      var parts = [], rnd = mulberry32(4242);
+      for (var yy = 0; yy < h; yy += step){
+        for (var xx = 0; xx < w; xx += step){
+          if (data[(yy*w + xx)*4 + 3] > 140){
+            var hx = xx + (rnd() - 0.5)*step*0.8, hy = yy + (rnd() - 0.5)*step*0.8;
+            var ang = rnd()*Math.PI*2, dist = 60 + rnd()*220;
+            parts.push({hx: hx, hy: hy, x: w/2 + Math.cos(ang)*dist, y: h/2 + Math.sin(ang)*dist*0.6,
+                        vx: 0, vy: 0, s: 1.1 + rnd()*1.1, ph: rnd()*6.28, dl: (hx/w)*0.5 + rnd()*0.25});
+          }
+        }
+      }
+      wm.parts = parts; wm.ready = true; wm.t0 = performance.now();
+    }
+    wm.build = build;
+    wm.step = function(now, dt){
+      var vis = screenEl && screenEl.classList.contains("visible");
+      if (!vis || !wm.ready){
+        if (!wm.cleared){ cx2.clearRect(0, 0, wm.w, wm.h); wm.cleared = true; }
+        return;
+      }
+      wm.cleared = false;
+      var rect = cv.getBoundingClientRect();
+      var px = wmPointer.x - rect.left, py = wmPointer.y - rect.top;
+      var near = wmPointer.on;
+      var R = 70, R2 = R*R;
+      var el = (now - wm.t0)/1000;
+      var parts = wm.parts, n = parts.length;
+      cx2.clearRect(0, 0, wm.w, wm.h);
+      cx2.globalCompositeOperation = "lighter";
+      var kAll = dt/16.7, sub = Math.max(1, Math.ceil(kAll/1.5)), k = kAll/sub;
+      for (var si = 0; si < sub; si++){
+      for (var i = 0; i < n; i++){
+        var p = parts[i];
+        var asm = Math.max(0, Math.min(1, (el - p.dl)/1.1));         // monta da esquerda pra direita
+        var hx = p.hx + Math.sin(el*1.3 + p.ph)*0.5, hy = p.hy + Math.cos(el*1.1 + p.ph)*0.5;
+        var ax = (hx - p.x)*(0.012 + 0.07*asm), ay = (hy - p.y)*(0.012 + 0.07*asm);
+        if (near){
+          var dx = p.x - px, dy = p.y - py, d2 = dx*dx + dy*dy;
+          if (d2 < R2){
+            var d = Math.sqrt(d2) || 1, f = 1 - d/R;
+            ax += (dx/d)*f*f*7 - (dy/d)*f*1.4;                          // empurra e gira um pouco
+            ay += (dy/d)*f*f*7 + (dx/d)*f*1.4;
+          }
+        }
+        p.vx = (p.vx + ax*k)*Math.pow(0.86, k); p.vy = (p.vy + ay*k)*Math.pow(0.86, k);
+        p.x += p.vx*k; p.y += p.vy*k;
+        var off = Math.abs(p.x - hx) + Math.abs(p.y - hy);
+        var hot = Math.min(1, off/24);
+        var al = (0.55 + 0.4*Math.sin(el*2 + p.ph)*0.5 + 0.2*hot)*Math.min(1, 0.25 + asm);
+        cx2.fillStyle = hot > 0.12
+          ? "rgba(" + Math.round(150 + 90*(1 - hot)) + "," + Math.round(230 + 20*(1 - hot)) + ",255," + al.toFixed(2) + ")"
+          : "rgba(214,244,255," + al.toFixed(2) + ")";
+        var sz = p.s*(1 + hot*0.8);
+        if (si === sub - 1) cx2.fillRect(p.x - sz/2, p.y - sz/2, sz, sz);
+      }
+      }
+      cx2.globalCompositeOperation = "source-over";
+    };
+    wordmarks.push(wm);
+    build();
+    return wm;
+  }
+  var wmLast = 0;
+  function wmLoop(now){
+    var dt = wmLast ? Math.min(100, now - wmLast) : 16.7;
+    wmLast = now;
+    for (var i = 0; i < wordmarks.length; i++) wordmarks[i].step(now, dt);
+    requestAnimationFrame(wmLoop);
+  }
+  var wmResizeT = 0;
+  window.addEventListener("resize", function(){
+    clearTimeout(wmResizeT);
+    wmResizeT = setTimeout(function(){ wordmarks.forEach(function(w){ w.build(); }); }, 200);
+  });
+  if (!reduceMotion){
+    try {
+      makeWordmark(document.querySelector("#splash .brand"));
+      makeWordmark(document.querySelector("#welcome .welcome-brand"));
+      requestAnimationFrame(wmLoop);
+    } catch (e) { /* sem a escrita viva o texto normal continua */ }
+  }
 
   // ---------------------------------------------------------------------
   // Estado de cena
@@ -2836,6 +3016,12 @@
   }
 
   startBtn.addEventListener("click", function(){
+    if (sky.ok && !reduceMotion){
+      sky.hole();                         // buraco negro engole a tela e se acomoda pra escolha do destino
+      [canvas, markersRoot].forEach(function(el){
+        if (el.animate) el.animate([{opacity: 1}, {opacity: 0, offset: 0.35}, {opacity: 0, offset: 0.5}, {opacity: 1}], {duration: 1500, easing: "ease-in-out"});
+      });
+    }
     state.scene = "destino";
     state.targetAmbient = 0.40; // visível o bastante pra achar o país, sem lavar a imagem
     welcomeEl.classList.remove("visible");
