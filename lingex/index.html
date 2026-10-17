@@ -94,11 +94,11 @@
     align-items:center;
   }
   .brand{
-    font-size:34px;
-    font-weight:600;
-    letter-spacing:0.42em;
+    font-size:46px;
+    font-weight:700;
+    letter-spacing:0.34em;
     margin:0 0 10px 0;
-    padding-left:0.42em; /* balances the trailing tracking */
+    padding-left:0.34em; /* balances the trailing tracking */
   }
   .tagline{
     font-size:13px;
@@ -139,17 +139,17 @@
     left:0;
     right:0;
     text-align:center;
-    font-size:30px;
-    font-weight:600;
-    letter-spacing:0.42em;
-    padding-left:0.42em;
+    font-size:46px;
+    font-weight:700;
+    letter-spacing:0.34em;
+    padding-left:0.34em;
     color:var(--ink-dim);
   }
   .wm-host{ color:transparent !important; }
   .welcome-brand.wm-host{ position:absolute; }
   .brand.wm-host{ position:relative; }
   canvas.wordmark-cv{ position:absolute; pointer-events:none; }
-  @media (max-width:360px){ .welcome-brand{ font-size:24px; } }
+  @media (max-width:360px){ .welcome-brand{ font-size:34px; } }
   .headline{
     font-size:34px;
     line-height:1.15;
@@ -2442,7 +2442,7 @@
       var x = w/2 - total/2;
       for (var j = 0; j < text.length; j++){ oc.fillText(text[j], x, h/2); x += adv[j] + ls; }
       var data = oc.getImageData(0, 0, w, h).data;
-      var step = Math.max(2, Math.round(fs/13));
+      var step = 2;                                   // denso: o traço das letras fica contínuo
       var parts = [], rnd = mulberry32(4242);
       for (var yy = 0; yy < h; yy += step){
         for (var xx = 0; xx < w; xx += step){
@@ -2450,7 +2450,7 @@
             var hx = xx + (rnd() - 0.5)*step*0.8, hy = yy + (rnd() - 0.5)*step*0.8;
             var ang = rnd()*Math.PI*2, dist = 60 + rnd()*220;
             parts.push({hx: hx, hy: hy, x: w/2 + Math.cos(ang)*dist, y: h/2 + Math.sin(ang)*dist*0.6,
-                        vx: 0, vy: 0, s: 1.1 + rnd()*1.1, ph: rnd()*6.28, dl: (hx/w)*0.5 + rnd()*0.25});
+                        vx: 0, vy: 0, s: 2.2 + rnd()*0.7, ph: rnd()*6.28, dl: (hx/w)*0.5 + rnd()*0.25});
           }
         }
       }
@@ -2491,11 +2491,11 @@
         p.x += p.vx*k; p.y += p.vy*k;
         var off = Math.abs(p.x - hx) + Math.abs(p.y - hy);
         var hot = Math.min(1, off/24);
-        var al = (0.55 + 0.4*Math.sin(el*2 + p.ph)*0.5 + 0.2*hot)*Math.min(1, 0.25 + asm);
+        var al = (0.9 + 0.1*Math.sin(el*2 + p.ph))*Math.min(1, 0.25 + asm);
         cx2.fillStyle = hot > 0.12
           ? "rgba(" + Math.round(150 + 90*(1 - hot)) + "," + Math.round(230 + 20*(1 - hot)) + ",255," + al.toFixed(2) + ")"
-          : "rgba(214,244,255," + al.toFixed(2) + ")";
-        var sz = p.s*(1 + hot*0.8);
+          : "rgba(240,251,255," + al.toFixed(2) + ")";
+        var sz = p.s*(1 + hot*0.4);
         if (si === sub - 1) cx2.fillRect(p.x - sz/2, p.y - sz/2, sz, sz);
       }
       }
