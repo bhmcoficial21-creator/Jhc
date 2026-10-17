@@ -36,6 +36,7 @@ async function onboard(page,markerName,optIdx=0){
   await page.evaluate(()=>document.getElementById('objContinueBtn').click()); await page.waitForTimeout(400);
   await page.evaluate(()=>document.getElementById('lvlList').children[0].click());
   await page.evaluate(()=>document.getElementById('nivelContinueBtn').click()); await page.waitForTimeout(400);
+  await page.evaluate(()=>document.getElementById('companionContinueBtn').click()); await page.waitForTimeout(300);
   await page.evaluate(()=>document.getElementById('resumoCta').click()); await page.waitForTimeout(600);
   return {sheet};
 }

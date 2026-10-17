@@ -1251,6 +1251,105 @@
   #treinoSummary .ts-big{ font-size:26px; font-weight:700; margin:0 0 10px 0; }
   #treinoSummary .ts-sub{ font-size:14px; color:var(--ink-dim); line-height:1.5; margin:0 auto 22px auto; max-width:300px; }
   #treinoSummary .cta{ margin-bottom:10px; }
+  /* ---- escolha do representante (carrossel) ---- */
+  #companheiro{
+    justify-content:flex-start;
+    padding-top:calc(24px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    padding-left:0; padding-right:0;
+    text-align:center;
+    align-items:stretch;
+    pointer-events:none;
+    z-index:20;
+  }
+  #companheiro{ visibility:hidden; transition:opacity 300ms ease, visibility 0s linear 300ms; }
+  #companheiro.visible{ pointer-events:auto; visibility:visible; transition-delay:0s; }
+  #companheiro.overlay{ background:#030a14; }
+  #companheiro .situ-back{ margin-left:20px; margin-bottom:0; }
+  #companheiro.overlay #compBackBtn{ display:none; }
+  .comp-eyebrow{ margin:6px 0 8px 0; font-size:12px; letter-spacing:.34em; color:var(--accent); padding-left:.34em; }
+  .comp-title{ margin:0 20px 6px 20px; font-size:26px; line-height:1.2; font-weight:700; }
+  .comp-sub{ margin:0 auto 4px auto; max-width:300px; font-size:14px; line-height:1.45; color:var(--ink-dim); padding:0 20px; }
+  #compTrack{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:18px calc(50% - 100px) 10px calc(50% - 100px);
+    flex:1;
+    min-height:250px;
+    max-height:360px;
+    align-items:center;
+    perspective:900px;
+  }
+  #compTrack::-webkit-scrollbar{ display:none; }
+  .comp-card{
+    appearance:none;
+    border:1px solid rgba(158,247,255,0.16);
+    background:linear-gradient(180deg,rgba(18,44,78,0.55),rgba(5,14,28,0.7));
+    color:var(--ink);
+    flex:none;
+    width:200px;
+    height:100%;
+    max-height:300px;
+    border-radius:28px;
+    scroll-snap-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:14px;
+    font-family:inherit;
+    transform:scale(.76) rotateY(var(--ry,0deg));
+    opacity:.45;
+    filter:saturate(.6);
+    transition:transform 380ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease, filter 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  }
+  .comp-card.active{
+    transform:scale(1) rotateY(0deg);
+    opacity:1;
+    filter:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px rgba(158,247,255,.25), 0 18px 50px rgba(30,150,230,.28);
+  }
+  .comp-art{ width:140px; height:140px; display:flex; align-items:center; justify-content:center; }
+  .comp-art img{ max-width:100%; max-height:100%; object-fit:contain; filter:drop-shadow(0 8px 18px rgba(60,180,255,.35)); }
+  .comp-art img.round, .guide-card img.round{ border-radius:50%; object-fit:cover; }
+  .comp-art img.round{ width:128px; height:128px; box-shadow:0 0 30px rgba(60,180,255,.35); }
+  .comp-name{ font-size:22px; font-weight:700; letter-spacing:.04em; }
+  .comp-role{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+  #compDots{ display:flex; justify-content:center; gap:0; margin:0 0 4px 0; }
+  .comp-dot{ appearance:none; border:none; background:transparent; width:44px; height:44px; padding:0; position:relative; }
+  .comp-dot::after{ content:""; position:absolute; left:50%; top:50%; width:8px; height:8px; margin:-4px 0 0 -4px; border-radius:4px; background:rgba(255,255,255,.25); transition:width 250ms ease, margin 250ms ease, background 250ms ease; }
+  .comp-dot.active::after{ width:26px; margin-left:-13px; background:var(--accent); }
+  #compDesc{ margin:0 auto 14px auto; padding:0 28px; max-width:340px; min-height:66px; font-size:14px; line-height:1.5; color:var(--ink); }
+  #companionContinueBtn{
+    appearance:none;
+    border:none;
+    width:calc(100% - 56px);
+    align-self:center;
+    min-height:56px;
+    border-radius:28px;
+    font-size:16px;
+    font-weight:600;
+    color:#04121c;
+    background:linear-gradient(90deg,#2f6fe0,#57c8f2);
+  }
+  /* cartão do representante nas conquistas */
+  .guide-card{
+    display:flex; gap:12px; align-items:center;
+    border:1px solid rgba(158,247,255,.22);
+    background:linear-gradient(135deg,rgba(18,44,78,.5),rgba(5,14,28,.6));
+    border-radius:20px; padding:12px 14px; margin:0 0 10px 0;
+  }
+  .guide-card img{ width:64px; height:64px; object-fit:contain; flex:none; filter:drop-shadow(0 4px 10px rgba(60,180,255,.3)); }
+  .guide-card > div{ min-width:0; }
+  .guide-name{ margin:0 0 2px 0; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+  .guide-msg{ margin:0; font-size:13.5px; line-height:1.4; }
+  @media (prefers-reduced-motion:reduce){ .comp-card{ transition:none; } }
   /* ---- conquistas ---- */
   #badgeGrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
   .badge{
@@ -1560,6 +1659,17 @@
     <button id="resumoCta" type="button">Começar a aprender</button>
   </section>
 
+  <section id="companheiro" class="screen" aria-label="Escolha seu representante">
+    <button class="situ-back" id="compBackBtn" type="button">‹ Voltar</button>
+    <p class="comp-eyebrow">SEU REPRESENTANTE</p>
+    <h2 class="comp-title">Quem vai te guiar nas conquistas?</h2>
+    <p class="comp-sub">Deslize pro lado e escolha. Ele mostra o melhor caminho pra próxima conquista.</p>
+    <div id="compTrack" role="listbox" aria-label="Personagens"></div>
+    <div id="compDots"></div>
+    <p id="compDesc" aria-live="polite"></p>
+    <button id="companionContinueBtn" type="button">Escolher</button>
+  </section>
+
   <section id="home" class="screen" aria-label="Início">
     <div id="homeContent">
 
@@ -1638,6 +1748,8 @@
         <p class="section-label" style="margin-top:22px;">Sua progressão</p>
         <div id="perfilProgresso"></div>
         <p class="radar-note" id="perfilProgressoNote">Nenhuma situação concluída ainda — nada aqui é inventado, só aparece o que você realmente praticou.</p>
+        <div id="guideCard" class="guide-card"><img id="guideImg" alt=""><div><p class="guide-name" id="guideName">—</p><p class="guide-msg" id="guideMsg">—</p></div></div>
+        <button class="sl-btn" id="guideChangeBtn" type="button" style="margin-bottom:6px;">🔁 Trocar representante</button>
         <p class="section-label" style="margin-top:22px;" id="badgeLabel">Conquistas</p>
         <div id="badgeGrid" role="list"></div>
         <div class="profile-row" style="margin-top:14px;"><span class="pr-label">Dias em que você praticou</span><span class="pr-value" id="perfilDias">0</span></div>
@@ -3279,13 +3391,17 @@
     nivelEl.classList.add("visible");
   });
 
-  nivelContinueBtn.addEventListener("click", function(){
-    nivelEl.classList.remove("visible");
+  function showResumo(){
     state.scene = "resumo";
     resumoDestinoEl.textContent = chosenDestinoText;
     resumoObjetivoEl.textContent = chosenObjectiveLabels.join(", ");
     resumoNivelEl.textContent = selectedLevelCode + " · " + LEVELS.filter(function(l){return l.code===selectedLevelCode;})[0].name;
     resumoEl.classList.add("visible");
+  }
+  nivelContinueBtn.addEventListener("click", function(){
+    nivelEl.classList.remove("visible");
+    state.scene = "home";                 // sem planeta atrás do carrossel (cena "home" = raio 0)
+    openCompanion("onboarding");
   });
 
   var LANG_GREETINGS = {
@@ -3316,13 +3432,160 @@
   });
   document.getElementById("resumoBackBtn").addEventListener("click", function(){
     resumoEl.classList.remove("visible");
+    state.scene = "home";
+    openCompanion("onboarding");
+  });
+
+  // -----------------------------------------------------------------
+  // Representante das conquistas: Lumo (anfitrião), Nexus (tira-dúvidas) e
+  // Orbit (destinos e conquistas). Cada um continua no seu lugar; aqui a
+  // pessoa escolhe quem comenta as conquistas e mostra o melhor caminho.
+  // -----------------------------------------------------------------
+  var COMPANIONS = [
+    {id:"lumo",  name:"Lumo",  role:"Anfitrião", img:"mascotLumo",
+     desc:"Te recebe no Início, cumprimenta no idioma que você escolheu e comemora cada passo do seu dia.",
+     lead:"👋 Que tal isso agora?"},
+    {id:"nexus", name:"Nexus", role:"Tira-dúvidas", img:"mascotNexus",
+     desc:"Responde suas perguntas por texto ou voz, a qualquer hora, e ensina a frase certa pra falar.",
+     lead:"💬 Minha dica:"},
+    {id:"orbit", name:"Orbit", role:"Mestre das conquistas", img:"mascotOrbit",
+     desc:"Aponta o melhor caminho até a próxima conquista e leva você pelos destinos do mundo.",
+     lead:"🧭 Melhor caminho agora:"}
+  ];
+  var companion = "orbit";
+  function companionById(id){ return COMPANIONS.filter(function(c){ return c.id === id; })[0] || COMPANIONS[2]; }
+  var companionEl = document.getElementById("companheiro");
+  var compTrack = document.getElementById("compTrack");
+  var compDots = document.getElementById("compDots");
+  var compDesc = document.getElementById("compDesc");
+  var compBtn = document.getElementById("companionContinueBtn");
+  var compMode = "onboarding", compIndex = 2, compBuilt = false;
+
+  function buildCompanionCards(){
+    if (compBuilt) return;
+    compBuilt = true;
+    COMPANIONS.forEach(function(c, i){
+      var card = document.createElement("button");
+      card.type = "button"; card.className = "comp-card"; card.setAttribute("role", "option");
+      card.setAttribute("aria-label", c.name + ", " + c.role);
+      var art = document.createElement("div"); art.className = "comp-art";
+      var im = document.createElement("img"); im.alt = ""; im.src = document.getElementById(c.img).src; if (c.id === "nexus") im.className = "round";
+      art.appendChild(im);
+      var nm = document.createElement("span"); nm.className = "comp-name"; nm.textContent = c.name;
+      var rl = document.createElement("span"); rl.className = "comp-role"; rl.textContent = c.role;
+      card.appendChild(art); card.appendChild(nm); card.appendChild(rl);
+      card.addEventListener("click", function(){ scrollToCompanion(i); });
+      compTrack.appendChild(card);
+      var dot = document.createElement("button");
+      dot.type = "button"; dot.className = "comp-dot"; dot.setAttribute("aria-label", "Escolher " + c.name);
+      dot.addEventListener("click", function(){ scrollToCompanion(i); });
+      compDots.appendChild(dot);
+    });
+  }
+  function scrollToCompanion(i){
+    var card = compTrack.children[i];
+    if (!card) return;
+    var left = card.offsetLeft - (compTrack.clientWidth - card.offsetWidth)/2;
+    if (compTrack.scrollTo) compTrack.scrollTo({left: left, behavior: reduceMotion ? "auto" : "smooth"});
+    else compTrack.scrollLeft = left;
+    setCompanionIndex(i);
+  }
+  function setCompanionIndex(i){
+    compIndex = i;
+    var c = COMPANIONS[i];
+    for (var k = 0; k < compTrack.children.length; k++){
+      var on = (k === i);
+      compTrack.children[k].classList.toggle("active", on);
+      compTrack.children[k].setAttribute("aria-selected", on ? "true" : "false");
+      compDots.children[k].classList.toggle("active", on);
+    }
+    compDesc.textContent = c.desc;
+    compBtn.textContent = compMode === "profile" ? "Salvar " + c.name : "Escolher " + c.name;
+  }
+  var compScrollT = 0;
+  compTrack.addEventListener("scroll", function(){
+    clearTimeout(compScrollT);
+    var mid = compTrack.scrollLeft + compTrack.clientWidth/2, best = 0, bd = 1e9;
+    for (var k = 0; k < compTrack.children.length; k++){
+      var ch = compTrack.children[k], d = Math.abs(ch.offsetLeft + ch.offsetWidth/2 - mid);
+      if (d < bd){ bd = d; best = k; }
+    }
+    if (best !== compIndex) setCompanionIndex(best);
+  }, {passive: true});
+  compTrack.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight") scrollToCompanion(Math.min(COMPANIONS.length - 1, compIndex + 1));
+    else if (e.key === "ArrowLeft") scrollToCompanion(Math.max(0, compIndex - 1));
+  });
+
+  function openCompanion(mode){
+    compMode = mode;
+    buildCompanionCards();
+    companionEl.classList.toggle("overlay", mode === "profile");
+    companionEl.classList.add("visible");
+    var idx = COMPANIONS.indexOf(companionById(companion));
+    setCompanionIndex(idx);
+    requestAnimationFrame(function(){
+      var card = compTrack.children[idx];
+      if (card) compTrack.scrollLeft = card.offsetLeft - (compTrack.clientWidth - card.offsetWidth)/2;
+    });
+  }
+  compBtn.addEventListener("click", function(){
+    companion = COMPANIONS[compIndex].id;
+    saveState();
+    companionEl.classList.remove("visible");
+    if (compMode === "profile"){
+      renderGuide();
+      showToast(COMPANIONS[compIndex].name + " agora representa suas conquistas.");
+    } else {
+      showResumo();
+    }
+  });
+  document.getElementById("compBackBtn").addEventListener("click", function(){
+    companionEl.classList.remove("visible");
     state.scene = "nivel";
     state.targetAmbient = 0.28;
     nivelEl.classList.add("visible");
   });
+  document.getElementById("guideChangeBtn").addEventListener("click", function(){ openCompanion("profile"); });
+
+  function missing(n, have){ return Math.max(0, n - have); }
+  // melhor caminho até a próxima conquista (só conta o que o app realmente mede)
+  function nextAchievementPath(){
+    var defs = badgeDefs();
+    var next = defs.filter(function(b){ return !earnedBadges[b.id]; })[0];
+    if (!next) return null;
+    var firstOpen = SITUATIONS.filter(function(s){ return !completedSituations[s.id]; })[0];
+    var tip;
+    switch (next.id){
+      case "primeira": tip = firstOpen ? "abra “" + firstOpen.title + "”, ouça as falas e passe no teste." : next.desc + "."; break;
+      case "ouvido":   tip = "toque em 🔊 Ouvir nas falas — faltam " + missing(10, counters.listens) + "."; break;
+      case "sempressa":tip = "use o 🐢 Devagar nas falas — faltam " + missing(5, counters.slow) + "."; break;
+      case "minhavoz": tip = "numa fala sua, toque em 🎙️ e grave sua voz."; break;
+      case "curioso":  tip = "toque em “Tirar dúvida” e pergunte algo à Nexus."; break;
+      case "treino":   tip = "abra Praticar e responda o treino — faltam " + missing(5, counters.quizAsked) + "."; break;
+      case "afiado":   tip = "acerte mais " + missing(5, counters.quizRight) + " no treino de escuta."; break;
+      case "tudo":     tip = "faltam " + (SITUATIONS.length - SITUATIONS.filter(function(s){ return completedSituations[s.id]; }).length) + " situações."; break;
+      case "segredo":  tip = "conclua as " + SITUATIONS.length + " situações pra liberar a secreta."; break;
+      default:
+        tip = firstOpen ? "faça “" + firstOpen.title + "” (" + next.desc.toLowerCase() + ")." : next.desc + ".";
+    }
+    return {badge: next, tip: tip};
+  }
+  function renderGuide(){
+    var c = companionById(companion);
+    var gi = document.getElementById("guideImg");
+    gi.src = document.getElementById(c.img).src;
+    gi.className = c.id === "nexus" ? "round" : "";
+    document.getElementById("guideName").textContent = c.name + " · " + c.role;
+    var p = nextAchievementPath();
+    document.getElementById("guideMsg").textContent = p
+      ? c.lead + " " + p.badge.emoji + " " + p.badge.title + " — " + p.tip
+      : "🏆 Você desbloqueou todas as conquistas. Escolha outro destino em Perfil pra seguir explorando.";
+  }
 
   function enterHome(){
     onboardingDone = true;
+    companionEl.classList.remove("visible");
     state.scene = "home";
     document.getElementById("perfilDestino").textContent = chosenDestinoText;
     document.getElementById("perfilObjetivo").textContent = chosenObjectiveLabels.join(", ");
@@ -4534,6 +4797,7 @@
     var defs = badgeDefs();
     var earned = defs.filter(function(b){ return earnedBadges[b.id]; }).length;
     document.getElementById("badgeLabel").textContent = "Conquistas · " + earned + "/" + defs.length;
+    if (typeof renderGuide === "function") renderGuide();
     var grid = document.getElementById("badgeGrid");
     grid.innerHTML = "";
     defs.forEach(function(b){
@@ -5667,6 +5931,7 @@
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
         v: 1,
         variant: chosenVariant,
+        companion: companion,
         objectives: OBJECTIVES.filter(function(o){ return selectedObjectives[o.id]; }).map(function(o){ return o.id; }),
         level: selectedLevelCode,
         completed: completedSituations,
@@ -5698,6 +5963,7 @@
       chosenLangName = marker.lang;
       chosenDestinoText = titleCase(marker.name) + " · " + marker.lang + " (" + marker.variant + ")";
       selectedLevelCode = o.level;
+      companion = COMPANIONS.some(function(c){ return c.id === o.companion; }) ? o.companion : "orbit";
       selectedObjectives = {};
       objIds.forEach(function(id){ selectedObjectives[id] = true; });
       chosenObjectiveLabels = OBJECTIVES.filter(function(x){ return selectedObjectives[x.id]; })
@@ -5763,7 +6029,8 @@
     SKILL_NAMES.forEach(function(k){ skillPoints[k] = 0; });
     SITUATIONS = []; BONUS_SITU = null;
     chosenDestinoText = ""; chosenVariant = ""; chosenLangName = "";
-    chosenObjectiveLabels = []; selectedLevelCode = null; selectedObjectives = {};
+    chosenObjectiveLabels = []; selectedLevelCode = null; selectedObjectives = {}; companion = "orbit";
+    companionEl.classList.remove("visible");
 
     for (var oi = 0; oi < objListEl.children.length; oi++){
       objListEl.children[oi].classList.remove("selected");
