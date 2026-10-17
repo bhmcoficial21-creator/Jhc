@@ -1916,8 +1916,10 @@
   var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
 
   function resize(){
-    W = window.innerWidth;
-    H = window.innerHeight;
+    // mede o palco (não a janela): se a página roda dentro de um visualizador com margens, o palco é menor que a janela
+    var st = document.getElementById("stage");
+    W = (st && st.clientWidth) || window.innerWidth;
+    H = (st && st.clientHeight) || window.innerHeight;
     canvas.width = Math.round(W * DPR);
     canvas.height = Math.round(H * DPR);
     canvas.style.width = W + "px";
@@ -3003,7 +3005,6 @@
   }
   intro.onDone = leaveSplash;
   setTimeout(function(){
-    if (restoredFromStorage) intro.cancel();
     splashHeld = true;
     leaveSplash();
   }, holdMs);
