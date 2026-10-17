@@ -145,6 +145,12 @@
     padding-left:0.34em;
     color:var(--ink-dim);
   }
+  #welcomeContinueBtn{
+    appearance:none; border:none; background:transparent; color:var(--ink-dim);
+    font-size:14px; text-decoration:underline; text-underline-offset:4px;
+    min-height:44px; margin-top:6px; font-family:inherit;
+  }
+  #welcomeContinueBtn[hidden]{ display:none; }
   .wm-host{ color:transparent !important; }
   .welcome-brand.wm-host{ position:absolute; }
   .brand.wm-host{ position:relative; }
@@ -1589,6 +1595,7 @@
     <h2 class="headline">Expanda<br>seu mundo.</h2>
     <p class="sub">Aprenda idiomas para se comunicar, viajar e viver novas experiências.</p>
     <button class="cta" id="startBtn" type="button">Começar</button>
+    <button id="welcomeContinueBtn" type="button" hidden>Continuar de onde parei</button>
   </section>
 
   <section id="destino" class="screen" aria-label="Escolha o destino">
@@ -3099,13 +3106,14 @@
   var homeEl = document.getElementById("home");
 
   var holdMs = reduceMotion ? 900 : 2200;
+  var welcomeContinueBtn = document.getElementById("welcomeContinueBtn");
   var splashHeld = false, splashLeft = false;
   function leaveSplash(){
     if (!splashHeld || splashLeft) return;
     if (intro.phase === "load" || intro.phase === "play") return;    // espera o planeta terminar de aparecer
     splashLeft = true;
-    // quem já tem progresso também vê a abertura e as boas-vindas; "Continuar" leva à Home
-    if (restoredFromStorage) startBtn.textContent = "Continuar";
+    // quem já tem progresso vê as boas-vindas completas: "Começar" refaz país/objetivo/nível; o atalho leva à Home
+    if (restoredFromStorage) welcomeContinueBtn.hidden = false;
     state.scene = "welcome";
     state.targetAmbient = 0.5; // piso alto: precisa achar e tocar o país
     splashEl.classList.remove("visible");
@@ -3124,7 +3132,18 @@
     el.classList.add("enter");
   }
 
-  startBtn.addEventListener("click", function(){
+  function clearOnboardingChoices(){
+    selectedObjectives = {}; selectedLevelCode = null;
+    for (var oi = 0; oi < objListEl.children.length; oi++){
+      objListEl.children[oi].classList.remove("selected");
+      objListEl.children[oi].setAttribute("aria-pressed", "false");
+    }
+    objContinueBtn.disabled = true;
+    levelCards.forEach(function(c){ c.classList.remove("selected"); c.setAttribute("aria-checked", "false"); });
+    nivelContinueBtn.disabled = true;
+    selectedIndex = -1;
+  }
+  welcomeContinueBtn.addEventListener("click", function(){
     if (restoredFromStorage && !onboardingDone){      // voltando: atravessa o buraco negro direto pra Home
       welcomeEl.classList.remove("visible");
       if (sky.ok && !reduceMotion){
@@ -3137,8 +3156,10 @@
         enterHome();
         diveFlash.classList.remove("show");
       }, (sky.ok && !reduceMotion) ? 800 : 0);
-      return;
     }
+  });
+  startBtn.addEventListener("click", function(){
+    if (restoredFromStorage) clearOnboardingChoices();   // refazer: escolhas começam em branco, o progresso só muda se o idioma mudar
     if (sky.ok && !reduceMotion){
       sky.hole();                         // buraco negro engole a tela e se acomoda pra escolha do destino
       [canvas, markersRoot].forEach(function(el){
@@ -3608,6 +3629,15 @@
   }
   resumoCta.addEventListener("click", function(){
     resumoEl.classList.remove("visible");
+    if (restoredFromStorage){
+      if (chosenVariant !== savedVariant){      // outro idioma: o progresso do anterior não vale aqui
+        completedSituations = {}; viewedSituations = {}; totalActivities = 0;
+        counters = {listens:0, slow:0, records:0, nexus:0, quizAsked:0, quizRight:0, quizPass:0, quizPerfect:0};
+        earnedBadges = {}; reviewLines = {}; daysPracticed = {};
+        SKILL_NAMES.forEach(function(k){ skillPoints[k] = 0; });
+      }
+      restoredFromStorage = false;
+    }
     enterHome();
   });
 
@@ -5935,6 +5965,7 @@
   } catch (err){ storageOK = false; }
   var onboardingDone = false;
   var restoredFromStorage = false;
+  var savedVariant = "";
 
   function saveState(){
     if (!storageOK || !onboardingDone) return;
@@ -5971,6 +6002,7 @@
         return false;
       }
       chosenVariant = marker.variant;
+      savedVariant = marker.variant;
       chosenLangName = marker.lang;
       chosenDestinoText = titleCase(marker.name) + " · " + marker.lang + " (" + marker.variant + ")";
       selectedLevelCode = o.level;

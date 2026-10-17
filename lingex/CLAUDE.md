@@ -41,4 +41,4 @@ Rodam com o HTML servido por rota mockada (`https://lingex.test/`), stubs de spe
 - Não colocar a chave da Anthropic em nenhum arquivo versionado.
 
 ## Fluxo de abertura
-Splash (intro do planeta) → boas-vindas → destino/objetivo/nível/representante/resumo → Home. Quem já tem progresso salvo também vê splash e boas-vindas (botão "Continuar") e atravessa o buraco negro direto pra Home; "Trocar destino e recomeçar" apaga o progresso e volta à escolha de destino.
+Splash (intro do planeta) → boas-vindas → destino/objetivo/nível/representante/resumo → Home. Quem já tem progresso salvo vê as mesmas boas-vindas: "Começar" refaz país/objetivo/nível (escolhas em branco; o progresso é mantido se o idioma for o mesmo e zerado se mudar) e "Continuar de onde parei" atravessa o buraco negro direto pra Home. "Trocar destino e recomeçar" (Perfil) apaga tudo. Teste: `tests/retorno.js`.
