@@ -3104,12 +3104,8 @@
     if (!splashHeld || splashLeft) return;
     if (intro.phase === "load" || intro.phase === "play") return;    // espera o planeta terminar de aparecer
     splashLeft = true;
-    if (restoredFromStorage){               // já tem progresso salvo neste aparelho: vai direto pra Home
-      splashEl.classList.remove("visible");
-      state.targetAmbient = 0.3;
-      enterHome();
-      return;
-    }
+    // quem já tem progresso também vê a abertura e as boas-vindas; "Continuar" leva à Home
+    if (restoredFromStorage) startBtn.textContent = "Continuar";
     state.scene = "welcome";
     state.targetAmbient = 0.5; // piso alto: precisa achar e tocar o país
     splashEl.classList.remove("visible");
@@ -3129,6 +3125,20 @@
   }
 
   startBtn.addEventListener("click", function(){
+    if (restoredFromStorage && !onboardingDone){      // voltando: atravessa o buraco negro direto pra Home
+      welcomeEl.classList.remove("visible");
+      if (sky.ok && !reduceMotion){
+        sky.hole();
+        diveFlash.style.setProperty("--fx", "50%"); diveFlash.style.setProperty("--fy", "40%");
+        requestAnimationFrame(function(){ diveFlash.classList.add("show"); });
+      }
+      setTimeout(function(){
+        state.targetAmbient = 0.3;
+        enterHome();
+        diveFlash.classList.remove("show");
+      }, (sky.ok && !reduceMotion) ? 800 : 0);
+      return;
+    }
     if (sky.ok && !reduceMotion){
       sky.hole();                         // buraco negro engole a tela e se acomoda pra escolha do destino
       [canvas, markersRoot].forEach(function(el){
@@ -6018,6 +6028,7 @@
     stopAllMedia();
     try { window.localStorage.removeItem(STORAGE_KEY); } catch (err){}
     onboardingDone = false;
+    restoredFromStorage = false;
     // isPremium NÃO reseta aqui: é um plano pago de verdade, preso ao e-mail,
     // não ao destino escolhido. Trocar de país não pode derrubar quem já pagou.
     completedSituations = {}; viewedSituations = {}; totalActivities = 0;

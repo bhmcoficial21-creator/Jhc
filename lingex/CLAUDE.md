@@ -10,7 +10,7 @@ Micro-SaaS freemium de aprendizado de idiomas, em **um único arquivo HTML** (`i
 - `tests/` — testes Playwright (ver abaixo).
 
 ## Como o app funciona
-- Entrada do planeta: objeto `intro` no IIFE. 32 discos do modelo "Cycle" são renderizados em WebGL offscreen; a silhueta vira máscara (`destination-in`) do planeta 2D na splash e o brilho ciano entra por cima (`lighter`). Dura 4,2 s (o ritmo original do modelo, 24 quadros/s), só na 1ª tela para quem ainda não tem progresso salvo, só com o céu 3D ativo; sem WebGL, sem `prefers-reduced-motion` ou sem os arquivos em `assets/` o planeta aparece normal. A splash espera a intro acabar antes de ir às boas-vindas.
+- Entrada do planeta: objeto `intro` no IIFE. 32 discos do modelo "Cycle" são renderizados em WebGL offscreen; a silhueta vira máscara (`destination-in`) do planeta 2D na splash e o brilho ciano entra por cima (`lighter`). Dura 4,2 s (o ritmo original do modelo, 24 quadros/s), na splash (também para quem já tem progresso salvo), só com o céu 3D ativo; sem WebGL, sem `prefers-reduced-motion` ou sem os arquivos em `assets/` o planeta aparece normal. A splash espera a intro acabar antes de ir às boas-vindas.
 - Conquistas só por prova: situações exigem o teste de domínio; as conquistas de escuta exigem **provinha de escuta aprovada** (Praticar → treino, 80%+ de acerto; `counters.quizPass/quizPerfect`). Ouvir, gravar ou perguntar não destrava nada. `earnedBadges` é sempre recalculado do estado, nunca restaurado do salvo. Teste: `tests/conquistas.js`.
 - Representante das conquistas (`COMPANIONS`, `openCompanion`): após o nível, tela com carrossel deslizável (scroll-snap) para escolher Lumo (anfitrião), Nexus (tira-dúvidas) ou Orbit (mestre das conquistas; padrão). Cada personagem continua no seu lugar (Lumo na Home, Nexus no chat, Orbit na escolha de destino). O escolhido fica em `lingex.v1.companion` e comenta as conquistas em Perfil (`renderGuide`: próxima conquista + melhor caminho, só com dados que o app mede). "Trocar representante" reabre o carrossel em modo `profile`.
 - Escrita LINGEX viva (`makeWordmark`): na splash e nas boas-vindas o texto é um canvas de partículas que fogem do dedo/cursor e voltam por mola, e se montam da esquerda pra direita. O texto HTML continua (transparente) para leitores de tela; com `prefers-reduced-motion` vale só o texto.
@@ -39,3 +39,6 @@ Rodam com o HTML servido por rota mockada (`https://lingex.test/`), stubs de spe
 - Interface em português do Brasil. Mobile-first (testar 320×568, 375×667, 390×844, 430×932). `100dvh`, `visualViewport` só quando o teclado realmente encolhe a tela.
 - Ao mudar conteúdo de idioma: rodar `lines_ui.js` e `check.py`.
 - Não colocar a chave da Anthropic em nenhum arquivo versionado.
+
+## Fluxo de abertura
+Splash (intro do planeta) → boas-vindas → destino/objetivo/nível/representante/resumo → Home. Quem já tem progresso salvo também vê splash e boas-vindas (botão "Continuar") e atravessa o buraco negro direto pra Home; "Trocar destino e recomeçar" apaga o progresso e volta à escolha de destino.

@@ -40,7 +40,9 @@ const L=require('./lib.js');
  await page.evaluate(()=>[...document.querySelectorAll('#masterySummary .cta')][0].click()); await page.waitForTimeout(300);
  ok(await page.evaluate(()=>document.getElementById('situTitle').textContent.includes('No aeroporto')),'botão "Próxima" abriu No aeroporto');
  // persistência
- await page.reload(); await page.waitForTimeout(1500);
+ await page.reload(); await page.waitForSelector('#welcome.visible',{timeout:12000}); await page.waitForTimeout(400);
+ ok(await page.evaluate(()=>document.getElementById('startBtn').textContent)==='Continuar','quem já tem progresso vê as boas-vindas com "Continuar"');
+ await page.click('#startBtn'); await page.waitForTimeout(1800);
  await L.tab(page,'tabSituacoes'); st=await L.trailBtns(page);
  ok(st[0].includes('done')&&st[1].includes('next'),'após recarregar a página o progresso permanece: '+st.slice(0,3).join(' | '));
  ok(errs.length===0,'sem erros de JS: '+JSON.stringify(errs));

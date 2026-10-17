@@ -72,7 +72,7 @@ const L=require('./lib.js');
 
  // ---- PROGRESSO ANTIGO RESTAURADO (salvo antes do teste existir) ----
  { const seed=JSON.stringify({v:1,variant:'en-US',objectives:['viajar'],level:'A1',completed:{cafe:true,aeroporto:true},viewed:{cafe:true,aeroporto:true},skillPoints:{}});
-   const {page,errs}=await L.newPage(b,{seed}); await page.goto('https://lingex.test/'); await page.waitForTimeout(3200);
+   const {page,errs}=await L.newPage(b,{seed}); await page.goto('https://lingex.test/'); await page.waitForSelector('#welcome.visible',{timeout:12000}); await page.waitForTimeout(400); await page.click('#startBtn'); await page.waitForTimeout(1800);
    const homeVisible=await page.evaluate(()=>document.getElementById('home').classList.contains('visible'));
    await L.tab(page,'tabSituacoes'); const st=await L.trailBtns(page);
    ok(homeVisible&&st[0].includes('done')&&st[1].includes('done')&&st[2].includes('next'),'progresso antigo restaurado: '+st.slice(0,4).join(' | ')+' (home='+homeVisible+')'); await page.context().close(); }
