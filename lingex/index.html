@@ -1357,21 +1357,54 @@
   .guide-msg{ margin:0; font-size:13.5px; line-height:1.4; }
   @media (prefers-reduced-motion:reduce){ .comp-card{ transition:none; } }
   /* ---- conquistas ---- */
-  #badgeGrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  /* conquistas como livros 3D: capa, lombada à esquerda e bloco de páginas na borda; inclinam com o dedo/cursor */
+  #badgeGrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px 18px; perspective:1100px; padding:4px 10px 4px 4px; }
   .badge{
-    border:1px dashed rgba(158,247,255,0.18);
-    background:rgba(255,255,255,0.02);
-    border-radius:14px;
-    padding:12px;
+    --ry:-9deg; --rx:0deg;
+    position:relative;
+    min-height:158px;
+    padding:12px 12px 12px 24px;
+    border-radius:4px 10px 10px 4px;
+    background:linear-gradient(135deg,#23262c 0%,#12141a 60%,#0b0c10 100%);
+    border:1px solid rgba(255,255,255,0.07);
+    box-shadow:0 14px 26px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
     display:flex;
-    gap:10px;
-    align-items:flex-start;
-    opacity:0.6;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:8px;
+    transform-style:preserve-3d;
+    transform:rotateY(var(--ry)) rotateX(var(--rx));
+    transform-origin:30% 50%;
+    transition:transform 260ms cubic-bezier(.22,.7,.2,1), box-shadow 260ms ease;
+    opacity:0.92;
+    touch-action:pan-y;
   }
-  .badge.earned{ border-style:solid; border-color:var(--accent); background:rgba(158,247,255,0.08); opacity:1; }
-  .badge .b-emoji{ font-size:22px; flex:none; }
-  .badge .b-title{ font-size:13px; font-weight:600; margin:0 0 2px 0; }
+  .badge::before{              /* lombada */
+    content:""; position:absolute; left:0; top:0; bottom:0; width:16px;
+    border-radius:4px 0 0 4px;
+    background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%,rgba(0,0,0,.35));
+    border-right:1px solid rgba(0,0,0,.45);
+  }
+  .badge::after{               /* bloco de páginas */
+    content:""; position:absolute; right:-9px; top:4px; bottom:4px; width:10px;
+    border-radius:0 3px 3px 0;
+    background:repeating-linear-gradient(to bottom,#e3e6ea 0 2px,#b3b8c0 2px 3px);
+    transform:rotateY(70deg); transform-origin:left center;
+    box-shadow:inset -2px 0 3px rgba(0,0,0,.25);
+  }
+  .badge.earned{
+    background:linear-gradient(135deg,#0f5568 0%,#0a3347 55%,#06202f 100%);
+    border-color:var(--accent);
+    box-shadow:0 14px 30px rgba(20,140,200,.35), 0 0 0 1px rgba(158,247,255,.25), inset 0 1px 0 rgba(255,255,255,.18);
+    opacity:1;
+  }
+  .badge.earned::before{ background:linear-gradient(90deg,rgba(158,247,255,.4),rgba(158,247,255,.08) 55%,rgba(0,0,0,.3)); }
+  .badge .b-emoji{ font-size:30px; flex:none; line-height:1; transform:translateZ(18px); filter:drop-shadow(0 4px 5px rgba(0,0,0,.45)); }
+  .badge .b-title{ font-size:14px; font-weight:700; margin:0 0 3px 0; line-height:1.2; }
   .badge .b-desc{ font-size:11.5px; color:var(--ink-dim); margin:0; line-height:1.35; }
+  .badge.earned .b-desc{ color:rgba(234,246,255,.85); }
+  .badge > div{ transform:translateZ(10px); min-width:0; }
+  @media (prefers-reduced-motion:reduce){ .badge{ transition:none; } }
   /* ---- carteira / pra rever ---- */
   .wallet-group-title{ font-size:13px; font-weight:600; margin:16px 0 8px 0; color:var(--ink-dim); }
   .wallet-item{
@@ -4827,6 +4860,29 @@
     document.getElementById("perfilDias").textContent = Object.keys(daysPracticed).length;
   }
 
+  // livros 3D: inclinam conforme o dedo/cursor passa por cima
+  (function(){
+    var grid = document.getElementById("badgeGrid");
+    function tilt(e){
+      var el = e.target.closest && e.target.closest(".badge");
+      Array.prototype.forEach.call(grid.children, function(c){
+        if (c !== el){ c.style.removeProperty("--ry"); c.style.removeProperty("--rx"); }
+      });
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      var nx = (e.clientX - r.left)/r.width - 0.5, ny = (e.clientY - r.top)/r.height - 0.5;
+      el.style.setProperty("--ry", (-9 + nx*34).toFixed(1) + "deg");
+      el.style.setProperty("--rx", (-ny*22).toFixed(1) + "deg");
+    }
+    function reset(){ Array.prototype.forEach.call(grid.children, function(c){ c.style.removeProperty("--ry"); c.style.removeProperty("--rx"); }); }
+    if (!reduceMotion){
+      grid.addEventListener("pointermove", tilt);
+      grid.addEventListener("pointerdown", tilt);
+      grid.addEventListener("pointerleave", reset);
+      grid.addEventListener("pointerup", function(e){ if (e.pointerType !== "mouse") reset(); });
+      grid.addEventListener("pointercancel", reset);
+    }
+  })();
   function renderBadges(){
     var defs = badgeDefs();
     var earned = defs.filter(function(b){ return earnedBadges[b.id]; }).length;
