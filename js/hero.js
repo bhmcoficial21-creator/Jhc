@@ -26,7 +26,7 @@ window.JSDHero = (function () {
             <video class="v v1" muted playsinline preload="auto" aria-hidden="true"></video>
             <div class="v vyt" aria-hidden="true"><div id="heroYT"></div></div>
             <canvas class="v vc" aria-hidden="true"></canvas>
-            <span class="hero__shade"></span>
+            <span class="hero__tint"></span><span class="hero__lines"></span><span class="hero__sheen"></span><span class="hero__shade"></span>
           </div>
           <svg class="hero__maskdebug" id="heroDebug" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon /></svg>
         </div>
