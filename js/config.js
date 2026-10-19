@@ -40,7 +40,8 @@ window.JSD_CONFIG = {
   entry: {
     mode: "doors",
     animate: false,   // false = a entrada já aparece pronta, sem contador nem portas. true = contador + portas se abrindo.
-    image: "assets/produtos/ronaldo-frente.jpg",
+    image: "assets/entry/entrada-960.jpg",
+    srcset: "assets/entry/entrada-640.jpg 640w, assets/entry/entrada-960.jpg 960w",   // versões leves da mesma foto (celular carrega a menor)
     pos: "50% 22%",
     alt: "Cristiano Ronaldo com a camisa vermelha de Portugal, em campo.",
     caption: ""

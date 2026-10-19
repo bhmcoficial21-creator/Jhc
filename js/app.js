@@ -55,6 +55,8 @@
     if (p.images && p.images.length) return p.images.map((im, i) => typeof im === "string" ? { src: im, alt: `${p.name}, ${VIEWS[i] || "foto " + (i + 1)}` } : im);
     return ["front", "back", "detail"].map((v, i) => ({ src: PH.jersey(p, v), alt: `${p.name}, ${VIEWS[i]} (imagem provisória)` }));
   }
+  /* versão leve (-sm) das fotos de produto: o celular baixa a menor */
+  const sset = (im, sizes) => /^assets\/produtos\/[^/]+\.jpg$/.test(im.src) && !im.src.endsWith("-sm.jpg") ? ` srcset="${im.src.replace(/\.jpg$/, "-sm.jpg")} 560w, ${im.src} 1000w" sizes="${sizes}"` : "";
   const ip = im => im.pos ? ` style="object-position:${im.pos}"` : "";
   const badgeCls = b => b === "Novo" ? "new" : b === "Esgotado" ? "out" : "ltd";
   const isOut = p => p.badge === "Esgotado" || p.sizes.every(s => p.unavailable.includes(s));
@@ -135,8 +137,8 @@
     const ims = imgs(p), im = ims[0], out = isOut(p);
     return `<article class="card rv">
       <a class="card__media" href="#/produto/${p.id}" aria-label="Ver ${esc(p.name)}">
-        <img src="${im.src}" alt="${esc(im.alt)}"${ip(im)} loading="lazy" width="600" height="800">
-        ${ims[1] && p.images && p.images.length > 1 ? `<img class="card__alt" src="${ims[1].src}" alt=""${ip(ims[1])} loading="lazy" width="600" height="800">` : ""}
+        <img src="${im.src}"${sset(im, "(min-width:1100px) 25vw, (min-width:700px) 33vw, 50vw")} alt="${esc(im.alt)}"${ip(im)} loading="lazy" width="600" height="800">
+        ${ims[1] && p.images && p.images.length > 1 ? `<img class="card__alt" src="${ims[1].src}"${sset(ims[1], "(min-width:1100px) 25vw, (min-width:700px) 33vw, 50vw")} alt=""${ip(ims[1])} loading="lazy" width="600" height="800">` : ""}
         ${p.badge ? `<span class="tags"><span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span></span>` : ""}
       </a>
       ${bmHtml(p)}
@@ -265,7 +267,7 @@
   function catsHtml() {
     return `<section class="sec" aria-labelledby="catT">
       <header class="sec__head"><h2 id="catT">${esc(CFG.copy.categoriesTitle)}</h2></header>
-      <div class="cats">${CFG.categories.map(c => `<a class="cat" href="#/colecao" data-preset='${esc(JSON.stringify({ group: c.group }))}'><img src="${c.image}" alt="${esc(c.alt)}" loading="lazy" width="600" height="750"><span class="cat__lbl">${esc(c.label)}${ARROW}</span></a>`).join("")}</div></section>`;
+      <div class="cats">${CFG.categories.map(c => `<a class="cat" href="#/colecao" data-preset='${esc(JSON.stringify({ group: c.group }))}'><img src="${c.image}"${sset({ src: c.image }, "(min-width:900px) 25vw, 50vw")} alt="${esc(c.alt)}" loading="lazy" width="600" height="750"><span class="cat__lbl">${esc(c.label)}${ARROW}</span></a>`).join("")}</div></section>`;
   }
   function pcarHtml() {
     const list = CFG.products.filter(p => p.featured);
@@ -273,7 +275,7 @@
       <header class="sec__head"><h2 id="cofreT">${esc(CFG.copy.vaultTitle)}</h2><a class="textbtn" href="#/colecao">Ver tudo</a></header>
       <div class="pcar" id="pcar" tabindex="0" role="region" aria-label="Peças selecionadas. Deslize ou use as setas do teclado.">
         ${list.map((p, i) => { const im = imgs(p)[0]; return `<article class="pcar__item">
-          <a class="pcar__img" href="#/produto/${p.id}" aria-label="${esc(p.name)}" draggable="false"><img src="${im.src}" alt="${esc(im.alt)}"${ip(im)} loading="${i < 2 ? "eager" : "lazy"}" width="600" height="750" draggable="false">${p.badge ? `<span class="tags"><span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span></span>` : ""}</a>
+          <a class="pcar__img" href="#/produto/${p.id}" aria-label="${esc(p.name)}" draggable="false"><img src="${im.src}"${sset(im, "(min-width:900px) 24vw, 78vw")} alt="${esc(im.alt)}"${ip(im)} loading="${i < 2 ? "eager" : "lazy"}" width="600" height="750" draggable="false">${p.badge ? `<span class="tags"><span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span></span>` : ""}</a>
           ${bmHtml(p)}
           <a href="#/produto/${p.id}" draggable="false"><p class="pcar__team">${esc(p.team)}</p><p class="pcar__name">${esc(p.name)}</p><p class="pcar__price">${money(p.price)}<span>${money(pix(p.price))} no Pix</span></p></a>
           <p class="sizes-line" aria-label="Tamanhos">${p.sizes.map(z => p.unavailable.includes(z) ? `<s title="Indisponível">${z}</s>` : `<span>${z}</span>`).join("")}</p></article>`; }).join("")}
@@ -298,7 +300,7 @@
     const list = (CFG.highlights || []).map(byId).filter(Boolean);
     return `<section class="sec" aria-labelledby="featT">
       <header class="sec__head"><h2 id="featT">${esc(CFG.copy.featTitle)}</h2></header>
-      <div class="feats">${list.map(p => { const im = imgs(p)[0]; return `<a class="feat" href="#/produto/${p.id}"><img src="${im.src}" alt="${esc(im.alt)}"${ip(im)} loading="lazy" width="900" height="1125"><span class="feat__txt"><h3>${esc(p.name)}</h3><span>Ver peça ${ARROW}</span></span></a>`; }).join("")}</div></section>`;
+      <div class="feats">${list.map(p => { const im = imgs(p)[0]; return `<a class="feat" href="#/produto/${p.id}"><img src="${im.src}"${sset(im, "(min-width:800px) 50vw, 100vw")} alt="${esc(im.alt)}"${ip(im)} loading="lazy" width="900" height="1125"><span class="feat__txt"><h3>${esc(p.name)}</h3><span>Ver peça ${ARROW}</span></span></a>`; }).join("")}</div></section>`;
   }
 
   /* ---------- busca ---------- */
@@ -371,7 +373,7 @@
     const loader = $("#loader"), sig = $("#sig");
     const still = CFG.entry && CFG.entry.mode !== "stadium" && CFG.entry.animate === false;   // entrada sem animação
     const startIntro = !still && first.route && !introDone && !pendingScroll;
-    if (startIntro) { introDone = true; heroCtl.intro(loader, sig); }
+    if (startIntro) { introDone = true; document.body.classList.add("is-loading"); heroCtl.intro(loader, sig); }
     else { introDone = true; if (loader) loader.remove(); heroCtl.skip(sig); }
     return "JSD™ — Private • Vault Drop";
   }
@@ -433,7 +435,7 @@
     main.innerHTML = `<section class="page"><h1 class="page__t">Sua sacola <span>(${n} ${n === 1 ? "item" : "itens"})</span></h1>
       <div class="cart">
         <ul class="cart__list">${cart.map((i, k) => { const p = byId(i.id), im = imgs(p)[0]; return `<li class="line">
-          <a class="line__img" href="#/produto/${p.id}"><img src="${im.src}" alt="${esc(im.alt)}"${ip(im)} width="96" height="115"></a>
+          <a class="line__img" href="#/produto/${p.id}"><img src="${im.src}"${sset(im, "110px")} alt="${esc(im.alt)}"${ip(im)} width="96" height="115"></a>
           <div class="line__info"><a class="line__name" href="#/produto/${p.id}">${esc(p.name)}</a><p class="muted">Tamanho ${i.size}</p><p class="line__price">${money(p.price * i.qty)}</p>
             <div class="qty" role="group" aria-label="Quantidade de ${esc(p.name)}"><button type="button" data-q="${k}" data-d="-1" aria-label="Diminuir quantidade">−</button><output aria-live="polite">${i.qty}</output><button type="button" data-q="${k}" data-d="1" aria-label="Aumentar quantidade">+</button></div>
             <button class="link" type="button" data-rm="${k}" aria-label="Remover ${esc(p.name)} tamanho ${i.size} da sacola">Remover</button></div></li>`; }).join("")}</ul>

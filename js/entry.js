@@ -15,7 +15,7 @@ window.JSDEntry = (function () {
     const b = CFG.brand, e = CFG.entry;
     return `
     <section class="hero hero--doors" id="hero" aria-label="Abertura da JSD" style="--pos:${e.pos || "50% 25%"}">
-      <img class="entry__img" id="entryImg" src="${e.image}" alt="${e.alt}" decoding="async" fetchpriority="high">
+      <img class="entry__img" id="entryImg" src="${e.image}"${e.srcset ? ` srcset="${e.srcset}" sizes="100vw"` : ""} alt="${e.alt}" decoding="async" fetchpriority="high">
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="entry__doors" aria-hidden="true">
         <div class="door door--l"><i class="handle"></i></div>
