@@ -69,6 +69,13 @@ window.JSDViewer360 = (function () {
     return { destroy() { dead = true; cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); }, set(p) { product = p; frames = null; const pr = new Image(); pr.onload = () => { frames = Array.from({ length: total }, (_, n) => { const im = new Image(); im.src = frameUrl(p.id, n); im.onload = draw; return im; }); draw(); }; pr.src = frameUrl(p.id, 0); cv.setAttribute("aria-label", `Modelo vestindo ${p.name}, em visualização 360°. Arraste para girar.`); draw(); } };
   }
   
+  /* sem WebGL: mostra a foto parada */
+  function createStatic(host, p) {
+    const im = p.images && p.images[0], src = im && (im.src || im);
+    host.innerHTML = `<div class="v360__stage v360__stage--card"><img class="v360__still" src="${src || ""}" alt="${p.name}"></div>`;
+    return { destroy() { host.innerHTML = ""; } };
+  }
+
   /* Escolhe o melhor modo: fotos 360° reais (se existirem) > manequim 3D > modelo provisório em canvas */
   function create(host, product) {
     const V3 = window.JSDViewer3D; let inner = null, dead = false, cur = product, tick = 0;
@@ -78,7 +85,8 @@ window.JSDViewer360 = (function () {
       host.innerHTML = '<div class="v360__stage v360__loading"><span>Carregando manequim…</span></div>';
       const [photos, ok] = await Promise.all([probe(p), V3 ? V3.ensure() : Promise.resolve(false)]);
       if (dead || my !== tick) return;
-      if (!photos && ok && V3.supported() && p.kit) inner = V3.create(host, p); else inner = createPhoto(host, p);
+      if (!photos && ok && V3.supported()) inner = V3.create(host, p);
+      else if (!photos) inner = createStatic(host, p); else inner = createPhoto(host, p);
     }
     build(product);
     return { destroy() { dead = true; if (inner) inner.destroy(); }, set(p) { build(p); } };
