@@ -365,7 +365,7 @@
   function homeView() {
     main.innerHTML = `<div id="heroHost"></div>
       ${catsHtml()}${pcarHtml()}${featsHtml()}${collectionHtml()}${viewerHtml()}`;
-    heroCtl = window.JSDHero.mount($("#heroHost"));
+    heroCtl = (CFG.entry && CFG.entry.mode === "stadium" ? window.JSDHero : window.JSDEntry).mount($("#heroHost"));
     $("#heroCta").addEventListener("click", e => { e.preventDefault(); scrollToSec("colecao"); });
     bindCollection(); renderGrid(); initPcar(); initViewer();
     const loader = $("#loader"), sig = $("#sig");

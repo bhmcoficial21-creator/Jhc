@@ -33,7 +33,19 @@ window.JSD_CONFIG = {
     ]
   },
 
-  /* ---------- ABERTURA (HERO) ----------
+  /* ---------- ENTRADA ----------
+     mode "doors": portas do cofre se abrem e revelam a foto (padrão).
+     mode "stadium": a cena do estádio com o vídeo nas costas (veja `hero` abaixo).
+     Troque `image` pela foto do Cristiano Ronaldo com a camisa do Real Madrid; `pos` ajusta o enquadramento. */
+  entry: {
+    mode: "doors",
+    image: "assets/produtos/ronaldo-frente.jpg",
+    pos: "50% 22%",
+    alt: "Cristiano Ronaldo com a camisa vermelha de Portugal, em campo.",
+    caption: ""
+  },
+
+  /* ---------- ABERTURA DO ESTÁDIO (mode: \"stadium\") ----------
      Troque as imagens por fotos reais (JPG/WebP). Use duas versões da MESMA foto:
      retrato 9:16 e paisagem 16:9. O `mask` é o contorno da "janela" nas costas da
      camisa, em % da imagem (x, y). Ajuste os pontos até casar com o contorno real.
