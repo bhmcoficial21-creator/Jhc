@@ -93,73 +93,453 @@ window.JSD_CONFIG = {
 
   /* ---------- PRODUTOS ----------
      badge: "Novo" | "Edição limitada" | "Esgotado" | "" ·  images: lista de fotos
-     (vazio = imagem provisória gerada pelo site) ·  unavailable: tamanhos sem estoque */
+     [{ src, alt }] (vazio = imagem provisória gerada pelo site) ·  unavailable: tamanhos sem estoque */
   products: [
-    { id: "selecao-brasil-i", name: "Camisa Seleção Brasil I", team: "Seleção Brasil", group: "Seleções", type: "Camisa",
-      price: 349.90, badge: "Novo", featured: true, sizes: ["P","M","G","GG","XG"], unavailable: ["XG"],
-      colors: [{ name: "Amarelo", hex: "#f2c500" }], images: [],
-      composition: "100% poliéster reciclado, malha respirável com acabamento a laser na gola.",
-      description: "A camisa principal da seleção, de caimento reto e toque leve. Peça lisa nas costas, sem escudo bordado em destaque." },
-    { id: "selecao-brasil-ii", name: "Camisa Seleção Brasil II", team: "Seleção Brasil", group: "Seleções", type: "Camisa",
-      price: 349.90, badge: "Edição limitada", featured: true, sizes: ["P","M","G","GG","XG"], unavailable: ["P"],
-      colors: [{ name: "Azul", hex: "#16408f" }], images: [],
-      composition: "100% poliéster, malha dry com gola em ribana.",
-      description: "A segunda camisa em azul profundo, lote numerado e quantidade reduzida." },
-    { id: "argentina-i", name: "Camisa Seleção Argentina I", team: "Seleção Argentina", group: "Seleções", type: "Camisa",
-      price: 339.90, badge: "", featured: true, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Branco", hex: "#f5f5f5" }, { name: "Azul", hex: "#75aadb" }], images: [],
-      composition: "100% poliéster, malha dry com ventilação nas laterais.",
-      description: "Listras clássicas com tecnologia de secagem rápida, perfeita para jogo e para o dia a dia." },
-    { id: "franca-i", name: "Camisa Seleção França I", team: "Seleção França", group: "Seleções", type: "Camisa",
-      price: 339.90, badge: "Novo", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: ["GG"],
-      colors: [{ name: "Azul", hex: "#16408f" }], images: [],
-      composition: "100% poliéster, malha leve.",
-      description: "Azul marinho de corte atlético, com gola careca em ribana e acabamento limpo." },
-    { id: "flamengo-i", name: "Camisa Flamengo I", team: "Flamengo", group: "Clubes do Brasil", type: "Camisa",
-      price: 319.90, badge: "", featured: true, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Vermelho", hex: "#c8102e" }, { name: "Preto", hex: "#000000" }], images: [],
-      composition: "100% poliéster, listras em sublimação.",
-      description: "Listras rubro-negras em malha respirável, pensada para arquibancada e rua." },
-    { id: "corinthians-i", name: "Camisa Corinthians I", team: "Corinthians", group: "Clubes do Brasil", type: "Camisa",
-      price: 319.90, badge: "", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: ["P","XG"],
-      colors: [{ name: "Branco", hex: "#f5f5f5" }], images: [],
-      composition: "100% poliéster, malha dry.",
-      description: "Branca, limpa e de caimento solto, com gola em V e detalhes preto e branco." },
-    { id: "palmeiras-i", name: "Camisa Palmeiras I", team: "Palmeiras", group: "Clubes do Brasil", type: "Camisa",
-      price: 319.90, badge: "Novo", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Verde", hex: "#006437" }], images: [],
-      composition: "100% poliéster, malha texturizada.",
-      description: "Verde intenso com textura sutil no tecido e gola polo." },
-    { id: "real-madrid-i", name: "Camisa Real Madrid I", team: "Real Madrid", group: "Clubes da Europa", type: "Camisa",
-      price: 369.90, badge: "Edição limitada", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Branco", hex: "#f5f5f5" }], images: [],
-      composition: "100% poliéster reciclado.",
-      description: "Branca clássica com acabamento premium e costas totalmente lisas." },
-    { id: "barcelona-i", name: "Camisa Barcelona I", team: "Barcelona", group: "Clubes da Europa", type: "Camisa",
-      price: 369.90, badge: "", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: ["G"],
-      colors: [{ name: "Azul", hex: "#16408f" }, { name: "Vermelho", hex: "#a50044" }], images: [],
-      composition: "100% poliéster, listras em jacquard.",
-      description: "Listras largas em jacquard, tecido leve e elástico." },
-    { id: "regata-brasil-treino", name: "Regata Treino Seleção Brasil", team: "Seleção Brasil", group: "Seleções", type: "Regata",
-      price: 199.90, badge: "", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Amarelo", hex: "#f2c500" }, { name: "Preto", hex: "#000000" }], images: [],
-      composition: "100% poliéster, cavas rebaixadas.",
-      description: "Regata de treino com cavas amplas e tecido que seca rápido." },
-    { id: "jaqueta-brasil", name: "Jaqueta Corta-vento Seleção Brasil", team: "Seleção Brasil", group: "Seleções", type: "Jaqueta",
-      price: 449.90, badge: "Esgotado", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: ["P","M","G","GG","XG"],
-      colors: [{ name: "Preto", hex: "#000000" }], images: [],
-      composition: "100% poliamida, forro de malha, ziper frontal.",
-      description: "Jaqueta corta-vento leve e dobrável, com capuz embutido na gola." },
-    { id: "shorts-brasil-treino", name: "Shorts Treino Seleção Brasil", team: "Seleção Brasil", group: "Seleções", type: "Shorts",
-      price: 179.90, badge: "Novo", featured: false, sizes: ["P","M","G","GG","XG"], unavailable: [],
-      colors: [{ name: "Preto", hex: "#000000" }, { name: "Branco", hex: "#f5f5f5" }], images: [],
-      composition: "100% poliéster, cós com elástico e cordão.",
-      description: "Shorts de treino leve com bolsos laterais e cós ajustável." }
+    {
+      "id": "argentina-messi",
+      "name": "Camisa Argentina — Despedida do Messi",
+      "team": "Seleção Argentina",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 300,
+      "badge": "",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Azul-celeste",
+          "hex": "#75aadb"
+        },
+        {
+          "name": "Branco",
+          "hex": "#f5f5f5"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/argentina-messi.jpg",
+          "alt": "Costas da camisa da Argentina com o nome MESSI e o número 10 em dourado sobre as listras celeste e branca"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "A última camiseta. Listras celeste e branca, com MESSI e o número 10 em dourado nas costas."
+    },
+    {
+      "id": "noruega-26-27",
+      "name": "Camisa Nike Seleção Noruega 26/27",
+      "team": "Seleção Noruega",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Vermelho",
+          "hex": "#c8102e"
+        },
+        {
+          "name": "Azul",
+          "hex": "#14214d"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/noruega.jpg",
+          "alt": "Quatro camisas Nike da Seleção da Noruega 26/27 dobradas, vermelhas com cruz azul e branca e escudo da federação"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "A camisa da Noruega 26/27 da Nike, com a cruz nórdica em azul-marinho texturizado e escudo da federação. Pronta entrega."
+    },
+    {
+      "id": "holanda-copa-2026",
+      "name": "Camisa Nike Seleção Holandesa",
+      "team": "Seleção Holandesa",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Laranja",
+          "hex": "#f26a1b"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/holanda.jpg",
+          "alt": "Camisa laranja Nike da Seleção Holandesa com patch da Copa do Mundo 2026 e número 10 nas costas"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "O icônico uniforme laranja, com patch da Copa do Mundo 2026, escudo do leão e número 10."
+    },
+    {
+      "id": "portugal-cr7",
+      "name": "Camisa Puma Seleção Portugal — CR7",
+      "team": "Seleção Portugal",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 180,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Vinho",
+          "hex": "#9b1c26"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/portugal-cr7.jpg",
+          "alt": "Camisa Puma vermelha da Seleção Portuguesa com número 7 branco e escudo da federação"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "The Last Dance. Camisa vermelha da Puma, com o número 7 em branco e gola em V com detalhe verde."
+    },
+    {
+      "id": "arsenal-home",
+      "name": "Camisa Adidas Arsenal",
+      "team": "Arsenal",
+      "group": "Clubes da Europa",
+      "type": "Camisa",
+      "price": 180,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Vermelho",
+          "hex": "#d71920"
+        },
+        {
+          "name": "Branco",
+          "hex": "#f5f5f5"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/arsenal.jpg",
+          "alt": "Camisa vermelha e branca do Arsenal da Adidas com patrocínio Emirates"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Vermelha com mangas brancas e três listras vinho, da Adidas, com o patrocínio Emirates Fly Better."
+    },
+    {
+      "id": "chelsea-munique-2012",
+      "name": "Camisa Retrô Chelsea — Final Munique 2012",
+      "team": "Chelsea",
+      "group": "Clubes da Europa",
+      "type": "Camisa",
+      "price": 180,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Azul",
+          "hex": "#1f4bd8"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/chelsea-2012.jpg",
+          "alt": "Camisa retrô azul do Chelsea da Adidas, com a inscrição Final Munique 2012 e patrocínio Samsung"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Azul intenso e clássico, com detalhes brancos que marcaram uma geração. Referência à final de Munique, em 2012."
+    },
+    {
+      "id": "portugal-away",
+      "name": "Camisa Puma Seleção Portugal — Preta",
+      "team": "Seleção Portugal",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Preto",
+          "hex": "#000000"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/portugal-away.jpg",
+          "alt": "Camisa preta da Puma da Seleção Portuguesa com número 8 em bege"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "A camisa preta da Seleção Portuguesa, da Puma, com números em bege e escudo da federação."
+    },
+    {
+      "id": "espanha-away-26-27",
+      "name": "Camisa Adidas Seleção Espanhola Away 26/27",
+      "team": "Seleção Espanhola",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Branco",
+          "hex": "#f5f5f5"
+        },
+        {
+          "name": "Vinho",
+          "hex": "#6b1f2a"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/espanha-away.jpg",
+          "alt": "Camisa branca Away da Seleção Espanhola da Adidas, com gola vinho e dourada e escudo da federação"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Away 26/27 em branco com trevo Originals, gola em vinho e dourado, listras vinho e tecido texturizado."
+    },
+    {
+      "id": "argentina-away-26-27",
+      "name": "Camisa Adidas Seleção Argentina Away 26/27",
+      "team": "Seleção Argentina",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Preto",
+          "hex": "#000000"
+        },
+        {
+          "name": "Azul",
+          "hex": "#2a3fd0"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/argentina-away.jpg",
+          "alt": "Camisa preta Away da Seleção Argentina da Adidas, com grafismos em azul e patch de campeão mundial 2022"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Away 26/27 preta com grafismos em azul e branco, patch de campeão mundial 2022 e três estrelas no escudo da AFA."
+    },
+    {
+      "id": "franca-away-26-27",
+      "name": "Camisa Nike Seleção Francesa Away 26/27",
+      "team": "Seleção Francesa",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Verde",
+          "hex": "#9fd6bf"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/franca-away-1.jpg",
+          "alt": "Camisa verde-menta Away da Seleção Francesa da Nike com galo bordado e duas estrelas"
+        },
+        {
+          "src": "assets/produtos/franca-away-2.jpg",
+          "alt": "Detalhe do símbolo da Nike bordado na camisa verde-menta da França"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Away 26/27 em verde-menta com tecido texturizado, galo da FFF bordado e símbolo da Nike em destaque."
+    },
+    {
+      "id": "lakers-city-75",
+      "name": "Regata Lakers City Edition 75th Diamond",
+      "team": "Los Angeles Lakers",
+      "group": "Basquete",
+      "type": "Regata",
+      "price": 180,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Roxo",
+          "hex": "#552583"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/lakers-regata.jpg",
+          "alt": "Regata roxa do Los Angeles Lakers City Edition 75th Diamond, com número 6"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Regata de basquete inspirada na história da franquia. City Edition 75th Diamond, que celebra os 75 anos da NBA."
+    },
+    {
+      "id": "brasil-jordan-ii-26-27",
+      "name": "Camisa Jordan Seleção Brasileira II 26/27",
+      "team": "Seleção Brasil",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 250,
+      "badge": "Novo",
+      "featured": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Azul",
+          "hex": "#1a2fa0"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/brasil-ii.jpg",
+          "alt": "Camisa II azul da Jordan da Seleção Brasileira 26/27, com escudo da CBF e símbolo Jumpman"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "A segunda camisa da Seleção Brasileira 26/27, da Jordan, em azul com estampa digital e detalhes em verde-limão."
+    },
+    {
+      "id": "corinthians-iii-all-black",
+      "name": "Camisa Nike Corinthians III All Black 24/25",
+      "team": "Corinthians",
+      "group": "Clubes do Brasil",
+      "type": "Camisa",
+      "price": 180,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Preto",
+          "hex": "#000000"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/corinthians-iii.jpg",
+          "alt": "Detalhe do escudo do Corinthians em preto sobre preto na camisa III All Black 24/25"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "A terceira camisa 24/25 toda preta, com escudo em relevo tom sobre tom."
+    }
   ],
 
   /* ---------- MENU (grupos) ----------
      Os times são lidos automaticamente dos produtos (campo `group`). */
-  menuTypes: ["Camisa", "Regata", "Jaqueta", "Shorts"],
+  menuTypes: ["Camisa", "Regata"],
 
   /* ---------- TEXTOS ---------- */
   copy: {

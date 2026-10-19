@@ -41,7 +41,7 @@
   /* ---------- imagens dos produtos ---------- */
   const VIEWS = ["vista frontal", "vista de costas", "detalhe do tecido"];
   function imgs(p) {
-    if (p.images && p.images.length) return p.images.map((src, i) => ({ src, alt: `${p.name}, ${VIEWS[i] || "foto " + (i + 1)}` }));
+    if (p.images && p.images.length) return p.images.map((im, i) => typeof im === "string" ? { src: im, alt: `${p.name}, ${VIEWS[i] || "foto " + (i + 1)}` } : im);
     return ["front", "back", "detail"].map((v, i) => ({ src: PH.jersey(p, v), alt: `${p.name}, ${VIEWS[i]} (imagem provisória)` }));
   }
   const badgeCls = b => b === "Novo" ? "new" : b === "Esgotado" ? "out" : "ltd";
@@ -76,7 +76,7 @@
       <div class="drawer__scroll">
         <a class="drawer__big" href="#/colecao" data-preset="{}">Toda a coleção</a>
         ${groups().map(([g, teams]) => `<div class="drawer__grp"><h2>${esc(g)}</h2><ul>${teams.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ team: t }))}'>${esc(t)}</a></li>`).join("")}</ul></div>`).join("")}
-        <div class="drawer__grp"><h2>Peças</h2><ul>${CFG.menuTypes.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ type: t }))}'>${esc(t)}${t.endsWith("s") ? "" : "s"}</a></li>`).join("")}</ul></div>
+        <div class="drawer__grp"><h2>Peças</h2><ul>${CFG.menuTypes.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ type: t }))}'>${esc(t)}s</a></li>`).join("")}</ul></div>
         <div class="drawer__grp"><h2>A JSD</h2><ul>
           <li><a href="#/sobre">Sobre a JSD™</a></li><li><a href="#/contato">Contato</a></li>
           <li><a href="https://instagram.com/${ig}" target="_blank" rel="noopener">Instagram @${ig}</a></li></ul></div>
