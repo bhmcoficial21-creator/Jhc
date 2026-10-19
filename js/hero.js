@@ -117,7 +117,7 @@ window.JSDHero = (function () {
     }
     slots.forEach(s => {
       s.addEventListener("canplay", () => { if (s.dataset.state === "loading") s.dataset.state = "ready"; });
-      s.addEventListener("error", () => { s.dataset.state = "fail"; });
+      s.addEventListener("error", () => { s.dataset.state = "fail"; if (+s.dataset.idx === k && s.classList.contains("is-on")) fallback(k % N, token); });
       s.addEventListener("ended", () => { if (+s.dataset.idx === k && !paused) go(single ? k : k + 1); });
     });
 
@@ -149,6 +149,19 @@ window.JSDHero = (function () {
       raf = requestAnimationFrame(draw);
     }
 
+    /* Se o navegador bloqueou o autoplay (ex.: modo de economia de bateria), o primeiro toque solta o vídeo na hora. */
+    let armed = false;
+    function armUnlock(slot, my) {
+      if (armed) return; armed = true;
+      const evs = ["pointerup", "touchend", "click", "keydown"];
+      const fire = () => {
+        evs.forEach(e => removeEventListener(e, fire, true)); armed = false;
+        if (my !== token || paused) return;
+        const p = slot.play(); if (p) p.catch(() => armUnlock(slot, my));
+      };
+      evs.forEach(e => addEventListener(e, fire, true));
+    }
+
     function go(next) {
       cancelAnimationFrame(raf);
       const my = ++token; k = next; const ci = k % N;
@@ -159,10 +172,11 @@ window.JSDHero = (function () {
       if (+slot.dataset.idx !== k) load(slot, k);
       const begin = () => {
         if (my !== token) return;
-        if (slot.dataset.state === "ready") {
-          show(slot); slot.currentTime = 0;
+        const state = slot.dataset.state;
+        if (state === "ready" || state === "loading") {   // "loading" após o tempo limite: o celular segura o vídeo até o primeiro toque
+          show(slot); if (state === "ready") slot.currentTime = 0;
           if (paused) { slot.pause(); return; }
-          const p = slot.play(); if (p) p.catch(() => fallback(ci, my, true));
+          const p = slot.play(); if (p) p.catch(() => armUnlock(slot, my));
           other.pause(); if (+other.dataset.idx !== k + 1) load(other, k + 1);
         } else fallback(ci, my);
       };
@@ -171,7 +185,7 @@ window.JSDHero = (function () {
       else {
         let done = false; const fin = () => { if (!done) { done = true; begin(); } };
         slot.addEventListener("canplay", fin, { once: true }); slot.addEventListener("error", fin, { once: true });
-        setTimeout(fin, 3500);
+        setTimeout(fin, 3000);
       }
     }
 
@@ -202,6 +216,7 @@ window.JSDHero = (function () {
     dots.innerHTML = CFG.hero.videos.map(() => "<i></i>").join("");
 
     root.classList.toggle("is-gray", !!CFG.hero.videoGrayscale);
+    root.classList.toggle("is-reduce", reduce);
     if (new URLSearchParams(location.search).has("mask")) root.classList.add("is-debug");
 
     let variant = "";

@@ -160,7 +160,8 @@ sup.ltr { font-size: .2em; vertical-align: top; margin-left: .15em; font-style: 
 .hero__dots { display: flex; gap: 6px; margin-left: auto; }
 .hero__dots i { width: 22px; height: 2px; background: #555; transition: background .4s, width .4s; }
 .hero__dots i.is-on { background: #fff; width: 34px; }
-.hero__motion { order: 3; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(0, 0, 0, .5); display: grid; place-items: center; color: #fff; }
+.hero__motion { display: none; order: 3; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(0, 0, 0, .5); place-items: center; color: #fff; }
+.hero.is-reduce .hero__motion { display: grid; }
 .hero__motion svg { width: 18px; height: 18px; fill: currentColor; }
 .hero__motion .i-play { display: none; }
 .hero__motion.is-paused .i-play { display: block; }
