@@ -39,16 +39,20 @@ window.JSD_CONFIG = {
      camisa, em % da imagem (x, y). Ajuste os pontos até casar com o contorno real.
      Dica: abra o site com ?mask=1 para ver o contorno desenhado. */
   hero: {
-    alt: "Modelo de costas com camisa amarela de seleção brasileira, sentado diante de um estádio moderno à noite, com arquibancadas cheias e refletores acesos.",
+    alt: "Pessoa de costas, de boné preto, sentada na arquibancada de um estádio moderno à noite, com o campo e as arquibancadas cheias à frente.",
+    /* mask = contorno da janela nas costas, em % da foto (x, y). focus = ponto da foto que fica no centro da tela.
+       fit "contain" = foto inteira, com o fundo desfocado nas laterais (usado em tela larga). */
     portrait: {
-      image: "assets/hero-portrait.svg",
-      ratio: 9 / 16,
-      mask: [[36.7, 61.6], [63.3, 61.6], [64.7, 74.4], [50, 75.9], [35.3, 74.4]]
+      image: "assets/hero/estadio.jpg",
+      ratio: 1086 / 1448,
+      focus: [52, 60],
+      mask: [[38.5, 55.6], [51.6, 55.1], [64.6, 55.7], [65.6, 64.6], [64.5, 73.5], [51.6, 74.4], [39.8, 73.6], [39.0, 64.6]]
     },
     landscape: {
-      image: "assets/hero-landscape.svg",
-      ratio: 16 / 9,
-      mask: [[44.75, 49.9], [55.25, 49.9], [55.78, 65.9], [50, 67.8], [44.2, 65.9]]
+      image: "assets/hero/estadio.jpg",
+      ratio: 1086 / 1448,
+      fit: "contain",
+      mask: [[38.5, 55.6], [51.6, 55.1], [64.6, 55.7], [65.6, 64.6], [64.5, 73.5], [51.6, 74.4], [39.8, 73.6], [39.0, 64.6]]
     },
     /* A janela aceita quantos lances você quiser: basta adicionar/remover itens.
        Cada lance usa `youtube: "ID"` (+ start/end em segundos) OU `src` (arquivo MP4).

@@ -16,6 +16,7 @@ window.JSDHero = (function () {
     const b = CFG.brand;
     return `
     <section class="hero" id="hero" aria-label="Abertura da JSD">
+      <img class="hero__bg" id="heroBg" alt="" aria-hidden="true">
       <div class="hero__stage" id="heroStage">
         <div class="hero__zoom" id="heroZoom">
           <img class="hero__img" id="heroImg" alt="${CFG.hero.alt}" decoding="async" fetchpriority="high">
@@ -208,7 +209,7 @@ window.JSDHero = (function () {
   /* ---------- montagem ---------- */
   function mount(host) {
     host.insertAdjacentHTML("afterbegin", html());
-    const root = host.querySelector("#hero"), stage = root.querySelector("#heroStage"), img = root.querySelector("#heroImg");
+    const root = host.querySelector("#hero"), stage = root.querySelector("#heroStage"), img = root.querySelector("#heroImg"), bg = root.querySelector("#heroBg");
     const win = root.querySelector("#heroWin"), halo = root.querySelector("#heroHalo");
     const dots = root.querySelector("#heroDots"), label = root.querySelector("#heroLabel"), count = root.querySelector("#heroCount");
     const pad = n => String(n).padStart(2, "0");
@@ -224,14 +225,29 @@ window.JSDHero = (function () {
       const v = innerWidth / innerHeight < 0.95 ? "portrait" : "landscape";
       if (v === variant) return; variant = v;
       const c = CFG.hero[v];
-      img.src = c.image; stage.style.setProperty("--ar", c.ratio);
+      img.src = c.image; bg.src = c.image;
+      root.classList.toggle("is-contain", c.fit === "contain");
+      root.classList.toggle("is-photo", !/\.svg$/i.test(c.image));
       const xs = c.mask.map(p => p[0]), ys = c.mask.map(p => p[1]);
       const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
       Object.assign(win.style, { left: x0 + "%", top: y0 + "%", width: (x1 - x0) + "%", height: (y1 - y0) + "%" });
       win.style.clipPath = "polygon(" + c.mask.map(p => `${((p[0] - x0) / (x1 - x0) * 100).toFixed(2)}% ${((p[1] - y0) / (y1 - y0) * 100).toFixed(2)}%`).join(",") + ")";
       Object.assign(halo.style, { left: ((x0 + x1) / 2) + "%", top: ((y0 + y1) / 2) + "%" });
       root.querySelector("#heroDebug polygon").setAttribute("points", c.mask.map(p => p.join(",")).join(" "));
+      layout();
       if (player) player.refit();
+    }
+    /* posiciona a foto: "cover" preenche a tela (com ponto de foco); "contain" mostra inteira com fundo desfocado nas laterais */
+    function layout() {
+      const c = CFG.hero[variant]; if (!c) return;
+      const W = root.clientWidth, H = root.clientHeight; let sw, sh;
+      if (c.fit === "contain") { sh = H; sw = sh * c.ratio; } else { sw = Math.max(W, H * c.ratio); sh = sw / c.ratio; }
+      let left = (W - sw) / 2, top = (H - sh) / 2;
+      if (c.focus && c.fit !== "contain") {
+        left = Math.min(0, Math.max(W - sw, W / 2 - c.focus[0] / 100 * sw));
+        top = Math.min(0, Math.max(H - sh, H / 2 - c.focus[1] / 100 * sh));
+      }
+      Object.assign(stage.style, { width: sw + "px", height: sh + "px", left: left + "px", top: top + "px" });
     }
 
     const single = reduce;
@@ -243,7 +259,7 @@ window.JSDHero = (function () {
       }
     });
     applyVariant();
-    let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(applyVariant, 150); });
+    let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { applyVariant(); layout(); if (player) player.refit(); }, 120); });
 
     const btn = root.querySelector("#heroMotion");
     btn.addEventListener("click", () => {
@@ -254,14 +270,6 @@ window.JSDHero = (function () {
     if (single) { btn.setAttribute("aria-pressed", "true"); btn.setAttribute("aria-label", "Reproduzir lance"); btn.classList.add("is-paused"); }
 
     new IntersectionObserver(es => player.setVisible(es[0].isIntersecting), { threshold: 0.05 }).observe(root);
-
-    if (!reduce) {
-      let ticking = false;
-      addEventListener("scroll", () => {
-        if (ticking) return; ticking = true;
-        requestAnimationFrame(() => { stage.style.setProperty("--py", Math.min(scrollY, innerHeight) * 0.12 + "px"); ticking = false; });
-      }, { passive: true });
-    }
 
     const nameLetters = root.querySelectorAll(".ltr");
     nameLetters.forEach(l => l.style.setProperty("--n", nameLetters.length));
