@@ -1,15 +1,16 @@
 /* ==========================================================================
    JSD™ — BASE: cores, tipografia, botões.
-   Loja em estilo editorial minimalista: fundo branco, texto preto, letras pequenas em maiúsculas.
+   Loja em estilo masculino clássico: fundo branco quente, letras leves em maiúsculas, fotos grandes de editorial.
    Para mudar cores e fontes, edite as variáveis abaixo.
    ========================================================================== */
 :root {
-  --bg: #fff; --fg: #000; --mute: #6b6b6b; --line: #e6e6e6; --line2: #cfcfcf; --panel: #f4f4f4;
-  --ann: 28px; --hdr: 56px;
+  --bg: #fdfcfa; --fg: #1a1a1a; --mute: #6c6762; --line: #e7e3de; --line2: #d3cec8; --panel: #f4f2ef; --strip: #ece8e3;
+  --ann: 38px; --hdr: 64px;
   --hh: max(520px, calc(100vh - var(--ann)));
   --ease: cubic-bezier(.22, 1, .36, 1);
   --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
   --f-body: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-logo: "Oswald", "Arial Narrow", Impact, sans-serif;
   --gut: 16px;
 }
 @supports (height: 100svh) { :root { --hh: max(520px, calc(100svh - var(--ann))); } }
@@ -17,7 +18,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--hdr) + 8px); }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 400 13px/1.5 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 300 15px/1.5 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 body.is-loading, body.no-scroll { overflow: hidden; }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }

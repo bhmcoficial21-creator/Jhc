@@ -553,14 +553,27 @@ window.JSD_CONFIG = {
      Os times são lidos automaticamente dos produtos (campo `group`). */
   menuTypes: ["Camisa", "Regata"],
 
+  /* ---------- VITRINE DA HOME ----------
+     categories: os quatro blocos de "Explore a coleção" (group = campo `group` dos produtos).
+     highlights: ids dos produtos nos blocos grandes de "Em destaque". */
+  categories: [
+    { label: "Seleções", group: "Seleções", image: "assets/produtos/brasil-ii.jpg", alt: "Camisa II da Seleção Brasileira 26/27 exposta" },
+    { label: "Clubes da Europa", group: "Clubes da Europa", image: "assets/produtos/arsenal.jpg", alt: "Camisa vermelha e branca do Arsenal" },
+    { label: "Clubes do Brasil", group: "Clubes do Brasil", image: "assets/produtos/corinthians-iii.jpg", alt: "Detalhe do escudo do Corinthians na camisa preta" },
+    { label: "Basquete", group: "Basquete", image: "assets/produtos/lakers-regata.jpg", alt: "Regata roxa do Lakers" }
+  ],
+  highlights: ["argentina-messi", "espanha-away-26-27"],
+
   /* ---------- TEXTOS ---------- */
   copy: {
     marquee: "Private • Vault Drop",
-    vaultTitle: "Saiu do cofre",
-    vaultText: "Peças em destaque do drop atual. Deslize para ver cada uma.",
+    categoriesTitle: "Explore a coleção",
+    vaultTitle: "Selecionado para você",
+    vaultText: "Peças em destaque do drop atual.",
+    featTitle: "Em destaque",
     viewerTitle: "Gire a peça",
     viewerText: "Arraste para virar a camisa e ver a frente e o verso.",
-    collectionTitle: "A coleção",
+    collectionTitle: "Todas as peças",
     collectionText: "Filtre por time, peça, tamanho e cor.",
     aboutTitle: "Sobre a JSD™",
     aboutParagraphs: [

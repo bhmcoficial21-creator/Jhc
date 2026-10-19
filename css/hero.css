@@ -25,7 +25,7 @@
 body.is-loading .sig { opacity: 0; }
 
 /* ---------- HERO ---------- */
-.hero { position: relative; height: var(--hh); overflow: hidden; background: #000; isolation: isolate; }
+.hero { position: relative; height: min(133.33vw, calc(100vh - var(--hdr) - var(--ann))); min-height: 440px; overflow: hidden; background: #000; isolation: isolate; }
 .hero__stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 .hero__bg { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(38px) brightness(.5) saturate(1.15); display: none; }
 .hero.is-contain .hero__bg { display: block; }
@@ -64,7 +64,7 @@ body.is-loading .sig { opacity: 0; }
 .hero__maskdebug polygon { fill: rgba(255, 255, 255, .12); stroke: #fff; stroke-width: .3; stroke-dasharray: 1 .6; }
 .hero__veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, .8) 0, rgba(0, 0, 0, .25) 30%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, .88) 100%), radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, .55)); }
 
-.hero__name { position: absolute; left: 0; right: 0; top: calc(var(--hdr) + 3vh); text-align: center; font-family: var(--f-display); font-style: italic; font-weight: 500; color: #fff; pointer-events: none; filter: drop-shadow(0 4px 22px rgba(0, 0, 0, .7)) drop-shadow(0 0 2px rgba(0, 0, 0, .5)); }
+.hero__name { position: absolute; left: 0; right: 0; top: 5%; text-align: center; font-family: var(--f-display); font-style: italic; font-weight: 500; color: #fff; pointer-events: none; filter: drop-shadow(0 4px 22px rgba(0, 0, 0, .7)) drop-shadow(0 0 2px rgba(0, 0, 0, .5)); }
 .hero__brand .ltr:not(.ltr--sp) { background: linear-gradient(180deg, #ffffff 25%, #c4c4c4 70%, #8d8d8d 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 .hero__brand { display: block; font-size: clamp(88px, 31vw, 230px); line-height: .88; letter-spacing: .01em; }
 .hero__sub { display: block; margin-top: 14px; font: 600 clamp(11px, 3.3vw, 18px)/1 var(--f-body); font-style: normal; letter-spacing: .36em; text-transform: uppercase; }
@@ -76,8 +76,8 @@ sup.ltr { font-size: .2em; vertical-align: top; margin-left: .15em; font-style: 
 .hero.is-name .hero__sub .ltr:not(.ltr--sp) { animation-delay: calc(.55s + var(--i) * 40ms); }
 @keyframes ltrIn { to { opacity: 1; transform: none; filter: blur(0); } }
 
-.hero__meta { position: absolute; left: 14px; right: 14px; bottom: 142px; display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(14px); transition: opacity .8s .1s, transform .8s .1s var(--ease); }
-.hero__cta { position: absolute; left: 50%; bottom: 66px; transform: translate(-50%, 18px); opacity: 0; transition: opacity .8s, transform .8s var(--ease), background .25s, color .25s; min-width: min(78vw, 300px); }
+.hero__meta { position: absolute; left: 14px; right: 14px; bottom: 15%; display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(14px); transition: opacity .8s .1s, transform .8s .1s var(--ease); }
+.hero__cta { position: absolute; left: 50%; bottom: 7%; transform: translate(-50%, 18px); opacity: 0; transition: opacity .8s, transform .8s var(--ease); min-width: 0; padding: 0 4px; border: 0; background: transparent; color: #fff; font: 400 15px/1 var(--f-body); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; filter: drop-shadow(0 2px 12px rgba(0,0,0,.6)); }
 .hero.is-cta .hero__meta { opacity: 1; transform: none; }
 .hero.is-cta .hero__cta { opacity: 1; transform: translate(-50%, 0); }
 .hero:not(.is-cta) .hero__cta, .hero:not(.is-cta) .hero__meta { pointer-events: none; }
@@ -101,5 +101,6 @@ sup.ltr { font-size: .2em; vertical-align: top; margin-left: .15em; font-style: 
   .hero__meta { left: 6vw; right: 6vw; bottom: 130px; }
 }
 
-.hero .btn--primary, .hero .btn--primary:hover { background: #fff; border-color: #fff; color: #000; }
+.hero .hero__cta, .hero .hero__cta:hover { background: transparent; border: 0; color: #fff; }
+.hero__cta svg { width: 20px; height: 20px; }
 .hero__meta button, .hero__motion { color: #fff; }

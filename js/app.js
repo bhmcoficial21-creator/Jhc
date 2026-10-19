@@ -22,13 +22,24 @@
   const cartTotal = () => cart.reduce((s, i) => s + byId(i.id).price * i.qty, 0);
   function updateBag() {
     const n = cartCount(), el = $("#bagCount");
-    el.textContent = `(${n})`;
+    el.textContent = n; el.hidden = n === 0;
     $("#bagBtn").setAttribute("aria-label", `Abrir sacola, ${n} ${n === 1 ? "item" : "itens"}`);
   }
   function addToCart(id, size, qty = 1) {
     const f = cart.find(i => i.id === id && i.size === size);
     if (f) f.qty += qty; else cart.push({ id, size, qty });
     saveCart(); updateBag(); toast(`${byId(id).name} (${size}) foi para a sacola.`);
+  }
+
+  /* ---------- favoritos (marcador) ---------- */
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem("jsd-fav") || "[]").filter(byId); } catch (e) { favs = []; }
+  const saveFavs = () => { try { localStorage.setItem("jsd-fav", JSON.stringify(favs)); } catch (e) { /* sem storage */ } };
+  const bmHtml = p => `<button class="bm" type="button" data-fav="${p.id}" aria-pressed="${favs.includes(p.id)}" aria-label="Salvar nos favoritos: ${esc(p.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v16l-5-4-5 4z" stroke-linejoin="round"/></svg></button>`;
+  function toggleFav(id, btn) {
+    const on = !favs.includes(id); favs = on ? [...favs, id] : favs.filter(x => x !== id); saveFavs();
+    $$(`[data-fav="${id}"]`).forEach(b => b.setAttribute("aria-pressed", String(on)));
+    toast(on ? "Salvo nos favoritos." : "Removido dos favoritos.");
   }
 
   /* ---------- toast ---------- */
@@ -59,7 +70,7 @@
     updateBag();
     const onScroll = () => $("#header").classList.toggle("is-solid", scrollY > 40 || current !== "home");
     addEventListener("scroll", onScroll, { passive: true }); onScroll(); window.__hdr = onScroll;
-    buildDrawer();
+    buildDrawer(); initSearch();
   }
 
   function groups() {
@@ -74,7 +85,7 @@
         <button class="icon-btn" type="button" data-close aria-label="Fechar menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
       <div class="drawer__scroll">
         <a class="drawer__big" href="#/colecao" data-preset="{}">Toda a coleção</a>
-        ${groups().map(([g, teams]) => `<div class="drawer__grp"><h2>${esc(g)}</h2><ul>${teams.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ team: t }))}'>${esc(t)}</a></li>`).join("")}</ul></div>`).join("")}
+        ${groups().map(([g, teams]) => `<div class="drawer__grp"><h2>${esc(g)}</h2><ul><li><a href="#/colecao" data-preset='${esc(JSON.stringify({ group: g }))}'>Ver tudo</a></li>${teams.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ team: t }))}'>${esc(t)}</a></li>`).join("")}</ul></div>`).join("")}
         <div class="drawer__grp"><h2>Peças</h2><ul>${CFG.menuTypes.map(t => `<li><a href="#/colecao" data-preset='${esc(JSON.stringify({ type: t }))}'>${esc(t)}s</a></li>`).join("")}</ul></div>
         <div class="drawer__grp"><h2>A JSD</h2><ul>
           <li><a href="#/sobre">Sobre a JSD™</a></li><li><a href="#/contato">Contato</a></li>
@@ -86,7 +97,7 @@
     btn.addEventListener("click", open);
     d.addEventListener("click", e => {
       const a = e.target.closest("a[data-preset]");
-      if (a) { Object.assign(F, { team: "", type: "", size: "", color: "" }, JSON.parse(a.dataset.preset)); shown = CFG.store.pageSize; pendingScroll = "colecao"; }
+      if (a) { resetF(); Object.assign(F, JSON.parse(a.dataset.preset)); shown = CFG.store.pageSize; pendingScroll = "colecao"; if (location.hash === a.getAttribute("href")) setTimeout(route, 0); }
       if (e.target.closest("[data-close]") || e.target.closest("a")) close(!e.target.closest("a"));
     });
     d.addEventListener("keydown", e => {
@@ -109,10 +120,11 @@
   }
 
   /* ---------- filtros ---------- */
-  const F = { team: "", type: "", size: "", color: "" };
+  const F = { group: "", team: "", type: "", size: "", color: "" };
+  const resetF = () => Object.assign(F, { group: "", team: "", type: "", size: "", color: "" });
   let shown = CFG.store.pageSize, pendingScroll = "";
   const filtered = () => CFG.products.filter(p =>
-    (!F.team || p.team === F.team) && (!F.type || p.type === F.type) &&
+    (!F.group || p.group === F.group) && (!F.team || p.team === F.team) && (!F.type || p.type === F.type) &&
     (!F.size || (p.sizes.includes(F.size) && !p.unavailable.includes(F.size))) &&
     (!F.color || p.colors.some(c => c.name === F.color)));
   const uniq = (fn) => [...new Set(CFG.products.flatMap(fn))];
@@ -124,8 +136,9 @@
       <a class="card__media" href="#/produto/${p.id}" aria-label="Ver ${esc(p.name)}">
         <img src="${im.src}" alt="${esc(im.alt)}" loading="lazy" width="600" height="800">
         ${ims[1] && p.images && p.images.length > 1 ? `<img class="card__alt" src="${ims[1].src}" alt="" loading="lazy" width="600" height="800">` : ""}
-        ${p.badge ? `<span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span>` : ""}
+        ${p.badge ? `<span class="tags"><span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span></span>` : ""}
       </a>
+      ${bmHtml(p)}
       <button class="card__add" type="button" data-add="${p.id}" aria-label="${out ? "Esgotado: " : "Adicionar à sacola: "}${esc(p.name)}" ${out ? "disabled" : ""}>${PLUS}</button>
       <div class="card__body">
         <h3 class="card__name"><a href="#/produto/${p.id}">${esc(p.name)}</a></h3>
@@ -154,6 +167,7 @@
         <div class="fpanel__box" role="dialog" aria-modal="true" aria-labelledby="fT" tabindex="-1">
           <div class="fpanel__top"><h2 id="fT">Filtrar</h2><button class="icon-btn" type="button" data-fx aria-label="Fechar filtros"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
           <div class="fpanel__body" id="filters">
+            <fieldset class="fgroup"><legend>Categoria</legend>${opts("group", uniq(p => [p.group]))}</fieldset>
             <fieldset class="fgroup"><legend>Time</legend>${opts("team", uniq(p => [p.team]))}</fieldset>
             <fieldset class="fgroup"><legend>Peça</legend>${opts("type", uniq(p => [p.type]))}</fieldset>
             <fieldset class="fgroup"><legend>Tamanho</legend>${opts("size", CFG.sizes)}</fieldset>
@@ -208,7 +222,7 @@
       $$(".gridsw").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
     }));
   }
-  function clearFilters() { Object.assign(F, { team: "", type: "", size: "", color: "" }); shown = CFG.store.pageSize; renderGrid(); }
+  function clearFilters() { resetF(); shown = CFG.store.pageSize; renderGrid(); }
 
   /* ---------- sheet de tamanho ---------- */
   let lastFocus = null;
@@ -245,42 +259,66 @@
     };
   }
 
-  /* ---------- carrossel em destaque ---------- */
-  function railHtml() {
-    const list = CFG.products.filter(p => p.featured);
-    return `<section class="sec sec--rail" id="cofre" aria-labelledby="cofreT">
-      <header class="sec__head"><h2 id="cofreT">${esc(CFG.copy.vaultTitle)}</h2><a class="textbtn" href="#/colecao">Ver tudo</a></header>
-      <div class="rail-wrap">
-        <div class="rail" id="rail" tabindex="0" role="region" aria-label="Carrossel de camisas em destaque. Use as setas do teclado ou deslize.">
-          ${list.map((p, i) => { const im = imgs(p)[0]; return `<a class="rail__item" href="#/produto/${p.id}" aria-label="${esc(p.name)}, ${money(p.price)}" draggable="false">
-            <span class="rail__img"><img src="${im.src}" alt="${esc(im.alt)}" loading="${i < 2 ? "eager" : "lazy"}" width="600" height="720" draggable="false">${p.badge ? `<em class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</em>` : ""}</span>
-            <span class="rail__meta"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(p.name)}</span><strong>${money(p.price)}</strong></span></a>`; }).join("")}
-        </div>
-        <div class="rail__ctl"><button class="icon-btn icon-btn--ring" type="button" data-rail="-1" aria-label="Peça anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
-          <button class="icon-btn icon-btn--ring" type="button" data-rail="1" aria-label="Próxima peça"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div>
-      </div></section>`;
+  /* ---------- vitrine da home ---------- */
+  const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h17m0 0l-6-6m6 6l-6 6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+  function catsHtml() {
+    return `<section class="sec" aria-labelledby="catT">
+      <header class="sec__head"><h2 id="catT">${esc(CFG.copy.categoriesTitle)}</h2></header>
+      <div class="cats">${CFG.categories.map(c => `<a class="cat" href="#/colecao" data-preset='${esc(JSON.stringify({ group: c.group }))}'><img src="${c.image}" alt="${esc(c.alt)}" loading="lazy" width="600" height="750"><span class="cat__lbl">${esc(c.label)}${ARROW}</span></a>`).join("")}</div></section>`;
   }
-  function initRail() {
-    const rail = $("#rail"); if (!rail) return;
-    const items = $$(".rail__item", rail);
-    let tick = false;
-    const update = () => {
-      tick = false; const c = rail.scrollLeft + rail.clientWidth / 2; let best = 0, bd = 1e9;
-      items.forEach((it, i) => { const d = Math.abs(it.offsetLeft + it.offsetWidth / 2 - c); if (d < bd) { bd = d; best = i; } it.style.setProperty("--d", Math.min(1, d / (rail.clientWidth * 0.55)).toFixed(3)); });
-      items.forEach((it, i) => it.classList.toggle("is-active", i === best));
-    };
+  function pcarHtml() {
+    const list = CFG.products.filter(p => p.featured);
+    return `<section class="sec" id="cofre" aria-labelledby="cofreT">
+      <header class="sec__head"><h2 id="cofreT">${esc(CFG.copy.vaultTitle)}</h2><a class="textbtn" href="#/colecao">Ver tudo</a></header>
+      <div class="pcar" id="pcar" tabindex="0" role="region" aria-label="Peças selecionadas. Deslize ou use as setas do teclado.">
+        ${list.map((p, i) => { const im = imgs(p)[0]; return `<article class="pcar__item">
+          <a class="pcar__img" href="#/produto/${p.id}" aria-label="${esc(p.name)}" draggable="false"><img src="${im.src}" alt="${esc(im.alt)}" loading="${i < 2 ? "eager" : "lazy"}" width="600" height="750" draggable="false">${p.badge ? `<span class="tags"><span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span></span>` : ""}</a>
+          ${bmHtml(p)}
+          <a href="#/produto/${p.id}" draggable="false"><p class="pcar__team">${esc(p.team)}</p><p class="pcar__name">${esc(p.name)}</p><p class="pcar__price">${money(p.price)}<span>${money(pix(p.price))} no Pix</span></p></a>
+          <p class="sizes-line" aria-label="Tamanhos">${p.sizes.map(z => p.unavailable.includes(z) ? `<s title="Indisponível">${z}</s>` : `<span>${z}</span>`).join("")}</p></article>`; }).join("")}
+      </div>
+      <div class="pprog" aria-hidden="true"><i id="pprog"></i></div></section>`;
+  }
+  function initPcar() {
+    const rail = $("#pcar"); if (!rail) return;
+    const bar = $("#pprog"); let tick = false;
+    const update = () => { tick = false; const max = rail.scrollWidth - rail.clientWidth, w = Math.min(100, rail.clientWidth / rail.scrollWidth * 100); bar.style.width = w + "%"; bar.style.left = (max > 0 ? rail.scrollLeft / max * (100 - w) : 0) + "%"; };
     rail.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(update); } }, { passive: true });
     addEventListener("resize", update); update();
-    $$("[data-rail]").forEach(b => b.addEventListener("click", () => {
-      const w = items[0].offsetWidth + 2; rail.scrollBy({ left: w * +b.dataset.rail, behavior: reduce ? "auto" : "smooth" });
-    }));
-    rail.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); rail.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * (items[0].offsetWidth + 2), behavior: reduce ? "auto" : "smooth" }); } });
-    // arrastar com o mouse (toque já rola nativamente)
-    let down = false, sx = 0, sl = 0, moved = false;
-    rail.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") return; down = true; moved = false; sx = e.clientX; sl = rail.scrollLeft; rail.classList.add("is-drag"); });
+    const step = () => (rail.querySelector(".pcar__item").offsetWidth + 14);
+    rail.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); rail.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * step(), behavior: reduce ? "auto" : "smooth" }); } });
+    let down = false, sx = 0, sl = 0, moved = false;   // arrastar com o mouse (toque já rola nativamente)
+    rail.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" || e.target.closest("button")) return; down = true; moved = false; sx = e.clientX; sl = rail.scrollLeft; rail.classList.add("is-drag"); });
     addEventListener("pointermove", e => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 4) moved = true; rail.scrollLeft = sl - dx; });
     addEventListener("pointerup", () => { if (down) { down = false; rail.classList.remove("is-drag"); setTimeout(() => { moved = false; }, 0); } });
     rail.addEventListener("click", e => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+  }
+  function featsHtml() {
+    const list = (CFG.highlights || []).map(byId).filter(Boolean);
+    return `<section class="sec" aria-labelledby="featT">
+      <header class="sec__head"><h2 id="featT">${esc(CFG.copy.featTitle)}</h2></header>
+      <div class="feats">${list.map(p => { const im = imgs(p)[0]; return `<a class="feat" href="#/produto/${p.id}"><img src="${im.src}" alt="${esc(im.alt)}" loading="lazy" width="900" height="1125"><span class="feat__txt"><h3>${esc(p.name)}</h3><span>Ver peça ${ARROW}</span></span></a>`; }).join("")}</div></section>`;
+  }
+
+  /* ---------- busca ---------- */
+  function initSearch() {
+    const root = $("#search"), btn = $("#searchBtn");
+    root.innerHTML = `<div class="search__bg" data-sx2></div><div class="search__box" role="dialog" aria-modal="true" aria-label="Buscar" tabindex="-1">
+      <div class="search__row"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.2"/></svg>
+      <input id="sInput" type="search" placeholder="Buscar camisa ou time" autocomplete="off" aria-label="Buscar camisa ou time"><button class="icon-btn" type="button" data-sx2 aria-label="Fechar busca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.3"/></svg></button></div>
+      <div class="search__res" id="sRes" aria-live="polite"></div></div>`;
+    const box = $(".search__box", root), input = $("#sInput"), res = $("#sRes");
+    const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const render = () => {
+      const q = norm(input.value.trim()); if (!q) { res.innerHTML = ""; return; }
+      const hits = CFG.products.filter(p => norm(p.name + " " + p.team + " " + p.type).includes(q)).slice(0, 8);
+      res.innerHTML = hits.length ? hits.map(p => `<a class="sr-item" href="#/produto/${p.id}"><img src="${imgs(p)[0].src}" alt=""><div><b>${esc(p.name)}</b><span>${esc(p.team)}</span></div><strong>${money(p.price)}</strong></a>`).join("") : `<p class="search__none">Nenhuma peça encontrada para "${esc(input.value.trim())}".</p>`;
+    };
+    const open = () => { root.hidden = false; requestAnimationFrame(() => root.classList.add("is-open")); document.body.classList.add("no-scroll"); setTimeout(() => input.focus(), 60); };
+    const close = (back = true) => { root.classList.remove("is-open"); document.body.classList.remove("no-scroll"); setTimeout(() => { root.hidden = true; }, 380); if (back) btn.focus({ preventScroll: true }); };
+    btn.addEventListener("click", open); input.addEventListener("input", render);
+    root.addEventListener("click", e => { if (e.target.closest("[data-sx2]")) close(); else if (e.target.closest("a")) close(false); });
+    root.addEventListener("keydown", e => { if (e.key === "Escape") close(); if (e.key === "Enter") { const a = $(".sr-item", res); if (a) { location.hash = a.getAttribute("href"); close(false); } } });
   }
 
   /* ---------- seção 360° ---------- */
@@ -325,10 +363,10 @@
 
   function homeView() {
     main.innerHTML = `<div id="heroHost"></div>
-      ${railHtml()}${collectionHtml()}${viewerHtml()}`;
+      ${catsHtml()}${pcarHtml()}${featsHtml()}${collectionHtml()}${viewerHtml()}`;
     heroCtl = window.JSDHero.mount($("#heroHost"));
     $("#heroCta").addEventListener("click", e => { e.preventDefault(); scrollToSec("colecao"); });
-    bindCollection(); renderGrid(); initRail(); initViewer();
+    bindCollection(); renderGrid(); initPcar(); initViewer();
     const loader = $("#loader"), sig = $("#sig");
     const startIntro = first.route && !introDone && !pendingScroll;
     if (startIntro) { introDone = true; heroCtl.intro(loader, sig); }
@@ -487,8 +525,10 @@
   initChrome();
   main.addEventListener("click", e => {
     const a = e.target.closest("[data-add]"); if (a) openSheet(byId(a.dataset.add));
+    const fv = e.target.closest("[data-fav]"); if (fv) { e.preventDefault(); toggleFav(fv.dataset.fav); }
+    const pr = e.target.closest("a[data-preset]"); if (pr) { resetF(); Object.assign(F, JSON.parse(pr.dataset.preset)); shown = CFG.store.pageSize; pendingScroll = "colecao"; if (location.hash === pr.getAttribute("href")) { e.preventDefault(); route(); } }
     const t = e.target.closest("[data-team]");
-    if (t) { Object.assign(F, { team: t.dataset.team, type: "", size: "", color: "" }); shown = CFG.store.pageSize; pendingScroll = "colecao"; }
+    if (t) { resetF(); F.team = t.dataset.team; shown = CFG.store.pageSize; pendingScroll = "colecao"; }
   });
   addEventListener("hashchange", route);
   route();

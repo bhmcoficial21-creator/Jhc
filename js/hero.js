@@ -48,7 +48,7 @@ window.JSDHero = (function () {
         <div class="hero__dots" id="heroDots" aria-hidden="true"></div>
       </div>
       <a class="btn btn--primary hero__cta" href="#/colecao" id="heroCta">Entrar no cofre
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h17m0 0l-6-6m6 6l-6 6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     </section>`;
   }
 
