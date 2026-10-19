@@ -54,9 +54,10 @@ window.JSD_CONFIG = {
        Cada lance usa `youtube: "ID"` (+ start/end em segundos) OU `src` (arquivo MP4).
        src = vídeo completo · srcMobile = versão leve (usada no celular) · tone = índice em `tones` */
     videos: [
-      { youtube: "sc-0Xvgdxps", start: 0, end: 10, poster: "", label: "Lance 01", tone: 0 }, // YouTube: troque start/end (segundos) pelo trecho do drible. Para vídeo próprio use src/srcMobile no lugar de youtube
-      { src: "assets/video/lance-2.mp4", srcMobile: "assets/video/lance-2-leve.mp4", poster: "", label: "Lance 02 · Pedalada",     tone: 1 },
-      { src: "assets/video/lance-3.mp4", srcMobile: "assets/video/lance-3-leve.mp4", poster: "", label: "Lance 03 · Chapéu",       tone: 2 }
+      { src: "assets/video/lance-1.mp4", srcMobile: "assets/video/lance-1-leve.mp4", poster: "assets/video/lance-1.jpg", label: "Lance 01", tone: 0 },
+      { src: "assets/video/lance-2.mp4", srcMobile: "assets/video/lance-2-leve.mp4", poster: "assets/video/lance-2.jpg", label: "Lance 02", tone: 1 },
+      { src: "assets/video/lance-3.mp4", srcMobile: "assets/video/lance-3-leve.mp4", poster: "assets/video/lance-3.jpg", label: "Lance 03", tone: 2 }
+      // Para usar YouTube no lugar de arquivo: { youtube: "ID", start: 0, end: 10, label: "Lance 01", tone: 0 }
     ],
     placeholderSeconds: 4,   // duração dos lances provisórios (quando o arquivo não existe)
     videoGrayscale: true,    // mantém o vídeo em preto e branco (amarelo da camisa fica o único ponto de cor)
