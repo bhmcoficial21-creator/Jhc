@@ -122,6 +122,8 @@ body.is-loading .sig { opacity: 0; }
 .hero__window.is-on { opacity: 1; }
 .hero__window .v { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .45s; }
 .hero__window .v.is-on { opacity: 1; }
+.hero__window .vyt { background: #111 center / cover no-repeat; pointer-events: none; overflow: hidden; }
+.hero__window .vyt > div, .hero__window .vyt iframe { position: absolute; top: 0; left: 50%; height: 100%; width: auto !important; min-width: 100%; aspect-ratio: 16 / 9; transform: translateX(-50%); border: 0; pointer-events: none; }
 .hero.is-gray .hero__window .v { filter: grayscale(1) contrast(1.12); }
 .hero__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, .28), rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, .35)); box-shadow: inset 0 0 18px rgba(0, 0, 0, .7); }
 .hero__flash { position: absolute; inset: 0; background: rgba(255, 255, 255, .24); opacity: 0; pointer-events: none; }

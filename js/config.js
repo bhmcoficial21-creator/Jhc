@@ -51,9 +51,10 @@ window.JSD_CONFIG = {
       mask: [[44.75, 49.9], [55.25, 49.9], [55.78, 65.9], [50, 67.8], [44.2, 65.9]]
     },
     /* A janela aceita quantos lances você quiser: basta adicionar/remover itens.
+       Cada lance usa `youtube: "ID"` (+ start/end em segundos) OU `src` (arquivo MP4).
        src = vídeo completo · srcMobile = versão leve (usada no celular) · tone = índice em `tones` */
     videos: [
-      { src: "assets/video/lance-1.mp4", srcMobile: "assets/video/lance-1-leve.mp4", poster: "", label: "Lance 01 · Drible curto", tone: 0 },
+      { youtube: "sc-0Xvgdxps", start: 0, end: 10, poster: "", label: "Lance 01", tone: 0 }, // YouTube: troque start/end (segundos) pelo trecho do drible. Para vídeo próprio use src/srcMobile no lugar de youtube
       { src: "assets/video/lance-2.mp4", srcMobile: "assets/video/lance-2-leve.mp4", poster: "", label: "Lance 02 · Pedalada",     tone: 1 },
       { src: "assets/video/lance-3.mp4", srcMobile: "assets/video/lance-3-leve.mp4", poster: "", label: "Lance 03 · Chapéu",       tone: 2 }
     ],

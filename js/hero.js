@@ -24,6 +24,7 @@ window.JSDHero = (function () {
           <div class="hero__window" id="heroWin" role="img" aria-label="Janela nas costas da camisa mostrando três lances de drible, um após o outro.">
             <video class="v v0" muted playsinline preload="auto" aria-hidden="true"></video>
             <video class="v v1" muted playsinline preload="auto" aria-hidden="true"></video>
+            <div class="v vyt" aria-hidden="true"><div id="heroYT"></div></div>
             <canvas class="v vc" aria-hidden="true"></canvas>
             <span class="hero__shade"></span>
           </div>
@@ -55,6 +56,47 @@ window.JSDHero = (function () {
     const clips = CFG.hero.videos, N = clips.length;
     const slots = [win.querySelector(".v0"), win.querySelector(".v1")];
     const cv = win.querySelector(".vc"), ctx = cv.getContext("2d");
+    const ytHost = win.querySelector(".vyt");
+    let yt = null, ytActive = -1, ytPlaying = false, ytCbs = [];
+
+    /* ---- clipe do YouTube (clips[i].youtube = "ID", start/end em segundos) ---- */
+    function loadYT(cb) {
+      if (window.YT && window.YT.Player) return cb(true);
+      ytCbs.push(cb);
+      if (!loadYT.sent) {
+        loadYT.sent = true;
+        const prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => { if (prev) prev(); ytCbs.splice(0).forEach(f => f(true)); };
+        const sc = document.createElement("script"); sc.src = "https://www.youtube.com/iframe_api";
+        sc.onerror = () => ytCbs.splice(0).forEach(f => f(false));
+        document.head.appendChild(sc);
+      }
+      setTimeout(() => ytCbs.splice(0).forEach(f => f(false)), 6000);
+    }
+    function playYT(ci, my) {
+      const c = clips[ci];
+      ytHost.style.backgroundImage = `url(https://i.ytimg.com/vi/${c.youtube}/hqdefault.jpg)`;
+      show(ytHost); ytPlaying = false; ytActive = my;
+      loadYT(ok => {
+        if (my !== token || ytPlaying) return;
+        if (!ok) return fallback(ci, my);
+        const vars = { videoId: c.youtube, startSeconds: c.start || 0 }; if (c.end) vars.endSeconds = c.end;
+        if (yt) { yt.loadVideoById(vars); if (paused) yt.pauseVideo(); return; }
+        yt = new window.YT.Player("heroYT", {
+          width: "100%", height: "100%", videoId: c.youtube,
+          playerVars: { autoplay: paused ? 0 : 1, mute: 1, controls: 0, playsinline: 1, rel: 0, modestbranding: 1, disablekb: 1, iv_load_policy: 3, fs: 0, start: c.start || 0, end: c.end || undefined, origin: location.origin },
+          events: {
+            onReady: e => { e.target.mute(); if (!paused) e.target.playVideo(); },
+            onStateChange: e => {
+              if (e.data === 1) ytPlaying = true;
+              if (e.data === 0 && ytActive === token && !paused) go(single ? k : k + 1);
+            },
+            onError: () => { if (ytActive === token) fallback(clips[k % N] ? k % N : 0, token); }
+          }
+        });
+      });
+      setTimeout(() => { if (ytActive === my && my === token && !ytPlaying && !paused) fallback(ci, my); }, 8000);
+    }
     let k = 0, token = 0, raf = 0, paused = false, started = false, visible = true;
     const single = !!opts.single;
 
@@ -80,7 +122,7 @@ window.JSDHero = (function () {
     });
 
     function show(el) {
-      [...slots, cv].forEach(e => e.classList.toggle("is-on", e === el));
+      [...slots, cv, ytHost].forEach(e => e.classList.toggle("is-on", e === el));
     }
     function applyTone(ci) {
       const t = CFG.hero.tones[(clips[ci].tone || 0) % CFG.hero.tones.length];
@@ -112,6 +154,8 @@ window.JSDHero = (function () {
       const my = ++token; k = next; const ci = k % N;
       opts.onChange(ci); applyTone(ci);
       const slot = slots[k % 2], other = slots[(k + 1) % 2];
+      if (yt && yt.pauseVideo && !clips[ci].youtube) { try { yt.pauseVideo(); } catch (e) { /* player ainda carregando */ } }
+      if (clips[ci].youtube) { slots.forEach(s => s.pause()); return playYT(ci, my); }
       if (+slot.dataset.idx !== k) load(slot, k);
       const begin = () => {
         if (my !== token) return;
@@ -133,12 +177,14 @@ window.JSDHero = (function () {
 
     return {
       start() { if (started) return; started = true; go(0); },
-      pause() { paused = true; slots.forEach(s => s.pause()); },
-      resume() { paused = false; if (started) go(k); },
+      pause() { paused = true; slots.forEach(s => s.pause()); if (yt && yt.pauseVideo) yt.pauseVideo(); },
+      resume() { paused = false; if (started) { if (yt && clips[k % N].youtube && ytPlaying) yt.playVideo(); else go(k); } },
       isPaused: () => paused,
-      setVisible(v) { visible = v; slots.forEach(s => { if (v && !paused && s.classList.contains("is-on")) s.play().catch(() => {}); else if (!v) s.pause(); }); },
+      setVisible(v) { visible = v; if (yt && yt.pauseVideo && ytActive === token && ytPlaying) { if (v && !paused) yt.playVideo(); else if (!v) yt.pauseVideo(); } slots.forEach(s => { if (v && !paused && s.classList.contains("is-on")) s.play().catch(() => {}); else if (!v) s.pause(); }); },
       refit() { fit(); },
-      holdFirst() { started = true; paused = true; opts.onChange(0); applyTone(0); load(slots[0], 0);
+      holdFirst() { started = true; paused = true; opts.onChange(0); applyTone(0);
+        if (clips[0].youtube) { ytHost.style.backgroundImage = `url(https://i.ytimg.com/vi/${clips[0].youtube}/hqdefault.jpg)`; show(ytHost); return; }
+        load(slots[0], 0);
         const sh = () => { if (slots[0].dataset.state === "ready") { show(slots[0]); } else fallback(0, token, true); };
         slots[0].addEventListener("canplay", () => { slots[0].dataset.state = "ready"; sh(); }, { once: true });
         slots[0].addEventListener("error", sh, { once: true }); setTimeout(() => { if (!cv.classList.contains("is-on") && !slots[0].classList.contains("is-on")) sh(); }, 1200); }
