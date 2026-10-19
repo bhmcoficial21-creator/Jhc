@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030303"/><stop offset=".55" stop-color="#1d1d1d"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
+<linearGradient id="jy" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e2b800"/><stop offset=".5" stop-color="#ffd90a"/><stop offset="1" stop-color="#d8ae00"/></linearGradient>
+<linearGradient id="fac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#bdbdbd" stop-opacity=".25"/></linearGradient>
+<linearGradient id="bm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#202020"/><stop offset="1" stop-color="#050505"/></linearGradient>
+<pattern id="fans" width="9" height="7" patternUnits="userSpaceOnUse"><rect width="9" height="7" fill="#101010"/><circle cx="2.5" cy="3" r="1.6" fill="#555"/><circle cx="7" cy="5" r="1.3" fill="#2f2f2f"/><circle cx="6" cy="1.5" r="1" fill="#777"/></pattern>
+<filter id="bl"><feGaussianBlur stdDeviation="30"/></filter><filter id="hz"><feGaussianBlur stdDeviation="60"/></filter></defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<path d="M-40 468 L-40 292.5 Q800 76.5 1640 292.5 L1640 468Z" fill="url(#fans)"/><path d="M-40 540 L-40 364.5 Q800 148.5 1640 364.5 L1640 540Z" fill="url(#fans)"/>
+<path d="M-40 324 Q800 180 1640 324 L1640 378 Q800 234 -40 378Z" fill="url(#fac)" opacity=".9"/>
+<path d="M-40 45 Q800 -108 1640 45 L1640 180 Q800 18 -40 180Z" fill="#0b0b0b"/>
+<g><rect x="166" y="63.00000000000001" width="52" height="16" rx="3" fill="#fff"/><polygon points="170,81 214,81 632,765 392,765" fill="url(#bm)" opacity=".22"/></g><g><rect x="454" y="63.00000000000001" width="52" height="16" rx="3" fill="#fff"/><polygon points="458,81 502,81 920,765 680,765" fill="url(#bm)" opacity=".22"/></g><g><rect x="774" y="63.00000000000001" width="52" height="16" rx="3" fill="#fff"/><polygon points="778,81 822,81 600,765 360,765" fill="url(#bm)" opacity=".22"/></g><g><rect x="1094" y="63.00000000000001" width="52" height="16" rx="3" fill="#fff"/><polygon points="1098,81 1142,81 920,765 680,765" fill="url(#bm)" opacity=".22"/></g><g><rect x="1382" y="63.00000000000001" width="52" height="16" rx="3" fill="#fff"/><polygon points="1386,81 1430,81 1208,765 968,765" fill="url(#bm)" opacity=".22"/></g>
+<ellipse cx="800" cy="414" rx="880.0000000000001" ry="126.00000000000001" fill="#fff" opacity=".18" filter="url(#hz)"/>
+<rect y="558" width="1600" height="360" fill="url(#gr)"/>
+<g transform="translate(800 -240) scale(0.7) translate(-450 0)">
+<ellipse cx="450" cy="1300" rx="330" ry="120" fill="#000" opacity=".35" filter="url(#bl)"/>
+<path d="M440 735h20v82h-20z" fill="#2a2a2a"/>
+<ellipse cx="450" cy="690" rx="76" ry="92" fill="#2e2e2e"/>
+<path d="M366 668c4-62 44-96 86-96s84 34 84 96c-30-14-62-20-84-20s-56 6-86 20z" fill="#0d0d0d"/>
+<path d="M356 672c20-8 40-12 60-12-30 4-46 20-60 12z" fill="#0d0d0d"/>
+<path d="M255 1000C250 890 330 830 450 820c120 10 200 70 195 180l45 480c-2 44-488 44-490 0z" fill="url(#jy)"/>
+<path d="M255 1000c-52 26-82 120-88 236l70 14c8-90 30-168 62-210z" fill="#c99f00"/>
+<path d="M645 1000c52 26 82 120 88 236l-70 14c-8-90-30-168-62-210z" fill="#c99f00"/>
+<path d="M375 822c24 44 126 44 150 0 8-14 8-22-4-24-40-8-102-8-142 0-12 2-12 10-4 24z" fill="#0a7d3b"/>
+<path d="M392 818c20 30 96 30 116 0" fill="none" stroke="#065a2a" stroke-width="6"/>
+<path d="M330 1000q60-20 120-14t120 14v220q-60 24-120 24t-120-24z" fill="#fff" opacity=".05"/></g>
+<rect y="810" width="1600" height="90" fill="#000" opacity=".5"/>
+</svg>
