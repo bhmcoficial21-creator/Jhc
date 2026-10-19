@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JSD™ — Private • Vault Drop</title>
+<meta name="description" content="JSD™ Private • Vault Drop: camisas de time e peças esportivas em lançamentos limitados, direto do cofre. Pedido fechado pelo WhatsApp.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="JSD™ — Private • Vault Drop">
+<meta property="og:description" content="Lançamentos exclusivos saindo do cofre. Camisas de time e peças esportivas.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-loading">
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<!-- Contador inicial -->
+<div class="loader" id="loader" role="progressbar" aria-label="Abrindo o cofre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <div class="loader__count"><span id="loaderNum">0</span><i>%</i></div>
+  <div class="loader__bar"><b id="loaderBar"></b></div>
+  <p class="loader__txt">Abrindo o cofre</p>
+</div>
+
+<div class="announce" id="announce" role="region" aria-label="Avisos da loja"><p id="announceText"></p></div>
+
+<header class="header" id="header">
+  <button class="icon-btn" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 16h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <a class="logo" href="#/" aria-label="JSD™ — página inicial"><img id="logoImg" alt="" width="44" height="44"><span class="logo__txt">JSD<sup>™</sup></span></a>
+  <a class="icon-btn bag-btn" href="#/sacola" id="bagBtn" aria-label="Abrir sacola, 0 itens">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 12H4zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    <span class="bag-btn__n" id="bagCount" hidden>0</span>
+  </a>
+</header>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer__bg" data-close></div>
+  <nav class="drawer__panel" id="drawerPanel" aria-label="Menu principal" tabindex="-1"></nav>
+</div>
+
+<main id="main" tabindex="-1"></main>
+
+<footer class="footer" id="footer"></footer>
+
+<!-- Assinatura desenhada à mão: aparece na abertura e fica fixa no canto -->
+<svg class="sig" id="sig" viewBox="0 0 210 96" aria-hidden="true" focusable="false">
+  <path pathLength="1" d="M52 10 L26 12 M44 12 C46 34 42 58 32 68 C25 76 12 74 14 62"/>
+  <path pathLength="1" d="M86 24 C72 6 56 28 74 40 C92 52 76 76 60 64"/>
+  <path pathLength="1" d="M104 16 C97 42 99 64 103 72 C140 78 160 44 135 22 C124 12 112 12 102 16"/>
+  <path pathLength="1" d="M8 78 C60 88 140 86 204 66"/>
+</svg>
+
+<div class="sheet" id="sheet" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/placeholders.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/viewer360.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
