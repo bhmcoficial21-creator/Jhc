@@ -205,6 +205,7 @@ body.is-loading .announce, body.is-loading .header { opacity: 0; }
 .crumbs [aria-current] { padding: 6px 0; color: #000; }
 .pdp__grid { display: grid; gap: 0; }
 .pdp__gal { position: relative; }
+.galwrap { position: relative; }
 .gal { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: var(--panel); }
 .gal::-webkit-scrollbar { display: none; }
 .gal img { flex: 0 0 100%; width: 100%; scroll-snap-align: center; aspect-ratio: 3/4; object-fit: cover; }

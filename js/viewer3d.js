@@ -24,11 +24,11 @@ window.JSDViewer3D = (function () {
   const loadImg = src => new Promise(res => { if (!src) return res(null); const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
 
   const CW = 1200, CH = 1440; // textura 5:6
-  function coverCanvas(img) {
+  function coverCanvas(img, pos) {
     const c = document.createElement("canvas"); c.width = CW; c.height = CH;
     const g = c.getContext("2d"); g.fillStyle = "#0b0b0b"; g.fillRect(0, 0, CW, CH);
-    const s = Math.max(CW / img.naturalWidth, CH / img.naturalHeight);
-    g.drawImage(img, (CW - img.naturalWidth * s) / 2, (CH - img.naturalHeight * s) / 2, img.naturalWidth * s, img.naturalHeight * s);
+    const s = Math.max(CW / img.naturalWidth, CH / img.naturalHeight), px = pos ? pos[0] : 0.5, py = pos ? pos[1] : 0.5;
+    g.drawImage(img, (CW - img.naturalWidth * s) * px, (CH - img.naturalHeight * s) * py, img.naturalWidth * s, img.naturalHeight * s);
     return c;
   }
   /* verso com a marca: placa preta com logo prateado */
@@ -105,7 +105,7 @@ window.JSDViewer3D = (function () {
       renderer.domElement.setAttribute("aria-label", `${p.name}: foto da peça em 3D. Arraste para girar entre ${labels[0].toLowerCase()} e ${labels[1].toLowerCase()}.`);
       Promise.all([loadImg(frontSrc), loadImg(v.back), loadImg(CFG.brand.logo)]).then(([f, b, logo]) => {
         if (dead) return;
-        [[frontMat, f ? coverCanvas(f) : brandCanvas(logo)], [backMat, b ? coverCanvas(b) : brandCanvas(logo)]].forEach(([m, cv]) => {
+        [[frontMat, f ? coverCanvas(f, v.frontPos) : brandCanvas(logo)], [backMat, b ? coverCanvas(b, v.backPos) : brandCanvas(logo)]].forEach(([m, cv]) => {
           if (m.map) m.map.dispose(); const t = new T.CanvasTexture(cv); t.anisotropy = renderer.capabilities.getMaxAnisotropy(); m.map = t; m.needsUpdate = true;
         });
       });

@@ -75,7 +75,8 @@ window.JSD_CONFIG = {
   },
 
   /* ---------- VISOR 3D (frente e verso) ----------
-     Em cada produto, use  view3d: { front: "foto-da-frente.jpg", back: "foto-das-costas.jpg" }
+     Em cada produto, use  view3d: { front: "foto-da-frente.jpg", back: "foto-das-costas.jpg", frontPos: [0.5, 0.4] }
+     (frontPos/backPos = ponto da foto que fica no centro do recorte, de 0 a 1)
      Sem `front`, usa a primeira foto do produto. Sem `back`, o verso é o selo do cofre JSD™.
      Dica: fotos da peça esticada, em fundo liso, na proporção 5:6, funcionam melhor. */
 
@@ -108,7 +109,9 @@ window.JSD_CONFIG = {
   products: [
     {
       "id": "argentina-messi",
-    "view3d": {"frontLabel": "Costas"},
+      "view3d": {
+        "frontLabel": "Costas"
+      },
       "name": "Camisa Argentina — Despedida do Messi",
       "team": "Seleção Argentina",
       "group": "Seleções",
@@ -236,12 +239,33 @@ window.JSD_CONFIG = {
       ],
       "images": [
         {
+          "src": "assets/produtos/ronaldo-frente.jpg",
+          "alt": "Cristiano Ronaldo com a camisa vermelha de Portugal, vista de frente",
+          "pos": "50% 30%"
+        },
+        {
+          "src": "assets/produtos/ronaldo-costas.jpg",
+          "alt": "Costas da camisa vermelha de Portugal com RONALDO e o número 7"
+        },
+        {
           "src": "assets/produtos/portugal-cr7.jpg",
           "alt": "Camisa Puma vermelha da Seleção Portuguesa com número 7 branco e escudo da federação"
         }
       ],
       "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
-      "description": "The Last Dance. Camisa vermelha da Puma, com o número 7 em branco e gola em V com detalhe verde."
+      "description": "The Last Dance. Camisa vermelha da Puma, com o número 7 em branco e gola em V com detalhe verde.",
+      "view3d": {
+        "front": "assets/produtos/ronaldo-frente.jpg",
+        "frontPos": [
+          0.5,
+          0.4
+        ],
+        "back": "assets/produtos/ronaldo-costas.jpg",
+        "backPos": [
+          0.5,
+          0.4
+        ]
+      }
     },
     {
       "id": "arsenal-home",
@@ -310,6 +334,88 @@ window.JSD_CONFIG = {
       ],
       "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
       "description": "Azul intenso e clássico, com detalhes brancos que marcaram uma geração. Referência à final de Munique, em 2012."
+    },
+    {
+      "id": "barcelona-yamal",
+      "name": "Camisa Nike Barcelona — Yamal 10",
+      "team": "Barcelona",
+      "group": "Clubes da Europa",
+      "type": "Camisa",
+      "price": 180.0,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Azul",
+          "hex": "#1f3a8a"
+        },
+        {
+          "name": "Vermelho",
+          "hex": "#a50044"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/yamal-frente.jpg",
+          "alt": "Jogador do Barcelona com a camisa azul e grená, de frente",
+          "pos": "50% 92%"
+        },
+        {
+          "src": "assets/produtos/yamal-costas.jpg",
+          "alt": "Costas da camisa do Barcelona com LAMINE YAMAL e o número 10"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Listras azul e grená, com o nome LAMINE YAMAL e o número 10 nas costas.",
+      "view3d": {
+        "front": "assets/produtos/yamal-frente.jpg",
+        "frontPos": [
+          0.5,
+          0.95
+        ],
+        "back": "assets/produtos/yamal-costas.jpg"
+      }
+    },
+    {
+      "id": "bayern-iii",
+      "name": "Camisa Adidas Bayern de Munique III",
+      "team": "Bayern de Munique",
+      "group": "Clubes da Europa",
+      "type": "Camisa",
+      "price": 180.0,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Preto",
+          "hex": "#111111"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/bayern-iii.jpg",
+          "alt": "Jogador com a terceira camisa do Bayern de Munique, estampa colorida sobre fundo preto",
+          "pos": "50% 40%"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Terceira camisa em estampa colorida sobre fundo preto, com as três listras nas mangas e patrocínio em branco."
     },
     {
       "id": "portugal-away",
@@ -450,6 +556,39 @@ window.JSD_CONFIG = {
       ],
       "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
       "description": "Away 26/27 em verde-menta com tecido texturizado, galo da FFF bordado e símbolo da Nike em destaque."
+    },
+    {
+      "id": "franca-i",
+      "name": "Camisa Nike Seleção Francesa I",
+      "team": "Seleção Francesa",
+      "group": "Seleções",
+      "type": "Camisa",
+      "price": 180.0,
+      "badge": "",
+      "featured": false,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG",
+        "XG"
+      ],
+      "unavailable": [],
+      "colors": [
+        {
+          "name": "Azul",
+          "hex": "#1d3fd0"
+        }
+      ],
+      "images": [
+        {
+          "src": "assets/produtos/franca-i.jpg",
+          "alt": "Jogadores da França com a camisa azul da Nike, em campo",
+          "pos": "50% 50%"
+        }
+      ],
+      "composition": "Tecido esportivo leve. Consulte a composição exata pelo WhatsApp.",
+      "description": "Azul royal com listras diagonais em tom escuro, galo bordado no peito e detalhes em branco."
     },
     {
       "id": "lakers-city-75",
