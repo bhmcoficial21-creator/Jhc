@@ -424,14 +424,18 @@
     return p.name + " — JSD™";
   }
 
+  function orderMsg() {
+    const total = cartTotal(), lines = cart.map(i => { const p = byId(i.id); return `${i.qty}x ${p.name} — Tam. ${i.size} — ${money(p.price * i.qty)}`; });
+    return `Olá, JSD! Quero finalizar meu pedido:\n\n${lines.join("\n")}\n\nSubtotal: ${money(total)}\nTotal no Pix: ${money(pix(total))}\n\nNome:\nEndereço / CEP:`;
+  }
+
   function cartView() {
     const n = cartCount(), total = cartTotal(), need = CFG.store.freeShippingFrom, pct = Math.min(100, total / need * 100);
     if (!n) {
       main.innerHTML = `<section class="page"><h1 class="page__t">Sua sacola</h1><div class="empty"><p>Sua sacola está vazia.</p><a class="btn btn--primary" href="#/colecao">Ver a coleção</a></div></section>`;
       return "Sacola — JSD™";
     }
-    const lines = cart.map(i => { const p = byId(i.id); return `${i.qty}x ${p.name} — Tam. ${i.size} — ${money(p.price * i.qty)}`; });
-    const msg = `Olá, JSD! Quero finalizar meu pedido:\n\n${lines.join("\n")}\n\nSubtotal: ${money(total)}\nTotal no Pix: ${money(pix(total))}\n\nNome:\nEndereço / CEP:`;
+    const msg = orderMsg();
     main.innerHTML = `<section class="page"><h1 class="page__t">Sua sacola <span>(${n} ${n === 1 ? "item" : "itens"})</span></h1>
       <div class="cart">
         <ul class="cart__list">${cart.map((i, k) => { const p = byId(i.id), im = imgs(p)[0]; return `<li class="line">
@@ -443,8 +447,9 @@
           <h2>Resumo</h2>
           <dl><div><dt>Subtotal</dt><dd>${money(total)}</dd></div><div class="pixrow"><dt>Total no Pix (${Math.round(CFG.store.pixDiscount * 100)}% off)</dt><dd>${money(pix(total))}</dd></div></dl>
           <div class="ship"><p>${total >= need ? "Você ganhou frete grátis." : `Faltam ${money(need - total)} para o frete grátis.`}</p><div class="ship__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" aria-label="Progresso para frete grátis"><b style="width:${pct}%"></b></div></div>
-          <a class="btn btn--primary btn--block btn--lg" href="${wa(msg)}" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
-          <p class="muted">Você será levado ao WhatsApp com o pedido pronto. Pagamento e frete são combinados lá.</p>
+          <a class="btn btn--primary btn--block btn--lg" href="#/pagamento">Ir para o pagamento</a>
+          <a class="btn btn--block" href="${wa(msg)}" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
+          <p class="muted">No WhatsApp o pedido já vai pronto. Pagamento e frete são combinados lá.</p>
         </aside></div></section>`;
     main.querySelector(".cart").addEventListener("click", e => {
       const q = e.target.closest("[data-q]"), r = e.target.closest("[data-rm]");
@@ -452,6 +457,86 @@
       if (r) { cart.splice(+r.dataset.rm, 1); saveCart(); updateBag(); cartView(); $("#main").focus(); }
     });
     return "Sacola — JSD™";
+  }
+
+  /* ---------- pagamento (visualização) ---------- */
+  function qrSvg() {
+    const n = 29, cell = 6; let a = 11, rects = "";
+    const rnd = () => { a = (a * 1664525 + 1013904223) >>> 0; return a / 4294967296; };
+    const finder = (x, y) => `<rect x="${x * cell}" y="${y * cell}" width="${7 * cell}" height="${7 * cell}" fill="#000"/><rect x="${(x + 1) * cell}" y="${(y + 1) * cell}" width="${5 * cell}" height="${5 * cell}" fill="#fff"/><rect x="${(x + 2) * cell}" y="${(y + 2) * cell}" width="${3 * cell}" height="${3 * cell}" fill="#000"/>`;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9); if (inF) continue;
+      if (rnd() > 0.52) rects += `<rect x="${x * cell}" y="${y * cell}" width="${cell}" height="${cell}"/>`;
+    }
+    return `<svg viewBox="0 0 ${n * cell} ${n * cell}" role="img" aria-label="Exemplo ilustrativo de QR Code Pix, não funcional"><rect width="100%" height="100%" fill="#fff"/><g fill="#000">${rects}</g>${finder(0, 0)}${finder(n - 7, 0)}${finder(0, n - 7)}</svg>`;
+  }
+  function payView() {
+    const n = cartCount();
+    if (!n) {
+      main.innerHTML = `<section class="page"><h1 class="page__t">Pagamento</h1><div class="empty"><p>Sua sacola está vazia.</p><a class="btn btn--primary" href="#/colecao">Ver a coleção</a></div></section>`;
+      return "Pagamento — JSD™";
+    }
+    const total = cartTotal(), tp = pix(total), max = CFG.store.installmentsMax || 3, need = CFG.store.freeShippingFrom;
+    const lines = cart.map(i => { const p = byId(i.id), im = imgs(p)[0]; return `<li class="mini"><img src="${im.src}"${sset(im, "64px")} alt="" width="64" height="80"><div><b>${esc(p.name)}</b><span>Tam. ${i.size} · ${i.qty}x</span></div><strong>${money(p.price * i.qty)}</strong></li>`; }).join("");
+    main.innerHTML = `<section class="page pay">
+      <p class="steps" aria-label="Etapas"><a href="#/sacola">Sacola</a><span aria-hidden="true">—</span><b aria-current="step">Pagamento</b><span aria-hidden="true">—</span><span>Confirmação</span></p>
+      <h1 class="page__t">Pagamento</h1>
+      <p class="demo" role="note"><b>Visualização.</b> O pagamento online ainda não está ativo: nada do que você digitar aqui é enviado ou salvo. Para fechar o pedido agora, use o WhatsApp.</p>
+      <div class="pay__grid">
+        <div class="pay__main">
+          <fieldset class="methods"><legend>Forma de pagamento</legend>
+            <label class="method"><input type="radio" name="pm" value="pix" checked><span class="method__in"><b>Pix</b><small>${Math.round(CFG.store.pixDiscount * 100)}% de desconto · ${money(tp)}</small></span></label>
+            <label class="method"><input type="radio" name="pm" value="card"><span class="method__in"><b>Cartão de crédito</b><small>Até ${max}x sem juros · ${money(total)}</small></span></label>
+          </fieldset>
+          <div class="panel" id="pPix">
+            <p class="panel__t">Pague com Pix e ganhe ${Math.round(CFG.store.pixDiscount * 100)}% de desconto</p>
+            <div class="qrbox"><div class="qr">${qrSvg()}</div><p class="muted">Exemplo ilustrativo: não é um QR Code válido.</p></div>
+            <p class="lbl">Pix copia e cola (exemplo)</p>
+            <div class="code"><code id="pixCode">EXEMPLO-CODIGO-PIX-JSD-NAO-VALIDO</code><button class="btn" id="pixCopy" type="button">Copiar código</button></div>
+            <ol class="how"><li>Abra o app do seu banco e escolha Pix.</li><li>Leia o QR Code ou use o Pix copia e cola.</li><li>Confira o valor de ${money(tp)} e confirme.</li></ol>
+          </div>
+          <form class="panel cardform" id="pCard" hidden novalidate autocomplete="off">
+            <p class="panel__t">Cartão de crédito</p>
+            <label for="cNum">Número do cartão</label><input id="cNum" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000" maxlength="19">
+            <label for="cName2">Nome impresso no cartão</label><input id="cName2" autocomplete="off" placeholder="Como está no cartão">
+            <div class="two"><div><label for="cVal">Validade</label><input id="cVal" inputmode="numeric" autocomplete="off" placeholder="MM/AA" maxlength="5"></div><div><label for="cCvv">CVV</label><input id="cCvv" inputmode="numeric" autocomplete="off" placeholder="000" maxlength="4"></div></div>
+            <label for="cCpf">CPF do titular</label><input id="cCpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14">
+            <label for="cPar">Parcelas</label><select id="cPar">${Array.from({ length: max }, (_, i) => `<option value="${i + 1}">${i + 1}x de ${money(total / (i + 1))} sem juros</option>`).join("")}</select>
+          </form>
+          <p class="sheet__err" id="payErr" role="alert"></p>
+          <button class="btn btn--primary btn--block btn--lg" id="payBtn" type="button">Pagar com Pix · ${money(tp)}</button>
+          <p class="demo demo--ok" id="payDemo" role="status" hidden><b>Visualização.</b> Aqui o pagamento seria confirmado. Como ainda não está ativo, <a href="${wa(orderMsg())}" target="_blank" rel="noopener">finalize pelo WhatsApp</a>: o pedido já vai pronto.</p>
+        </div>
+        <aside class="pay__sum" aria-label="Resumo do pedido"><h2>Resumo</h2><ul>${lines}</ul>
+          <dl><div><dt>Subtotal</dt><dd>${money(total)}</dd></div><div><dt>Frete</dt><dd>${total >= need ? "Grátis" : "A combinar"}</dd></div><div class="pixrow"><dt>Total no Pix</dt><dd>${money(tp)}</dd></div><div><dt>Total no cartão</dt><dd>${money(total)}</dd></div></dl>
+          <a class="link" href="#/sacola">Voltar para a sacola</a></aside>
+      </div></section>`;
+    const pix_ = $("#pPix"), card = $("#pCard"), btn = $("#payBtn"), err = $("#payErr"), demo = $("#payDemo");
+    const mask = (el, fn) => el.addEventListener("input", () => { el.value = fn(el.value.replace(/\D/g, "")); });
+    mask($("#cNum"), d => d.slice(0, 16).replace(/(.{4})/g, "$1 ").trim());
+    mask($("#cVal"), d => d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2, 4) : d);
+    mask($("#cCvv"), d => d.slice(0, 4));
+    mask($("#cCpf"), d => d.slice(0, 11).replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4").replace(/(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3").replace(/(\d{3})(\d{1,3})$/, "$1.$2"));
+    const method = () => $('input[name="pm"]:checked').value;
+    const paint = () => {
+      const isPix = method() === "pix"; pix_.hidden = !isPix; card.hidden = isPix; err.textContent = ""; demo.hidden = true;
+      $$(".method").forEach(m => m.classList.toggle("is-on", m.querySelector("input").checked));
+      btn.textContent = isPix ? `Pagar com Pix · ${money(tp)}` : `Pagar ${money(total)} no cartão`;
+    };
+    $$('input[name="pm"]').forEach(r => r.addEventListener("change", paint)); paint();
+    $("#pixCopy").addEventListener("click", () => {
+      const t = $("#pixCode").textContent, done = () => toast("Código de exemplo copiado.");
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done); else done();
+    });
+    btn.addEventListener("click", () => {
+      err.textContent = "";
+      if (method() === "card") {
+        const ok = $("#cNum").value.replace(/\D/g, "").length >= 15 && $("#cName2").value.trim().length > 2 && /^\d{2}\/\d{2}$/.test($("#cVal").value) && $("#cCvv").value.length >= 3 && $("#cCpf").value.replace(/\D/g, "").length === 11;
+        if (!ok) { err.textContent = "Preencha todos os dados do cartão para continuar."; return; }
+      }
+      demo.hidden = false; demo.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    });
+    return "Pagamento — JSD™";
   }
 
   function aboutView() {
@@ -507,6 +592,7 @@
     if (/^#\/colecao/.test(h)) { target = "colecao"; }
     else if (/^#\/produto\//.test(h)) { name = "product"; arg = decodeURIComponent(h.split("/")[2] || ""); }
     else if (/^#\/sacola/.test(h)) name = "cart";
+    else if (/^#\/pagamento/.test(h)) name = "pay";
     else if (/^#\/sobre/.test(h)) name = "about";
     else if (/^#\/contato/.test(h)) name = "contact";
     if (pendingScroll) { target = pendingScroll; }
@@ -518,7 +604,7 @@
     const prev = current; current = name; if (!pendingScroll && target) pendingScroll = target;
     document.body.dataset.route = name;
     if (name !== "home") { const l = $("#loader"); if (l) l.remove(); $("#sig").classList.add("is-instant", "is-drawn", "is-docked"); document.body.classList.remove("is-loading"); document.body.classList.add("is-ready"); }
-    const title = { home: homeView, product: () => productView(arg), cart: cartView, about: aboutView, contact: contactView }[name]();
+    const title = { home: homeView, product: () => productView(arg), cart: cartView, pay: payView, about: aboutView, contact: contactView }[name]();
     document.title = title; observeReveal(); window.__hdr && window.__hdr();
     if (name === "home" && pendingScroll) { const t = pendingScroll; pendingScroll = ""; requestAnimationFrame(() => scrollToSec(t)); }
     else { pendingScroll = ""; scrollTo(0, 0); if (prev) main.focus({ preventScroll: true }); }

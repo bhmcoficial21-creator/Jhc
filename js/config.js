@@ -25,6 +25,7 @@ window.JSD_CONFIG = {
   store: {
     freeShippingFrom: 299,   // R$ [valor] do frete grátis
     pixDiscount: 0.10,       // 10% de desconto no Pix
+    installmentsMax: 3,      // parcelas sem juros mostradas no cartão (visualização)
     pageSize: 8,             // peças por página em "Carregar mais"
     announcements: [
       "Frete grátis acima de R$ 299",
