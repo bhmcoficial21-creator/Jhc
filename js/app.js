@@ -22,7 +22,7 @@
   const cartTotal = () => cart.reduce((s, i) => s + byId(i.id).price * i.qty, 0);
   function updateBag() {
     const n = cartCount(), el = $("#bagCount");
-    el.textContent = n; el.hidden = n === 0;
+    el.textContent = `(${n})`;
     $("#bagBtn").setAttribute("aria-label", `Abrir sacola, ${n} ${n === 1 ? "item" : "itens"}`);
   }
   function addToCart(id, size, qty = 1) {
@@ -49,7 +49,6 @@
 
   /* ---------- cabeçalho, aviso, menu ---------- */
   function initChrome() {
-    $("#logoImg").src = CFG.brand.logo;
     const a = CFG.store.announcements, el = $("#announceText"); let i = 0;
     el.textContent = a[0];
     if (!reduce && a.length > 1) setInterval(() => {
@@ -103,7 +102,7 @@
 
   function footerHtml() {
     return `<div class="footer__in">
-      <div class="footer__brand"><img src="${CFG.brand.logo}" alt="" width="64" height="64"><p class="footer__name">JSD<sup>™</sup></p><p class="footer__tag">${esc(CFG.brand.tagline)}</p></div>
+      <div class="footer__brand"><p class="footer__name">JSD<sup>™</sup></p><p class="footer__tag">${esc(CFG.brand.tagline)}</p></div>
       <nav class="footer__nav" aria-label="Rodapé"><a href="#/colecao">Coleção</a><a href="#/sacola">Sacola</a><a href="#/sobre">Sobre a JSD™</a><a href="#/contato">Contato</a></nav>
       <div class="footer__soc"><a href="https://instagram.com/${ig}" target="_blank" rel="noopener">Instagram @${ig}</a><a href="${wa()}" target="_blank" rel="noopener">WhatsApp ${esc(CFG.contact.whatsappDisplay)}</a></div>
       <p class="footer__legal">© ${new Date().getFullYear()} JSD™. Todos os direitos reservados. Imagens ilustrativas.</p></div>`;
@@ -118,73 +117,96 @@
     (!F.color || p.colors.some(c => c.name === F.color)));
   const uniq = (fn) => [...new Set(CFG.products.flatMap(fn))];
 
+  const PLUS = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>';
   function cardHtml(p) {
-    const im = imgs(p)[0], out = isOut(p);
+    const ims = imgs(p), im = ims[0], out = isOut(p);
     return `<article class="card rv">
       <a class="card__media" href="#/produto/${p.id}" aria-label="Ver ${esc(p.name)}">
-        <img src="${im.src}" alt="${esc(im.alt)}" loading="lazy" width="600" height="720">
-        ${p.badge ? `<span class="badge badge--${badgeCls(p.badge)}">${esc(p.badge)}</span>` : ""}
+        <img src="${im.src}" alt="${esc(im.alt)}" loading="lazy" width="600" height="800">
+        ${ims[1] && p.images && p.images.length > 1 ? `<img class="card__alt" src="${ims[1].src}" alt="" loading="lazy" width="600" height="800">` : ""}
+        ${p.badge ? `<span class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</span>` : ""}
       </a>
+      <button class="card__add" type="button" data-add="${p.id}" aria-label="${out ? "Esgotado: " : "Adicionar à sacola: "}${esc(p.name)}" ${out ? "disabled" : ""}>${PLUS}</button>
       <div class="card__body">
-        <p class="card__team">${esc(p.team)}</p>
         <h3 class="card__name"><a href="#/produto/${p.id}">${esc(p.name)}</a></h3>
-        <p class="card__price"><strong>${money(p.price)}</strong><span>${money(pix(p.price))} no Pix</span></p>
+        <p class="card__price">${money(p.price)}<span>${money(pix(p.price))} no Pix</span></p>
         <ul class="dots" aria-label="Cores: ${p.colors.map(c => c.name).join(", ")}">${p.colors.map(c => `<li style="--c:${c.hex}" title="${esc(c.name)}"></li>`).join("")}</ul>
-        <button class="btn btn--block" type="button" data-add="${p.id}" ${out ? "disabled" : ""}>${out ? "Esgotado" : "Adicionar à sacola"}</button>
       </div></article>`;
   }
 
   function collectionHtml() {
-    const chips = (key, list) => list.map(v => `<button class="chip" type="button" data-f="${key}" data-v="${esc(v)}" aria-pressed="false">${esc(v)}</button>`).join("");
+    const opts = (key, list) => list.map(v => `<button class="fopt" type="button" data-f="${key}" data-v="${esc(v)}" aria-pressed="false">${esc(v)}</button>`).join("");
     const colors = uniq(p => p.colors.map(c => JSON.stringify(c))).map(s => JSON.parse(s)).filter((c, i, a) => a.findIndex(x => x.name === c.name) === i);
-    return `<section class="sec" id="colecao" aria-labelledby="colTitle">
-      <header class="sec__head rv"><p class="eyebrow">03 — Coleção</p><h2 id="colTitle">${esc(CFG.copy.collectionTitle)}</h2><p>${esc(CFG.copy.collectionText)}</p></header>
-      <div class="filters" id="filters">
-        <div class="filters__bar">
-          <button class="btn btn--ghost filters__toggle" id="fToggle" type="button" aria-expanded="false" aria-controls="fPanel">Filtros <span id="fN" class="filters__n" hidden>0</span></button>
-          <button class="btn btn--ghost" id="fClear" type="button">Limpar filtros</button>
-        </div>
-        <div class="filters__panel" id="fPanel">
-          <fieldset><legend>Time</legend><div class="chips">${chips("team", uniq(p => [p.team]))}</div></fieldset>
-          <fieldset><legend>Peça</legend><div class="chips">${chips("type", uniq(p => [p.type]))}</div></fieldset>
-          <fieldset><legend>Tamanho</legend><div class="chips">${chips("size", CFG.sizes)}</div></fieldset>
-          <fieldset><legend>Cor</legend><div class="swatches">${colors.map(c => `<button class="swatch" type="button" data-f="color" data-v="${esc(c.name)}" style="--c:${c.hex}" aria-pressed="false" aria-label="${esc(c.name)}"><span>${esc(c.name)}</span></button>`).join("")}</div></fieldset>
+    return `<section class="list" id="colecao" aria-labelledby="colTitle">
+      <h2 class="sr" id="colTitle">${esc(CFG.copy.collectionTitle)}</h2>
+      <div class="list__bar">
+        <button class="textbtn" id="fOpen" type="button" aria-haspopup="dialog" aria-controls="fpanel">Filtrar <span class="fn" id="fN"></span></button>
+        <div class="list__tools">
+          <span class="count" id="count" role="status" aria-live="polite"></span>
+          <button class="gridsw" type="button" data-cols="1" aria-pressed="false" aria-label="Uma peça por linha"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12"/></svg></button>
+          <button class="gridsw" type="button" data-cols="2" aria-pressed="true" aria-label="Duas peças por linha"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="3" width="6" height="12"/><rect x="10" y="3" width="6" height="12"/></svg></button>
         </div>
       </div>
-      <p class="count" id="count" role="status" aria-live="polite"></p>
       <div class="grid" id="grid"></div>
-      <div class="more"><button class="btn" id="moreBtn" type="button">Carregar mais</button></div>
+      <div class="more"><button class="textbtn" id="moreBtn" type="button">Ver mais</button></div>
+      <div class="fpanel" id="fpanel" hidden>
+        <div class="fpanel__bg" data-fx></div>
+        <div class="fpanel__box" role="dialog" aria-modal="true" aria-labelledby="fT" tabindex="-1">
+          <div class="fpanel__top"><h2 id="fT">Filtrar</h2><button class="icon-btn" type="button" data-fx aria-label="Fechar filtros"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
+          <div class="fpanel__body" id="filters">
+            <fieldset class="fgroup"><legend>Time</legend>${opts("team", uniq(p => [p.team]))}</fieldset>
+            <fieldset class="fgroup"><legend>Peça</legend>${opts("type", uniq(p => [p.type]))}</fieldset>
+            <fieldset class="fgroup"><legend>Tamanho</legend>${opts("size", CFG.sizes)}</fieldset>
+            <fieldset class="fgroup"><legend>Cor</legend>${colors.map(c => `<button class="fopt" type="button" data-f="color" data-v="${esc(c.name)}" aria-pressed="false"><i class="sw" style="--c:${c.hex}"></i>${esc(c.name)}</button>`).join("")}</fieldset>
+          </div>
+          <div class="fpanel__foot"><button class="btn" id="fClear" type="button">Limpar</button><button class="btn btn--primary" id="fShow" type="button" data-fx>Ver peças</button></div>
+        </div>
+      </div>
     </section>`;
   }
 
-  function renderGrid(animate) {
+  function renderGrid() {
     const list = filtered(), part = list.slice(0, shown);
     $("#grid").innerHTML = list.length ? part.map(cardHtml).join("") :
       `<div class="empty"><p>Nenhuma peça com esses filtros.</p><button class="btn" type="button" id="emptyClear">Limpar filtros</button></div>`;
-    $("#count").textContent = list.length ? `Mostrando ${part.length} de ${list.length} ${list.length === 1 ? "peça" : "peças"}` : "0 peças encontradas";
+    $("#count").textContent = `${list.length} ${list.length === 1 ? "peça" : "peças"}`;
     const left = list.length - part.length, more = $("#moreBtn");
-    more.hidden = left <= 0; more.textContent = `Carregar mais (${left})`;
+    more.hidden = left <= 0; more.textContent = `Ver mais (${left})`;
     $$("[data-f]").forEach(b => b.setAttribute("aria-pressed", String(F[b.dataset.f] === b.dataset.v)));
-    const n = Object.values(F).filter(Boolean).length, fn = $("#fN");
-    fn.textContent = n; fn.hidden = !n; $("#fClear").disabled = !n;
+    const n = Object.values(F).filter(Boolean).length;
+    $("#fN").textContent = n ? `(${n})` : ""; $("#fClear").disabled = !n;
+    $("#fShow").textContent = list.length ? `Ver ${list.length} ${list.length === 1 ? "peça" : "peças"}` : "Sem resultados";
     observeReveal();
   }
 
   function bindCollection() {
+    const fp = $("#fpanel"), box = $(".fpanel__box", fp), opener = $("#fOpen");
+    const open = () => { fp.hidden = false; requestAnimationFrame(() => fp.classList.add("is-open")); document.body.classList.add("no-scroll"); box.focus(); };
+    const close = () => { fp.classList.remove("is-open"); document.body.classList.remove("no-scroll"); setTimeout(() => { fp.hidden = true; }, 380); opener.focus({ preventScroll: true }); };
+    opener.addEventListener("click", open);
+    fp.addEventListener("click", e => { if (e.target.closest("[data-fx]")) close(); });
+    fp.addEventListener("keydown", e => {
+      if (e.key === "Escape") close();
+      if (e.key === "Tab") {
+        const f = $$("button:not([disabled])", box), first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
     $("#filters").addEventListener("click", e => {
       const b = e.target.closest("[data-f]");
       if (b) { F[b.dataset.f] = F[b.dataset.f] === b.dataset.v ? "" : b.dataset.v; shown = CFG.store.pageSize; renderGrid(); }
     });
     $("#fClear").addEventListener("click", clearFilters);
-    $("#grid").addEventListener("click", e => {
-      if (e.target.id === "emptyClear") clearFilters();
-    });
+    $("#grid").addEventListener("click", e => { if (e.target.id === "emptyClear") clearFilters(); });
     $("#moreBtn").addEventListener("click", () => {
       const before = shown; shown += CFG.store.pageSize; renderGrid();
       const cards = $$(".card", $("#grid")); if (cards[before]) cards[before].querySelector("a").focus({ preventScroll: true });
     });
-    const t = $("#fToggle"), panel = $("#fPanel");
-    t.addEventListener("click", () => { const o = panel.classList.toggle("is-open"); t.setAttribute("aria-expanded", String(o)); });
+    $$(".gridsw").forEach(b => b.addEventListener("click", () => {
+      $("#grid").classList.toggle("grid--1", b.dataset.cols === "1");
+      $$(".gridsw").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    }));
   }
   function clearFilters() { Object.assign(F, { team: "", type: "", size: "", color: "" }); shown = CFG.store.pageSize; renderGrid(); }
 
@@ -227,11 +249,11 @@
   function railHtml() {
     const list = CFG.products.filter(p => p.featured);
     return `<section class="sec sec--rail" id="cofre" aria-labelledby="cofreT">
-      <header class="sec__head rv"><p class="eyebrow">01 — O cofre</p><h2 id="cofreT">${esc(CFG.copy.vaultTitle)}</h2><p>${esc(CFG.copy.vaultText)}</p></header>
+      <header class="sec__head"><h2 id="cofreT">${esc(CFG.copy.vaultTitle)}</h2><a class="textbtn" href="#/colecao">Ver tudo</a></header>
       <div class="rail-wrap">
         <div class="rail" id="rail" tabindex="0" role="region" aria-label="Carrossel de camisas em destaque. Use as setas do teclado ou deslize.">
           ${list.map((p, i) => { const im = imgs(p)[0]; return `<a class="rail__item" href="#/produto/${p.id}" aria-label="${esc(p.name)}, ${money(p.price)}" draggable="false">
-            <span class="rail__img"><img src="${im.src}" alt="${esc(im.alt)}" loading="${i < 2 ? "eager" : "lazy"}" width="600" height="720" draggable="false">${p.badge ? `<em class="badge badge--${badgeCls(p.badge)}">${esc(p.badge)}</em>` : ""}</span>
+            <span class="rail__img"><img src="${im.src}" alt="${esc(im.alt)}" loading="${i < 2 ? "eager" : "lazy"}" width="600" height="720" draggable="false">${p.badge ? `<em class="tag${p.badge === "Esgotado" ? " tag--out" : ""}">${esc(p.badge)}</em>` : ""}</span>
             <span class="rail__meta"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(p.name)}</span><strong>${money(p.price)}</strong></span></a>`; }).join("")}
         </div>
         <div class="rail__ctl"><button class="icon-btn icon-btn--ring" type="button" data-rail="-1" aria-label="Peça anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
@@ -250,9 +272,9 @@
     rail.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(update); } }, { passive: true });
     addEventListener("resize", update); update();
     $$("[data-rail]").forEach(b => b.addEventListener("click", () => {
-      const w = items[0].offsetWidth + 16; rail.scrollBy({ left: w * +b.dataset.rail, behavior: reduce ? "auto" : "smooth" });
+      const w = items[0].offsetWidth + 2; rail.scrollBy({ left: w * +b.dataset.rail, behavior: reduce ? "auto" : "smooth" });
     }));
-    rail.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); rail.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * (items[0].offsetWidth + 16), behavior: reduce ? "auto" : "smooth" }); } });
+    rail.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); rail.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * (items[0].offsetWidth + 2), behavior: reduce ? "auto" : "smooth" }); } });
     // arrastar com o mouse (toque já rola nativamente)
     let down = false, sx = 0, sl = 0, moved = false;
     rail.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") return; down = true; moved = false; sx = e.clientX; sl = rail.scrollLeft; rail.classList.add("is-drag"); });
@@ -266,8 +288,8 @@
   function viewerHtml() {
     const list = CFG.products;
     return `<section class="sec sec--viewer" id="viewer" aria-labelledby="vwT">
-      <header class="sec__head rv"><p class="eyebrow">02 — Vista 3D</p><h2 id="vwT">${esc(CFG.copy.viewerTitle)}</h2><p>${esc(CFG.copy.viewerText)}</p></header>
-      <div class="vw rv">
+      <header class="sec__head"><h2 id="vwT">${esc(CFG.copy.viewerTitle)}</h2><p>${esc(CFG.copy.viewerText)}</p></header>
+      <div class="vw">
         <div class="v360" id="v360"></div>
         <div class="vw__info">
           <div class="chips chips--scroll" role="group" aria-label="Escolher camisa no visor">${list.map((p, i) => `<button class="chip" type="button" data-vp="${p.id}" aria-pressed="${i === 0}">${esc(p.name.replace(/^(Camisa|Regata) /, "").replace(/^(Nike|Adidas|Puma|Jordan) /, ""))}</button>`).join("")}</div>
@@ -302,10 +324,8 @@
   const first = { route: true };
 
   function homeView() {
-    const m = CFG.copy.marquee, rep = Array(8).fill(`<span>${esc(m)}</span><i></i>`).join("");
     main.innerHTML = `<div id="heroHost"></div>
-      <div class="marquee" aria-hidden="true"><div class="marquee__track">${rep}${rep}</div></div>
-      ${railHtml()}${viewerHtml()}${collectionHtml()}`;
+      ${railHtml()}${collectionHtml()}${viewerHtml()}`;
     heroCtl = window.JSDHero.mount($("#heroHost"));
     $("#heroCta").addEventListener("click", e => { e.preventDefault(); scrollToSec("colecao"); });
     bindCollection(); renderGrid(); initRail(); initViewer();
@@ -328,12 +348,11 @@
       <div class="pdp__grid">
         <div class="pdp__gal">
           <div class="gal" id="gal" tabindex="0" role="region" aria-label="Galeria de fotos de ${esc(p.name)}">${im.map(i => `<img src="${i.src}" alt="${esc(i.alt)}" width="600" height="720">`).join("")}</div>
-          ${p.badge ? `<span class="badge badge--${badgeCls(p.badge)} badge--pdp">${esc(p.badge)}</span>` : ""}
-          <div class="gal__dots" id="galDots">${im.map((_, i) => `<button type="button" aria-label="Foto ${i + 1} de ${im.length}" aria-current="${i === 0}" data-g="${i}"></button>`).join("")}</div>
+          ${p.badge ? `<span class="badge--pdp">${esc(p.badge)}</span>` : ""}
+          ${im.length > 1 ? `<span class="gal__count" id="galCount" aria-hidden="true">1/${im.length}</span>` : ""}
           <div class="pdp3d"><p class="lbl">Gire a peça: frente e verso</p><div class="v360" id="pdp360"></div></div>
         </div>
         <div class="pdp__info">
-          <p class="eyebrow">${esc(p.team)} · ${esc(p.type)}</p>
           <h1 class="pdp__name">${esc(p.name)}</h1>
           <p class="pdp__price"><strong>${money(p.price)}</strong><span>${money(pix(p.price))} no Pix (${Math.round(CFG.store.pixDiscount * 100)}% off)</span></p>
           <p class="pdp__desc">${esc(p.description)}</p>
@@ -354,9 +373,8 @@
       </div>
       ${rel.length ? `<section class="sec" aria-labelledby="relT"><header class="sec__head"><h2 id="relT">Do mesmo time</h2></header><div class="grid">${rel.map(cardHtml).join("")}</div></section>` : ""}
     </article>`;
-    const gal = $("#gal"), gd = $$("#galDots button");
-    gal.addEventListener("scroll", () => { const i = Math.round(gal.scrollLeft / gal.clientWidth); gd.forEach((b, j) => b.setAttribute("aria-current", String(i === j))); }, { passive: true });
-    gd.forEach(b => b.addEventListener("click", () => gal.scrollTo({ left: gal.clientWidth * +b.dataset.g, behavior: reduce ? "auto" : "smooth" })));
+    const gal = $("#gal"), gc = $("#galCount");
+    if (gc) gal.addEventListener("scroll", () => { gc.textContent = `${Math.round(gal.scrollLeft / gal.clientWidth) + 1}/${im.length}`; }, { passive: true });
     $$(".pdp__info .size").forEach(b => b.addEventListener("click", () => { size = b.dataset.size; $$(".pdp__info .size").forEach(x => x.setAttribute("aria-pressed", String(x === b))); $("#pdpErr").textContent = ""; }));
     $("#pdpAdd").addEventListener("click", () => { if (!size) { $("#pdpErr").textContent = "Escolha um tamanho para continuar."; return; } addToCart(p.id, size); });
     viewer = lazyViewer($("#pdp360"), p);
@@ -396,7 +414,7 @@
 
   function aboutView() {
     const c = CFG.copy;
-    main.innerHTML = `<section class="page page--about"><p class="eyebrow">A casa</p><h1 class="page__t">${esc(c.aboutTitle)}</h1>
+    main.innerHTML = `<section class="page page--about"><h1 class="page__t">${esc(c.aboutTitle)}</h1>
       <div class="about"><div class="about__txt">${c.aboutParagraphs.map(t => `<p>${esc(t)}</p>`).join("")}</div>
         <ul class="pillars">${c.aboutPillars.map((p, i) => `<li><b>${String(i + 1).padStart(2, "0")}</b><h2>${esc(p.t)}</h2><p>${esc(p.d)}</p></li>`).join("")}</ul></div>
       <a class="btn btn--primary" href="#/colecao">Entrar no cofre</a></section>`;
@@ -405,7 +423,7 @@
 
   function contactView() {
     const k = CFG.contact;
-    main.innerHTML = `<section class="page"><p class="eyebrow">Fale com a gente</p><h1 class="page__t">Contato</h1>
+    main.innerHTML = `<section class="page"><h1 class="page__t">Contato</h1>
       <p class="lead">${esc(k.note)}</p>
       <div class="contact">
         <div class="contact__links">

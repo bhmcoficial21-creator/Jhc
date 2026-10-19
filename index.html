@@ -13,7 +13,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/hero.css">
+<link rel="stylesheet" href="css/store.css">
 </head>
 <body class="is-loading">
 <a class="skip" href="#main">Pular para o conteúdo</a>
@@ -28,13 +30,12 @@
 <div class="announce" id="announce" role="region" aria-label="Avisos da loja"><p id="announceText"></p></div>
 
 <header class="header" id="header">
-  <button class="icon-btn" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 16h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  <button class="header__menu" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 16h18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg><span>Menu</span>
   </button>
-  <a class="logo" href="#/" aria-label="JSD™ — página inicial"><img id="logoImg" alt="" width="44" height="44"><span class="logo__txt">JSD<sup>™</sup></span></a>
-  <a class="icon-btn bag-btn" href="#/sacola" id="bagBtn" aria-label="Abrir sacola, 0 itens">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 12H4zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-    <span class="bag-btn__n" id="bagCount" hidden>0</span>
+  <a class="logo" href="#/" aria-label="JSD™, página inicial">JSD<sup>™</sup></a>
+  <a class="header__bag" href="#/sacola" id="bagBtn" aria-label="Abrir sacola, 0 itens">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 12H4zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="lbl">Sacola</span><span class="bag-n" id="bagCount">0</span>
   </a>
 </header>
 
