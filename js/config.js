@@ -99,6 +99,7 @@ window.JSD_CONFIG = {
   products: [
     {
       "id": "argentina-messi",
+    "kit": {"base": "#75aadb", "accent": "#ffffff", "pattern": "stripes", "stripes": 20, "sleeve": "#75aadb", "collar": "#101010", "trim": "#101010", "crest": "#ffffff", "crestLine": "#75aadb", "back": {"name": "MESSI", "number": "10", "color": "#c9a24a", "outline": "#3a2a10"}},
       "name": "Camisa Argentina — Despedida do Messi",
       "team": "Seleção Argentina",
       "group": "Seleções",
@@ -135,6 +136,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "noruega-26-27",
+    "kit": {"base": "#c8102e", "accent": "#14214d", "pattern": "cross", "sleeve": "#14214d", "collar": "#c8102e", "trim": "#ffffff", "crest": "#c8102e", "crestLine": "#d9b25a"},
       "name": "Camisa Nike Seleção Noruega 26/27",
       "team": "Seleção Noruega",
       "group": "Seleções",
@@ -171,6 +173,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "holanda-copa-2026",
+    "kit": {"base": "#f26a1b", "sleeve": "#f26a1b", "collar": "#101010", "trim": "#101010", "crest": "#f26a1b", "crestLine": "#101010", "back": {"number": "10", "color": "#101010", "outline": "rgba(0,0,0,0)"}},
       "name": "Camisa Nike Seleção Holandesa",
       "team": "Seleção Holandesa",
       "group": "Seleções",
@@ -203,6 +206,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "portugal-cr7",
+    "kit": {"base": "#9b1c26", "sleeve": "#9b1c26", "collar": "#0f5a4a", "trim": "#0f5a4a", "crest": "#c0392b", "crestLine": "#d9b25a", "frontNumber": {"text": "7", "color": "#ffffff", "y": 0.52}},
       "name": "Camisa Puma Seleção Portugal — CR7",
       "team": "Seleção Portugal",
       "group": "Seleções",
@@ -235,6 +239,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "arsenal-home",
+    "kit": {"base": "#d71920", "sleeve": "#ffffff", "collar": "#ffffff", "trim": "#8a1c2b", "crest": "#d71920", "crestLine": "#ffffff", "sponsor": {"text": "Emirates", "color": "#ffffff", "size": 100, "y": 0.52}},
       "name": "Camisa Adidas Arsenal",
       "team": "Arsenal",
       "group": "Clubes da Europa",
@@ -271,6 +276,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "chelsea-munique-2012",
+    "kit": {"base": "#1f4bd8", "sleeve": "#1f4bd8", "collar": "#ffffff", "trim": "#ffffff", "crest": "#1f4bd8", "crestLine": "#f2d11c", "sponsor": {"text": "SAMSUNG", "color": "#ffffff", "size": 96, "y": 0.52}},
       "name": "Camisa Retrô Chelsea — Final Munique 2012",
       "team": "Chelsea",
       "group": "Clubes da Europa",
@@ -303,6 +309,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "portugal-away",
+    "kit": {"base": "#141414", "sleeve": "#141414", "collar": "#b79b6b", "trim": "#b79b6b", "crest": "#141414", "crestLine": "#d8c9a3", "back": {"number": "8", "color": "#d8c9a3", "outline": "rgba(0,0,0,0)"}},
       "name": "Camisa Puma Seleção Portugal — Preta",
       "team": "Seleção Portugal",
       "group": "Seleções",
@@ -335,6 +342,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "espanha-away-26-27",
+    "kit": {"base": "#f2f1ee", "sleeve": "#f2f1ee", "collar": "#6b1f2a", "trim": "#c9a24a", "crest": "#f2f1ee", "crestLine": "#6b1f2a"},
       "name": "Camisa Adidas Seleção Espanhola Away 26/27",
       "team": "Seleção Espanhola",
       "group": "Seleções",
@@ -371,6 +379,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "argentina-away-26-27",
+    "kit": {"base": "#0b0b14", "accent": "#2a3fd0", "pattern": "swirl", "sleeve": "#0b0b14", "collar": "#ffffff", "trim": "#2a3fd0", "crest": "#ffffff", "crestLine": "#2a3fd0"},
       "name": "Camisa Adidas Seleção Argentina Away 26/27",
       "team": "Seleção Argentina",
       "group": "Seleções",
@@ -407,6 +416,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "franca-away-26-27",
+    "kit": {"base": "#a8dcc7", "sleeve": "#a8dcc7", "collar": "#7fc3aa", "trim": "#7fc3aa", "crest": "#d4672b", "crestLine": "#ffffff"},
       "name": "Camisa Nike Seleção Francesa Away 26/27",
       "team": "Seleção Francesa",
       "group": "Seleções",
@@ -443,6 +453,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "lakers-city-75",
+    "kit": {"base": "#552583", "sleeve": "#552583", "collar": "#ffffff", "trim": "#ffffff", "frontNumber": {"text": "6", "color": "#9cc4ee", "y": 0.62, "size": 200}, "sponsor": {"text": "LAKERS", "color": "#ffffff", "size": 120, "y": 0.42}},
       "name": "Regata Lakers City Edition 75th Diamond",
       "team": "Los Angeles Lakers",
       "group": "Basquete",
@@ -475,6 +486,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "brasil-jordan-ii-26-27",
+    "kit": {"base": "#1a2fa0", "accent": "#0c1654", "pattern": "camo", "sleeve": "#1a2fa0", "collar": "#101010", "trim": "#e8f26a", "crest": "#f2d11c", "crestLine": "#1a2fa0"},
       "name": "Camisa Jordan Seleção Brasileira II 26/27",
       "team": "Seleção Brasil",
       "group": "Seleções",
@@ -507,6 +519,7 @@ window.JSD_CONFIG = {
     },
     {
       "id": "corinthians-iii-all-black",
+    "kit": {"base": "#0e0e0e", "sleeve": "#0e0e0e", "collar": "#1c1c1c", "trim": "#1c1c1c", "crest": "#262626", "crestLine": "#3a3a3a"},
       "name": "Camisa Nike Corinthians III All Black 24/25",
       "team": "Corinthians",
       "group": "Clubes do Brasil",
@@ -548,8 +561,8 @@ window.JSD_CONFIG = {
     marquee: "Private • Vault Drop",
     vaultTitle: "Saiu do cofre",
     vaultText: "Peças em destaque do drop atual. Deslize para ver cada uma.",
-    viewerTitle: "Gire a peça",
-    viewerText: "Arraste para girar 360° e veja o caimento de todos os lados.",
+    viewerTitle: "No manequim",
+    viewerText: "Arraste para girar em 3D e veja a frente, as costas e os lados de cada camisa.",
     collectionTitle: "A coleção",
     collectionText: "Filtre por time, peça, tamanho e cor.",
     aboutTitle: "Sobre a JSD™",

@@ -215,6 +215,10 @@ sup.ltr { font-size: .2em; vertical-align: top; margin-left: .15em; font-style: 
 .v360__canvas { width: 100%; height: 100%; display: block; }
 .v360__hint { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: rgba(0, 0, 0, .6); border: 1px solid var(--line2); font: 600 11px var(--f-body); letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
 .v360__hint svg { width: 16px; height: 16px; }
+.v360__loading { display: grid; place-items: center; color: var(--mute); font: 600 11px var(--f-body); letter-spacing: .2em; text-transform: uppercase; }
+.v360__side { position: absolute; right: 12px; top: 12px; padding: 8px 12px; border-radius: 999px; background: rgba(0, 0, 0, .6); border: 1px solid var(--line2); font: 600 11px var(--f-body); letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+.pdp3d { margin-top: 18px; }
+.pdp3d .lbl { margin-bottom: 10px; }
 .v360__range { display: flex; align-items: center; gap: 14px; min-height: 52px; margin-top: 10px; font: 600 11px var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
 .v360__range input { flex: 1; accent-color: #fff; height: 32px; }
 .vw__name { font: italic 500 clamp(30px, 8vw, 46px)/1.05 var(--f-display); margin: 20px 0 6px; }
@@ -403,7 +407,6 @@ legend { padding: 0; margin-bottom: 10px; font: 600 11px var(--f-body); letter-s
 }
 @media (min-width: 900px) {
   .pdp__grid { grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
-  .pdp__gal { position: sticky; top: 90px; }
   .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .filters__toggle { display: none; }
   .filters__panel { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 40px; }

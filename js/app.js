@@ -264,21 +264,30 @@
   /* ---------- seção 360° ---------- */
   let viewer = null;
   function viewerHtml() {
-    const list = CFG.products.filter(p => p.featured);
+    const list = CFG.products.filter(p => p.kit);
     return `<section class="sec sec--viewer" id="viewer" aria-labelledby="vwT">
-      <header class="sec__head rv"><p class="eyebrow">02 — Vista 360°</p><h2 id="vwT">${esc(CFG.copy.viewerTitle)}</h2><p>${esc(CFG.copy.viewerText)}</p></header>
+      <header class="sec__head rv"><p class="eyebrow">02 — Manequim 3D</p><h2 id="vwT">${esc(CFG.copy.viewerTitle)}</h2><p>${esc(CFG.copy.viewerText)}</p></header>
       <div class="vw rv">
         <div class="v360" id="v360"></div>
         <div class="vw__info">
-          <div class="chips chips--scroll" role="group" aria-label="Escolher peça no visualizador">${list.map((p, i) => `<button class="chip" type="button" data-vp="${p.id}" aria-pressed="${i === 0}">${esc(p.name.replace("Camisa ", ""))}</button>`).join("")}</div>
+          <div class="chips chips--scroll" role="group" aria-label="Escolher camisa no manequim">${list.map((p, i) => `<button class="chip" type="button" data-vp="${p.id}" aria-pressed="${i === 0}">${esc(p.name.replace(/^(Camisa|Regata) /, "").replace(/^(Nike|Adidas|Puma|Jordan) /, ""))}</button>`).join("")}</div>
           <h3 class="vw__name" id="vwName"></h3><p class="vw__price" id="vwPrice"></p>
           <div class="vw__act"><a class="btn" id="vwLink" href="#/">Ver peça</a><button class="btn btn--primary" type="button" id="vwAdd">Adicionar à sacola</button></div>
         </div></div></section>`;
   }
+  /* o visualizador só é criado quando chega perto da tela (o 3D só baixa nesse momento) */
+  function lazyViewer(host, product) {
+    const holder = { destroy() { dead = true; if (v) v.destroy(); }, set(p) { product = p; if (v) v.set(p); } };
+    let v = null, dead = false;
+    const io = new IntersectionObserver(es => { if (es[0].isIntersecting && !v && !dead) { v = window.JSDViewer360.create(host, product); io.disconnect(); } }, { rootMargin: "500px" });
+    io.observe(host);
+    const d = holder.destroy; holder.destroy = () => { io.disconnect(); d(); };
+    return holder;
+  }
   function initViewer() {
     const host = $("#v360"); if (!host) return;
-    const list = CFG.products.filter(p => p.featured); let cur = list[0];
-    viewer = window.JSDViewer360.create(host, cur);
+    const list = CFG.products.filter(p => p.kit); let cur = list[0];
+    viewer = lazyViewer(host, cur);
     const paint = () => { $("#vwName").textContent = cur.name; $("#vwPrice").innerHTML = `${money(cur.price)} <span>${money(pix(cur.price))} no Pix</span>`; $("#vwLink").href = "#/produto/" + cur.id; $("#vwAdd").disabled = isOut(cur); };
     paint();
     $("#viewer").addEventListener("click", e => {
@@ -321,6 +330,7 @@
           <div class="gal" id="gal" tabindex="0" role="region" aria-label="Galeria de fotos de ${esc(p.name)}">${im.map(i => `<img src="${i.src}" alt="${esc(i.alt)}" width="600" height="720">`).join("")}</div>
           ${p.badge ? `<span class="badge badge--${badgeCls(p.badge)} badge--pdp">${esc(p.badge)}</span>` : ""}
           <div class="gal__dots" id="galDots">${im.map((_, i) => `<button type="button" aria-label="Foto ${i + 1} de ${im.length}" aria-current="${i === 0}" data-g="${i}"></button>`).join("")}</div>
+          ${p.kit ? `<div class="pdp3d"><p class="lbl">Veja no manequim</p><div class="v360" id="pdp360"></div></div>` : ""}
         </div>
         <div class="pdp__info">
           <p class="eyebrow">${esc(p.team)} · ${esc(p.type)}</p>
@@ -349,6 +359,7 @@
     gd.forEach(b => b.addEventListener("click", () => gal.scrollTo({ left: gal.clientWidth * +b.dataset.g, behavior: reduce ? "auto" : "smooth" })));
     $$(".pdp__info .size").forEach(b => b.addEventListener("click", () => { size = b.dataset.size; $$(".pdp__info .size").forEach(x => x.setAttribute("aria-pressed", String(x === b))); $("#pdpErr").textContent = ""; }));
     $("#pdpAdd").addEventListener("click", () => { if (!size) { $("#pdpErr").textContent = "Escolha um tamanho para continuar."; return; } addToCart(p.id, size); });
+    if (p.kit) viewer = lazyViewer($("#pdp360"), p);
     observeReveal();
     return p.name + " — JSD™";
   }
