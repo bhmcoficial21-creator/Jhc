@@ -84,7 +84,7 @@ window.JSDEntry = (function () {
     }
 
     function skip(sig) {
-      root.classList.add("is-open", "is-name", "is-cta", "is-instant"); sig.classList.add("is-drawn", "is-docked");
+      root.classList.add("is-open", "is-name", "is-cta", "is-instant"); sig.classList.add("is-instant", "is-drawn", "is-docked");
       document.body.classList.remove("is-loading"); document.body.classList.add("is-ready");
       const sk = root.querySelector("#entrySkip"); if (sk) sk.remove();
     }

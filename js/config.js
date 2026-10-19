@@ -39,6 +39,7 @@ window.JSD_CONFIG = {
      Troque `image` pela foto do Cristiano Ronaldo com a camisa do Real Madrid; `pos` ajusta o enquadramento. */
   entry: {
     mode: "doors",
+    animate: false,   // false = a entrada já aparece pronta, sem contador nem portas. true = contador + portas se abrindo.
     image: "assets/produtos/ronaldo-frente.jpg",
     pos: "50% 22%",
     alt: "Cristiano Ronaldo com a camisa vermelha de Portugal, em campo.",

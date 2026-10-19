@@ -369,7 +369,8 @@
     $("#heroCta").addEventListener("click", e => { e.preventDefault(); scrollToSec("colecao"); });
     bindCollection(); renderGrid(); initPcar(); initViewer();
     const loader = $("#loader"), sig = $("#sig");
-    const startIntro = first.route && !introDone && !pendingScroll;
+    const still = CFG.entry && CFG.entry.mode !== "stadium" && CFG.entry.animate === false;   // entrada sem animação
+    const startIntro = !still && first.route && !introDone && !pendingScroll;
     if (startIntro) { introDone = true; heroCtl.intro(loader, sig); }
     else { introDone = true; if (loader) loader.remove(); heroCtl.skip(sig); }
     return "JSD™ — Private • Vault Drop";
@@ -514,7 +515,7 @@
     if (viewer) { viewer.destroy(); viewer = null; }
     const prev = current; current = name; if (!pendingScroll && target) pendingScroll = target;
     document.body.dataset.route = name;
-    if (name !== "home") { const l = $("#loader"); if (l) l.remove(); $("#sig").classList.add("is-drawn", "is-docked"); document.body.classList.remove("is-loading"); document.body.classList.add("is-ready"); }
+    if (name !== "home") { const l = $("#loader"); if (l) l.remove(); $("#sig").classList.add("is-instant", "is-drawn", "is-docked"); document.body.classList.remove("is-loading"); document.body.classList.add("is-ready"); }
     const title = { home: homeView, product: () => productView(arg), cart: cartView, about: aboutView, contact: contactView }[name]();
     document.title = title; observeReveal(); window.__hdr && window.__hdr();
     if (name === "home" && pendingScroll) { const t = pendingScroll; pendingScroll = ""; requestAnimationFrame(() => scrollToSec(t)); }

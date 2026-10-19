@@ -23,6 +23,7 @@
 .sig.is-drawn path:nth-child(3) { transition-delay: .7s; }
 .sig.is-drawn path:nth-child(4) { transition-delay: 1.15s; }
 body.is-loading .sig { opacity: 0; }
+.sig.is-instant, .sig.is-instant path { transition: none !important; }
 
 /* ---------- HERO ---------- */
 .hero { position: relative; height: min(133.33vw, calc(100vh - var(--hdr) - var(--ann))); min-height: 440px; overflow: hidden; background: #000; isolation: isolate; }
