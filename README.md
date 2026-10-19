@@ -21,4 +21,4 @@ Vídeos: coloque em `assets/video/` (`lance-1.mp4`, `lance-1-leve.mp4` para o ce
 Enquanto os arquivos não existem, o site mostra lances e imagens provisórias (`js/placeholders.js`).
 
 ## Estrutura
-`index.html` · `css/styles.css` (cores em `:root`) · `js/config.js` · `js/app.js` (rotas, coleção, sacola) · `js/hero.js` (abertura) · `js/viewer360.js` · `assets/`
+`index.html` · `css/base.css` (cores e fontes) · `css/store.css` (loja) · `css/hero.css` (abertura) · `js/config.js` · `js/app.js` (rotas, coleção, sacola) · `js/hero.js` (abertura) · `js/viewer360.js` · `assets/`
