@@ -5,7 +5,12 @@ import * as THREE from 'three'
 import { type Replay, ballAt, focusAt, posAt, velAt } from '../../lib/replay'
 import { actPose, type ActName } from '../pose'
 import { applyPose, modelUrl } from '../RiggedMannequin'
-const ACT_PROC = new Set(['jockey', 'feint', 'pedal', 'kick', 'turn', 'receive', 'dive', 'celebrate'])
+// peso da pose calculada por gesto e se ela mexe nos braços (senão os braços/mãos vêm da captura de movimento)
+const ACT_PROC: Record<string, { w: number; arms: boolean }> = {
+  jockey: { w: 0.4, arms: false }, receive: { w: 0.5, arms: false }, turn: { w: 0.6, arms: false }, feint: { w: 0.75, arms: false },
+  pedal: { w: 0.8, arms: false }, kick: { w: 0.9, arms: true }, dive: { w: 1, arms: true }, celebrate: { w: 1, arms: true },
+}
+const ARMS = /Shoulder|Arm|Hand|Neck|Head/
 import { createKitFigure, createScanFigure, KIT_HOME, SKINS, type ScanFigure } from './scan'
 
 export interface Clock { t: number; playing: boolean; speed: number; loop: boolean }
@@ -63,7 +68,7 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   const mixers = useMemo(() => figs.map((f) => {
     const m = new THREE.AnimationMixer(f.root), acts: Record<string, THREE.AnimationAction> = {}
     for (const name of ['idle', 'walk', 'run']) { const clip = gltf.animations.find((a) => a.name === name); if (clip) { const a = m.clipAction(clip); a.play(); a.setEffectiveWeight(name === 'idle' ? 1 : 0); acts[name] = a } }
-    return { m, acts, w: { idle: 1, walk: 0, run: 0 }, proc: 0 }
+    return { m, acts, w: { idle: 1, walk: 0, run: 0 }, proc: 0, arms: false }
   }), [figs, gltf.animations])
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
   const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
@@ -113,8 +118,10 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       mx.acts.walk?.setEffectiveTimeScale(Math.max(0.5, sp / 1.45)); mx.acts.run?.setEffectiveTimeScale(Math.max(0.7, Math.min(2.0, sp / 4.2)))
       mx.m.update(c.playing ? dt * c.speed * slow.current : 0)
       // 2) gestos do futebol (finta, chute, mergulho…) por cima, com transição suave
-      mx.proc += ((ACT_PROC.has(act) ? 1 : 0) - mx.proc) * Math.min(1, dt * 12)
-      if (mx.proc > 0.02) blendPose(f.bones, rest[i], actPose(act, v.speed, phases.current[i], p.actT, side), mx.proc)
+      const cfg = ACT_PROC[act]
+      mx.proc += ((cfg ? cfg.w : 0) - mx.proc) * Math.min(1, dt * 10)
+      if (mx.proc > 0.02) blendPose(f.bones, rest[i], actPose(act, v.speed, phases.current[i], p.actT, side), mx.proc, cfg?.arms ?? mx.arms)
+      if (cfg) mx.arms = cfg.arms
     })
     if (ball.current) { ball.current.position.set(b.x, b.z, b.y) }
     // rastro da bola
@@ -172,10 +179,10 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
 
 const tmpQ = new THREE.Quaternion()
 /** Mistura a pose calculada com a que o clipe de movimento deixou nos ossos (w = 0..1). */
-function blendPose(B: Record<string, THREE.Bone>, rest: { hipsX: number; hipsY: number; hipsZ: number }, pose: ReturnType<typeof actPose>, w: number) {
+function blendPose(B: Record<string, THREE.Bone>, rest: { hipsX: number; hipsY: number; hipsZ: number }, pose: ReturnType<typeof actPose>, w: number, arms: boolean) {
   const names = Object.keys(B), saved = names.map((n) => B[n].quaternion.clone()), hp = B.Hips?.position.clone()
   applyPose(B, rest, pose)
-  names.forEach((n, i) => { tmpQ.copy(saved[i]).slerp(B[n].quaternion, w); B[n].quaternion.copy(tmpQ) })
+  names.forEach((n, i) => { if (!arms && ARMS.test(n)) { B[n].quaternion.copy(saved[i]); return } tmpQ.copy(saved[i]).slerp(B[n].quaternion, w); B[n].quaternion.copy(tmpQ) })
   if (B.Hips && hp) B.Hips.position.lerpVectors(hp, B.Hips.position, w)
 }
 
