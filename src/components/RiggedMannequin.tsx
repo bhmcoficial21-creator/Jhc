@@ -6,7 +6,19 @@ import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js
 import type { MannequinApi } from './Mannequin'
 import { poseAt } from './pose'
 
-export const MODEL_URL = `${import.meta.env.BASE_URL}models/xbot.glb`
+const BASE_URL_GLB = `${import.meta.env.BASE_URL}models/xbot.glb`
+// Na demo publicada o .glb vai embutido em base64 num .json (a plataforma só serve tipos de texto/mídia).
+let blobUrl: string | undefined, pending: Promise<void> | undefined
+function modelUrl(): string {
+  if (import.meta.env.VITE_DEMO !== 'true') return BASE_URL_GLB
+  if (blobUrl) return blobUrl
+  pending ??= fetch(`${import.meta.env.BASE_URL}models/xbot.json`).then((r) => r.json()).then((j: { b64: string }) => {
+    const bin = atob(j.b64), bytes = new Uint8Array(bin.length)
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
+    blobUrl = URL.createObjectURL(new Blob([bytes], { type: 'model/gltf-binary' }))
+  })
+  throw pending
+}
 const qx = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), a)
 const qy = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), a)
 const qz = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), a)
@@ -14,7 +26,7 @@ const mul = (...q: THREE.Quaternion[]) => q.reduce((a, b) => a.multiply(b))
 
 /** Modelo humano rigado (cinza-escuro, short vermelho) movido pelas mesmas poses do manequim procedural. */
 export function RiggedMannequin({ motion, playing, speed, err, xray, joint, api }: { motion?: string | null; playing: boolean; speed: number; err: boolean; xray: boolean; joint?: string | null; api: { current: MannequinApi | null } }) {
-  const gltf = useGLTF(MODEL_URL)
+  const gltf = useGLTF(modelUrl())
   const { scene, bones, mats } = useMemo(() => {
     const sc = cloneSkinned(gltf.scene) as THREE.Group
     const b: Record<string, THREE.Bone> = {}
@@ -76,4 +88,3 @@ export function RiggedMannequin({ motion, playing, speed, err, xray, joint, api 
   })
   return <primitive object={scene} />
 }
-useGLTF.preload(MODEL_URL)
