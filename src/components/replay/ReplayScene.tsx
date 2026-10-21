@@ -5,13 +5,13 @@ import * as THREE from 'three'
 import { type Replay, ballAt, focusAt, posAt, velAt } from '../../lib/replay'
 import { actPose, type ActName } from '../pose'
 import { applyPose, modelUrl } from '../RiggedMannequin'
-import { createScanFigure, type ScanFigure } from './scan'
+import { createKitFigure, createScanFigure, KIT_HOME, SKINS, type ScanFigure } from './scan'
 
 export interface Clock { t: number; playing: boolean; speed: number; loop: boolean }
 export type CamMode = 'tv' | 'seguir' | 'gol'
 export interface Hud { t: number; dist: number; kmh: number; step: string }
 
-const BG = '#040914', LINE = '#7f9bd6', TEAM = { a: '#9fd0ff', b: '#d9dde6' }
+const BG = '#03060f', LINE = '#e6eaf2', GHOST = '#8e98a8'
 const HERO = '#c6ff00'
 
 function Pitch({ r }: { r: Replay }) {
@@ -26,7 +26,13 @@ function Pitch({ r }: { r: Replay }) {
       rect(-20, -10, 20, 10); pts.push(0, 0, -10, 0, 0, 10); circle(0, 0, 3)
       for (const s of [1, -1]) circle(s * 20, 0, 6, s > 0 ? Math.PI / 2 : -Math.PI / 2, s > 0 ? Math.PI * 1.5 : Math.PI / 2, 24)
     }
-    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); return g
+    // converte os segmentos em faixas largas (linha de giz)
+    const W = 0.2, q: number[] = []
+    for (let i = 0; i < pts.length; i += 6) {
+      const x0 = pts[i], z0 = pts[i + 2], x1 = pts[i + 3], z1 = pts[i + 5], dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz) || 1, nx = (-dz / L) * W / 2, nz = (dx / L) * W / 2
+      q.push(x0 - nx, 0, z0 - nz, x0 + nx, 0, z0 + nz, x1 + nx, 0, z1 + nz, x0 - nx, 0, z0 - nz, x1 + nx, 0, z1 + nz, x1 - nx, 0, z1 - nz)
+    }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(q, 3)); return g
   }, [r.pitch])
   // grão no gramado (pontos tênues), concentrado perto do foco
   const grain = useMemo(() => {
@@ -37,8 +43,8 @@ function Pitch({ r }: { r: Replay }) {
   }, [r.focus.x, r.focus.y])
   const goal = r.goal
   return <>
-    <lineSegments geometry={geo} position-y={0.01}><lineBasicMaterial color={LINE} transparent opacity={0.8} /></lineSegments>
-    <points geometry={grain}><pointsMaterial color="#3a5a9a" size={0.09} transparent opacity={0.55} sizeAttenuation depthWrite={false} /></points>
+    <mesh geometry={geo} position-y={0.012}><meshBasicMaterial color={LINE} transparent opacity={0.92} side={THREE.DoubleSide} depthWrite={false} /></mesh>
+    <points geometry={grain}><pointsMaterial color="#5d78a8" size={0.1} transparent opacity={0.5} sizeAttenuation depthWrite={false} /></points>
     {goal && <group position={[goal.x, 0, 0]}>
       <lineSegments><edgesGeometry args={[new THREE.BoxGeometry(2.2, 2.44, 7.32)]} /><lineBasicMaterial color="#e8eeff" /></lineSegments>
       <mesh position={[0.4, 1.22, 0]}><boxGeometry args={[1.6, 2.44, 7.32]} /><meshBasicMaterial color="#8fa8d8" wireframe transparent opacity={0.25} /></mesh>
@@ -50,7 +56,7 @@ function Pitch({ r }: { r: Replay }) {
 function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.MutableRefObject<Clock>; mode: CamMode; hudRef: React.MutableRefObject<Hud>; onEnd?: () => void }) {
   const gltf = useGLTF(modelUrl())
   const { size, camera, gl } = useThree()
-  const figs = useMemo<(ScanFigure & { id: string })[]>(() => r.tracks.map((t) => ({ id: t.id, ...createScanFigure(gltf.scene, t.hero ? HERO : TEAM[t.team]) })), [r, gltf.scene])
+  const figs = useMemo<(ScanFigure & { id: string })[]>(() => r.tracks.map((t, i) => ({ id: t.id, ...(t.team === 'a' ? createKitFigure(gltf.scene, { ...KIT_HOME, skin: SKINS[i % SKINS.length] }) : createScanFigure(gltf.scene, GHOST, { step: 2, jointsStep: 3, size: 0.03 })) })), [r, gltf.scene])
   const rest = useMemo(() => figs.map((f) => ({ hipsX: f.bones.Hips?.position.x ?? 0, hipsY: f.bones.Hips?.position.y ?? 104, hipsZ: f.bones.Hips?.position.z ?? 0 })), [figs])
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
   const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
@@ -65,7 +71,7 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       if (c.t >= r.duration) { if (c.loop) { endHold.current += dt; if (endHold.current > 1.2) { c.t = 0; endHold.current = 0 } else c.t = r.duration } else { c.t = r.duration; c.playing = false; onEnd?.() } }
     }
     const t = Math.min(Math.max(0, c.t), r.duration)
-    for (const f of figs) f.mat.uniforms.uScale.value = (size.height * gl.getPixelRatio()) / (2 * Math.tan(((camera as THREE.PerspectiveCamera).fov * Math.PI) / 360))
+    for (const f of figs) if (f.mat.uniforms) f.mat.uniforms.uScale.value = (size.height * gl.getPixelRatio()) / (2 * Math.tan(((camera as THREE.PerspectiveCamera).fov * Math.PI) / 360))
     const b = ballAt(r, t)
     const hero = r.tracks.find((x) => x.hero)!
     r.tracks.forEach((tr, i) => {
@@ -103,7 +109,7 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     hudRef.current = { t, dist: H.d, kmh: hv.speed * 3.6, step }
     // câmera
     const f = focusAt(r, t), hd = Math.atan2(hv.vx, hv.vy), cs = cam.current
-    const k = 1 - Math.exp(-dt * 3.2), S = r.focus.size
+    const k = 1 - Math.exp(-dt * 6), S = r.focus.size
     let px: number, py: number, pz: number, lx: number, ly: number, lz: number
     const m: CamMode = mode === 'gol' && !r.goal ? 'tv' : mode
     if (m === 'seguir') {
@@ -114,12 +120,12 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     } else {
       // enquadra herói, bola e quem está por perto, respeitando o formato vertical da tela
       const pts: [number, number][] = [[f.ball.x, f.ball.y]]
-      for (const tr of r.tracks) { const q = posAt(tr, t); if (tr.hero || Math.hypot(q.x - hp.x, q.y - hp.y) < 20) pts.push([q.x, q.y]) }
+      for (const tr of r.tracks) { const q = posAt(tr, t); if (tr.hero || Math.hypot(q.x - hp.x, q.y - hp.y) < 9) pts.push([q.x, q.y]) }
       const xs = pts.map((q) => q[0]), zs = pts.map((q) => q[1])
       const w = Math.max(...xs) - Math.min(...xs) + 5.5, h = Math.max(...zs) - Math.min(...zs) + 6
       const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cz = (Math.max(...zs) + Math.min(...zs)) / 2
       const asp = size.width / size.height, vf = ((camera as THREE.PerspectiveCamera).fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * asp)
-      const need = Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 7)
+      const need = Math.min(S * 0.95, Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 6))
       cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k; cs.d = cs.d === 0 ? need : cs.d + (need - cs.d) * k * 0.7
       px = cs.tx; py = cs.d * 0.72; pz = cs.ty + cs.d * 0.78; lx = cs.tx; ly = 0.9; lz = cs.ty
     }
@@ -128,8 +134,11 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   })
 
   return <>
+    <hemisphereLight args={['#dfe9ff', '#0a1020', 1.25]} /><directionalLight position={[8, 20, 6]} intensity={1.9} />
     <Pitch r={r} />
     {figs.map((f, i) => <group key={f.id} ref={(g) => { if (g) groups.current[i] = g }}><primitive object={f.root} />
+      <mesh rotation-x={-Math.PI / 2} position-y={0.02}><circleGeometry args={[0.6, 24]} /><meshBasicMaterial color="#000" transparent opacity={0.5} depthWrite={false} /></mesh>
+      {r.tracks[i].hero && <mesh rotation-x={-Math.PI / 2} position-y={0.025}><ringGeometry args={[0.78, 0.86, 32]} /><meshBasicMaterial color="#c6ff00" transparent opacity={0.9} depthWrite={false} /></mesh>}
       <Html position={[0, 2.1, 0]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
         <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide ${r.tracks[i].hero ? 'bg-lime text-black' : 'bg-black/55 text-zinc-200'}`}>{r.tracks[i].role}</span>
       </Html></group>)}

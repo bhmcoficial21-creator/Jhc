@@ -35,6 +35,10 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
         <Suspense fallback={<Spinner label="Carregando replay…" />}>
           <Scene r={r} clock={clock} mode={mode} hudRef={hudRef} onEnd={onEnd} onCanvas={(c) => { canvas.current = c }} />
         </Suspense>
+        {/* vinheta e desfoque nas bordas (efeito tilt-shift) */}
+        <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%)' }} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[22%] backdrop-blur-[2.5px]" style={{ WebkitMaskImage: 'linear-gradient(#000, transparent)', maskImage: 'linear-gradient(#000, transparent)' }} />
+        <div className="pointer-events-none absolute inset-x-0 bottom-[22%] h-[16%] backdrop-blur-[2.5px]" style={{ WebkitMaskImage: 'linear-gradient(transparent, #000)', maskImage: 'linear-gradient(transparent, #000)' }} />
         {/* HUD no estilo scan */}
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
           <div className="font-display text-[11px] font-bold uppercase leading-tight tracking-widest text-sky-200/80">VÁRZEA PRO<br />REPLAY 3D</div>

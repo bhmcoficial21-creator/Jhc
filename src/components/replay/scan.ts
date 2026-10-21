@@ -61,3 +61,35 @@ export function createScanFigure(gltfScene: THREE.Object3D, color: string, opts:
   }
   return { root, bones, mat }
 }
+
+// ---------- Jogador "sólido": uniforme, pele e cabelo pintados por região (cores originais, sem escudo nem marca) ----------
+export interface Kit { shirtA: string; shirtB: string; shorts: string; socks: string; skin: string; hair: string; boots: string }
+export const SKINS = ['#c68a64', '#8d5a3b', '#e0ac88', '#6f4630', '#b87a55', '#d29a74']
+export const KIT_HOME: Omit<Kit, 'skin'> = { shirtA: '#b9f200', shirtB: '#10240a', shorts: '#0c1210', socks: '#b9f200', hair: '#1b1410', boots: '#0b0b0b' }
+
+export function createKitFigure(gltfScene: THREE.Object3D, kit: Kit): ScanFigure {
+  const root = cloneSkinned(gltfScene) as THREE.Object3D
+  const bones: Record<string, THREE.Bone> = {}
+  root.traverse((o) => { if ((o as THREE.Bone).isBone) bones[o.name.replace(/^mixamorig:?/, '')] = o as THREE.Bone })
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.68, metalness: 0.02 }) as unknown as THREE.ShaderMaterial
+  const C = Object.fromEntries(Object.entries(kit).map(([k, v]) => [k, new THREE.Color(v)])) as Record<keyof Kit, THREE.Color>
+  const pick = (x: number, y: number, z: number): THREE.Color => {
+    const ax = Math.abs(x)
+    if (y < 0.075) return C.boots
+    if (ax > 0.19 && y > 1.25) return ax < 0.4 ? (Math.floor((y + 0.5) / 0.05) % 2 ? C.shirtA : C.shirtB) : C.skin           // braços: manga e pele
+    if (y > 1.5) return y > 1.74 && z < 0.06 ? C.hair : C.skin                                                           // pescoço e cabeça
+    if (y > 1.06) return Math.floor((x + 1) / 0.055) % 2 ? C.shirtA : C.shirtB                                           // camisa listrada
+    if (y > 0.62) return C.shorts
+    if (y > 0.42) return C.skin
+    return Math.floor((y + 1) / 0.12) % 9 === 0 ? C.shirtB : C.socks                                                     // meias
+  }
+  const meshes: THREE.SkinnedMesh[] = []
+  root.traverse((o) => { if ((o as THREE.SkinnedMesh).isSkinnedMesh) meshes.push(o as THREE.SkinnedMesh) })
+  for (const m of meshes) {
+    const geo = m.geometry.clone(), p = geo.getAttribute('position'), col = new Float32Array(p.count * 3)
+    for (let i = 0; i < p.count; i++) { const c = pick(p.getX(i), p.getY(i), p.getZ(i)); col.set([c.r, c.g, c.b], i * 3) }
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3))
+    m.geometry = geo; m.material = mat as unknown as THREE.Material; m.frustumCulled = false
+  }
+  return { root, bones, mat }
+}
