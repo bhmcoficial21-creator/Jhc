@@ -21,7 +21,7 @@ export default function Profile() {
     try {
       if (DEMO) Object.keys(localStorage).filter((k) => k.startsWith('vp:')).forEach((k) => localStorage.removeItem(k))
       else { const { error } = await supabase.functions.invoke('delete-account'); if (error) throw error }
-      await signOut(); location.href = '/'
+      await signOut(); location.href = DEMO ? location.pathname : '/'
     } catch (e) { alert('Não foi possível apagar agora: ' + (e as Error).message); setDel(false) }
   }
   return (

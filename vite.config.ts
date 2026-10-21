@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
+    ...(process.env.VITE_DEMO === 'true' ? [] : [VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png', 'icons/icon.svg'],
       manifest: {
@@ -29,8 +29,9 @@ export default defineConfig({
             options: { cacheName: 'media', expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 60 }, cacheableResponse: { statuses: [0, 200] } } },
         ],
       },
-    }),
+    })]),
   ],
+  resolve: process.env.VITE_DEMO === 'true' ? { alias: { 'virtual:pwa-register': '/src/pwa-stub.ts' } } : {},
   build: { chunkSizeWarningLimit: 1200 },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },
 })
