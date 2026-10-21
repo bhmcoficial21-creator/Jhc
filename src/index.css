@@ -1,0 +1,29 @@
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/barlow-condensed/800.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body, #root { min-height: 100%; }
+body { @apply bg-ink text-zinc-100 font-sans antialiased; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+h1, h2, h3 { font-family: 'Barlow Condensed', 'Arial Narrow', Impact, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; }
+input, select, textarea { @apply bg-panel2 border border-line rounded-xl px-4 py-3 text-base w-full outline-none focus:border-lime; }
+textarea { min-height: 96px; }
+label { @apply text-sm text-zinc-400; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 min-h-[56px] font-display text-xl font-extrabold uppercase tracking-wide transition active:scale-[.98] disabled:opacity-40 disabled:pointer-events-none select-none; }
+  .btn-primary { @apply bg-lime text-black; }
+  .btn-ghost { @apply bg-panel2 text-zinc-100 border border-line; }
+  .btn-danger { @apply bg-danger text-black; }
+  .btn-sm { @apply min-h-[44px] text-base px-4 rounded-xl; }
+  .card { @apply bg-panel border border-line rounded-2xl p-4; }
+  .chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide border border-line bg-panel2 text-zinc-300; }
+  .chip-on { @apply bg-lime text-black border-lime; }
+  .page { @apply mx-auto w-full max-w-xl px-4 pb-28 pt-4; }
+  .muted { @apply text-zinc-400 text-sm; }
+}
+.safe-b { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+@keyframes pulse-ring { 0% { opacity: .9 } 100% { opacity: 0; transform: scale(1.6) } }

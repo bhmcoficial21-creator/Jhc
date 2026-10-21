@@ -1,0 +1,4 @@
+export { EXERCISES } from './exercises'
+export { PROGRAMS } from './programs'
+export { LESSONS, QUIZ, MISSIONS, GUIDE } from './game'
+export { DEFAULT_CONFIG, PHASES } from './config'
