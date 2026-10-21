@@ -24,6 +24,9 @@ const Quiz = lazy(() => import('./pages/Quiz'))
 const Routine = lazy(() => import('./pages/Routine'))
 const Planner = lazy(() => import('./pages/Planner'))
 const Guide = lazy(() => import('./pages/Guide'))
+const Ball = lazy(() => import('./pages/Ball'))
+const BallDrill = lazy(() => import('./pages/BallDrill'))
+const Montage = lazy(() => import('./pages/Montage'))
 const Admin = lazy(() => import('./pages/admin/Admin'))
 
 const Icon = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
@@ -88,6 +91,9 @@ export default function App() {
           <Route path="aprender" element={<Learn />} />
           <Route path="aprender/:id" element={<LessonPage />} />
           <Route path="aprender/:id/quiz" element={<Quiz />} />
+          <Route path="bola" element={<Ball />} />
+          <Route path="bola/montagem" element={<Montage />} />
+          <Route path="bola/:id" element={<BallDrill />} />
           <Route path="planner" element={<Planner />} />
           <Route path="guia" element={<Guide />} />
           <Route path="guia/:id" element={<Guide />} />

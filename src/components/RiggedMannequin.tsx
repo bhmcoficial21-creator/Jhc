@@ -4,13 +4,13 @@ import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import type { MannequinApi } from './Mannequin'
-import { poseAt } from './pose'
+import { poseAt, type Pose } from './pose'
 
 const BASE_URL_GLB = `${import.meta.env.BASE_URL}models/xbot.glb`
 // Na demo publicada o .glb vai embutido em base64 num .json (a plataforma só serve tipos de texto/mídia).
 let blobUrl: string | undefined, pending: Promise<void> | undefined
-function modelUrl(): string {
-  if (import.meta.env.VITE_DEMO !== 'true') return BASE_URL_GLB
+export function modelUrl(): string {
+  if (import.meta.env.VITE_DEMO !== 'true' || import.meta.env.DEV) return BASE_URL_GLB
   if (blobUrl) return blobUrl
   pending ??= fetch(`${import.meta.env.BASE_URL}models/xbot.json`).then((r) => r.json()).then((j: { b64: string }) => {
     const bin = atob(j.b64), bytes = new Uint8Array(bin.length)
@@ -23,6 +23,21 @@ const qx = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vect
 const qy = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), a)
 const qz = (a: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), a)
 const mul = (...q: THREE.Quaternion[]) => q.reduce((a, b) => a.multiply(b))
+
+/** Aplica uma pose (ângulos em radianos) aos ossos do modelo rigado. */
+export function applyPose(B: Record<string, THREE.Bone>, rest: { hipsX: number; hipsY: number; hipsZ: number }, p: Pose) {
+  if (!B.Hips) return
+  B.Hips.position.set(rest.hipsX + p.rootX * 100, rest.hipsY + p.rootY * 100, rest.hipsZ + p.rootZ * 100)
+  B.Hips.quaternion.copy(mul(qy(p.rotY), qz(p.rotZ), qx(p.rotX)))
+  const spine = p.lean / 3
+  for (const k of ['Spine', 'Spine1', 'Spine2'] as const) B[k]?.quaternion.copy(qx(spine))
+  B.LeftUpLeg?.quaternion.copy(mul(qz(-p.valgus + p.hipAbL), qx(p.hipL)))
+  B.RightUpLeg?.quaternion.copy(mul(qz(p.valgus - p.hipAbR), qx(p.hipR)))
+  B.LeftLeg?.quaternion.copy(qx(p.kneeL)); B.RightLeg?.quaternion.copy(qx(p.kneeR))
+  B.LeftFoot?.quaternion.copy(qx(-p.kneeL * 0.25 - p.hipL * 0.15)); B.RightFoot?.quaternion.copy(qx(-p.kneeR * 0.25 - p.hipR * 0.15))
+  B.LeftArm?.quaternion.copy(mul(qx(p.shL), qz(-Math.PI / 2 + 0.12))); B.RightArm?.quaternion.copy(mul(qx(p.shR), qz(Math.PI / 2 - 0.12)))
+  B.LeftForeArm?.quaternion.copy(qy(-p.elL)); B.RightForeArm?.quaternion.copy(qy(p.elR))
+}
 
 /** Modelo humano rigado (cinza-escuro, short vermelho) movido pelas mesmas poses do manequim procedural. */
 export function RiggedMannequin({ motion, playing, speed, err, xray, joint, api }: { motion?: string | null; playing: boolean; speed: number; err: boolean; xray: boolean; joint?: string | null; api: { current: MannequinApi | null } }) {
@@ -72,19 +87,7 @@ export function RiggedMannequin({ motion, playing, speed, err, xray, joint, api 
 
   useFrame((_, dt) => {
     if (playing) time.current += dt * speed
-    const p = poseAt(motion, time.current, err), B = bones
-    if (!B.Hips) return
-    B.Hips.position.set(rest.hipsX + p.rootX * 100, rest.hipsY + p.rootY * 100, rest.hipsZ + p.rootZ * 100)
-    B.Hips.quaternion.copy(mul(qy(p.rotY), qz(p.rotZ), qx(p.rotX)))
-    const spine = p.lean / 3
-    for (const k of ['Spine', 'Spine1', 'Spine2'] as const) B[k]?.quaternion.copy(qx(spine))
-    B.LeftUpLeg?.quaternion.copy(mul(qz(-p.valgus + p.hipAbL), qx(p.hipL)))
-    B.RightUpLeg?.quaternion.copy(mul(qz(p.valgus - p.hipAbR), qx(p.hipR)))
-    B.LeftLeg?.quaternion.copy(qx(p.kneeL)); B.RightLeg?.quaternion.copy(qx(p.kneeR))
-    B.LeftFoot?.quaternion.copy(qx(-p.kneeL * 0.25 - p.hipL * 0.15)); B.RightFoot?.quaternion.copy(qx(-p.kneeR * 0.25 - p.hipR * 0.15))
-    // braços: do T-pose para baixo (±90° em Z) e depois balanço para frente/trás em X
-    B.LeftArm?.quaternion.copy(mul(qx(p.shL), qz(-Math.PI / 2 + 0.12))); B.RightArm?.quaternion.copy(mul(qx(p.shR), qz(Math.PI / 2 - 0.12)))
-    B.LeftForeArm?.quaternion.copy(qy(-p.elL)); B.RightForeArm?.quaternion.copy(qy(p.elR))
+    applyPose(bones, rest, poseAt(motion, time.current, err))
   })
   return <primitive object={scene} />
 }

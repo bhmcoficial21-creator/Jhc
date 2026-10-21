@@ -1,14 +1,15 @@
 import { DEFAULT_CONFIG } from '../seed/config'
 import { DEMO, lsGet, lsSet, supabase } from './supabase'
+import type { Replay } from './replay'
 import type { AppConfig, Exercise, GuidePage, Lesson, Mission, Program, QuizQuestion, RefLink } from './types'
 
 export interface Content {
   exercises: Exercise[]; programs: Program[]; lessons: Lesson[]; quiz: QuizQuestion[]
-  missions: Mission[]; guide: GuidePage[]; refs: RefLink[]
+  missions: Mission[]; guide: GuidePage[]; refs: RefLink[]; replays: Replay[]
 }
 export type ContentKey = keyof Content
-export const TABLE: Record<ContentKey, string> = { exercises: 'exercises', programs: 'programs', lessons: 'lessons', quiz: 'quiz_questions', missions: 'missions', guide: 'guide_pages', refs: 'references_links' }
-const EMPTY: Content = { exercises: [], programs: [], lessons: [], quiz: [], missions: [], guide: [], refs: [] }
+export const TABLE: Record<ContentKey, string> = { exercises: 'exercises', programs: 'programs', lessons: 'lessons', quiz: 'quiz_questions', missions: 'missions', guide: 'guide_pages', refs: 'references_links', replays: 'replays' }
+const EMPTY: Content = { exercises: [], programs: [], lessons: [], quiz: [], missions: [], guide: [], refs: [], replays: [] }
 const CACHE = 'vp:content'
 
 /**
@@ -18,7 +19,7 @@ const CACHE = 'vp:content'
 export async function loadContent(): Promise<{ content: Content; fromCache: boolean }> {
   if (DEMO) {
     const seed = await import('../seed')
-    const base: Content = { exercises: seed.EXERCISES, programs: seed.PROGRAMS, lessons: seed.LESSONS, quiz: seed.QUIZ, missions: seed.MISSIONS, guide: seed.GUIDE, refs: [] }
+    const base: Content = { exercises: seed.EXERCISES, programs: seed.PROGRAMS, lessons: seed.LESSONS, quiz: seed.QUIZ, missions: seed.MISSIONS, guide: seed.GUIDE, refs: [], replays: seed.REPLAYS }
     const out = { ...base }
     for (const k of Object.keys(TABLE) as ContentKey[]) { const o = lsGet<unknown[] | null>(`vp:demo:${k}`, null); if (o) (out[k] as unknown[]) = o }
     return { content: out, fromCache: false }
@@ -30,6 +31,7 @@ export async function loadContent(): Promise<{ content: Content; fromCache: bool
       return [k, data ?? []] as const
     }))
     const content = { ...EMPTY, ...Object.fromEntries(res) } as Content
+    content.replays = (content.replays as unknown as { id: string; published: boolean; data: Replay }[]).map((r) => ({ ...r.data, id: r.id, published: r.published }))
     content.lessons.sort((a, b) => a.order_idx - b.order_idx)
     content.programs.sort((a, b) => a.order_idx - b.order_idx)
     lsSet(CACHE, content)
@@ -47,7 +49,8 @@ export async function saveContentRow(k: ContentKey, row: { id?: string }, curren
     if (i >= 0) list[i] = row as never; else list.push(row as never)
     lsSet(`vp:demo:${k}`, list); return
   }
-  const { error } = await supabase.from(TABLE[k]).upsert(row)
+  const payload = k === 'replays' ? (({ id, title, category, level, published }) => ({ id, title, category, level, published: published ?? true, data: row, updated_at: new Date().toISOString() }))(row as Replay) : row
+  const { error } = await supabase.from(TABLE[k]).upsert(payload)
   if (error) throw error
 }
 export async function deleteContentRow(k: ContentKey, id: string, current: Content): Promise<void> {

@@ -37,7 +37,7 @@ interface Data {
 const D = createContext<Data>(null!)
 export const useData = () => useContext(D)
 
-const EMPTY: Content = { exercises: [], programs: [], lessons: [], quiz: [], missions: [], guide: [], refs: [] }
+const EMPTY: Content = { exercises: [], programs: [], lessons: [], quiz: [], missions: [], guide: [], refs: [], replays: [] }
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const { user, annual } = useAuth()

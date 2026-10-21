@@ -85,3 +85,41 @@ export function poseAt(motion: string | null | undefined, t: number, err = false
   }
   return p
 }
+
+// ---------- Poses de ação para os replays (fase de corrida dirigida pela distância percorrida) ----------
+export const zeroPose = Z
+export type ActName = 'idle' | 'run' | 'jog' | 'jockey' | 'feint' | 'pedal' | 'kick' | 'turn' | 'receive' | 'dive' | 'celebrate'
+
+/** phase: radianos do ciclo de corrida; u: progresso 0..1 do gesto; side: ±1 (lado da finta ou do mergulho). */
+export function actPose(act: ActName, v: number, phase: number, u: number, side = 1): Pose {
+  const p = Z(), w = phase
+  const run = (amp: number, lean: number) => {
+    p.lean = lean; p.hipL = -Math.sin(w) * amp - 0.15; p.hipR = Math.sin(w) * amp - 0.15
+    p.kneeL = pos(Math.sin(w + 1.2)) * (1.2 * amp + 0.5) + 0.3; p.kneeR = pos(Math.sin(w + 1.2 + Math.PI)) * (1.2 * amp + 0.5) + 0.3
+    p.shL = Math.sin(w) * amp; p.shR = -Math.sin(w) * amp; p.elL = p.elR = 1.2; p.rootY = -Math.abs(Math.sin(w)) * 0.04
+  }
+  const sm = smooth(Math.min(1, Math.max(0, u)))
+  switch (act) {
+    case 'run': run(Math.min(1.15, 0.5 + v * 0.08), 0.1 + Math.min(0.35, v * 0.05)); break
+    case 'jog': run(0.6, 0.12); break
+    case 'celebrate': run(0.5, -0.1); p.shL = p.shR = -2.7; p.elL = p.elR = 0.3; break
+    case 'receive': p.rootY = -0.12; p.hipL = p.hipR = -0.5; p.kneeL = p.kneeR = 0.8; p.lean = 0.2; p.shL = p.shR = -0.4; p.hipAbL = 0.12; p.hipAbR = -0.12; break
+    case 'jockey': {
+      p.rootY = -0.2; p.lean = 0.22; p.hipL = -0.5 + Math.sin(w) * 0.25; p.hipR = -0.5 - Math.sin(w) * 0.25; p.kneeL = 0.95 + Math.sin(w) * 0.15; p.kneeR = 0.95 - Math.sin(w) * 0.15
+      p.shL = -0.9; p.shR = -0.9; p.elL = p.elR = 0.9; p.hipAbL = 0.18; p.hipAbR = -0.18; break
+    }
+    case 'feint': p.rootY = -0.14; p.lean = 0.26; p.rotZ = Math.sin(Math.PI * u) * 0.32 * side; p.hipL = p.hipR = -0.55; p.kneeL = p.kneeR = 0.9; p.shL = Math.sin(Math.PI * u) * -1.0; p.shR = Math.sin(Math.PI * u) * 1.0; p.rootX = Math.sin(Math.PI * u) * 0.2 * side; break
+    case 'pedal': p.rootY = -0.1; p.lean = 0.3; p.hipL = -0.45; p.kneeL = 0.8; p.hipR = -0.6 + Math.sin(Math.PI * 4 * u) * 0.55; p.kneeR = 0.9 + Math.cos(Math.PI * 4 * u) * 0.5; p.hipAbR = 0.2 * Math.sin(Math.PI * 2 * u); p.shL = -0.6; p.shR = 0.4; break
+    case 'turn': p.rootY = -0.16; p.lean = 0.3; p.hipL = p.hipR = -0.6; p.kneeL = p.kneeR = 1.0; p.shL = -0.9; p.shR = -0.2; break
+    case 'kick': {
+      p.lean = 0.12; p.rootY = -0.06; p.hipL = -0.15; p.kneeL = 0.45; p.shL = -0.7; p.shR = 0.5
+      if (u < 0.35) { const s = u / 0.35; p.hipR = 0.8 * s; p.kneeR = 1.6 * s; p.lean = -0.08 * s }
+      else if (u < 0.5) { const s = (u - 0.35) / 0.15; p.hipR = 0.8 - 2.2 * s; p.kneeR = 1.6 - 1.4 * s; p.lean = 0.2 * s }
+      else { p.hipR = -1.4 + 0.4 * (u - 0.5) * 2; p.kneeR = 0.2 + 0.3 * (u - 0.5) * 2; p.lean = 0.2 }
+      break
+    }
+    case 'dive': p.rotZ = -side * 1.35 * sm; p.rootY = -0.45 * sm; p.shL = p.shR = -2.6 * sm; p.hipAbL = 0.5 * sm; p.hipAbR = -0.5 * sm; p.elL = p.elR = 0.1; break
+    case 'idle': default: p.rootY = Math.sin(phase * 0.35) * 0.006; p.shL = p.shR = 0.05; p.elL = p.elR = 0.2
+  }
+  return p
+}

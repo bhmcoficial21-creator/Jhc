@@ -74,6 +74,7 @@ export default function Today() {
       )}
 
       <LinkBtn to="/app/aquecer-jogo" variant="ghost" className="w-full">AQUECER PARA O JOGO · 10 min</LinkBtn>
+      <LinkBtn to="/app/bola" className="w-full">TREINO COM BOLA · REPLAYS 3D</LinkBtn>
 
       {/* Dia seguinte ao jogo: só recuperação */}
       {annual && plan.recoveryOnly ? (

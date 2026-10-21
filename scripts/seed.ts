@@ -1,7 +1,7 @@
 // Popula o Supabase com o conteúdo inicial (idempotente). Uso:
 //   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run seed
 import { createClient } from '@supabase/supabase-js'
-import { EXERCISES, GUIDE, LESSONS, MISSIONS, PROGRAMS, QUIZ } from '../src/seed'
+import { EXERCISES, GUIDE, LESSONS, MISSIONS, PROGRAMS, QUIZ, REPLAYS } from '../src/seed'
 
 const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY
 if (!url || !key) { console.error('Defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY'); process.exit(1) }
@@ -21,3 +21,4 @@ await up('lessons', LESSONS)
 await up('quiz_questions', QUIZ)
 await up('missions', MISSIONS)
 await up('guide_pages', GUIDE)
+await up('replays', REPLAYS.map((r) => ({ id: r.id, title: r.title, category: r.category, level: r.level, published: true, data: r })))

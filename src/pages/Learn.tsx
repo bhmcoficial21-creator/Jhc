@@ -18,6 +18,7 @@ export default function Learn() {
     <div className="page space-y-4">
       <h1 className="text-5xl leading-none">Aprender jogo</h1>
       <p className="muted">Posicionamento e leitura de jogo para a sua função ({d.profile!.position}). Lições curtas de 2 a 4 minutos. Orientação geral de tática, sem promessa de resultado.</p>
+      <Link to="/app/bola" className="btn btn-primary w-full">TREINO COM BOLA · REPLAYS 3D</Link>
       <div className="space-y-2">{lessons.map((l, i) => {
         const open = unlocked(i)
         const card = <Card className={`flex items-start gap-3 ${open ? '' : 'opacity-60'}`}>
