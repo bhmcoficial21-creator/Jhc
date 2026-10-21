@@ -108,7 +108,7 @@ export function actPose(act: ActName, v: number, phase: number, u: number, side 
       p.rootY = -0.2; p.lean = 0.22; p.hipL = -0.5 + Math.sin(w) * 0.25; p.hipR = -0.5 - Math.sin(w) * 0.25; p.kneeL = 0.95 + Math.sin(w) * 0.15; p.kneeR = 0.95 - Math.sin(w) * 0.15
       p.shL = -0.25; p.shR = -0.25; p.elL = p.elR = 1.35; p.hipAbL = 0.18; p.hipAbR = -0.18; break
     }
-    case 'feint': p.rootY = -0.14; p.lean = 0.26; p.rotZ = Math.sin(Math.PI * u) * 0.32 * side; p.hipL = p.hipR = -0.55; p.kneeL = p.kneeR = 0.9; p.shL = Math.sin(Math.PI * u) * -1.0; p.shR = Math.sin(Math.PI * u) * 1.0; p.rootX = Math.sin(Math.PI * u) * 0.2 * side; break
+    case 'feint': p.rootY = -0.16; p.lean = 0.3; p.rotZ = Math.sin(Math.PI * u) * 0.42 * side; p.rotY = Math.sin(Math.PI * u) * 0.5 * side; p.hipL = p.hipR = -0.55; p.kneeL = p.kneeR = 0.9; p.shL = Math.sin(Math.PI * u) * -1.0; p.shR = Math.sin(Math.PI * u) * 1.0; p.rootX = Math.sin(Math.PI * u) * 0.2 * side; break
     case 'pedal': p.rootY = -0.1; p.lean = 0.3; p.hipL = -0.45; p.kneeL = 0.8; p.hipR = -0.6 + Math.sin(Math.PI * 4 * u) * 0.55; p.kneeR = 0.9 + Math.cos(Math.PI * 4 * u) * 0.5; p.hipAbR = 0.2 * Math.sin(Math.PI * 2 * u); p.shL = -0.6; p.shR = 0.4; break
     case 'turn': p.rootY = -0.16; p.lean = 0.3; p.hipL = p.hipR = -0.6; p.kneeL = p.kneeR = 1.0; p.shL = -0.9; p.shR = -0.2; break
     case 'kick': {

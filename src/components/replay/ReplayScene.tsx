@@ -60,17 +60,22 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   const rest = useMemo(() => figs.map((f) => ({ hipsX: f.bones.Hips?.position.x ?? 0, hipsY: f.bones.Hips?.position.y ?? 104, hipsZ: f.bones.Hips?.position.z ?? 0 })), [figs])
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
   const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
-  const endHold = useRef(0)
+  const endHold = useRef(0), slow = useRef(1), lastT = useRef(0)
   const trailGeo = useMemo(() => new THREE.BufferGeometry().setFromPoints(Array.from({ length: 28 }, () => new THREE.Vector3())), [])
   useEffect(() => { phases.current = r.tracks.map(() => 0); yaws.current = r.tracks.map(() => 0); heroDist.current = { d: 0, lastT: 0, prev: null } }, [r])
 
   useFrame((_, dt) => {
     const c = clock.current
+    const hk = r.tracks.find((x) => x.hero)!, ha = posAt(hk, Math.min(c.t, r.duration)).act
+    const key = ha === 'feint' || ha === 'pedal' || ha === 'kick' || ha === 'turn'
+    slow.current += ((key ? 0.38 : 1) - slow.current) * Math.min(1, dt * 6)
     if (c.playing) {
-      c.t += dt * c.speed
+      c.t += dt * c.speed * slow.current
       if (c.t >= r.duration) { if (c.loop) { endHold.current += dt; if (endHold.current > 1.2) { c.t = 0; endHold.current = 0 } else c.t = r.duration } else { c.t = r.duration; c.playing = false; onEnd?.() } }
     }
     const t = Math.min(Math.max(0, c.t), r.duration)
+    if (t < lastT.current - 1) { cam.current.init = false; cam.current.d = 0; trailPts.current = [] }   // reinício do replay: câmera corta direto, sem arrastar
+    lastT.current = t
     for (const f of figs) if (f.mat.uniforms) f.mat.uniforms.uScale.value = (size.height * gl.getPixelRatio()) / (2 * Math.tan(((camera as THREE.PerspectiveCamera).fov * Math.PI) / 360))
     const b = ballAt(r, t)
     const hero = r.tracks.find((x) => x.hero)!
@@ -79,8 +84,8 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       const p = posAt(tr, t), v = velAt(tr, t)
       const act: ActName = (p.act === 'run' && v.speed < 0.35 ? 'idle' : p.act === 'run' && v.speed < 3.2 ? 'jog' : p.act) as ActName
       const moving = act === 'run' || act === 'jog' || act === 'jockey' || act === 'celebrate'
-      if (c.playing && moving) phases.current[i] += dt * c.speed * Math.PI * 2 * (0.6 + 0.1 * Math.min(8, v.speed + 1))
-      else if (c.playing) phases.current[i] += dt * c.speed * 1.2
+      if (c.playing && moving) phases.current[i] += dt * c.speed * slow.current * Math.PI * 2 * (0.6 + 0.1 * Math.min(8, v.speed + 1))
+      else if (c.playing) phases.current[i] += dt * c.speed * slow.current * 1.2
       // orientação: pela velocidade; marcador/jockey olha para o herói/bola; gestos usam `face`
       let target = v.speed > 0.6 ? Math.atan2(v.vx, v.vy) : yaws.current[i]
       if (p.face !== undefined && (v.speed < 0.6 || act === 'feint' || act === 'pedal' || act === 'turn' || act === 'receive' || act === 'kick')) target = Math.atan2(Math.cos((p.face * Math.PI) / 180), Math.sin((p.face * Math.PI) / 180))
@@ -119,15 +124,17 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       px = r.goal!.x + 12; py = 2.4; pz = b.y * 0.4 + 6; lx = (f.cx + r.goal!.x) / 2; ly = 1.0; lz = f.cy
     } else {
       // enquadra herói, bola e quem está por perto, respeitando o formato vertical da tela
-      const pts: [number, number][] = [[f.ball.x, f.ball.y]]
+      const pts: [number, number][] = [[f.ball.x, f.ball.y], [hp.x + hv.vx * 0.55, hp.y + hv.vy * 0.55]]   // olha um pouco à frente do herói
       for (const tr of r.tracks) { const q = posAt(tr, t); if (tr.hero || Math.hypot(q.x - hp.x, q.y - hp.y) < 9) pts.push([q.x, q.y]) }
       const xs = pts.map((q) => q[0]), zs = pts.map((q) => q[1])
-      const w = Math.max(...xs) - Math.min(...xs) + 5.5, h = Math.max(...zs) - Math.min(...zs) + 6
+      const tight = slow.current < 0.8 ? 0.62 : 1
+      const w = (Math.max(...xs) - Math.min(...xs) + 4) * tight + 2, h = (Math.max(...zs) - Math.min(...zs) + 4) * tight + 2
       const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cz = (Math.max(...zs) + Math.min(...zs)) / 2
       const asp = size.width / size.height, vf = ((camera as THREE.PerspectiveCamera).fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * asp)
-      const need = Math.min(S * 0.95, Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 6))
-      cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k; cs.d = cs.d === 0 ? need : cs.d + (need - cs.d) * k * 0.7
-      px = cs.tx; py = cs.d * 0.72; pz = cs.ty + cs.d * 0.78; lx = cs.tx; ly = 0.9; lz = cs.ty
+      const need = Math.min(S * 0.95, Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 5))
+      if (!cs.init) { cs.tx = cx; cs.ty = cz } else { cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k }
+       cs.d = cs.d === 0 ? need : cs.d + (need - cs.d) * k * 0.9
+      px = cs.tx; py = cs.d * 0.5; pz = cs.ty + cs.d * 0.92; lx = cs.tx; ly = 0.9; lz = cs.ty
     }
     if (!cs.init) { camera.position.set(px, py, pz); cs.init = true } else camera.position.lerp(new THREE.Vector3(px, py, pz), m === 'tv' ? 0.2 : 0.12)
     camera.lookAt(lx, ly, lz)

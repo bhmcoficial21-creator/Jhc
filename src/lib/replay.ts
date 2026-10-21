@@ -57,7 +57,7 @@ export function ballAt(r: Replay, t: number): { x: number; y: number; z: number 
     // drible por TOQUES: a bola é empurrada à frente (rola rápido e desacelera) e o jogador a alcança para o toque seguinte
     const period = sp < 0.5 ? 1.2 : Math.max(0.42, 0.78 - sp * 0.05), cyc = ((t - seg.from) / period) % 1, k = Math.floor((t - seg.from) / period)
     const reach = Math.min(1, sp / 4.5)
-    const off = sp < 0.5 ? 0.42 : 0.45 + 0.75 * reach * (cyc < 0.22 ? 1 - Math.pow(1 - cyc / 0.22, 2) : 1 - ((cyc - 0.22) / 0.78) * 0.93)
+    const off = sp < 0.5 ? 0.36 : 0.38 + 0.5 * reach * (cyc < 0.22 ? 1 - Math.pow(1 - cyc / 0.22, 2) : 1 - ((cyc - 0.22) / 0.78) * 0.93)
     const sw = (k % 2 ? 1 : -1) * 0.13 * (1 - cyc * 0.6)
     const bounce = cyc < 0.12 ? Math.sin((cyc / 0.12) * Math.PI) * 0.05 : 0
     return { x: p.x + hx * off - hy * sw, y: p.y + hy * off + hx * sw, z: 0.11 + bounce }
