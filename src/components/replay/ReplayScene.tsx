@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { type Replay, ballAt, focusAt, posAt, velAt } from '../../lib/replay'
 import { actPose, type ActName } from '../pose'
 import { applyPose, modelUrl } from '../RiggedMannequin'
+const ACT_PROC = new Set(['jockey', 'feint', 'pedal', 'kick', 'turn', 'receive', 'dive', 'celebrate'])
 import { createKitFigure, createScanFigure, KIT_HOME, SKINS, type ScanFigure } from './scan'
 
 export interface Clock { t: number; playing: boolean; speed: number; loop: boolean }
@@ -58,6 +59,12 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   const { size, camera, gl } = useThree()
   const figs = useMemo<(ScanFigure & { id: string })[]>(() => r.tracks.map((t, i) => ({ id: t.id, ...(t.team === 'a' ? createKitFigure(gltf.scene, { ...KIT_HOME, skin: SKINS[i % SKINS.length] }) : createScanFigure(gltf.scene, GHOST, { step: 2, jointsStep: 3, size: 0.03 })) })), [r, gltf.scene])
   const rest = useMemo(() => figs.map((f) => ({ hipsX: f.bones.Hips?.position.x ?? 0, hipsY: f.bones.Hips?.position.y ?? 104, hipsZ: f.bones.Hips?.position.z ?? 0 })), [figs])
+  // Locomoção de verdade: clipes de captura de movimento (idle / walk / run) do próprio modelo, misturados pela velocidade
+  const mixers = useMemo(() => figs.map((f) => {
+    const m = new THREE.AnimationMixer(f.root), acts: Record<string, THREE.AnimationAction> = {}
+    for (const name of ['idle', 'walk', 'run']) { const clip = gltf.animations.find((a) => a.name === name); if (clip) { const a = m.clipAction(clip); a.play(); a.setEffectiveWeight(name === 'idle' ? 1 : 0); acts[name] = a } }
+    return { m, acts, w: { idle: 1, walk: 0, run: 0 }, proc: 0 }
+  }), [figs, gltf.animations])
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
   const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
   const endHold = useRef(0), slow = useRef(1), lastT = useRef(0)
@@ -98,7 +105,16 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       const lat = v.vx * Math.cos(yaw) - v.vy * Math.sin(yaw)
       const side = (act === 'dive' ? Math.sign(lat || 1) : Math.sign(lat || (i % 2 ? 1 : -1))) as 1 | -1
       g.position.set(p.x, 0, p.y); g.rotation.y = yaw
-      applyPose(f.bones, rest[i], actPose(act, v.speed, phases.current[i], p.actT, side))
+      // 1) locomoção por captura de movimento
+      const mx = mixers[i], sp = v.speed
+      const tgt = { idle: sp < 0.35 ? 1 : 0, walk: sp >= 0.35 && sp < 2.5 ? 1 : 0, run: sp >= 2.5 ? 1 : 0 }
+      const kf = Math.min(1, dt * 7)
+      for (const k of ['idle', 'walk', 'run'] as const) { mx.w[k] += (tgt[k] - mx.w[k]) * kf; mx.acts[k]?.setEffectiveWeight(mx.w[k]) }
+      mx.acts.walk?.setEffectiveTimeScale(Math.max(0.5, sp / 1.45)); mx.acts.run?.setEffectiveTimeScale(Math.max(0.7, Math.min(2.0, sp / 4.2)))
+      mx.m.update(c.playing ? dt * c.speed * slow.current : 0)
+      // 2) gestos do futebol (finta, chute, mergulho…) por cima, com transição suave
+      mx.proc += ((ACT_PROC.has(act) ? 1 : 0) - mx.proc) * Math.min(1, dt * 12)
+      if (mx.proc > 0.02) blendPose(f.bones, rest[i], actPose(act, v.speed, phases.current[i], p.actT, side), mx.proc)
     })
     if (ball.current) { ball.current.position.set(b.x, b.z, b.y) }
     // rastro da bola
@@ -152,6 +168,15 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#9fd0ff" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
     <primitive object={useMemo(() => new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: '#cfe6ff', transparent: true, opacity: 0.55 })), [trailGeo])} ref={trail as never} />
   </>
+}
+
+const tmpQ = new THREE.Quaternion()
+/** Mistura a pose calculada com a que o clipe de movimento deixou nos ossos (w = 0..1). */
+function blendPose(B: Record<string, THREE.Bone>, rest: { hipsX: number; hipsY: number; hipsZ: number }, pose: ReturnType<typeof actPose>, w: number) {
+  const names = Object.keys(B), saved = names.map((n) => B[n].quaternion.clone()), hp = B.Hips?.position.clone()
+  applyPose(B, rest, pose)
+  names.forEach((n, i) => { tmpQ.copy(saved[i]).slerp(B[n].quaternion, w); B[n].quaternion.copy(tmpQ) })
+  if (B.Hips && hp) B.Hips.position.lerpVectors(hp, B.Hips.position, w)
 }
 
 export default function ReplayScene({ r, clock, mode, hudRef, onEnd, onCanvas }: { r: Replay; clock: React.MutableRefObject<Clock>; mode: CamMode; hudRef: React.MutableRefObject<Hud>; onEnd?: () => void; onCanvas?: (c: HTMLCanvasElement) => void }) {
