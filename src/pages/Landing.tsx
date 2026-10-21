@@ -1,10 +1,13 @@
+import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
+import FavelaBg from '../components/FavelaBg'
 import { useAuth } from '../lib/auth'
 import { brl } from '../lib/content'
 import { RESULTS, TESTIMONIALS } from '../content/landing'
 import { PHASES } from '../seed/config'
 import { ExtLink, Logo } from '../components/ui'
 
+const Hero3D = lazy(() => import('../components/Hero3D'))
 const go = (id: string) => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 const Sec = ({ id, title, children }: { id?: string; title?: string; children: React.ReactNode }) =>
   <section id={id} className="mx-auto w-full max-w-3xl px-4 py-10">{title && <h2 className="mb-5 text-4xl leading-none">{title}</h2>}{children}</section>
@@ -21,12 +24,17 @@ export default function Landing() {
       <header className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4"><Logo />
         <Link to={user ? '/app' : '/login'} className="rounded-xl border border-line px-4 py-2 text-sm font-semibold">{user ? 'Abrir app' : 'Já sou aluno'}</Link></header>
 
-      <Sec>
-        <h1 className="text-[3.1rem] leading-[.95] sm:text-7xl">Joga na várzea e <span className="text-lime">cansa nos primeiros 15 minutos?</span> Treine onde der.</h1>
-        <p className="mt-4 text-lg text-zinc-300">Treino de explosão e agilidade para fazer em casa, na academia, no campo ou na quadra.</p>
-        <p className="mt-1 text-sm text-zinc-500">Em casa, até 3x3 metros. O mesmo programa nos três lugares: o app troca os exercícios para onde você vai treinar hoje.</p>
-        <div className="mt-6"><CTA /></div>
-      </Sec>
+      <section className="relative isolate overflow-hidden">
+        <FavelaBg className="absolute inset-0 -z-20 h-full w-full" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/75 via-black/35 to-ink" />
+        <div className="mx-auto w-full max-w-3xl px-4 pb-0 pt-10">
+          <h1 className="text-[3.1rem] leading-[.95] drop-shadow-lg sm:text-7xl">Joga na várzea e <span className="text-lime">cansa nos primeiros 15 minutos?</span> Treine onde der.</h1>
+          <div className="mx-auto -mb-2 mt-2 h-[300px] w-full max-w-sm"><Suspense fallback={null}><Hero3D motion="jump" /></Suspense></div>
+          <p className="mt-2 text-lg text-zinc-100">Treino de explosão e agilidade para fazer em casa, na academia, no campo ou na quadra.</p>
+          <p className="mt-1 text-sm text-zinc-300">Em casa, até 3x3 metros. O mesmo programa nos três lugares: o app troca os exercícios para onde você vai treinar hoje.</p>
+          <div className="mt-6 pb-10"><CTA /></div>
+        </div>
+      </section>
 
       <Sec title="Você se reconhece?">
         <div className="grid gap-3">

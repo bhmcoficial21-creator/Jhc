@@ -13,7 +13,7 @@ export interface ViewerProps {
 }
 
 const webglOk = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')) } catch { return false } })()
-const ANGLES: Record<string, [number, number, number]> = { lateral: [1, 0.35, 0], frontal: [0, 0.35, 1], traseiro: [0, 0.35, -1], cima: [0, 1, 0.001] }
+const ANGLES: Record<string, [number, number, number]> = { lateral: [1, 0.6, 0], frontal: [0, 0.6, 1], traseiro: [0, 0.6, -1], cima: [0, 1, 0.001] }
 const ANGLE_LABEL: Record<string, string> = { lateral: 'Lateral', frontal: 'Frontal', traseiro: 'Traseiro', cima: 'De cima' }
 
 class Boundary extends Component<{ fallback: ReactNode; children: ReactNode }, { err: boolean }> {
@@ -23,16 +23,11 @@ class Boundary extends Component<{ fallback: ReactNode; children: ReactNode }, {
 }
 
 function Floor({ circuit }: { circuit?: CircuitDef | null }) {
-  const shadow = useMemo(() => {
-    const c = document.createElement('canvas'); c.width = c.height = 64
-    const g = c.getContext('2d')!, gr = g.createRadialGradient(32, 32, 2, 32, 32, 32)
-    gr.addColorStop(0, 'rgba(0,0,0,.65)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64)
-    return new THREE.CanvasTexture(c)
-  }, [])
   return <>
-    <mesh rotation-x={-Math.PI / 2} position-y={-0.001}><circleGeometry args={[6, 48]} /><meshStandardMaterial color="#111" roughness={1} /></mesh>
-    <gridHelper args={[8, 16, '#222', '#1a1a1a']} position-y={0.001} />
-    <mesh rotation-x={-Math.PI / 2} position-y={0.003}><planeGeometry args={[1.1, 1.1]} /><meshBasicMaterial map={shadow} transparent depthWrite={false} /></mesh>
+    <mesh rotation-x={-Math.PI / 2} position-y={-0.002}><circleGeometry args={[9, 48]} /><meshBasicMaterial color="#050505" /></mesh>
+    {/* grade neon: linhas finas + halo */}
+    <gridHelper args={[18, 36, '#ff3030', '#ff3030']} position-y={0.001}><lineBasicMaterial attach="material" color="#ff3030" transparent opacity={0.95} /></gridHelper>
+    <gridHelper args={[18, 36, '#ff3030', '#ff3030']} position={[0, 0.004, 0]} scale={[1.0, 1, 1.0]}><lineBasicMaterial attach="material" color="#ff6060" transparent opacity={0.25} /></gridHelper>
     {circuit && <CircuitMarks c={circuit} />}
   </>
 }
@@ -130,9 +125,10 @@ export default function Viewer3D(p: ViewerProps) {
         {!webglOk ? fallback : (
           <Boundary fallback={fallback}>
             <Canvas frameloop="demand" dpr={[1, 1.5]} camera={{ fov: 40, position: [3, 1.5, 0] }} gl={{ antialias: false, powerPreference: 'low-power' }} style={{ touchAction: 'none' }}>
-              <color attach="background" args={['#070707']} />
-              <hemisphereLight args={['#ffffff', '#222222', 0.9]} />
-              <directionalLight position={[3, 5, 2]} intensity={1.4} />
+              <color attach="background" args={['#020202']} /><fog attach="fog" args={['#020202', 6, 13]} />
+              <hemisphereLight args={['#cfd8ff', '#201010', 0.8]} />
+              <directionalLight position={[3, 5, 2]} intensity={1.6} />
+              <directionalLight position={[-3, 2, -3]} intensity={1.1} color="#ff5a4a" />
               <Suspense fallback={null}>
                 <Floor circuit={p.circuit} />
                 {hasModel ? <GlbModel url={p.src!} mode={p.mode} level={p.level} playing={playing} speed={speed} xray={xray} joint={joint} />
