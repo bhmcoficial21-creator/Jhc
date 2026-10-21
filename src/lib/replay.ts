@@ -53,13 +53,19 @@ export function ballAt(r: Replay, t: number): { x: number; y: number; z: number 
   if (seg.type === 'at') { const [x, y] = resolve(seg.at, t); return { x, y, z: 0.11 } }
   if (seg.type === 'carry') {
     const tr = r.tracks.find((x) => x.id === seg!.by)!, p = posAt(tr, t), v = velAt(tr, t)
-    const sp = Math.max(0.0, v.speed), hx = sp > 0.3 ? v.vx / sp : Math.cos(((p.face ?? 0) * Math.PI) / 180), hy = sp > 0.3 ? v.vy / sp : Math.sin(((p.face ?? 0) * Math.PI) / 180)
-    const off = 0.55 + Math.min(0.6, sp * 0.09), sw = Math.sin(t * 7.5) * 0.18
-    return { x: p.x + hx * off - hy * sw, y: p.y + hy * off + hx * sw, z: 0.11 + Math.abs(Math.sin(t * 7.5)) * 0.04 }
+    const sp = v.speed, hx = sp > 0.3 ? v.vx / sp : Math.cos(((p.face ?? 0) * Math.PI) / 180), hy = sp > 0.3 ? v.vy / sp : Math.sin(((p.face ?? 0) * Math.PI) / 180)
+    // drible por TOQUES: a bola é empurrada à frente (rola rápido e desacelera) e o jogador a alcança para o toque seguinte
+    const period = sp < 0.5 ? 1.2 : Math.max(0.42, 0.78 - sp * 0.05), cyc = ((t - seg.from) / period) % 1, k = Math.floor((t - seg.from) / period)
+    const reach = Math.min(1, sp / 4.5)
+    const off = sp < 0.5 ? 0.42 : 0.45 + 0.75 * reach * (cyc < 0.22 ? 1 - Math.pow(1 - cyc / 0.22, 2) : 1 - ((cyc - 0.22) / 0.78) * 0.93)
+    const sw = (k % 2 ? 1 : -1) * 0.13 * (1 - cyc * 0.6)
+    const bounce = cyc < 0.12 ? Math.sin((cyc / 0.12) * Math.PI) * 0.05 : 0
+    return { x: p.x + hx * off - hy * sw, y: p.y + hy * off + hx * sw, z: 0.11 + bounce }
   }
   const u = Math.min(1, Math.max(0, (t - seg.from) / Math.max(1e-3, seg.to - seg.from)))
   const a = resolve(seg.a, seg.from), b = resolve(seg.b, seg.to)
-  return { x: lerp(a[0], b[0], u), y: lerp(a[1], b[1], u), z: 0.11 + (seg.arc ?? 0) * 4 * u * (1 - u) }
+  const e = (seg.arc ?? 0) < 0.6 ? 1 - Math.pow(1 - u, 1.5) : u            // bola rasteira desacelera pelo atrito; chute alto mantém a velocidade
+  return { x: lerp(a[0], b[0], e), y: lerp(a[1], b[1], e), z: 0.11 + (seg.arc ?? 0) * 4 * u * (1 - u) }
 }
 
 /** Troca de câmera automática: centroide de interesse (herói + bola). */

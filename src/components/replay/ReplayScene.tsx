@@ -53,7 +53,7 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   const figs = useMemo<(ScanFigure & { id: string })[]>(() => r.tracks.map((t) => ({ id: t.id, ...createScanFigure(gltf.scene, t.hero ? HERO : TEAM[t.team]) })), [r, gltf.scene])
   const rest = useMemo(() => figs.map((f) => ({ hipsX: f.bones.Hips?.position.x ?? 0, hipsY: f.bones.Hips?.position.y ?? 104, hipsZ: f.bones.Hips?.position.z ?? 0 })), [figs])
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
-  const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
+  const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
   const endHold = useRef(0)
   const trailGeo = useMemo(() => new THREE.BufferGeometry().setFromPoints(Array.from({ length: 28 }, () => new THREE.Vector3())), [])
   useEffect(() => { phases.current = r.tracks.map(() => 0); yaws.current = r.tracks.map(() => 0); heroDist.current = { d: 0, lastT: 0, prev: null } }, [r])
@@ -112,18 +112,26 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     } else if (m === 'gol') {
       px = r.goal!.x + 12; py = 2.4; pz = b.y * 0.4 + 6; lx = (f.cx + r.goal!.x) / 2; ly = 1.0; lz = f.cy
     } else {
-      cs.tx += (f.cx - cs.tx) * k; cs.ty += (f.cy - cs.ty) * k
-      px = cs.tx * 0.97; py = S * 0.5; pz = cs.ty + S * 0.8; lx = cs.tx; ly = 0.6; lz = cs.ty
+      // enquadra herói, bola e quem está por perto, respeitando o formato vertical da tela
+      const pts: [number, number][] = [[f.ball.x, f.ball.y]]
+      for (const tr of r.tracks) { const q = posAt(tr, t); if (tr.hero || Math.hypot(q.x - hp.x, q.y - hp.y) < 20) pts.push([q.x, q.y]) }
+      const xs = pts.map((q) => q[0]), zs = pts.map((q) => q[1])
+      const w = Math.max(...xs) - Math.min(...xs) + 5.5, h = Math.max(...zs) - Math.min(...zs) + 6
+      const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cz = (Math.max(...zs) + Math.min(...zs)) / 2
+      const asp = size.width / size.height, vf = ((camera as THREE.PerspectiveCamera).fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * asp)
+      const need = Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 7)
+      cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k; cs.d = cs.d === 0 ? need : cs.d + (need - cs.d) * k * 0.7
+      px = cs.tx; py = cs.d * 0.72; pz = cs.ty + cs.d * 0.78; lx = cs.tx; ly = 0.9; lz = cs.ty
     }
-    if (!cs.init) { camera.position.set(px, py, pz); cs.init = true } else camera.position.lerp(new THREE.Vector3(px, py, pz), m === 'tv' ? 0.12 : 0.1)
+    if (!cs.init) { camera.position.set(px, py, pz); cs.init = true } else camera.position.lerp(new THREE.Vector3(px, py, pz), m === 'tv' ? 0.2 : 0.12)
     camera.lookAt(lx, ly, lz)
   })
 
   return <>
     <Pitch r={r} />
     {figs.map((f, i) => <group key={f.id} ref={(g) => { if (g) groups.current[i] = g }}><primitive object={f.root} />
-      <Html position={[0, 2.15, 0]} center distanceFactor={26} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
-        <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-display text-[11px] font-extrabold uppercase tracking-wide ${r.tracks[i].hero ? 'bg-lime text-black' : 'bg-black/55 text-zinc-200'}`}>{r.tracks[i].role}</span>
+      <Html position={[0, 2.1, 0]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
+        <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide ${r.tracks[i].hero ? 'bg-lime text-black' : 'bg-black/55 text-zinc-200'}`}>{r.tracks[i].role}</span>
       </Html></group>)}
     <group ref={ball}><mesh><sphereGeometry args={[0.13, 14, 10]} /><meshBasicMaterial color="#ffffff" /></mesh>
       <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#9fd0ff" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
