@@ -119,22 +119,21 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     const m: CamMode = mode === 'gol' && !r.goal ? 'tv' : mode
     if (m === 'seguir') {
       const dirx = hv.speed > 0.6 ? Math.sin(hd) : Math.sin(yaws.current[r.tracks.indexOf(hero)]), dirz = hv.speed > 0.6 ? Math.cos(hd) : Math.cos(yaws.current[r.tracks.indexOf(hero)])
-      px = hp.x - dirx * 7 + dirz * 1.5; py = 3.4; pz = hp.y - dirz * 7 - dirx * 1.5; lx = hp.x + dirx * 5; ly = 1.1; lz = hp.y + dirz * 5
+      px = hp.x - dirx * 9.5 + dirz * 1.5; py = 4.4; pz = hp.y - dirz * 9.5 - dirx * 1.5; lx = hp.x + dirx * 4.5; ly = 0.9; lz = hp.y + dirz * 4.5
     } else if (m === 'gol') {
       px = r.goal!.x + 12; py = 2.4; pz = b.y * 0.4 + 6; lx = (f.cx + r.goal!.x) / 2; ly = 1.0; lz = f.cy
     } else {
-      // enquadra herói, bola e quem está por perto, respeitando o formato vertical da tela
-      const pts: [number, number][] = [[f.ball.x, f.ball.y], [hp.x + hv.vx * 0.55, hp.y + hv.vy * 0.55]]   // olha um pouco à frente do herói
-      for (const tr of r.tracks) { const q = posAt(tr, t); if (tr.hero || Math.hypot(q.x - hp.x, q.y - hp.y) < 9) pts.push([q.x, q.y]) }
+      // Câmera "de trás": olha ao longo do sentido do ataque (o eixo x da jogada fica na vertical da tela, ideal para celular em pé).
+      const pts: [number, number][] = [[f.ball.x, f.ball.y], [hp.x + hv.vx * 0.5, hp.y + hv.vy * 0.5], [hp.x, hp.y]]
+      for (const tr of r.tracks) { if (tr.hero) continue; const q = posAt(tr, t); if (Math.hypot(q.x - hp.x, q.y - hp.y) < 14) pts.push([q.x, q.y]) }
       const xs = pts.map((q) => q[0]), zs = pts.map((q) => q[1])
-      const tight = slow.current < 0.8 ? 0.62 : 1
-      const w = (Math.max(...xs) - Math.min(...xs) + 4) * tight + 2, h = (Math.max(...zs) - Math.min(...zs) + 4) * tight + 2
+      const tight = slow.current < 0.8 ? 0.88 : 1
+      const sx = (Math.max(...xs) - Math.min(...xs) + 2) * tight + 2, sz = (Math.max(...zs) - Math.min(...zs) + 2) * tight + 3
       const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cz = (Math.max(...zs) + Math.min(...zs)) / 2
       const asp = size.width / size.height, vf = ((camera as THREE.PerspectiveCamera).fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * asp)
-      const need = Math.min(S * 0.95, Math.max(w / (2 * Math.tan(hf / 2)), (h * 0.8) / (2 * Math.tan(vf / 2)), 5))
-      if (!cs.init) { cs.tx = cx; cs.ty = cz } else { cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k }
-       cs.d = cs.d === 0 ? need : cs.d + (need - cs.d) * k * 0.9
-      px = cs.tx; py = cs.d * 0.5; pz = cs.ty + cs.d * 0.92; lx = cs.tx; ly = 0.9; lz = cs.ty
+      const need = Math.min(S * 1.1, Math.max(sz / (2 * Math.tan(hf / 2)), (sx * 0.62) / (2 * Math.tan(vf / 2)), 5.5))
+      if (!cs.init) { cs.tx = cx; cs.ty = cz; cs.d = need } else { cs.tx += (cx - cs.tx) * k; cs.ty += (cz - cs.ty) * k; cs.d += (need - cs.d) * k * 0.9 }
+      px = cs.tx - cs.d * 0.95; py = cs.d * 0.62; pz = cs.ty; lx = cs.tx + cs.d * 0.12; ly = 0.7; lz = cs.ty
     }
     if (!cs.init) { camera.position.set(px, py, pz); cs.init = true } else camera.position.lerp(new THREE.Vector3(px, py, pz), m === 'tv' ? 0.2 : 0.12)
     camera.lookAt(lx, ly, lz)

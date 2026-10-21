@@ -67,7 +67,7 @@ export const REPLAYS: Replay[] = [
     ball: [carry('O', 0, 8)],
     steps: [{ t: 0.5, text: 'Fique a 1 ou 2 metros, corpo de lado e base baixa.' }, { t: 2.5, text: 'Acompanhe com passos laterais, sem cruzar os pés.' }, { t: 4.5, text: 'Force o atacante para o lado fraco, rumo à linha lateral.' }, { t: 6.8, text: 'Só desarme quando a bola se afastar do pé dele.' }],
     how: ['Fique entre o atacante e o gol, a 1 ou 2 metros.', 'Corpo de lado e joelhos flexionados.', 'Acompanhe com passos laterais, sem cruzar os pés.', 'Force o atacante para o lado fraco, rumo à linha.', 'Desarme só quando a bola se afastar do pé dele.'],
-    setup: '1 bola, 1 parceiro atacando e 2 cones de gol. Espaço de 10 x 8 m.', tips: ['Olhe o quadril e a bola, não os pés.', 'Não pule na finta: espere o toque.', 'Fale com o time: "comigo!"'], mistakes: ['Dar o bote de longe.', 'Cruzar os pés e perder o equilíbrio.', 'Ficar de frente e reto.'], camera: 'seguir' },
+    setup: '1 bola, 1 parceiro atacando e 2 cones de gol. Espaço de 10 x 8 m.', tips: ['Olhe o quadril e a bola, não os pés.', 'Não pule na finta: espere o toque.', 'Fale com o time: "comigo!"'], mistakes: ['Dar o bote de longe.', 'Cruzar os pés e perder o equilíbrio.', 'Ficar de frente e reto.'], camera: 'tv' },
 
   { id: 'dr_desmarque_apoio', title: 'Desmarque de apoio para receber o passe', category: 'desmarque', level: 1, duration: 8, pitch: 'full', focus: { x: 2, y: 4, size: 24 },
     summary: 'Venha em direção à bola em ângulo, fora da sombra do marcador, e devolva de primeira.',
