@@ -22,12 +22,21 @@ class Boundary extends Component<{ fallback: ReactNode; children: ReactNode }, {
   render() { return this.state.err ? this.props.fallback : this.props.children }
 }
 
+function NeonGrid() {
+  const geo = useMemo(() => {
+    const pts: number[] = [], N = 9
+    for (let k = -N * 2; k <= N * 2; k++) { const i = k / 2; pts.push(i, 0, -N, i, 0, N, -N, 0, i, N, 0, i) }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); return g
+  }, [])
+  return <>
+    <lineSegments geometry={geo} position-y={0.002}><lineBasicMaterial color="#ff3a3a" transparent opacity={0.9} /></lineSegments>
+    <lineSegments geometry={geo} position-y={0.0015} scale={[1.0, 1, 1.0]}><lineBasicMaterial color="#ff2020" transparent opacity={0.25} linewidth={3} /></lineSegments>
+  </>
+}
 function Floor({ circuit }: { circuit?: CircuitDef | null }) {
   return <>
     <mesh rotation-x={-Math.PI / 2} position-y={-0.002}><circleGeometry args={[9, 48]} /><meshBasicMaterial color="#050505" /></mesh>
-    {/* grade neon: linhas finas + halo */}
-    <gridHelper args={[18, 36, '#ff3030', '#ff3030']} position-y={0.001}><lineBasicMaterial attach="material" color="#ff3030" transparent opacity={0.95} /></gridHelper>
-    <gridHelper args={[18, 36, '#ff3030', '#ff3030']} position={[0, 0.004, 0]} scale={[1.0, 1, 1.0]}><lineBasicMaterial attach="material" color="#ff6060" transparent opacity={0.25} /></gridHelper>
+    <NeonGrid />
     {circuit && <CircuitMarks c={circuit} />}
   </>
 }
@@ -52,7 +61,7 @@ function Ticker({ playing }: { playing: boolean }) {
 function Rig({ view, controls, api }: { view: { angle: string; zoom: boolean; n: number }; controls: React.MutableRefObject<{ target: THREE.Vector3; update: () => void } | null>; api: React.MutableRefObject<MannequinApi | null> }) {
   const { camera, invalidate } = useThree()
   useEffect(() => {
-    const dir = ANGLES[view.angle] ?? ANGLES.lateral, d = view.zoom ? 1.3 : 3.4
+    const dir = ANGLES[view.angle] ?? ANGLES.lateral, d = view.zoom ? 1.3 : 2.9
     let target = new THREE.Vector3(0, 0.9, 0)
     if (view.zoom) { const o = api.current?.joint((window as unknown as { __joint?: string }).__joint ?? 'joelho'); if (o) { const v = new THREE.Vector3(); o.getWorldPosition(v); target = v } }
     camera.position.set(target.x + dir[0] * d, target.y + dir[1] * d + (view.angle === 'cima' ? 1.5 : 0), target.z + dir[2] * d)
@@ -138,7 +147,7 @@ export default function Viewer3D(p: ViewerProps) {
               <Rig view={view} controls={controls} api={api} />
               <Ticker playing={playing} />
             </Canvas>
-            {!hasModel && <span className="pointer-events-none absolute left-2 top-2 rounded bg-black/70 px-2 py-1 text-[10px] font-bold uppercase text-zinc-400">Pré-visualização · manequim provisório</span>}
+            {false && !hasModel && <span className="pointer-events-none absolute left-2 top-2 rounded bg-black/70 px-2 py-1 text-[10px] font-bold uppercase text-zinc-400">Pré-visualização · manequim provisório</span>}
             {p.mode === 'erro' && <span className="pointer-events-none absolute right-2 top-2 rounded bg-danger px-2 py-1 text-xs font-extrabold uppercase text-black">Erro de iniciante</span>}
           </Boundary>
         )}

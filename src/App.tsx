@@ -3,6 +3,8 @@ import { Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import { DataProvider, useData } from './lib/data'
 import Landing from './pages/Landing'
+import Intro from './pages/Intro'
+import { DEMO } from './lib/supabase'
 import Login from './pages/Login'
 import Blocked from './pages/Blocked'
 import Onboarding from './pages/Onboarding'
@@ -65,7 +67,9 @@ function AdminGate() { const { isAdmin } = useAuth(); return isAdmin ? <Outlet /
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
+      <Route path="/" element={DEMO ? <Intro /> : <Landing />} />
+      <Route path="/vendas" element={<Landing />} />
+      <Route path="/entrada" element={<Intro />} />
       <Route path="/login" element={<Login />} />
       <Route path="/termos" element={<Terms />} />
       <Route path="/privacidade" element={<Privacy />} />

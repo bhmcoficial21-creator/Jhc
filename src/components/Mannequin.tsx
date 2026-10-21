@@ -9,7 +9,7 @@ const mat = (c: string, r = 0.45, m = 0.12) => new THREE.MeshStandardMaterial({ 
 export interface MannequinApi { joint: (name: string) => THREE.Object3D | null }
 
 /** Boneco original, cinza escuro, sem rosto, uniforme e chuteira sem marca. */
-export function Mannequin({ motion, playing, speed, err, xray, joint, api }: { motion?: string | null; playing: boolean; speed: number; err: boolean; xray: boolean; joint?: string | null; api: { current: MannequinApi | null } }) {
+export function ProcMannequin({ motion, playing, speed, err, xray, joint, api }: { motion?: string | null; playing: boolean; speed: number; err: boolean; xray: boolean; joint?: string | null; api: { current: MannequinApi | null } }) {
   const R = useRef<Record<string, THREE.Group>>({})
   const time = useRef(0)
   const materials = useMemo(() => ({ body: mat(BODY), shirt: mat(SHIRT), shorts: mat(SHORTS, 0.35, 0.05), boot: mat(BOOT, 0.6, 0.1) }), [])
@@ -99,4 +99,18 @@ function JointDot({ r, joint }: { r: React.MutableRefObject<Record<string, THREE
     if (g && ref.current) { const v = new THREE.Vector3(); g.getWorldPosition(v); ref.current.position.copy(v); ref.current.parent?.worldToLocal(ref.current.position) }
   })
   return <mesh ref={ref}><sphereGeometry args={[0.07, 16, 12]} /><meshBasicMaterial color="#ff2d2d" depthTest={false} transparent opacity={0.9} /></mesh>
+}
+
+import { Component, Suspense, type ReactNode } from 'react'
+import { RiggedMannequin } from './RiggedMannequin'
+
+class Guard extends Component<{ fallback: ReactNode; children: ReactNode }, { bad: boolean }> {
+  state = { bad: false }
+  static getDerivedStateFromError() { return { bad: true } }
+  render() { return this.state.bad ? this.props.fallback : this.props.children }
+}
+type MProps = Parameters<typeof ProcMannequin>[0]
+/** Boneco humano rigado (modelo base) com fallback para o manequim procedural. */
+export function Mannequin(p: MProps) {
+  return <Guard fallback={<ProcMannequin {...p} />}><Suspense fallback={null}><RiggedMannequin {...p} /></Suspense></Guard>
 }

@@ -27,3 +27,11 @@ label { @apply text-sm text-zinc-400; }
 }
 .safe-b { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
 @keyframes pulse-ring { 0% { opacity: .9 } 100% { opacity: 0; transform: scale(1.6) } }
+
+/* Abertura: câmera entra na tela do celular */
+.intro-scene { animation: dolly 6.2s cubic-bezier(.55, .05, .25, 1) .5s both; will-change: transform; }
+@keyframes dolly { 0% { transform: scale(1); } 35% { transform: scale(1.18); } 100% { transform: scale(9); } }
+.intro-flash { background: #000; animation: flash 6.8s linear both; }
+@keyframes flash { 0% { opacity: 1; } 8% { opacity: 0; } 70% { opacity: 0; } 100% { opacity: 1; } }
+.intro-title { animation: title 4s ease both .3s; }
+@keyframes title { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; } }
