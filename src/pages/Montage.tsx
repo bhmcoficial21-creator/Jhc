@@ -32,7 +32,7 @@ export default function Montage() {
     mr.onstop = () => setUrl(URL.createObjectURL(new Blob(chunks, { type: 'video/webm' })))
     const draw = () => {
       const st = (window as unknown as { __montage?: { title: string; sub: string; card: boolean } }).__montage
-      ctx.fillStyle = '#040914'; ctx.fillRect(0, 0, W, H)
+      ctx.fillStyle = '#040a06'; ctx.fillRect(0, 0, W, H)
       const src = api.current?.canvas
       if (st && !st.card && src && src.width) { const s = Math.max(W / src.width, H / src.height); ctx.drawImage(src, (W - src.width * s) / 2, (H - src.height * s) / 2, src.width * s, src.height * s) }
       ctx.fillStyle = '#9fd0ff'; ctx.font = '700 14px sans-serif'; ctx.fillText('VÁRZEA PRO · REPLAY 3D', 18, 28)
@@ -56,7 +56,7 @@ export default function Montage() {
       <p className="muted">Todos os treinos em sequência, no estilo replay 3D. Grave em vídeo para guardar ou compartilhar.</p>
       {cur ? <div className="relative">
         <ReplayPlayer key={cur.id} r={cur} loop={false} showControls={false} onEnd={next} apiRef={api} />
-        {card && <div className="absolute inset-0 grid place-items-center bg-[#040914] p-6 text-center"><div><p className="font-display text-sm font-bold uppercase tracking-widest text-sky-200/70">{i + 1}/{list.length} · {REPLAY_CATS[cur.category]}</p><h2 className="mt-2 text-5xl leading-none text-lime">{cur.title}</h2></div></div>}
+        {card && <div className="absolute inset-0 grid place-items-center bg-[#040a06] p-6 text-center"><div><p className="font-display text-sm font-bold uppercase tracking-widest text-sky-200/70">{i + 1}/{list.length} · {REPLAY_CATS[cur.category]}</p><h2 className="mt-2 text-5xl leading-none text-lime">{cur.title}</h2></div></div>}
       </div> : null}
       <div className="grid gap-2">
         <Btn onClick={() => start(false)} disabled={recording || list.length === 0}>▶ Assistir montagem</Btn>

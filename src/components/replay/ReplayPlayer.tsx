@@ -32,7 +32,7 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
   const stepTo = (dir: 1 | -1) => { const ts = r.steps.map((s) => s.t), cur = clock.current.t; const nx = dir > 0 ? ts.find((x) => x > cur + 0.1) ?? 0 : [...ts].reverse().find((x) => x < cur - 0.4) ?? 0; seek(nx) }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#1a2747] bg-[#040914]">
+    <div className="overflow-hidden rounded-2xl border border-[#1d2a1d] bg-[#040a06]">
       <div className="relative aspect-[9/13] w-full">
         <Suspense fallback={<Spinner label="Carregando replay…" />}>
           <Scene r={r} clock={clock} mode={mode} hudRef={hudRef} onEnd={onEnd} onCanvas={(c) => { canvas.current = c }} />
@@ -51,7 +51,7 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
           <button onClick={() => { setMuted(!mute); setMute(!mute) }} className="absolute right-3 px-2 py-2 text-base" aria-label={mute ? 'Ligar som' : 'Desligar som'}>{mute ? '🔇' : '🔊'}</button>
           {MODES.map((m) => <button key={m.v} onClick={() => setMode(m.v)} className={`px-2 py-2 ${mode === m.v ? 'text-white' : 'text-sky-200/40'}`} disabled={m.v === 'gol' && !r.goal}>{m.l}</button>)}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#040914] via-[#040914]/80 to-transparent p-3 pt-16">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#040a06] via-[#040a06]/80 to-transparent p-3 pt-16">
           <p className="mb-2 min-h-[2.6rem] text-center text-[15px] font-semibold leading-tight text-white drop-shadow">{hud.step}</p>
           <div className="grid grid-cols-3 items-end text-white">
             <div><div className="text-[10px] uppercase tracking-widest text-sky-200/60">Tempo</div><div className="font-display text-3xl font-extrabold leading-none">{hud.t.toFixed(1).replace('.', ',')}<span className="ml-0.5 text-xs text-sky-200/60">s</span></div></div>
@@ -60,7 +60,7 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
           </div>
         </div>
       </div>
-      {showControls && <div className="space-y-2 border-t border-[#1a2747] bg-[#070d1c] p-3">
+      {showControls && <div className="space-y-2 border-t border-[#1d2a1d] bg-[#0a120b] p-3">
         <input type="range" min={0} max={r.duration} step={0.05} value={hud.t} onChange={(e) => seek(Number(e.target.value))} className="!min-h-0 !border-0 !bg-transparent !p-0 accent-lime" aria-label="Linha do tempo" />
         <div className="flex items-center gap-2">
           <button onClick={() => stepTo(-1)} className="btn btn-ghost btn-sm !min-w-[52px]" aria-label="Passo anterior">⏮</button>

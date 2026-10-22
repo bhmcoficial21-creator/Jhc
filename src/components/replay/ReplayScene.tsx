@@ -18,16 +18,21 @@ export interface Clock { t: number; playing: boolean; speed: number; loop: boole
 export type CamMode = 'tv' | 'seguir' | 'gol'
 export interface Hud { t: number; dist: number; kmh: number; step: string; goal?: boolean }
 
-const BG = '#03060f', LINE = '#e6eaf2', GHOST = '#8e98a8'
+const BG = '#040a06', LINE = '#e6eaf2', GHOST = '#8e98a8'
 const HERO = '#c6ff00'
 
 function Pitch({ r }: { r: Replay }) {
   const ground = useMemo(() => {
-    const c = document.createElement('canvas'); c.width = c.height = 256
-    const g = c.getContext('2d')!, gr = g.createRadialGradient(128, 128, 10, 128, 128, 128)
-    gr.addColorStop(0, '#12439a'); gr.addColorStop(0.45, '#0a2a66'); gr.addColorStop(1, '#030a1c'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256)
-    g.fillStyle = 'rgba(255,255,255,.045)'; for (let i = 0; i < 256; i += 32) g.fillRect(0, i, 256, 16)       // faixas do corte do gramado
-    return new THREE.CanvasTexture(c)
+    // gramado real: verde com faixas de corte, manchas e grão; escurece nas bordas (estádio à noite, sob refletores)
+    const N = 512, c = document.createElement('canvas'); c.width = c.height = N
+    const g = c.getContext('2d')!, gr = g.createRadialGradient(N / 2, N / 2, 20, N / 2, N / 2, N / 2)
+    gr.addColorStop(0, '#3f8f35'); gr.addColorStop(0.5, '#2b6e2a'); gr.addColorStop(1, '#07160a'); g.fillStyle = gr; g.fillRect(0, 0, N, N)
+    const bands = 28
+    for (let i = 0; i < bands; i++) { g.fillStyle = i % 2 ? 'rgba(0,0,0,.10)' : 'rgba(255,255,255,.045)'; g.fillRect((i * N) / bands, 0, N / bands, N) }
+    let sd = 7; const rnd = () => ((sd = (sd * 1664525 + 1013904223) >>> 0) / 4294967296)
+    for (let i = 0; i < 9000; i++) { g.fillStyle = rnd() > 0.5 ? 'rgba(10,50,10,.35)' : 'rgba(120,190,90,.22)'; g.fillRect(rnd() * N, rnd() * N, 1.4, 1.4) }
+    for (let i = 0; i < 14; i++) { g.fillStyle = 'rgba(0,0,0,.025)'; g.beginPath(); g.arc(rnd() * N, rnd() * N, 12 + rnd() * 30, 0, 6.3); g.fill() }
+    const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t
   }, [])
   const mk = (W: number) => {
     const pts: number[] = []
@@ -60,9 +65,9 @@ function Pitch({ r }: { r: Replay }) {
   const goal = r.goal
   return <>
     <mesh rotation-x={-Math.PI / 2} position={[r.focus.x, -0.01, r.focus.y]}><planeGeometry args={[150, 150]} /><meshBasicMaterial map={ground} /></mesh>
-    <mesh geometry={glow} position-y={0.008}><meshBasicMaterial color="#5aa2ff" transparent opacity={0.22} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
+    <mesh geometry={glow} position-y={0.008}><meshBasicMaterial color="#ffffff" transparent opacity={0.1} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
     <mesh geometry={geo} position-y={0.012}><meshBasicMaterial color={LINE} transparent opacity={0.97} side={THREE.DoubleSide} depthWrite={false} /></mesh>
-    <points geometry={grain}><pointsMaterial color="#5d78a8" size={0.1} transparent opacity={0.5} sizeAttenuation depthWrite={false} /></points>
+    <points geometry={grain}><pointsMaterial color="#a8d890" size={0.1} transparent opacity={0.35} sizeAttenuation depthWrite={false} /></points>
     {goal && <group position={[goal.x, 0, 0]}>
       <lineSegments><edgesGeometry args={[new THREE.BoxGeometry(2.2, 2.44, 7.32)]} /><lineBasicMaterial color="#e8eeff" /></lineSegments>
       <mesh position={[0.4, 1.22, 0]}><boxGeometry args={[1.6, 2.44, 7.32]} /><meshBasicMaterial color="#8fa8d8" wireframe transparent opacity={0.25} /></mesh>
@@ -202,7 +207,7 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   })
 
   return <>
-    <hemisphereLight args={['#dfe9ff', '#0a1020', 1.25]} /><directionalLight position={[8, 20, 6]} intensity={1.9} />
+    <hemisphereLight args={['#fff6e0', '#0d1a0d', 1.15]} /><directionalLight position={[8, 20, 6]} intensity={1.9} />
     <Pitch r={r} />
     {figs.map((f, i) => <group key={f.id} ref={(g) => { if (g) groups.current[i] = g }}><primitive object={f.root} />
       <mesh rotation-x={-Math.PI / 2} position-y={0.02}><circleGeometry args={[0.6, 24]} /><meshBasicMaterial color="#000" transparent opacity={0.5} depthWrite={false} /></mesh>
@@ -212,9 +217,9 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
         <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide ${r.tracks[i].hero ? 'bg-lime text-black' : 'bg-black/55 text-zinc-200'}`}>{r.tracks[i].role}</span>
       </Html></group>)}
     <group ref={ball}><mesh><sphereGeometry args={[0.13, 14, 10]} /><meshBasicMaterial color="#ffffff" /></mesh>
-      <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#9fd0ff" transparent opacity={0.3} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
-      <mesh><sphereGeometry args={[0.9, 12, 8]} /><meshBasicMaterial color="#4d8dff" transparent opacity={0.1} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
-    {Array.from({ length: 4 }, (_, i) => <mesh key={i} rotation-x={-Math.PI / 2} visible={false} ref={(m) => { if (m) ringMeshes.current[i] = m }}><ringGeometry args={[0.45, 0.55, 40]} /><meshBasicMaterial color="#bfe0ff" transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>)}
+      <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
+      <mesh><sphereGeometry args={[0.9, 12, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.06} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
+    {Array.from({ length: 4 }, (_, i) => <mesh key={i} rotation-x={-Math.PI / 2} visible={false} ref={(m) => { if (m) ringMeshes.current[i] = m }}><ringGeometry args={[0.45, 0.55, 40]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>)}
     <points geometry={dustGeo} frustumCulled={false}><pointsMaterial size={0.22} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation /></points>
     <primitive object={useMemo(() => new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: '#e6f2ff', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending })), [trailGeo])} ref={trail as never} />
   </>
