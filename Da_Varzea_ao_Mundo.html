@@ -3221,12 +3221,14 @@ function pen3dMount(cv,cfg){
     P.crowdMat.bob=.08;
     P.say('');
     if(P.mode==='fk'&&P.fkEnter)P.fkEnter();
-    P.setCtl(P.mode==='fk'?'<p class="muted" style="font-size:13px;margin:8px 0">Falta perigosa! A barreira está a 9 metros.</p>':'<p class="muted" style="font-size:13px;margin:8px 0">Pênalti a seu favor. Respire fundo.</p>');
+    P.setCtl(P.mode==='fk'?'<p class="muted" style="font-size:13px;margin:8px 0">Falta perigosa! A barreira está a 9 metros.</p>':'<p class="muted" style="font-size:13px;margin:8px 0">Pênalti a seu favor. Você bate de chapa: arraste o dedo até o canto e solte. Quanto mais perto do ângulo, mais difícil para o goleiro.</p>');
   };
   P.fire=(power,cv0)=>{
     const cf=P.cfg;let u=P.rt.u,v=P.rt.v;
+    /* pênalti: bate de chapa (parte de dentro do pé), colocado e firme, sem depender da velocidade do gesto */
+    if(P.mode==='pen')power=.62;
     const sig=.12*(1.2-clamp(cf.chu*cf.form/99,.2,1))*(.5+power*.6)*Math.sqrt(P.bz/11);
-    const sk=P.mode==='fk'?.4:1;u+=gauss()*sig*sk;v+=gauss()*sig*.7*sk;
+    const sk=P.mode==='fk'?.4:P.mode==='pen'?.55:1;u+=gauss()*sig*sk;v+=gauss()*sig*.7*sk;
     if(power>.97){v+=(power-.97)*14;u+=(Math.random()-.5)*(power-.97)*8}
     P.shot={u,v,power,cv:(cv0||0)*5.2/Math.max(.6,Math.abs(P.dZ))};
     P.K=penKeeper(u,v,clamp((cf.opp-30)/65,0,1));
@@ -3274,7 +3276,7 @@ function pen3dMount(cv,cfg){
         const a0=Math.atan2(P1[0]-S0[0],P1[1]-S0[1]);let df=P.fa-a0;while(df>Math.PI)df-=2*Math.PI;while(df<-Math.PI)df+=2*Math.PI;sr.r=[0,penLerp(a0,a0+df,k*k),0];P.fa2=a0+df;
       }else{
         const tk=P.runT-RUN;
-        poseKick(S,tk);
+        poseKick(S,tk,P.mode==='pen'?'place':undefined);
         sr.p=[P1[0],0,P1[1]-Math.min(.35,tk*.7)];sr.r=[0,P.fa2||P.fa,0];
         if(tk>=KICK_HIT)P.launch();
       }
@@ -3283,10 +3285,10 @@ function pen3dMount(cv,cfg){
       const tk=P.phase==='fly'||P.phase==='res'?(P.runT+=dt)-.85:0;
       const res=P.B&&P.B.res;
       if(!res||P.phase==='fly'){
-        poseKick(S,tk);sr.p=[P1[0],0,P1[1]-.35];sr.r=[0,P.fa2||P.fa,0];
+        poseKick(S,tk,P.mode==='pen'?'place':undefined);sr.p=[P1[0],0,P1[1]-.35];sr.r=[0,P.fa2||P.fa,0];
       }else if(res==='goal'){
         const c=P.resT;
-        if(c<.35){poseKick(S,tk);sr.p=[P1[0],0,P1[1]-.35];sr.r=[0,P.fa2||P.fa,0]}
+        if(c<.35){poseKick(S,tk,P.mode==='pen'?'place':undefined);sr.p=[P1[0],0,P1[1]-.35];sr.r=[0,P.fa2||P.fa,0]}
         else{
           if(P.ck==null)P.ck=Math.floor(Math.random()*CELE_N);
           const cc=c-.35;poseCeleK(S,P.at,P.ck,cc);
