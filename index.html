@@ -2050,26 +2050,29 @@ function mkCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.heig
 
 /* ---------- renderizador ---------- */
 const VS=`attribute vec3 aP;attribute vec3 aN;attribute vec2 aT;attribute vec3 aC;attribute float aPh;
-uniform mat4 uVP,uM;uniform mat3 uNM;uniform float uTime,uBob;uniform vec2 uUV;
+uniform mat4 uVP,uM;uniform mat3 uNM;uniform float uTime,uBob;uniform mediump float uOut;uniform vec2 uUV;
 varying vec3 vN,vW,vC;varying vec2 vT;
 void main(){
   vec3 p=aP;
+  if(uOut>0.0)p+=normalize(aN)*uOut;
   if(uBob>0.0){p.y+=abs(sin(uTime*(5.0+aPh*4.0)+aPh*40.0))*uBob*(0.10+0.16*aPh);p.x+=sin(uTime*2.0+aPh*20.0)*0.03*uBob;}
   vec4 w=uM*vec4(p,1.0);vW=w.xyz;vN=uNM*aN;vC=aC;vT=aT*uUV;gl_Position=uVP*w;
 }`;
 const FS=`precision mediump float;
 varying vec3 vN,vW,vC;varying vec2 vT;
-uniform vec3 uCol,uEmis,uLD,uLC,uAT,uAB,uFog,uCam;
-uniform float uFogN,uFogF,uSpec,uAlpha,uAlphaTest,uUseTex,uUseVC,uSh,uDbl,uNoFog;
+uniform vec3 uCol,uEmis,uLD,uLC,uAT,uAB,uFog,uCam,uOutC;
+uniform float uFogN,uFogF,uSpec,uAlpha,uAlphaTest,uUseTex,uUseVC,uSh,uDbl,uNoFog,uOut,uToon;
 uniform sampler2D uTex;
 void main(){
   if(uSh>0.5){gl_FragColor=vec4(0.0,0.0,0.0,0.34);return;}
+  if(uOut>0.0){float fo=clamp((length(uCam-vW)-uFogN)/(uFogF-uFogN),0.0,1.0);gl_FragColor=vec4(mix(uOutC,uFog,fo),1.0);return;}
   vec4 t=vec4(1.0);
   if(uUseTex>0.5)t=texture2D(uTex,vT);
   if(t.a<uAlphaTest)discard;
   vec3 base=uCol*t.rgb;if(uUseVC>0.5)base*=vC;
   vec3 n=normalize(vN);
   float nd=dot(n,uLD);if(uDbl>0.5)nd=abs(nd);nd=max((nd+0.22)/1.22,0.0);
+  if(uToon>0.5)nd=mix(nd,smoothstep(0.12,0.2,nd)*0.5+smoothstep(0.5,0.58,nd)*0.5,0.7);
   vec3 hemi=mix(uAB,uAT,n.y*0.5+0.5);
   vec3 lit=base*(hemi+uLC*nd);
   vec3 v=normalize(uCam-vW);vec3 h=normalize(uLD+v);
@@ -2091,7 +2094,7 @@ class R3{
     gl.bindAttribLocation(pr,0,'aP');gl.bindAttribLocation(pr,1,'aN');gl.bindAttribLocation(pr,2,'aT');gl.bindAttribLocation(pr,3,'aC');gl.bindAttribLocation(pr,4,'aPh');
     gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(pr));
     gl.useProgram(pr);this.pr=pr;this.u={};
-    ['uVP','uM','uNM','uTime','uBob','uUV','uCol','uEmis','uLD','uLC','uAT','uAB','uFog','uCam','uFogN','uFogF','uSpec','uAlpha','uAlphaTest','uUseTex','uUseVC','uSh','uDbl','uNoFog','uTex'].forEach(n=>this.u[n]=gl.getUniformLocation(pr,n));
+    ['uVP','uM','uNM','uTime','uBob','uUV','uCol','uEmis','uLD','uLC','uAT','uAB','uFog','uCam','uFogN','uFogF','uSpec','uAlpha','uAlphaTest','uUseTex','uUseVC','uSh','uDbl','uNoFog','uTex','uOut','uToon','uOutC'].forEach(n=>this.u[n]=gl.getUniformLocation(pr,n));
     this.aniso=gl.getExtension('EXT_texture_filter_anisotropic');
     this.lightDir=V3.nrm([.35,.85,.42]);
     this.lightCol=[.78,.76,.7];this.ambT=[.36,.40,.50];this.ambB=[.15,.2,.16];
@@ -2113,6 +2116,11 @@ class R3{
     m.C=g.c&&g.c.length?this.buf(g.c,Float32Array,gl.ARRAY_BUFFER):null;
     m.H=g.ph&&g.ph.length?this.buf(g.ph,Float32Array,gl.ARRAY_BUFFER):null;
     m.I=this.buf(g.i,Uint16Array,gl.ELEMENT_ARRAY_BUFFER);
+    /* sentido das faces (algumas formas têm a ordem invertida): o contorno precisa saber qual lado esconder */
+    {let w=0;const P=g.p,I=g.i,N=g.n;for(let t=0;t<Math.min(I.length,600);t+=3){const a=I[t]*3,b=I[t+1]*3,c=I[t+2]*3;
+      const ux=P[b]-P[a],uy=P[b+1]-P[a+1],uz=P[b+2]-P[a+2],vx=P[c]-P[a],vy=P[c+1]-P[a+1],vz=P[c+2]-P[a+2];
+      w+=(uy*vz-uz*vy)*N[a]+(uz*vx-ux*vz)*N[a+1]+(ux*vy-uy*vx)*N[a+2]}
+      m.wind=w>=0?1:-1}
     m.g=g;return m;
   }
   /* atualiza posições de uma malha dinâmica (rede) */
@@ -2159,7 +2167,7 @@ class R3{
     const e=mt.emis||[0,0,0];gl.uniform3f(u.uEmis,e[0],e[1],e[2]);
     gl.uniform1f(u.uSpec,mt.spec||0);gl.uniform1f(u.uAlpha,mt.alpha==null?1:mt.alpha);
     gl.uniform1f(u.uAlphaTest,mt.at||0);gl.uniform1f(u.uUseVC,mt.vc?1:0);gl.uniform1f(u.uDbl,mt.dbl?1:0);
-    gl.uniform1f(u.uBob,mt.bob||0);gl.uniform1f(u.uNoFog,mt.nofog?1:0);
+    gl.uniform1f(u.uBob,mt.bob||0);gl.uniform1f(u.uNoFog,mt.nofog?1:0);gl.uniform1f(u.uToon,mt.toon?1:0);
     gl.uniform2f(u.uUV,mt.uv?mt.uv[0]:1,mt.uv?mt.uv[1]:1);
     if(mt.tex){gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,mt.tex);gl.uniform1i(u.uTex,0);gl.uniform1f(u.uUseTex,1)}
     else gl.uniform1f(u.uUseTex,0);
@@ -2192,6 +2200,13 @@ class R3{
     walk(root);
     gl.depthMask(true);
     for(const n of op){this.attr(n.mesh);this.mats(n.mat||{});this.setMat(n.mat,n);gl.drawElements(gl.TRIANGLES,n.mesh.n,gl.UNSIGNED_SHORT,0)}
+    /* contorno: casco inflado desenhado só por trás (jogadores com borda, no mesmo estilo) */
+    {const ol=op.filter(n=>n.mat&&n.mat.outline);
+      if(ol.length){
+        gl.enable(gl.CULL_FACE);gl.cullFace(gl.FRONT);gl.uniform3f(u.uOutC,.06,.045,.05);
+        for(const n of ol){this.attr(n.mesh);this.setMat(n.mat,n);gl.cullFace(n.mesh.wind>0?gl.FRONT:gl.BACK);gl.uniform1f(u.uOut,n.mat.outline);gl.uniform1f(u.uBob,0);gl.drawElements(gl.TRIANGLES,n.mesh.n,gl.UNSIGNED_SHORT,0)}
+        gl.uniform1f(u.uOut,0);gl.cullFace(gl.BACK);gl.disable(gl.CULL_FACE);
+      }}
     /* sombras planas projetadas no gramado (uma vez por pixel, via stencil) */
     if(sh.length){
       const L=this.lightDir,S=this.shM;
@@ -2461,7 +2476,7 @@ const SMB=(keys,n,seg,uv)=>gLoft(civRings(keys,n||9),seg||18,uv?{uv:SMU}:{});
 const SMB_C={};
 function smb(name,keys,n,seg,uv){return SMB_C[name]||(SMB_C[name]=SMB(keys,n,seg,uv))}
 function mkPlayer(R,o){
-  const P={},M=(c,spec)=>({c:hexc(c),spec:spec||.04,cast:true});
+  const P={},M=(c,spec)=>({c:hexc(c),spec:spec||.04,cast:true,toon:true,outline:.0045});
   const kitM=M(o.kit,.2),shortM=M(o.short),sockM=M(o.sock),skinM=M(o.skin,.2),hairM=M(o.hair),bootM=M(o.boot||'#14161b',.3);
   const gl=o.gk,OC=!!o.civ||!!o.suit;
   const kpt=(!gl&&!o.civ)?KITPAT[o.kit]:null;
@@ -2499,7 +2514,7 @@ function mkPlayer(R,o){
     part(head,gSph(.026,6,4,.5,1.3,.8,Math.PI,s*.108,.1,0),skinM);
   });
   part(head,gSph(.02,8,6,.9,1.35,1.2,Math.PI,0,.082,.106),skinM);
-  const mcol={c:[.36,.1,.1]};
+  const sk3=hexc(o.skin||'#c98f6b'),mcol={c:[sk3[0]*.5,sk3[1]*.32,sk3[2]*.3]};
   if(!NOFACE){P.mc=part(head,gBox(.044,.011,.01),mcol,[0,.045,.095]);
   P.mcn=[1,-1].map(s=>part(head,gBox(.02,.011,.01),mcol,[s*.03,.045,.093]));
   P.br=[1,-1].map(s=>part(head,gBox(.042,.01,.01),hairM,[s*.045,.158,.093]))}
