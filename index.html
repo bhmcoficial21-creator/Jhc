@@ -267,10 +267,28 @@ body:has(.hud3) .sb,body:has(.hud3) .min{display:none}
 /* menu (modelo de console clássico) */
 .pmenu{position:fixed;inset:0;z-index:55;background:#000;display:none;opacity:0;transition:opacity .6s;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
 .pmenu.on{display:grid;place-items:center}.pmenu.in{opacity:1}
-.pm-in{display:flex;align-items:center;gap:34px;padding:0 18px}
+.pmenu .pm-in{position:relative;z-index:2}.pmenu .pm-hint{z-index:2}
+.pm-in{display:flex;align-items:center;gap:34px;padding:22px 26px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(120,180,255,.18);box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.pm-bg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(120% 80% at 50% 0%,#12306b 0%,#0a1b3f 38%,#040a1a 72%,#010308 100%)}
+.pm-bg .bm{position:absolute;top:-12%;width:44%;height:95%;transform-origin:50% 0;background:linear-gradient(180deg,rgba(150,205,255,.34),rgba(90,160,255,.07) 60%,transparent);clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);filter:blur(7px);opacity:.7}
+.pm-bg .b1{left:-6%;animation:pmsw 9s ease-in-out infinite alternate}
+.pm-bg .b2{left:31%;animation:pmsw 11s ease-in-out -4s infinite alternate-reverse}
+.pm-bg .b3{right:-6%;animation:pmsw 10s ease-in-out -7s infinite alternate}
+@keyframes pmsw{0%{transform:rotate(-16deg)}100%{transform:rotate(16deg)}}
+.pm-pitch{position:absolute;left:-30%;right:-30%;bottom:-6%;height:60%;transform:perspective(420px) rotateX(58deg);transform-origin:50% 100%;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 2px,transparent 2px 64px),repeating-linear-gradient(0deg,rgba(40,180,90,.55) 0 40px,rgba(25,130,65,.45) 40px 80px);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.14);-webkit-mask-image:linear-gradient(0deg,#000 25%,transparent 100%);mask-image:linear-gradient(0deg,#000 25%,transparent 100%);animation:pmpitch 14s linear infinite}
+@keyframes pmpitch{to{background-position:0 0,0 80px}}
+.pm-parts span{position:absolute;left:var(--x);bottom:-10px;width:var(--s);height:var(--s);border-radius:50%;background:#cfe8ff;box-shadow:0 0 8px 2px rgba(110,180,255,.8);opacity:0;animation:pmup var(--d) linear var(--w) infinite}
+.pm-parts span:nth-child(3n){background:#ffe27a;box-shadow:0 0 8px 2px rgba(255,200,60,.75)}
+@keyframes pmup{0%{opacity:0;transform:translate(0,0)}12%{opacity:.9}85%{opacity:.5}100%{opacity:0;transform:translate(24px,-105vh)}}
+.pm-vg{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 50%,transparent 45%,rgba(0,0,0,.55) 100%)}
+.pm-ttl{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 34px);display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:left}
+.pm-ttl .pm-lg{width:44px;height:44px;filter:drop-shadow(0 0 12px rgba(255,230,0,.45))}.pm-ttl .pm-lg svg{width:100%;height:100%}
+.pm-ttl b{font:italic 900 24px/.9 'Barlow Condensed',Impact,sans-serif;letter-spacing:.02em;text-transform:uppercase;text-shadow:0 2px 12px rgba(40,120,255,.6)}.pm-ttl em{display:block;font-style:italic;color:#ffe23a}
 .pm-list{list-style:none;margin:0;padding:0}
-.pm-list li{padding:7px 0;font-size:17px;font-weight:300;color:#8d96a1;cursor:pointer;transition:color .15s,text-shadow .15s;-webkit-tap-highlight-color:transparent;max-width:210px}
-.pm-list li.sel{color:#63b9ff;text-shadow:0 0 12px rgba(80,170,255,.55)}
+.pm-list li{padding:8px 0;font-size:18px;font-weight:300;color:#9aa6b6;cursor:pointer;transition:color .15s,text-shadow .15s;-webkit-tap-highlight-color:transparent;max-width:210px}
+.pm-list li.sel{color:#7cc8ff;text-shadow:0 0 14px rgba(80,170,255,.7);transform:translateX(6px);transition:color .15s,text-shadow .15s,transform .18s}.pm-list li.sel:before{content:'▸ ';color:#ffe23a}
 .pm-hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);display:flex;justify-content:space-between;padding:0 8%;color:#7d8793;font-size:13px;font-weight:300}
 .pm-hint b{display:inline-block;background:#3a3f46;color:#cfd6de;font-size:9px;padding:2px 6px;border-radius:3px;margin-right:6px;font-weight:700}
 .pm-how{position:fixed;inset:0;z-index:210;background:rgba(0,0,0,.78);display:grid;place-items:center;padding:20px}
@@ -6801,7 +6819,8 @@ function titleScreen(toMenu){
     </div>
     <p class="cv-p">Do campinho de terra aos maiores estádios do planeta. Treine, jogue a partida, dispute o campeonato e escolha que tipo de craque você vai ser.</p>
   </div></div>`}
-  <div id="pmenu" class="pmenu${toMenu?' on':''}"><div class="pm-in"><div class="pm-ring">${PM_RING(8)}</div><ul class="pm-list">${items}</ul></div>
+  <div id="pmenu" class="pmenu${toMenu?' on':''}"><div class="pm-bg"><i class="bm b1"></i><i class="bm b2"></i><i class="bm b3"></i><div class="pm-pitch"></div><div class="pm-parts">${Array.from({length:22},(_,k)=>`<span style="--x:${(k*37)%100}%;--d:${6+(k*7)%9}s;--w:${-(k*13)%14}s;--s:${2+(k*5)%4}px"></span>`).join('')}</div><div class="pm-vg"></div></div>
+    <div class="pm-ttl"><span class="pm-lg">${logo}</span><b>DA VÁRZEA<em>AO MUNDO</em></b></div><div class="pm-in"><div class="pm-ring">${PM_RING(8)}</div><ul class="pm-list">${items}</ul></div>
     <div class="pm-hint"><span><b>OK</b> Selecionar</span><span><b>↕</b> Navegar</span></div></div>
   <div class="setup" id="setup"><h2>Crie seu jogador</h2>
   <p class="sit">Você tem 16 anos, uma chuteira furada e um sonho. Treine, jogue, assine contratos, gaste, erre e decida quem você vai ser.</p>
