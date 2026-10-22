@@ -35,3 +35,9 @@ label { @apply text-sm text-zinc-400; }
 @keyframes flash { 0% { opacity: 1; } 8% { opacity: 0; } 70% { opacity: 0; } 100% { opacity: 1; } }
 .intro-title { animation: title 4s ease both .3s; }
 @keyframes title { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Replay: gol */
+.gol-flash { animation: golflash .7s ease-out both; }
+@keyframes golflash { 0% { opacity: .75; } 100% { opacity: 0; } }
+.gol-banner { animation: golpop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+@keyframes golpop { 0% { transform: scale(.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import type { Replay } from '../../lib/replay'
+import { isMuted, setMuted } from '../../lib/audio'
 import { Spinner } from '../ui'
 import type { CamMode, Clock, Hud } from './ReplayScene'
 
@@ -19,6 +20,7 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
   const [mode, setMode] = useState<CamMode>(startMode ?? r.camera ?? 'tv')
   const [playing, setPlaying] = useState(autoplay)
   const [speed, setSpeed] = useState(1)
+  const [mute, setMute] = useState(isMuted())
 
   useEffect(() => { clock.current = { t: 0, playing: autoplay, speed: 1, loop }; setPlaying(autoplay); setSpeed(1); setMode(startMode ?? r.camera ?? 'tv') }, [r.id]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { clock.current.loop = loop }, [loop])
@@ -39,12 +41,14 @@ export default function ReplayPlayer({ r, autoplay = true, loop = true, onEnd, a
         <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%)' }} />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[22%] backdrop-blur-[2.5px]" style={{ WebkitMaskImage: 'linear-gradient(#000, transparent)', maskImage: 'linear-gradient(#000, transparent)' }} />
         <div className="pointer-events-none absolute inset-x-0 bottom-[22%] h-[16%] backdrop-blur-[2.5px]" style={{ WebkitMaskImage: 'linear-gradient(transparent, #000)', maskImage: 'linear-gradient(transparent, #000)' }} />
+        {hud.goal && <><div className="gol-flash pointer-events-none absolute inset-0 bg-white" /><div className="gol-banner pointer-events-none absolute inset-x-0 top-[34%] text-center font-display text-8xl font-extrabold uppercase leading-none text-lime drop-shadow-[0_0_24px_rgba(198,255,0,.8)]">GOL!</div></>}
         {/* HUD no estilo scan */}
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
           <div className="font-display text-[11px] font-bold uppercase leading-tight tracking-widest text-sky-200/80">VÁRZEA PRO<br />REPLAY 3D</div>
           <div className="text-right font-display text-xl font-extrabold uppercase leading-none text-white">{r.title}</div>
         </div>
         <div className="absolute inset-x-0 top-14 flex justify-center gap-4 text-[11px] font-bold uppercase tracking-widest">
+          <button onClick={() => { setMuted(!mute); setMute(!mute) }} className="absolute right-3 px-2 py-2 text-base" aria-label={mute ? 'Ligar som' : 'Desligar som'}>{mute ? '🔇' : '🔊'}</button>
           {MODES.map((m) => <button key={m.v} onClick={() => setMode(m.v)} className={`px-2 py-2 ${mode === m.v ? 'text-white' : 'text-sky-200/40'}`} disabled={m.v === 'gol' && !r.goal}>{m.l}</button>)}
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#040914] via-[#040914]/80 to-transparent p-3 pt-16">

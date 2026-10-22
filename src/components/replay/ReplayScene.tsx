@@ -4,6 +4,7 @@ import { Html, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { type Replay, ballAt, focusAt, posAt, velAt } from '../../lib/replay'
 import { actPose, type ActName } from '../pose'
+import { sfx } from '../../lib/audio'
 import { applyPose, modelUrl } from '../RiggedMannequin'
 // peso da pose calculada por gesto e se ela mexe nos braços (senão os braços/mãos vêm da captura de movimento)
 const ACT_PROC: Record<string, { w: number; arms: boolean }> = {
@@ -15,13 +16,20 @@ import { createKitFigure, createScanFigure, KIT_HOME, SKINS, type ScanFigure } f
 
 export interface Clock { t: number; playing: boolean; speed: number; loop: boolean }
 export type CamMode = 'tv' | 'seguir' | 'gol'
-export interface Hud { t: number; dist: number; kmh: number; step: string }
+export interface Hud { t: number; dist: number; kmh: number; step: string; goal?: boolean }
 
 const BG = '#03060f', LINE = '#e6eaf2', GHOST = '#8e98a8'
 const HERO = '#c6ff00'
 
 function Pitch({ r }: { r: Replay }) {
-  const geo = useMemo(() => {
+  const ground = useMemo(() => {
+    const c = document.createElement('canvas'); c.width = c.height = 256
+    const g = c.getContext('2d')!, gr = g.createRadialGradient(128, 128, 10, 128, 128, 128)
+    gr.addColorStop(0, '#12439a'); gr.addColorStop(0.45, '#0a2a66'); gr.addColorStop(1, '#030a1c'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256)
+    g.fillStyle = 'rgba(255,255,255,.045)'; for (let i = 0; i < 256; i += 32) g.fillRect(0, i, 256, 16)       // faixas do corte do gramado
+    return new THREE.CanvasTexture(c)
+  }, [])
+  const mk = (W: number) => {
     const pts: number[] = []
     const rect = (x0: number, y0: number, x1: number, y1: number) => pts.push(x0, 0, y0, x1, 0, y0, x1, 0, y0, x1, 0, y1, x1, 0, y1, x0, 0, y1, x0, 0, y1, x0, 0, y0)
     const circle = (cx: number, cy: number, rad: number, a0 = 0, a1 = Math.PI * 2, n = 48) => { for (let i = 0; i < n; i++) { const p = a0 + ((a1 - a0) * i) / n, q = a0 + ((a1 - a0) * (i + 1)) / n; pts.push(cx + rad * Math.cos(p), 0, cy + rad * Math.sin(p), cx + rad * Math.cos(q), 0, cy + rad * Math.sin(q)) } }
@@ -33,13 +41,15 @@ function Pitch({ r }: { r: Replay }) {
       for (const s of [1, -1]) circle(s * 20, 0, 6, s > 0 ? Math.PI / 2 : -Math.PI / 2, s > 0 ? Math.PI * 1.5 : Math.PI / 2, 24)
     }
     // converte os segmentos em faixas largas (linha de giz)
-    const W = 0.2, q: number[] = []
+    const q: number[] = []
     for (let i = 0; i < pts.length; i += 6) {
       const x0 = pts[i], z0 = pts[i + 2], x1 = pts[i + 3], z1 = pts[i + 5], dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, dz) || 1, nx = (-dz / L) * W / 2, nz = (dx / L) * W / 2
       q.push(x0 - nx, 0, z0 - nz, x0 + nx, 0, z0 + nz, x1 + nx, 0, z1 + nz, x0 - nx, 0, z0 - nz, x1 + nx, 0, z1 + nz, x1 - nx, 0, z1 - nz)
     }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(q, 3)); return g
-  }, [r.pitch])
+  }
+  const geo = useMemo(() => mk(0.2), [r.pitch]) // eslint-disable-line react-hooks/exhaustive-deps
+  const glow = useMemo(() => mk(0.9), [r.pitch]) // eslint-disable-line react-hooks/exhaustive-deps
   // grão no gramado (pontos tênues), concentrado perto do foco
   const grain = useMemo(() => {
     const n = 2600, a = new Float32Array(n * 3); let s = 11
@@ -49,7 +59,9 @@ function Pitch({ r }: { r: Replay }) {
   }, [r.focus.x, r.focus.y])
   const goal = r.goal
   return <>
-    <mesh geometry={geo} position-y={0.012}><meshBasicMaterial color={LINE} transparent opacity={0.92} side={THREE.DoubleSide} depthWrite={false} /></mesh>
+    <mesh rotation-x={-Math.PI / 2} position={[r.focus.x, -0.01, r.focus.y]}><planeGeometry args={[150, 150]} /><meshBasicMaterial map={ground} /></mesh>
+    <mesh geometry={glow} position-y={0.008}><meshBasicMaterial color="#5aa2ff" transparent opacity={0.22} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
+    <mesh geometry={geo} position-y={0.012}><meshBasicMaterial color={LINE} transparent opacity={0.97} side={THREE.DoubleSide} depthWrite={false} /></mesh>
     <points geometry={grain}><pointsMaterial color="#5d78a8" size={0.1} transparent opacity={0.5} sizeAttenuation depthWrite={false} /></points>
     {goal && <group position={[goal.x, 0, 0]}>
       <lineSegments><edgesGeometry args={[new THREE.BoxGeometry(2.2, 2.44, 7.32)]} /><lineBasicMaterial color="#e8eeff" /></lineSegments>
@@ -73,6 +85,8 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
   const groups = useRef<THREE.Group[]>([]), ball = useRef<THREE.Group>(null), trail = useRef<THREE.Line>(null)
   const phases = useRef<number[]>([]), yaws = useRef<number[]>([]), trailPts = useRef<THREE.Vector3[]>([]), cam = useRef({ tx: r.focus.x, ty: r.focus.y, d: 0, init: false }), heroDist = useRef({ d: 0, lastT: 0, prev: null as null | [number, number] })
   const endHold = useRef(0), slow = useRef(1), lastT = useRef(0)
+  const fx = useRef({ prevAct: [] as number[], goalAt: -99, shake: 0, fov: 42, rings: [] as { x: number; y: number; at: number; big: boolean }[], dustT: 0, dust: [] as { x: number; y: number; z: number; vx: number; vy: number; vz: number; life: number }[], inGoal: false, touchK: -1 })
+  const ringMeshes = useRef<THREE.Mesh[]>([]), dustGeo = useMemo(() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(90 * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(90 * 3), 3)); return g }, [])
   const trailGeo = useMemo(() => new THREE.BufferGeometry().setFromPoints(Array.from({ length: 28 }, () => new THREE.Vector3())), [])
   useEffect(() => { phases.current = r.tracks.map(() => 0); yaws.current = r.tracks.map(() => 0); heroDist.current = { d: 0, lastT: 0, prev: null } }, [r])
 
@@ -129,12 +143,32 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     const posAttr = trailGeo.getAttribute('position') as THREE.BufferAttribute
     for (let i = 0; i < 28; i++) { const q = tp[Math.min(i, tp.length - 1)]; posAttr.setXYZ(i, q.x, q.y, q.z) }
     posAttr.needsUpdate = true
+    // ---- efeitos de jogo: chute (onda de impacto + som + tremida), gol (flash + som), poeira na corrida ----
+    const F = fx.current, now = performance.now()
+    if (t < lastT.current - 0.5 || t < 0.05) { F.inGoal = false; F.touchK = -1; F.goalAt = -99 }
+    r.tracks.forEach((tr, i) => {
+      const q = posAt(tr, t), prev = F.prevAct[i] ?? 0
+      if (q.act === 'kick' && prev < 0.42 && q.actT >= 0.42 && c.playing) { F.rings.push({ x: b.x, y: b.y, at: now, big: false }); F.shake = 1; sfx('kick') }
+      if ((q.act === 'feint' || q.act === 'pedal') && prev < 0.3 && q.actT >= 0.3 && c.playing) sfx('swish')
+      F.prevAct[i] = q.act === 'kick' || q.act === 'feint' || q.act === 'pedal' ? q.actT : 0
+    })
+    if (r.goal && b.x > r.goal.x - 0.2 && Math.abs(b.y) < 3.7 && b.z < 2.5) { if (!F.inGoal && c.playing) { F.inGoal = true; F.goalAt = now; F.rings.push({ x: r.goal.x, y: b.y, at: now, big: true }); F.shake = 1.4; sfx('goal') } }
+    F.rings = F.rings.filter((q) => now - q.at < 900)
+    ringMeshes.current.forEach((m, i) => { const q = F.rings[i]; if (!m) return; if (!q) { m.visible = false; return } const a = (now - q.at) / 900; m.visible = true; m.position.set(q.x, 0.05, q.y); m.scale.setScalar((q.big ? 2.5 : 1) + a * (q.big ? 14 : 7)); (m.material as THREE.MeshBasicMaterial).opacity = (1 - a) * 0.85 })
+    // poeira nos pés do herói quando corre forte
+    const hv0 = velAt(hero, t), hp0 = posAt(hero, t)
+    F.dustT += dt
+    if (c.playing && hv0.speed > 3.5 && F.dustT > 0.05) { F.dustT = 0; F.dust.push({ x: hp0.x - (hv0.vx / hv0.speed) * 0.3, y: hp0.y - (hv0.vy / hv0.speed) * 0.3, z: 0.05, vx: -hv0.vx * 0.12 + (Math.random() - 0.5) * 0.6, vy: -hv0.vy * 0.12 + (Math.random() - 0.5) * 0.6, vz: 0.5 + Math.random() * 0.7, life: 1 }) }
+    const dp = dustGeo.getAttribute('position') as THREE.BufferAttribute, dc = dustGeo.getAttribute('color') as THREE.BufferAttribute
+    F.dust = F.dust.filter((d) => d.life > 0).slice(-90)
+    for (let i = 0; i < 90; i++) { const d = F.dust[i]; if (!d) { dc.setXYZ(i, 0, 0, 0); continue } if (c.playing) { d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt; d.life -= dt * 1.6 } dp.setXYZ(i, d.x, d.z, d.y); const a = Math.max(0, d.life) * 0.5; dc.setXYZ(i, 0.7 * a, 0.85 * a, a) }
+    dp.needsUpdate = true; dc.needsUpdate = true
     // dados do HUD
     const hp = posAt(hero, t), hv = velAt(hero, t), H = heroDist.current
     if (H.prev && t > H.lastT) H.d += Math.hypot(hp.x - H.prev[0], hp.y - H.prev[1]); if (t < H.lastT - 0.5) H.d = 0
     H.prev = [hp.x, hp.y]; H.lastT = t
     const step = [...r.steps].reverse().find((s) => t >= s.t - 0.05)?.text ?? r.steps[0]?.text ?? ''
-    hudRef.current = { t, dist: H.d, kmh: hv.speed * 3.6, step }
+    hudRef.current = { t, dist: H.d, kmh: hv.speed * 3.6, step, goal: now - F.goalAt < 2400 }
     // câmera
     const f = focusAt(r, t), hd = Math.atan2(hv.vx, hv.vy), cs = cam.current
     const k = 1 - Math.exp(-dt * 6), S = r.focus.size
@@ -159,6 +193,11 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
       px = cs.tx - cs.d * 0.95; py = cs.d * 0.62; pz = cs.ty; lx = cs.tx + cs.d * 0.12; ly = 0.7; lz = cs.ty
     }
     if (!cs.init) { camera.position.set(px, py, pz); cs.init = true } else camera.position.lerp(new THREE.Vector3(px, py, pz), m === 'tv' ? 0.2 : 0.12)
+    // sensação de velocidade (FOV abre ao acelerar) e tremida no chute/gol
+    const pc = camera as THREE.PerspectiveCamera, targetFov = 42 + Math.min(10, hv.speed * 1.1) + (slow.current < 0.8 ? -4 : 0)
+    fx.current.fov += (targetFov - fx.current.fov) * Math.min(1, dt * 3); pc.fov = fx.current.fov; pc.updateProjectionMatrix()
+    fx.current.shake = Math.max(0, fx.current.shake - dt * 2.6)
+    if (fx.current.shake > 0) camera.position.add(new THREE.Vector3((Math.random() - 0.5) * 0.18, (Math.random() - 0.5) * 0.12, (Math.random() - 0.5) * 0.18).multiplyScalar(fx.current.shake))
     camera.lookAt(lx, ly, lz)
   })
 
@@ -167,13 +206,17 @@ function World({ r, clock, mode, hudRef, onEnd }: { r: Replay; clock: React.Muta
     <Pitch r={r} />
     {figs.map((f, i) => <group key={f.id} ref={(g) => { if (g) groups.current[i] = g }}><primitive object={f.root} />
       <mesh rotation-x={-Math.PI / 2} position-y={0.02}><circleGeometry args={[0.6, 24]} /><meshBasicMaterial color="#000" transparent opacity={0.5} depthWrite={false} /></mesh>
-      {r.tracks[i].hero && <mesh rotation-x={-Math.PI / 2} position-y={0.025}><ringGeometry args={[0.78, 0.86, 32]} /><meshBasicMaterial color="#c6ff00" transparent opacity={0.9} depthWrite={false} /></mesh>}
+      {r.tracks[i].hero && <mesh rotation-x={-Math.PI / 2} position-y={0.025}><ringGeometry args={[0.78, 0.9, 32]} /><meshBasicMaterial color="#c6ff00" transparent opacity={0.95} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>}
+      {r.tracks[i].hero && <mesh rotation-x={-Math.PI / 2} position-y={0.022}><circleGeometry args={[1.5, 32]} /><meshBasicMaterial color="#c6ff00" transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>}
       <Html position={[0, 2.1, 0]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
         <span className={`whitespace-nowrap rounded px-1.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide ${r.tracks[i].hero ? 'bg-lime text-black' : 'bg-black/55 text-zinc-200'}`}>{r.tracks[i].role}</span>
       </Html></group>)}
     <group ref={ball}><mesh><sphereGeometry args={[0.13, 14, 10]} /><meshBasicMaterial color="#ffffff" /></mesh>
-      <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#9fd0ff" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
-    <primitive object={useMemo(() => new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: '#cfe6ff', transparent: true, opacity: 0.55 })), [trailGeo])} ref={trail as never} />
+      <mesh><sphereGeometry args={[0.42, 12, 8]} /><meshBasicMaterial color="#9fd0ff" transparent opacity={0.3} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>
+      <mesh><sphereGeometry args={[0.9, 12, 8]} /><meshBasicMaterial color="#4d8dff" transparent opacity={0.1} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh></group>
+    {Array.from({ length: 4 }, (_, i) => <mesh key={i} rotation-x={-Math.PI / 2} visible={false} ref={(m) => { if (m) ringMeshes.current[i] = m }}><ringGeometry args={[0.45, 0.55, 40]} /><meshBasicMaterial color="#bfe0ff" transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} /></mesh>)}
+    <points geometry={dustGeo} frustumCulled={false}><pointsMaterial size={0.22} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation /></points>
+    <primitive object={useMemo(() => new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: '#e6f2ff', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending })), [trailGeo])} ref={trail as never} />
   </>
 }
 
