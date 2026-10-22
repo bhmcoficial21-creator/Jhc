@@ -1,4 +1,4 @@
-<title>Craque Supremo</title>
+<title>Craque 27</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap">
@@ -2429,7 +2429,7 @@ function p3Tex(R,kind){
   if(kind==='ads'){
     const c=mkCanvas(1024,64),x=c.getContext('2d');
     x.fillStyle='#0c1a33';x.fillRect(0,0,1024,64);
-    const names=[['CRAQUE SUPREMO',['#ff2e93','#d4146e']],['SUPER LIGA',['#1f6bff','#0c3fb8']],['CRAQUE SUPREMO',['#ff2e93','#d4146e']],['CRAQUE CAFÉ',['#ffb21e','#e07a00']],['CRAQUE SUPREMO',['#1f6bff','#0c3fb8']],['GOL TV',['#19b86a','#0b7d45']],['MUNDIAL SPORT',['#8a3cff','#5b1fc4']]];
+    const names=[['CRAQUE 27',['#ff2e93','#d4146e']],['SUPER LIGA',['#1f6bff','#0c3fb8']],['CRAQUE 27',['#ff2e93','#d4146e']],['CRAQUE CAFÉ',['#ffb21e','#e07a00']],['CRAQUE 27',['#1f6bff','#0c3fb8']],['GOL TV',['#19b86a','#0b7d45']],['MUNDIAL SPORT',['#8a3cff','#5b1fc4']]];
     x.font='italic 800 34px "Barlow Condensed",Impact,sans-serif';x.textBaseline='middle';
     names.forEach(([n,cc],i)=>{
       const w=1024/7,gg=x.createLinearGradient(i*w,0,i*w,64);gg.addColorStop(0,cc[0]);gg.addColorStop(1,cc[1]);
@@ -6810,21 +6810,21 @@ function titleScreen(toMenu){
   const logo=`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#ffe600"/><path d="M20 8l5 4-2 6h-6l-2-6z" fill="#0a0a8f"/><path d="M8 22l6-3 3 5-3 5z M32 22l-6-3-3 5 3 5z" fill="#0a0a8f"/><path d="M12 31l8-3 8 3" stroke="#0a0a8f" stroke-width="2" fill="none"/></svg>`;
   screen(`${toMenu?'':`<div id="cover" class="cover"><div class="cv-in">
     <div class="cv-cap">Edição 2027 · Carreira de jogador</div>
-    <h1 class="cv-h">CRAQUE<br>SUPREMO</h1>
+    <h1 class="cv-h">CRAQUE<br>27</h1>
     <div class="cv-av"><span>${logo}</span><span class="g">${i1?`<img src="${i1}" alt="">`:'⚽'}</span></div>
     <div class="cv-card" data-a="coverGo" role="button" tabindex="0" aria-label="Começar">
       <b class="cv-bd">${logo}</b>
       <span class="cv-side l">16 ANOS · 10 RODADAS · 1 SONHO</span>
       <span class="cv-side r"><u>VÁRZEA</u><u>BASE</u><u>MUNDO</u></span>
-      <svg class="cv-sw" viewBox="0 0 100 100"><defs><path id="cvc" d="M50 50m-34 0a34 34 0 1 1 68 0a34 34 0 1 1-68 0"/></defs><text><textPath href="#cvc">CRAQUE ★ SUPREMO ★ </textPath></text><circle cx="50" cy="50" r="14" fill="none" stroke="#fff" stroke-width="2"/><path d="M50 42v16M44 52l6 6 6-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="cv-sw" viewBox="0 0 100 100"><defs><path id="cvc" d="M50 50m-34 0a34 34 0 1 1 68 0a34 34 0 1 1-68 0"/></defs><text><textPath href="#cvc">CRAQUE ★ 27 ★ </textPath></text><circle cx="50" cy="50" r="14" fill="none" stroke="#fff" stroke-width="2"/><path d="M50 42v16M44 52l6 6 6-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       ${i1?`<img class="pa" src="${i1}" alt="">`:''}${i2?`<img class="pb" src="${i2}" alt="">`:''}
-      <div class="cv-t"><small>O JOGO DE FUTEBOL</small><big>CRAQUE</big><big class="b">SUPREMO</big><em>2027</em></div>
+      <div class="cv-t"><small>O JOGO DE FUTEBOL</small><big>CRAQUE</big><big class="b">27</big><em>EDIÇÃO 2027</em></div>
       <span class="cv-btn">COMEÇAR</span>
     </div>
     <p class="cv-p">Do campinho de terra aos maiores estádios do planeta. Treine, jogue a partida, dispute o campeonato e escolha que tipo de craque você vai ser.</p>
   </div></div>`}
   <div id="pmenu" class="pmenu${toMenu?' on':''}"><div class="pm-bg"><canvas id="pmcv" class="pm-cv" width="480" height="854"></canvas><i class="bm b1"></i><i class="bm b2"></i><i class="bm b3"></i><div class="pm-pitch"></div><div class="pm-parts">${Array.from({length:22},(_,k)=>`<span style="--x:${(k*37)%100}%;--d:${6+(k*7)%9}s;--w:${-(k*13)%14}s;--s:${2+(k*5)%4}px"></span>`).join('')}</div><div class="pm-vg"></div></div>
-    <div class="pm-ttl"><span class="pm-lg">${logo}</span><b>CRAQUE<em>SUPREMO</em></b></div><div class="pm-in"><div class="pm-ring">${PM_RING(8)}</div><ul class="pm-list">${items}</ul></div>
+    <div class="pm-ttl"><span class="pm-lg">${logo}</span><b>CRAQUE<em>27</em></b></div><div class="pm-in"><div class="pm-ring">${PM_RING(8)}</div><ul class="pm-list">${items}</ul></div>
     <div class="pm-hint"><span><b>OK</b> Selecionar</span><span><b>↕</b> Navegar</span></div></div>
   <div class="setup" id="setup"><h2>Crie seu jogador</h2>
   <p class="sit">Você tem 16 anos, uma chuteira furada e um sonho. Treine, jogue, assine contratos, gaste, erre e decida quem você vai ser.</p>
@@ -6911,7 +6911,7 @@ function cityScene(R,root){
   const sc=mkCanvas(512,256),sx=sc.getContext('2d');sx.textAlign='center';sx.textBaseline='middle';
   sx.font='italic 900 120px "Barlow Condensed",Impact,sans-serif';
   sx.shadowColor='#ffd400';sx.shadowBlur=28;sx.fillStyle='#fff6b0';sx.fillText('CRAQUE',256,80);sx.fillText('CRAQUE',256,80);
-  sx.shadowColor='#ff2aa8';sx.fillStyle='#ffd1ee';sx.fillText('SUPREMO',256,196);sx.fillText('SUPREMO',256,196);
+  sx.shadowColor='#ff2aa8';sx.fillStyle='#ffd1ee';sx.fillText('27',256,196);sx.fillText('27',256,196);
   const sign=root.add(new N3(R.mesh(gPlane(46,23,1,1)),{c:[1,1,1],tex:R.tex(sc,{clamp:true}),emis:[1,1,1],blend:true,alpha:1,order:7,dbl:true,nofog:true,spec:0}));sign.p=[0,30,-70];
   return{update(t,eye){
     cars.forEach(c=>{c.p+=c.sp*.016;const lim=N*SP+8;if(c.p>lim)c.p=-lim;if(c.p<-lim)c.p=lim;c.m.p=c.ax?[c.lane,.5,c.p]:[c.p,.5,c.lane]});
