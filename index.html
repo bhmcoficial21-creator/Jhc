@@ -177,6 +177,14 @@ th{font:700 11px var(--f-display);letter-spacing:.1em;text-transform:uppercase;c
 .hud3 .hd{background:#0b0b0e;color:#fff;padding:7px 3px}
 .hud3 .hn{align-self:center;margin-left:8px;color:#fff;font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 3px #000,0 0 6px #000;opacity:.95}
 body:has(.hud3) .sb,body:has(.hud3) .min{display:none}
+.tg3{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.tg3i{position:absolute;left:0;top:0;display:none;font:800 10px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(8,8,10,.78);color:#f5f1e8;border:1px solid rgba(255,255,255,.35);white-space:nowrap}
+.tg3i.me{background:#e8b84a;color:#14100a;border-color:#ffe08a;box-shadow:0 0 12px rgba(232,184,74,.55)}
+.st3{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;max-width:440px;margin:6px auto 0;background:var(--line);border:1px solid var(--line)}
+.st3>div{background:#0b0b0d;padding:7px 4px 6px;text-align:center}
+.st3 small{display:block;font:700 9px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:var(--muted)}
+.st3 b{font:800 24px/1 'Barlow Condensed',Impact,sans-serif;color:#f5f1e8;font-variant-numeric:tabular-nums}
+.st3 u{text-decoration:none;font:600 10px sans-serif;color:var(--gold);margin-left:3px}
 .cv3{display:block;width:100%;aspect-ratio:360/460;touch-action:none;border:1px solid var(--line);background:#0a1220;cursor:crosshair}
 .trl{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
 .actbar.ckbar{position:absolute;left:8px;right:8px;bottom:10px;top:auto;flex-direction:row;justify-content:center;align-items:center;gap:8px}
@@ -2413,6 +2421,12 @@ function p3Adapt(P,dt){
 }
 function p3Tex(R,kind){
   const T={};
+  if(kind==='grassDark'){
+    const c=mkCanvas(512,512),x=c.getContext('2d');
+    x.fillStyle='#14231b';x.fillRect(0,0,512,256);x.fillStyle='#1a2d22';x.fillRect(0,256,512,256);
+    for(let i=0;i<14000;i++){const l=Math.random();x.fillStyle=l<.5?'rgba(0,0,0,.18)':'rgba(120,170,140,.05)';x.fillRect(Math.random()*512,Math.random()*512,1,2+Math.random()*4)}
+    return R.tex(c);
+  }
   if(kind==='grass'){
     const c=mkCanvas(512,512),x=c.getContext('2d');
     const g1=x.createLinearGradient(0,0,0,256),g2=x.createLinearGradient(0,256,0,512);
@@ -2866,22 +2880,24 @@ function crowdTex(R){
   else{if(!CROWD_IMG){CROWD_IMG=new Image();CROWD_IMG.src=CROWD_SRC}CROWD_IMG.addEventListener('load',()=>put(CROWD_IMG))}
   return t;
 }
-function p3Stadium(R,root,P){
+function p3Stadium(R,root,P,opt){
+  const dk=!!(opt&&opt.dark);
   /* luz de jogo à tarde, igual em pênalti, escanteio e jogada */
   R.lightCol=[.66,.6,.5];R.ambT=[.38,.43,.52];R.ambB=[.24,.28,.2];R.fog=[.5,.64,.82];R.fogN=80;R.fogF=260;
   const white={c:[.95,.95,.95],spec:.35};
-  const grass=p3Tex(R,'grass');
+  const grass=p3Tex(R,dk?'grassDark':'grass');
   /* terreno */
-  root.add(new N3(R.mesh(gFlat(-200,200,-200,200,1,1,1,1)),{c:[.2,.4,.22]})).p=[0,-.03,0];
+  root.add(new N3(R.mesh(gFlat(-200,200,-200,200,1,1,1,1)),{c:dk?[.04,.06,.05]:[.2,.4,.22]})).p=[0,-.03,0];
   const pit=root.add(new N3(R.mesh(gFlat(-36,36,-7,62,1,1,1,6.06)),{c:[1,1,1],tex:grass,spec:0,emis:[0,0,0]}));
   /* linhas */
-  const L=(w,d,x,z)=>{const n=root.add(new N3(R.mesh(gBox(w,.02,d)),{c:[.95,.97,.95],emis:[.3,.3,.3]}));n.p=[x,.011,z]};
-  const lw=.12;
+  const LE=dk?[1,1,1]:[.3,.3,.3];
+  const L=(w,d,x,z)=>{const n=root.add(new N3(R.mesh(gBox(w,.02,d)),{c:[.95,.97,.95],emis:LE}));n.p=[x,.011,z]};
+  const lw=dk?.2:.12;
   L(72,lw,0,0);L(40.32+lw,lw,0,16.5);L(lw,16.5,-20.16,8.25);L(lw,16.5,20.16,8.25);
   L(18.32+lw,lw,0,5.5);L(lw,5.5,-9.16,2.75);L(lw,5.5,9.16,2.75);
   L(lw,62,-34,31);L(lw,62,34,31);
-  const arc=root.add(new N3(R.mesh(gArc(0,11,9.03,9.15,.6435,Math.PI-.6435,40,.011)),{c:[.95,.97,.95],emis:[.3,.3,.3]}));
-  const spot=root.add(new N3(R.mesh(gCyl(.12,.12,.014,0,16)),{c:[.95,.97,.95],emis:[.3,.3,.3]}));spot.p=[0,0,11];
+  const arc=root.add(new N3(R.mesh(gArc(0,11,dk?8.98:9.03,dk?9.18:9.15,.6435,Math.PI-.6435,40,.011)),{c:[.95,.97,.95],emis:LE}));
+  const spot=root.add(new N3(R.mesh(gCyl(.12,.12,.014,0,16)),{c:[.95,.97,.95],emis:LE}));spot.p=[0,0,11];
   /* gol */
   const post=(x)=>{const n=root.add(new N3(R.mesh(gCyl(.06,.06,PEN_BAR+.06,0,12)),Object.assign({cast:false},white)));n.p=[x,0,0]};
   post(-PEN_PX);post(PEN_PX);
@@ -3719,6 +3735,28 @@ function mkRibbon(R,root,n,wTail,wHead,aim){
     R.upd(node.mesh);node.vis=true;
   }};
 }
+/* etiquetas sobre os jogadores (VOCÊ, MARCADOR, COMPANHEIRO) e painel de tempo, velocidade e distância */
+function tags3(P3o,P,me,inShot){
+  const box=document.getElementById('tg3');if(!box)return;
+  if(!P3o.tgs){P3o.tgs=[['me','VOCÊ'],['d0','MARCADOR'],['d1','MARCADOR'],['t0','COMPANHEIRO']].map(([k,t])=>{const e=document.createElement('i');e.className='tg3i '+k;e.textContent=t;box.appendChild(e);return e})}
+  const list=[[P3o.tgs[0],me.x-34,me.y]];
+  const ds=P.defs.map(d=>({d,q:Math.hypot(d.x-me.x,d.y-me.y)})).sort((a,b)=>a.q-b.q);
+  [1,2].forEach((ti,i)=>{const o=ds[i];list.push([P3o.tgs[ti],o?o.d.x-34:0,o?o.d.y:0,!o||o.q>14])});
+  const tm=P.tms[0];list.push([P3o.tgs[3],tm?tm.x-34:0,tm?tm.y:0,!tm||P.ball.own!=='me']);
+  list.forEach(([e,x,z,hide])=>{
+    const q=!inShot&&!hide?P3o.proj(x,2.35,z):null;
+    if(!q||q.x<0||q.y<0){e.style.display='none';return}
+    e.style.display='block';e.style.transform=`translate(${q.x.toFixed(0)}px,${q.y.toFixed(0)}px) translate(-50%,-100%)`;
+  });
+}
+function stats3(P3o,P,me,dt){
+  P3o.stT=(P3o.stT||0)-dt;if(P3o.stT>0)return;P3o.stT=.12;
+  const el=document.getElementById('st3');if(!el)return;
+  const v=Math.hypot(me.vx||0,me.vy||0)*3.6,dd=P.defs.reduce((m,d)=>Math.min(m,Math.hypot(d.x-me.x,d.y-me.y)),99),dg=Math.hypot(me.x-34,me.y);
+  if(!el.firstChild)el.innerHTML='<div><small>TEMPO</small><b id="s3t">0</b><u>s</u></div><div><small>VELOCIDADE</small><b id="s3v">0</b><u>km/h</u></div><div><small>MARCADOR</small><b id="s3d">0</b><u>m</u></div><div><small>GOL</small><b id="s3g">0</b><u>m</u></div>';
+  const set=(id,t)=>{const n=document.getElementById(id);if(n&&n.textContent!==t)n.textContent=t};
+  set('s3t',(P.t||0).toFixed(1));set('s3v',String(Math.round(v)));set('s3d',dd>=99?'–':dd.toFixed(0));set('s3g',dg.toFixed(0));
+}
 /* placar sobre o campo: minuto + placar com a cor dos uniformes */
 function hud3Html(){return '<div class="hud3" id="hud3"></div>'}
 function hud3Upd(){
@@ -3734,8 +3772,9 @@ function play3dMount(cv){
   p3Stop();penStop();
   let R;try{R=new R3(cv)}catch(e){return null}
   const root=new N3(),X={};
-  p3Stadium(R,root,X);
-  R.lightCol=[.66,.6,.5];R.ambT=[.38,.43,.52];R.ambB=[.24,.28,.2];R.fog=[.5,.64,.82];R.fogN=80;R.fogF=260;
+  p3Stadium(R,root,X,{dark:true});
+  R.lightCol=[.8,.8,.86];R.ambT=[.5,.55,.68];R.ambB=[.26,.3,.28];R.fog=[.03,.04,.07];R.fogN=70;R.fogF=250;
+  X.crowdMat.emis=[.2,.2,.19];
   const P3o=P3={R,cv,root,X,t:0,cam:{eye:[0,7,34],tgt:[0,.5,22],fov:.8},ks:0,lastPop:null,resShown:false,dpr:1};
   const kit=(k,sk,num,gk,me)=>mkPlayer(R,{kit:k.kit,short:k.short,sock:k.sock,hair:k.hair,skin:sk,num,gk,me,hs:((num||R_hs++)*7)%4});
   const add=p=>{root.add(p.root);return p};
@@ -3746,6 +3785,7 @@ function play3dMount(cv){
   P3o.gk=add(kit(KIT_GK,KIT_GK.skin,null,true));
   P3o.ref=add(mkPlayer(R,{kit:'#f2d21b',short:'#15151a',sock:'#15151a',hair:'#222',skin:SKINS[1],ref:true,hs:2}));
   const ball=P3o.ball=root.add(new N3(R.mesh(gBall(.11)),{c:[1,1,1],vc:true,spec:.3,cast:true}));
+  P3o.meRing=root.add(new N3(R.mesh(gArc(0,0,.7,.86,0,Math.PI*2,40,.03)),{c:[1,.82,.3],emis:[1,.82,.3],blend:true,order:3,alpha:.95}));
   P3o.trail=mkRibbon(R,root,28,.03,.2);P3o.aimR=mkRibbon(R,root,44,.34,.5,true);P3o.tpts=[];
   /* marcador sobre o jogador */
   const gold={c:[.95,.76,.18],emis:[.95,.76,.18],blend:true,order:9,alpha:.95,nodepth:true};
@@ -4018,6 +4058,8 @@ function play3dMount(cv){
       P3o.aimR.set(pts,ey);
     }
     hud3Upd();
+    P3o.meRing.vis=!inShot;P3o.meRing.p=[me.x-34,.04,me.y];{const k=1+Math.sin(P3o.t*4)*.05;P3o.meRing.s=[k,1,k]}
+    tags3(P3o,P,me,inShot);stats3(P3o,P,me,dt);
     R.render(root,{eye:ey,tgt:c.tgt.slice(),fov:c.fov});p3Adapt(P3o,dt);
   };
   /* perda de contexto WebGL: troca para o desenho 2D sem perder a jogada */
@@ -4102,7 +4144,7 @@ function momentScreen(){
   mkPlay();SHT=null;
   DPR=Math.min(2.5,(typeof window!=='undefined'&&window.devicePixelRatio)||1);
   if(penGL()){
-    screen(`<div id="sbwrap">${sb()}</div><div class="min">${M.mins[M.i]}'</div>${narrator('open')}<div class="clk"><i id="clki"></i></div><div class="cv3w"><canvas id="cv" class="cv3" width="${Math.round(360*DPR)}" height="${Math.round(540*DPR)}" style="aspect-ratio:360/540"></canvas>${hud3Html()}<div id="cv3t" class="cv3t"></div>${JOYHTML}${ACTHTML}</div><div id="ctl"></div>`,'x');
+    screen(`<div id="sbwrap">${sb()}</div><div class="min">${M.mins[M.i]}'</div>${narrator('open')}<div class="clk"><i id="clki"></i></div><div class="cv3w"><canvas id="cv" class="cv3" width="${Math.round(360*DPR)}" height="${Math.round(540*DPR)}" style="aspect-ratio:360/540"></canvas>${hud3Html()}<div id="tg3" class="tg3"></div><div id="cv3t" class="cv3t"></div>${JOYHTML}${ACTHTML}</div><div id="st3" class="st3"></div><div id="ctl"></div>`,'x');
     CV=$('#cv');CX=null;
     const P=play3dMount(CV);
     if(P){
