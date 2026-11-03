@@ -1,0 +1,341 @@
+/* ==========================================================
+   Brass Brew · tokens
+   ========================================================== */
+:root {
+  --night: #0d0a07;
+  --night-2: #17110b;
+  --night-3: #231a10;
+  --brass-hi: #f4d68f;
+  --brass: #c9973f;
+  --brass-mid: #9a6a26;
+  --brass-lo: #5a3812;
+  --brass-deep: #2a1908;
+  --cream: #fbefd5;
+  --muted: #a8977c;
+  --line: rgba(244, 214, 143, 0.16);
+
+  --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius: 18px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(201, 151, 63, 0.22), transparent 60%),
+    var(--night);
+  color: var(--cream);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+/* ==========================================================
+   Tela inicial
+   ========================================================== */
+.home {
+  width: 100%;
+  max-width: 440px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.home__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+.home__brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 55%, var(--brass-mid));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.home__mesa {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.home__mesa b { color: var(--cream); font-weight: 700; }
+
+.home__hello {
+  font-size: 15px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ==========================================================
+   Letreiro (sign)
+   ========================================================== */
+.sign {
+  position: relative;
+  z-index: 5;
+  padding: 10px;
+  border-radius: 24px;
+  background: #050403;
+  box-shadow:
+    0 0 0 1px rgba(244, 214, 143, 0.12),
+    0 30px 60px -20px rgba(0, 0, 0, 0.8),
+    0 0 80px -10px rgba(201, 151, 63, 0.35);
+  will-change: transform;
+}
+.sign__screen {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  border-radius: 10px;
+  container-type: size;
+  background:
+    radial-gradient(85% 75% at 30% 22%, #d9a650 0%, var(--brass-mid) 38%, var(--brass-lo) 72%, var(--brass-deep) 100%);
+}
+
+/* Nome pequeno repetido ao fundo, como no letreiro de referência */
+.sign__pattern {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='26'%3E%3Ctext x='0' y='17' font-family='Impact,Anton,Arial Narrow,sans-serif' font-size='12' letter-spacing='.6' fill='%232a1908'%3EBRASS BREW%3C/text%3E%3C/svg%3E");
+  background-size: 92px 26px;
+}
+.is-intro .sign__pattern,
+.is-ready .sign__pattern { animation: pattern-drift 18s linear infinite; }
+@keyframes pattern-drift {
+  to { background-position: -92px 26px; }
+}
+
+/* Linhas horizontais de painel de LED, por cima de tudo */
+.sign__screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(20, 10, 2, 0.28) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(10, 5, 0, 0.55) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* Faixa com o nome gigante */
+.sign__track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 46cqh;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--cream);
+  text-shadow: 0 0 0.1em rgba(255, 238, 200, 0.4), 0 0.03em 0.06em rgba(30, 14, 2, 0.6);
+  transform: translate3d(100cqw, -50%, 0);
+  will-change: transform, opacity;
+}
+.sign__track span { padding-right: 0.35em; }
+.sign__track .star {
+  font-size: 0.42em;
+  color: var(--brass-deep);
+  text-shadow: none;
+  padding-right: 0.8em;
+}
+
+/* Três barras de carregamento */
+.sign__bars {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  gap: 4.5cqh;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+.sign__bars i {
+  display: block;
+  width: 4.6cqh;
+  height: 15cqh;
+  background: var(--cream);
+  box-shadow: 0 0 2cqh rgba(255, 238, 200, 0.7);
+}
+
+/* Palavra final */
+.sign__word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 40cqh;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-shadow: 0 0 0.12em rgba(255, 238, 200, 0.5);
+  opacity: 0;
+}
+
+/* Reflexo de metal escovado passando */
+.sign__shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 246, 220, 0.28) 48%, transparent 60%);
+  transform: translateX(-120%);
+}
+.is-ready .sign__shine { animation: shine 7s 1.2s var(--ease-out) infinite; }
+@keyframes shine {
+  0% { transform: translateX(-120%); }
+  25%, 100% { transform: translateX(120%); }
+}
+
+/* Faixa contínua depois da entrada */
+.sign__track.is-loop {
+  font-size: 34cqh;
+  animation: marquee var(--loop-duration, 14s) linear infinite;
+}
+@keyframes marquee {
+  from { transform: translate3d(0, -50%, 0); }
+  to { transform: translate3d(calc(var(--loop-width) * -1), -50%, 0); }
+}
+
+/* ==========================================================
+   Chamar garçom e atalhos
+   ========================================================== */
+.btn-call {
+  width: 100%;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 0;
+  border-radius: var(--radius);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brass-deep);
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 60%, var(--brass-mid));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 14px 30px -12px rgba(201, 151, 63, 0.6);
+  transition: transform 0.15s;
+}
+.btn-call:active { transform: scale(0.98); }
+.btn-call svg { width: 26px; height: 26px; fill: currentColor; }
+
+.call__sent {
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--night-2);
+  text-align: center;
+}
+.call__title { font-family: var(--font-display); font-size: 28px; text-transform: uppercase; color: var(--brass-hi); }
+.call__text { margin: 6px 0 16px; color: var(--muted); }
+.call__text b { color: var(--cream); }
+
+.btn-ghost {
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.shortcut {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--night-2);
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.15s;
+}
+.shortcut:active { transform: scale(0.98); background: var(--night-3); }
+.shortcut svg { width: 22px; height: 22px; fill: var(--brass); }
+
+.home__legal {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+/* ==========================================================
+   Entrada: só o letreiro aparece; o resto entra depois
+   ========================================================== */
+.reveal {
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms + 250ms);
+}
+.is-intro .reveal { opacity: 0; transform: translateY(18px); pointer-events: none; }
+.is-intro { overflow: hidden; }
+
+.skip {
+  position: fixed;
+  right: 16px;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(13, 10, 7, 0.6);
+  color: var(--muted);
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s;
+}
+body:not(.is-intro) .skip { opacity: 0; pointer-events: none; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 20;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--brass-deep);
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s var(--ease-out);
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ==========================================================
+   Menos movimento: sem faixa correndo e sem balanço
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .sign__pattern, .sign__shine, .sign__track.is-loop { animation: none !important; }
+  .sign__track.is-loop { transform: translate3d(0, -50%, 0); }
+  .reveal { transition: none; }
+}
