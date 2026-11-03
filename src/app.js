@@ -28,7 +28,7 @@
   let finished = false;
 
   const anim = (el, keyframes, options) => {
-    if (finished) return Promise.reject(new Error('intro encerrada'));
+    if (finished) throw new Error('intro encerrada'); // interrompe a sequência (tratado no .catch)
     const a = el.animate(keyframes, { fill: 'forwards', ...options });
     running.push(a);
     return a.finished;
@@ -135,14 +135,20 @@
   if (!reduceMotion) placeSignCentered();
 
   const fontsReady = document.fonts ? Promise.race([document.fonts.ready, wait(1500)]) : Promise.resolve();
+  // Quem abre direto num drink (link compartilhado) não vê a entrada
+  const direto = /^#drinks?\//.test(location.hash);
+  if (direto) finish();
+
   fontsReady.then(() => {
-    if (reduceMotion) finish();
+    if (reduceMotion || finished) finish();
     else playIntro().catch(finish); // animação cancelada pelo "Pular" cai aqui
   });
 
   /* ---------- Ações da tela inicial ---------- */
   const toastEl = $('toast');
   let toastTimer;
+  window.BB = window.BB || {};
+  BB.toast = toast;
   function toast(msg) {
     toastEl.textContent = msg;
     toastEl.classList.add('is-on');
@@ -161,5 +167,5 @@
     toast('Chamado cancelado');
   });
   $('btnBill').addEventListener('click', () => toast('Conta solicitada. O garçom já traz para você.'));
-  $('btnDrinks').addEventListener('click', () => toast('Os reels de drinks são a próxima etapa.'));
+  $('btnDrinks').addEventListener('click', () => { location.hash = '#drinks/exclusivos'; });
 })();

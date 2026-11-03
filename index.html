@@ -58,9 +58,40 @@
     </footer>
   </main>
 
+
+  <!-- Doses e Drinks: abas, busca, grade colorida e lista simples -->
+  <section class="menu" id="menu" hidden>
+    <header class="menu__top">
+      <button class="icon-btn" id="menuBack" type="button" aria-label="Voltar ao início">←</button>
+      <h1 class="menu__title">Doses &amp; Drinks</h1>
+      <span class="bag" aria-label="Itens na sacola"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7V6a5 5 0 0 1 10 0v1h3l-1 14H5L4 7h3Zm2 0h6V6a3 3 0 0 0-6 0v1Z"/></svg><b class="js-bag" hidden>0</b></span>
+    </header>
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg>
+      <input id="menuSearch" type="search" placeholder="Buscar drink ou ingrediente" autocomplete="off" />
+    </label>
+    <nav class="tabs" id="menuTabs" role="tablist" aria-label="Categorias"></nav>
+    <div class="menu__content" id="menuContent"></div>
+    <footer class="home__legal">Venda proibida para menores de 18 anos · Beba com moderação</footer>
+  </section>
+
+  <!-- Reels do drink: tela cheia, desliza para o próximo -->
+  <section class="reel" id="reel" hidden>
+    <header class="reel__top">
+      <button class="icon-btn" id="reelClose" type="button" aria-label="Voltar para a lista">←</button>
+      <span class="reel__cat" id="reelCat"></span>
+      <span class="reel__count" id="reelCount"></span>
+    </header>
+    <div class="reel__track" id="reelTrack"></div>
+  </section>
+
   <button class="skip" id="skip" type="button">Pular</button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="src/data.js"></script>
+  <script src="src/vessel.js"></script>
   <script src="src/app.js"></script>
+  <script src="src/cardapio.js"></script>
+  <script>BB.route();</script>
 </body>
 </html>

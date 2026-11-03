@@ -10,10 +10,33 @@ Leia inteiro antes de começar e mantenha atualizado conforme o projeto avança.
 | Etapa | Status | Arquivos |
 |---|---|---|
 | Entrada (letreiro) + tela inicial | ✅ feito (v1) | `index.html`, `src/styles.css`, `src/app.js` |
-| `src/data.js` com todos os itens | ⏳ próximo | — |
-| Reels de drinks (Negroni e Conde Matarazzo) | ⏳ | — |
-| Lista com categorias e busca | ⏳ | — |
-| Sacola e chamado | ⏳ (chamado do garçom já tem tela "Chamado enviado" local) | — |
+| `src/data.js` com todos os itens | ✅ feito (sem fotos, sem preços) | `src/data.js` |
+| Lista com abas, busca e grade colorida | ✅ feito (v1) | `src/cardapio.js` |
+| Reels de drinks com copo desenhado (enche + inclina em 3D) | ✅ feito (v1) | `src/vessel.js`, `src/cardapio.js` |
+| Fotos dos drinks (dguests e site oficial) | ⛔ bloqueado: `www.dguests.com.br` e `framerusercontent.com` fora da rede liberada da sessão | — |
+| Sacola | ⏳ (por enquanto "Adicionar" só conta itens) | — |
+| Chamado do garçom em tempo real | ⏳ fase 2 (hoje só mostra "Chamado enviado" no celular) | — |
+
+### Doses e Drinks (como funciona)
+Referências: dois elementos do Awwwards da Bucks Sauce.
+- **"Product grid animation"** → a lista: cada drink é um cartão na cor dele, com o nome grande em cima e o
+  copo no meio. Tocar no cartão abre o reels e o copo "cresce" do cartão para a tela cheia (View Transitions,
+  onde o navegador suporta).
+- **"Bottle stop motion animation"** → o copo no reels: enche **camada por camada**, cada ingrediente caindo
+  em passos (stop motion), na ordem da receita. Pedaços (gelo, rodela, casca, hortelã, nibs, melancia,
+  abacaxi, espuma) são desenhados como peças; líquidos como faixas.
+- Arrastar o copo para os lados **inclina em 3D**; o líquido fica nivelado e balança com atraso, e o copo
+  volta balançando. Tocar enche de novo. `touch-action: none` só no copo.
+- Atrás do copo, o nome gigante corre em duas faixas (sólida e contorno).
+- Copos: `baixo` (clássicos e maquiados), `long` (Gin Tônica, Mojito), `taca` (spritz), `garrafa` (engarrafados).
+- Drinks sem ingrediente confirmado (Exclusivos, Seco de Ervas, 3 Spritz) mostram o copo cheio numa cor só
+  e o aviso "Ingredientes a confirmar com o bar". Clássicos mostram "Receita clássica · a confirmar".
+- Doses, garrafas, combos e sem álcool aparecem como lista simples, com "+".
+- Busca procura por nome e por ingrediente, em todas as categorias.
+- Rotas: `#drinks/<categoria>` e `#drink/<id>` (link direto pula a entrada).
+- **Fotos:** quando chegarem, basta preencher `foto: 'public/img/<id>.png'` no `data.js`; o cartão e o reels
+  trocam o desenho pela foto automaticamente (a inclinação continua funcionando).
+- As cores de cada drink e de cada ingrediente são só visuais e ficam em `data.js` (`cor` e `BB.camadas`).
 
 ### Entrada (como funciona)
 Referência: vídeo de um elemento do Awwwards (letreiro "KFC Rewards"). Foi adaptado para o perfil do Brass:
@@ -233,7 +256,7 @@ preço e marcar esgotado, e chamados do garçom em tempo real. Deploy no Netlify
 - [ ] Prints do cardápio dguests com **descrição e preço** de cada drink
 - [ ] Ingredientes dos **Exclusivos**, dos **Spritz** e dos **Maquiados**
 - [ ] Confirmar como o bar faz os **Clássicos**
-- [ ] **Fotos** de cada drink, de preferência recortadas e no mesmo ângulo
+- [ ] **Fotos** de cada drink, de preferência recortadas e no mesmo ângulo (liberar `www.dguests.com.br` e `framerusercontent.com` na rede do ambiente, ou enviar os arquivos)
 - [ ] Logo do Brass em vetor (SVG) e fontes ou cores oficiais, se existirem
 - [ ] Número de mesas, para gerar os links e QR Codes
 - [ ] Confirmar a palavra final da entrada ("SAÚDE!") ou trocar por outra do bar
@@ -250,9 +273,9 @@ preço e marcar esgotado, e chamados do garçom em tempo real. Deploy no Netlify
 ## 10. Ordem de trabalho
 
 0. ✅ Entrada (letreiro) e tela inicial.
-1. Montar `src/data.js` com todos os itens da seção 3, marcando o status de cada um.
-2. Criar a tela de reels com 2 drinks de teste (Negroni e Conde Matarazzo) e o copo desenhado por código.
-3. Validar a interação do copo (balançar, líquido e gelo) no celular.
-4. Fazer a lista com categorias e busca, incluindo doses, garrafas, combos e sem álcool.
+1. ✅ Montar `src/data.js` com todos os itens da seção 3, marcando o status de cada um.
+2. ✅ Criar a tela de reels com o copo desenhado por código (todos os drinks, não só 2).
+3. Validar a interação do copo (balançar, líquido e gelo) num celular de verdade.
+4. ✅ Fazer a lista com categorias e busca, incluindo doses, garrafas, combos e sem álcool.
 5. Fazer a sacola.
 6. Trocar os desenhos pelas fotos reais e preencher preços e ingredientes conforme o material chegar.
