@@ -41,7 +41,17 @@ Referências: dois elementos do Awwwards da Bucks Sauce.
   trocam o desenho pela foto automaticamente (a inclinação continua funcionando).
 - As cores de cada drink e de cada ingrediente são só visuais e ficam em `data.js` (`cor` e `BB.camadas`).
 
-### Entrada (como funciona)
+### Entrada v2 (atual) — referência "Navigation" da Don Molinico (Awwwards)
+1. O painel cor de tijolo cobre a tela com "BRASS BREW" grande no centro.
+2. O painel recolhe para dentro da **aba da marca**, pendurada no topo.
+3. Aparece a capa: parede de tijolos (Casa das Caldeiras), título "DA CALDEIRA PRO SEU COPO" subindo linha a linha
+   e os 4 drinks reais entrando quadro a quadro (stop motion). "Casa das Caldeiras" à esquerda e a mesa à direita.
+4. Tocar na aba abre o painel de novo, saindo da aba: as categorias em letras grandes, separadas por linhas,
+   e "Chamar garçom" / "Pedir a conta" no rodapé. Tocar numa categoria abre o cardápio nela.
+- Paleta nova (menos "premium"): tijolo `#a8361f`, tijolo escuro `#6e2213`, creme `#f5e6c8`, mostarda `#e0a526`,
+  carvão `#22150f`. Fonte de títulos: **Big Shoulders Display** (industrial, condensada).
+
+### Entrada v1 (substituída) — letreiro de LED
 Referência: vídeo de um elemento do Awwwards (letreiro "KFC Rewards"). Foi adaptado para o perfil do Brass:
 1. Tela noturna com o **letreiro** no centro: moldura preta, painel de latão escovado, linhas de LED
    e o nome "BRASS BREW" pequeno, repetido ao fundo.
@@ -104,7 +114,7 @@ Legenda de status:
 | Tangerina Spritz | gin Beefeater, cordial de tangerina, angostura | "Cítrico, vivo e amargo delicado." | R$ 45,00 | `public/img/tangerina-spritz.webp` |
 | Veraneio | vinho rosé, acerola, toque de bourbon whisky | "Acerola vibrante, fresco, cítrico e um…" (cortado no print) | R$ 45,00 | `public/img/veraneio.webp` |
 
-Fotos: recortadas do print (≈370 px), fundo removido com `rembg` (isnet), o coração do app apagado e a base da
+Fotos: recortadas do print (≈370 px), ampliadas 4× com super-resolução EDSR (OpenCV), fundo removido com `rembg` (isnet), o coração do app apagado e a base da
 taça do Veraneio refeita espelhando o lado esquerdo (o botão "voltar ao topo" cobria). Resolução baixa:
 trocar pelas originais quando possível.
 

@@ -3,59 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0d0a07" />
+  <meta name="theme-color" content="#a8361f" />
   <title>Brass Brew · Doses e Drinks</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Big+Shoulders+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="src/styles.css" />
 </head>
 <body class="is-intro">
   <main class="home" id="home">
-    <header class="home__top reveal">
-      <span class="home__brand">Brass Brew</span>
-      <span class="home__mesa">Mesa <b id="mesa">--</b></span>
-    </header>
-
-    <!-- Letreiro: na entrada fica no centro da tela; depois vira o destaque do início -->
-    <section class="sign" id="sign" aria-label="Brass Brew, doses e drinks">
-      <div class="sign__screen" id="screen">
-        <div class="sign__pattern" aria-hidden="true"></div>
-        <div class="sign__track" id="track" aria-hidden="true"></div>
-        <div class="sign__bars" id="bars" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="sign__word" id="word" aria-hidden="true">Saúde!</div>
-        <div class="sign__shine" aria-hidden="true"></div>
+    <!-- Capa: foto dos drinks, título grande e a aba da marca que abre o menu -->
+    <section class="hero" aria-label="Brass Brew">
+      <div class="hero__wall" aria-hidden="true"></div>
+      <p class="hero__side hero__side--l">Casa das<br>Caldeiras</p>
+      <p class="hero__side hero__side--r">Mesa<br><b id="mesa">—</b></p>
+      <h1 class="hero__title" aria-label="Da caldeira pro seu copo">
+        <span class="line"><span>Da caldeira</span></span>
+        <span class="line"><span>pro seu</span></span>
+        <span class="line"><span>copo</span></span>
+      </h1>
+      <div class="hero__drinks" aria-hidden="true">
+        <img src="public/img/tangerina-spritz.webp" alt="" class="d d1" draggable="false">
+        <img src="public/img/no-de-caju.webp" alt="" class="d d2" draggable="false">
+        <img src="public/img/brasa.webp" alt="" class="d d3" draggable="false">
+        <img src="public/img/veraneio.webp" alt="" class="d d4" draggable="false">
       </div>
     </section>
 
-    <p class="home__hello reveal"><span id="greeting">Boa noite</span>! Bem-vindo à Casa das Caldeiras.</p>
-
-    <section class="call reveal" id="call">
-      <button class="btn-call" id="btnCall" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1.5 1.5 0 0 1 1.5 1.5v.6A7 7 0 0 1 19 12v3.5l1.6 2.1a.9.9 0 0 1-.7 1.4H4.1a.9.9 0 0 1-.7-1.4L5 15.5V12a7 7 0 0 1 5.5-6.9v-.6A1.5 1.5 0 0 1 12 3Zm-2.4 17h4.8a2.4 2.4 0 0 1-4.8 0Z"/></svg>
-        <span>Chamar garçom</span>
-      </button>
+    <section class="actions">
+      <button class="btn-main" id="btnDrinks" type="button">Ver drinks <span aria-hidden="true">→</span></button>
+      <div class="actions__row" id="callRow">
+        <button class="btn-line" id="btnCall" type="button">Chamar garçom</button>
+        <button class="btn-line" id="btnBill" type="button">Pedir a conta</button>
+      </div>
       <div class="call__sent" id="callSent" hidden>
-        <p class="call__title">Chamado enviado</p>
-        <p class="call__text">O garçom já vai até a mesa <b class="js-mesa">--</b>.</p>
-        <button class="btn-ghost" id="btnCancel" type="button">Cancelar chamado</button>
+        <p class="call__title">Garçom chamado</p>
+        <p class="call__text">Já vai até a mesa <b class="js-mesa">—</b>.</p>
+        <button class="btn-line" id="btnCancel" type="button">Cancelar chamado</button>
       </div>
+      <p class="home__legal">Venda proibida para menores de 18 anos · Beba com moderação</p>
     </section>
 
-    <nav class="shortcuts reveal">
-      <button class="shortcut" id="btnDrinks" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-7 8v6h3v2H8v-2h3v-6L4 4Zm4.4 2 3.6 4.1L15.6 6H8.4Z"/></svg>
-        Ver drinks
-      </button>
-      <button class="shortcut" id="btnBill" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2Zm3 5v2h6V7H9Zm0 4v2h6v-2H9Z"/></svg>
-        Pedir a conta
-      </button>
-    </nav>
+    <!-- Aba da marca (pendurada no topo). Tocar abre o painel. -->
+    <button class="brand-tab" id="brandTab" type="button" aria-expanded="false" aria-controls="panel">
+      <span class="brand-tab__small">Cervejaria · Drinks</span>
+      <span class="brand-tab__name">Brass<br>Brew</span>
+      <span class="sr-only">Abrir menu</span>
+    </button>
 
-    <footer class="home__legal reveal">
-      Venda proibida para menores de 18 anos · Beba com moderação
-    </footer>
+    <nav class="panel" id="panel" aria-label="Menu">
+      <p class="panel__intro" aria-hidden="true"><span>Brass</span><span>Brew</span><small>Doses &amp; Drinks</small></p>
+      <ul class="panel__list" id="panelList"></ul>
+      <div class="panel__foot">
+        <button class="panel__link" type="button" data-act="call">Chamar garçom</button>
+        <button class="panel__link" type="button" data-act="bill">Pedir a conta</button>
+      </div>
+    </nav>
   </main>
 
 
@@ -85,7 +88,6 @@
     <div class="reel__track" id="reelTrack"></div>
   </section>
 
-  <button class="skip" id="skip" type="button">Pular</button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="src/data.js"></script>

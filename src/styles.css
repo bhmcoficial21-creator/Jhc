@@ -1,24 +1,32 @@
 /* ==========================================================
    Brass Brew · tokens
+   Direção: tijolo da Casa das Caldeiras, creme e mostarda; tipografia industrial condensada.
+   (os nomes antigos --night/--brass/--cream continuam, usados pelo cardápio e pelos reels)
    ========================================================== */
 :root {
   color-scheme: dark;
-  --night: #0d0a07;
-  --night-2: #17110b;
-  --night-3: #231a10;
-  --brass-hi: #f4d68f;
-  --brass: #c9973f;
-  --brass-mid: #9a6a26;
-  --brass-lo: #5a3812;
-  --brass-deep: #2a1908;
-  --cream: #fbefd5;
-  --muted: #a8977c;
-  --line: rgba(244, 214, 143, 0.16);
+  --tijolo: #a8361f;
+  --tijolo-escuro: #6e2213;
+  --creme: #f5e6c8;
+  --mostarda: #e0a526;
+  --carvao: #22150f;
 
-  --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --night: var(--carvao);
+  --night-2: #2e1d16;
+  --night-3: #3a251b;
+  --brass-hi: var(--creme);
+  --brass: var(--mostarda);
+  --brass-mid: #c98a1c;
+  --brass-lo: var(--tijolo-escuro);
+  --brass-deep: var(--carvao);
+  --cream: var(--creme);
+  --muted: #c9b49a;
+  --line: rgba(245, 230, 200, 0.18);
+
+  --font-display: "Big Shoulders Display", "Anton", "Impact", "Arial Narrow", sans-serif;
   --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --radius: 18px;
+  --radius: 14px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -26,9 +34,7 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   min-height: 100svh;
-  background:
-    radial-gradient(120% 60% at 50% -10%, rgba(201, 151, 63, 0.22), transparent 60%),
-    var(--night);
+  background: var(--night);
   color: var(--cream);
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
@@ -36,310 +42,188 @@ body {
 }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--mostarda); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ==========================================================
-   Tela inicial
+   Início: capa
    ========================================================== */
 .home {
-  width: 100%;
-  max-width: 440px;
   min-height: 100svh;
-  margin: 0 auto;
-  padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  background: var(--tijolo);
 }
 
-.home__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 4px;
-}
-.home__brand {
-  font-family: var(--font-display);
-  font-size: 22px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 55%, var(--brass-mid));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.home__mesa {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  padding: 7px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-.home__mesa b { color: var(--cream); font-weight: 700; }
-
-.home__hello {
-  font-size: 15px;
-  color: var(--muted);
-  text-align: center;
-}
-
-/* ==========================================================
-   Letreiro (sign)
-   ========================================================== */
-.sign {
+.hero {
   position: relative;
-  z-index: 5;
-  padding: 10px;
-  border-radius: 24px;
-  background: #050403;
-  box-shadow:
-    0 0 0 1px rgba(244, 214, 143, 0.12),
-    0 30px 60px -20px rgba(0, 0, 0, 0.8),
-    0 0 80px -10px rgba(201, 151, 63, 0.35);
-  will-change: transform;
-}
-.sign__screen {
-  position: relative;
-  aspect-ratio: 16 / 11;
+  flex: 1;
+  min-height: 560px;
   overflow: hidden;
-  border-radius: 10px;
-  container-type: size;
-  background:
-    radial-gradient(85% 75% at 30% 22%, #d9a650 0%, var(--brass-mid) 38%, var(--brass-lo) 72%, var(--brass-deep) 100%);
-}
-
-/* Nome pequeno repetido ao fundo, como no letreiro de referência */
-.sign__pattern {
-  position: absolute;
-  inset: -20%;
-  opacity: 0.22;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='26'%3E%3Ctext x='0' y='17' font-family='Impact,Anton,Arial Narrow,sans-serif' font-size='12' letter-spacing='.6' fill='%232a1908'%3EBRASS BREW%3C/text%3E%3C/svg%3E");
-  background-size: 92px 26px;
-}
-.is-intro .sign__pattern,
-.is-ready .sign__pattern { animation: pattern-drift 18s linear infinite; }
-@keyframes pattern-drift {
-  to { background-position: -92px 26px; }
-}
-
-/* Linhas horizontais de painel de LED, por cima de tudo */
-.sign__screen::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(to bottom, rgba(20, 10, 2, 0.28) 0 1px, transparent 1px 3px),
-    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(10, 5, 0, 0.55) 100%);
-  mix-blend-mode: multiply;
-}
-
-/* Faixa com o nome gigante */
-.sign__track {
-  position: absolute;
-  top: 50%;
-  left: 0;
+  padding: calc(max(16px, env(safe-area-inset-top)) + 104px) 16px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  white-space: nowrap;
-  font-family: var(--font-display);
-  font-size: 46cqh;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  color: var(--cream);
-  text-shadow: 0 0 0.1em rgba(255, 238, 200, 0.4), 0 0.03em 0.06em rgba(30, 14, 2, 0.6);
-  transform: translate3d(100cqw, -50%, 0);
-  will-change: transform, opacity;
+  isolation: isolate;
 }
-.sign__track span { padding-right: 0.35em; }
-.sign__track .star {
-  font-size: 0.42em;
-  color: var(--brass-deep);
-  text-shadow: none;
-  padding-right: 0.8em;
+/* Parede de tijolos da Casa das Caldeiras, desenhada em CSS */
+.hero__wall {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(90% 55% at 50% 78%, rgba(255, 190, 120, 0.28), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 30px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 64px),
+    var(--tijolo);
+  background-position: 0 0, 0 0, 0 0, 0 0;
 }
-
-/* Três barras de carregamento */
-.sign__bars {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  gap: 4.5cqh;
-  transform: translate(-50%, -50%);
-  opacity: 0;
+.hero__wall::after {
+  /* fileiras alternadas deslocadas meio tijolo */
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 64px);
+  background-position: 32px 0;
+  -webkit-mask: repeating-linear-gradient(0deg, transparent 0 32px, #000 32px 64px);
+          mask: repeating-linear-gradient(0deg, transparent 0 32px, #000 32px 64px);
 }
-.sign__bars i {
-  display: block;
-  width: 4.6cqh;
-  height: 15cqh;
-  background: var(--cream);
-  box-shadow: 0 0 2cqh rgba(255, 238, 200, 0.7);
+.hero__wall::before {
+  /* chão escuro onde os copos ficam */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+  background: linear-gradient(180deg, transparent, rgba(34, 21, 15, 0.55) 30%, var(--carvao));
 }
 
-/* Palavra final */
-.sign__word {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-display);
-  font-size: 40cqh;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--cream);
-  text-shadow: 0 0 0.12em rgba(255, 238, 200, 0.5);
-  opacity: 0;
+.hero__side {
+  position: absolute; top: calc(max(16px, env(safe-area-inset-top)) + 14px);
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 13px; line-height: 1.05; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--creme);
 }
+.hero__side--l { left: 16px; }
+.hero__side--r { right: 16px; text-align: right; }
+.hero__side b { font-size: 26px; letter-spacing: 0.02em; color: var(--mostarda); }
 
-/* Reflexo de metal escovado passando */
-.sign__shine {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 35%, rgba(255, 246, 220, 0.28) 48%, transparent 60%);
-  transform: translateX(-120%);
+.hero__title {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(64px, 21vw, 112px); line-height: 0.84;
+  text-transform: uppercase; text-align: center; letter-spacing: -0.01em;
+  color: var(--creme);
+  text-shadow: 0 3px 0 var(--tijolo-escuro);
 }
-.is-ready .sign__shine { animation: shine 7s 1.2s var(--ease-out) infinite; }
-@keyframes shine {
-  0% { transform: translateX(-120%); }
-  25%, 100% { transform: translateX(120%); }
-}
+.hero__title .line { display: block; overflow: hidden; padding-bottom: 0.04em; }
+.hero__title .line > span { display: inline-block; }
+.hero__title .line:nth-child(2) { color: var(--mostarda); }
 
-/* Faixa contínua depois da entrada */
-.sign__track.is-loop {
-  font-size: 34cqh;
-  animation: marquee var(--loop-duration, 14s) linear infinite;
+.hero__drinks {
+  position: relative;
+  width: 100%; max-width: 440px; height: 300px;
+  margin-top: auto;
 }
-@keyframes marquee {
-  from { transform: translate3d(0, -50%, 0); }
-  to { transform: translate3d(calc(var(--loop-width) * -1), -50%, 0); }
+.hero__drinks .d {
+  position: absolute; bottom: 0;
+  height: var(--h); width: auto;
+  filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.45));
+  -webkit-user-select: none; user-select: none;
+}
+.hero__drinks .d1 { --h: 210px; left: 0%; rotate: -5deg; }
+.hero__drinks .d2 { --h: 270px; left: 22%; z-index: 2; }
+.hero__drinks .d3 { --h: 250px; left: 48%; z-index: 3; rotate: 3deg; }
+.hero__drinks .d4 { --h: 240px; right: 0%; rotate: 6deg; }
+
+/* ==========================================================
+   Aba da marca e painel (abre a partir da aba)
+   ========================================================== */
+.brand-tab {
+  position: fixed; top: 0; left: 50%; z-index: 31;
+  transform: translateX(-50%);
+  width: 112px; padding: calc(env(safe-area-inset-top) + 12px) 8px 12px;
+  border: 0; border-radius: 0 0 14px 14px;
+  background: var(--tijolo-escuro);
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.5);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: var(--creme); text-align: center;
+}
+body:not([data-view="home"]) .brand-tab { display: none; }
+.brand-tab__small {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mostarda);
+}
+.brand-tab__name {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: 25px; line-height: 0.82; text-transform: uppercase;
+}
+.brand-tab[aria-expanded="true"] { box-shadow: none; }
+
+.panel {
+  position: fixed; inset: 0; z-index: 30;
+  display: flex; flex-direction: column;
+  padding: calc(max(16px, env(safe-area-inset-top)) + 120px) 16px max(24px, env(safe-area-inset-bottom));
+  background: var(--tijolo-escuro);
+  visibility: hidden;
+}
+.panel.is-open { visibility: visible; }
+.panel.is-intro .panel__list, .panel.is-intro .panel__foot { visibility: hidden; }
+.panel__list { list-style: none; padding: 0; border-top: 1px solid rgba(245, 230, 200, 0.22); }
+.panel__list li { overflow: hidden; border-bottom: 1px solid rgba(245, 230, 200, 0.22); }
+.panel__item {
+  display: block; width: 100%; padding: 10px 0 8px;
+  border: 0; background: none; text-align: center;
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(38px, 12vw, 58px); line-height: 0.95; text-transform: uppercase;
+  color: var(--mostarda);
+}
+.panel__item i { font-style: normal; color: var(--creme); }
+.panel__item:active, .panel__item:hover { color: var(--creme); }
+.panel__foot { margin-top: auto; display: flex; justify-content: center; gap: 24px; overflow: hidden; }
+.panel__link {
+  border: 0; background: none; padding: 8px 0;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: underline; text-underline-offset: 4px; color: var(--creme);
 }
 
 /* ==========================================================
-   Chamar garçom e atalhos
+   Início: ações
    ========================================================== */
-.btn-call {
-  width: 100%;
-  min-height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  border: 0;
-  border-radius: var(--radius);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--brass-deep);
-  background: linear-gradient(180deg, var(--brass-hi), var(--brass) 60%, var(--brass-mid));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 14px 30px -12px rgba(201, 151, 63, 0.6);
+.actions {
+  background: var(--carvao);
+  padding: 16px 16px max(20px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 10px;
+}
+.btn-main {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; min-height: 64px; padding: 0 22px;
+  border: 0; border-radius: var(--radius);
+  background: var(--mostarda); color: var(--carvao);
+  font-family: var(--font-display); font-weight: 900; font-size: 30px; text-transform: uppercase;
   transition: transform 0.15s;
 }
-.btn-call:active { transform: scale(0.98); }
-.btn-call svg { width: 26px; height: 26px; fill: currentColor; }
-
+.btn-main:active { transform: scale(0.98); }
+.actions__row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-line {
+  min-height: 52px; padding: 0 12px;
+  border: 1.5px solid var(--creme); border-radius: var(--radius);
+  background: transparent; color: var(--creme);
+  font-weight: 700; font-size: 15px;
+}
+.btn-line:active { background: rgba(245, 230, 200, 0.12); }
 .call__sent {
-  padding: 20px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--night-2);
-  text-align: center;
+  padding: 16px; border-radius: var(--radius);
+  background: var(--tijolo); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
 }
-.call__title { font-family: var(--font-display); font-size: 28px; text-transform: uppercase; color: var(--brass-hi); }
-.call__text { margin: 6px 0 16px; color: var(--muted); }
-.call__text b { color: var(--cream); }
+.call__title { font-family: var(--font-display); font-weight: 900; font-size: 32px; text-transform: uppercase; }
+.call__text { color: var(--creme); }
+.call__text b { color: var(--mostarda); }
+.call__sent .btn-line { margin-top: 6px; }
+.home__legal { font-size: 12px; line-height: 1.5; text-align: center; color: var(--muted); }
 
-.btn-ghost {
-  padding: 12px 18px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.shortcut {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--night-2);
-  font-weight: 600;
-  font-size: 16px;
-  transition: background 0.2s, transform 0.15s;
-}
-.shortcut:active { transform: scale(0.98); background: var(--night-3); }
-.shortcut svg { width: 22px; height: 22px; fill: var(--brass); }
-
-.home__legal {
-  margin-top: auto;
-  padding-top: 8px;
-  font-size: 12px;
-  line-height: 1.5;
-  text-align: center;
-  color: var(--muted);
-  opacity: 0.8;
-}
-
-/* ==========================================================
-   Entrada: só o letreiro aparece; o resto entra depois
-   ========================================================== */
-.reveal {
-  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 70ms + 250ms);
-}
-.is-intro .reveal { opacity: 0; transform: translateY(18px); pointer-events: none; }
 .is-intro { overflow: hidden; }
 
-.skip {
-  position: fixed;
-  right: 16px;
-  bottom: max(20px, env(safe-area-inset-bottom));
-  z-index: 10;
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(13, 10, 7, 0.6);
-  color: var(--muted);
-  font-size: 14px;
-  backdrop-filter: blur(6px);
-  transition: opacity 0.3s;
-}
-body:not(.is-intro) .skip { opacity: 0; pointer-events: none; }
-
 .toast {
-  position: fixed;
-  left: 50%;
-  bottom: max(24px, env(safe-area-inset-bottom));
-  z-index: 20;
-  max-width: calc(100% - 32px);
-  padding: 12px 18px;
-  border-radius: 14px;
-  background: var(--cream);
-  color: var(--brass-deep);
-  font-weight: 600;
-  font-size: 14px;
-  text-align: center;
-  transform: translate(-50%, 20px);
-  opacity: 0;
-  pointer-events: none;
+  position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); z-index: 40;
+  max-width: calc(100% - 32px); padding: 12px 18px; border-radius: 12px;
+  background: var(--creme); color: var(--carvao);
+  font-weight: 600; font-size: 14px; text-align: center;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
   transition: opacity 0.25s, transform 0.25s var(--ease-out);
 }
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
-
-/* ==========================================================
-   Menos movimento: sem faixa correndo e sem balanço
-   ========================================================== */
-@media (prefers-reduced-motion: reduce) {
-  .sign__pattern, .sign__shine, .sign__track.is-loop { animation: none !important; }
-  .sign__track.is-loop { transform: translate3d(0, -50%, 0); }
-  .reveal { transition: none; }
-}
 
 /* ==========================================================
    Doses e Drinks · lista
@@ -360,8 +244,8 @@ body[data-view="reel"] { overflow: hidden; }
 .menu__title {
   flex: 1;
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 28px;
+  font-weight: 900;
+  font-size: 30px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   background: linear-gradient(180deg, var(--brass-hi), var(--brass) 55%, var(--brass-mid));
@@ -606,3 +490,27 @@ body[data-view="reel"] { overflow: hidden; }
 }
 .card__ingr.is-pending { opacity: 0.65; font-style: italic; }
 .card { aspect-ratio: 3 / 4.9; }
+
+/* Nova fonte de títulos: pesos fortes */
+.card__name, .slide__name, .slide__price, .slide__run, .menu__title { font-weight: 900; }
+.menu__title { background: none; color: var(--mostarda); -webkit-background-clip: border-box; background-clip: border-box; }
+
+/* Durante a entrada a capa fica escondida até a hora de entrar (evita piscar) */
+.is-intro .hero__title .line > span,
+.is-intro .hero__drinks .d,
+.is-intro .hero__side,
+.is-intro .actions { visibility: hidden; }
+
+/* Nome grande no centro enquanto o painel cobre a tela na entrada */
+.panel__intro {
+  position: absolute; inset: 0; display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(96px, 30vw, 150px); line-height: 0.8; color: var(--creme);
+}
+.panel__intro span:last-of-type { color: var(--mostarda); }
+.panel__intro small {
+  margin-top: 18px; font-family: var(--font-ui); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.2em; color: var(--creme);
+}
+.panel.is-intro .panel__intro { display: flex; }
