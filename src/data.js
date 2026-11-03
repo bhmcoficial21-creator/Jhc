@@ -6,6 +6,7 @@
 window.BB = window.BB || {};
 
 BB.categorias = [
+  { id: 'novos', nome: 'Novos da Brass', reels: true },
   { id: 'exclusivos', nome: 'Exclusivos', reels: true },
   { id: 'engarrafados', nome: 'Engarrafados', reels: true },
   { id: 'classicos', nome: 'Clássicos', reels: true },
@@ -30,6 +31,21 @@ BB.categorias = [
   }, extra));
 
   BB.itens = [
+    /* 3.0 Novos da Brass — confirmados pelo cardápio dguests (print de 03/11/2026): ingredientes, texto e preço.
+       Fotos recortadas do print (fundo removido). Textos de Nó de Caju e Veraneio aparecem cortados no print. */
+    drink({ id: 'brasa', nome: 'Brasa', categoria: 'novos', copo: 'long', cor: '#b86a12', selos: ['Novo'],
+      ingredientes: ['rum Havana', 'manga', 'coentro'], perfil: 'Tropical, suculento e inesperado',
+      preco: 45, foto: 'public/img/brasa.webp', status: { ingredientes: 'confirmado', preco: 'confirmado' } }),
+    drink({ id: 'no-de-caju', nome: 'Nó de Caju', categoria: 'novos', copo: 'taca', cor: '#8e7a22', selos: ['Novo'],
+      ingredientes: ['gin Beefeater', 'extrato de caju', 'vermute seco', 'angostura'], perfil: null, // texto cortado no print
+      preco: 45, foto: 'public/img/no-de-caju.webp', status: { ingredientes: 'confirmado', preco: 'confirmado' } }),
+    drink({ id: 'tangerina-spritz', nome: 'Tangerina Spritz', categoria: 'novos', copo: 'long', cor: '#c4621a', selos: ['Novo'],
+      ingredientes: ['gin Beefeater', 'cordial de tangerina', 'angostura'], perfil: 'Cítrico, vivo e amargo delicado',
+      preco: 45, foto: 'public/img/tangerina-spritz.webp', status: { ingredientes: 'confirmado', preco: 'confirmado' } }),
+    drink({ id: 'veraneio', nome: 'Veraneio', categoria: 'novos', copo: 'taca', cor: '#a8283a', selos: ['Novo'],
+      ingredientes: ['vinho rosé', 'acerola', 'bourbon whisky'], perfil: null, // texto cortado no print
+      preco: 45, foto: 'public/img/veraneio.webp', status: { ingredientes: 'confirmado', preco: 'confirmado' } }),
+
     /* 3.1 Exclusivos — fotos do site oficial ainda não baixadas; ligação foto → drink deduzida pela ordem */
     drink({ id: 'raiz-da-serra', nome: 'Raiz da Serra', categoria: 'exclusivos', cor: '#8c5a24', selos: ['Exclusivo'],
       fotoSite: 'https://framerusercontent.com/images/l3kAB8kMArfCUyENwutVvet7W5k.jpg' }),
@@ -96,6 +112,16 @@ BB.categorias = [
   /* Cores das camadas no desenho do copo (só visual).
      tipo 'liquido' = faixa lisa; os outros desenham pedaços (stop motion). */
   BB.camadas = {
+    'rum havana': { cor: '#e8dcc0', tipo: 'liquido' },
+    'manga': { cor: '#f4a81d', tipo: 'cubo' },
+    'coentro': { cor: '#4f9a3a', tipo: 'folha' },
+    'gin beefeater': { cor: '#e9efe2', tipo: 'liquido' },
+    'extrato de caju': { cor: '#f1c84b', tipo: 'liquido' },
+    'vermute seco': { cor: '#e6dcaa', tipo: 'liquido' },
+    'cordial de tangerina': { cor: '#f59a23', tipo: 'liquido' },
+    'vinho rosé': { cor: '#f19aa0', tipo: 'liquido' },
+    'acerola': { cor: '#e0302f', tipo: 'liquido' },
+    'bourbon whisky': { cor: '#b5651d', tipo: 'liquido' },
     'gin': { cor: '#e9efe2', tipo: 'liquido' },
     'campari': { cor: '#c8102e', tipo: 'liquido' },
     'vermute tinto': { cor: '#6e1423', tipo: 'liquido' },

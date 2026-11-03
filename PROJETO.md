@@ -13,7 +13,8 @@ Leia inteiro antes de começar e mantenha atualizado conforme o projeto avança.
 | `src/data.js` com todos os itens | ✅ feito (sem fotos, sem preços) | `src/data.js` |
 | Lista com abas, busca e grade colorida | ✅ feito (v1) | `src/cardapio.js` |
 | Reels de drinks com copo desenhado (enche + inclina em 3D) | ✅ feito (v1) | `src/vessel.js`, `src/cardapio.js` |
-| Fotos dos drinks (dguests e site oficial) | ⛔ bloqueado: `www.dguests.com.br` e `framerusercontent.com` fora da rede liberada da sessão | — |
+| Fotos reais: Novos da Brass (4) | ✅ recortadas do print do dguests, fundo removido | `public/img/*.webp` |
+| Fotos dos demais drinks | ⛔ falta material (rede da sessão bloqueia dguests, brassbrew.com e framerusercontent.com) | — |
 | Sacola | ⏳ (por enquanto "Adicionar" só conta itens) | — |
 | Chamado do garçom em tempo real | ⏳ fase 2 (hoje só mostra "Chamado enviado" no celular) | — |
 
@@ -92,6 +93,18 @@ Legenda de status:
 - ❌ **pendente**: ainda não temos a informação
 
 **Nenhum preço está confirmado.** Os preços dos engarrafados vêm de uma matéria de lançamento e podem estar desatualizados.
+
+### 3.0 Novos da Brass (cardápio dguests, print de 03/11/2026) ✅
+| Drink | Ingredientes | Texto do cardápio | Preço | Foto |
+|---|---|---|---|---|
+| Brasa | rum Havana, manga, coentro | "Tropical, suculento e inesperado." | R$ 45,00 | `public/img/brasa.webp` |
+| Nó de Caju | gin Beefeater, extrato de caju, vermute seco, angostura | "O lado elegante e refrescante do…" (cortado no print) | R$ 45,00 | `public/img/no-de-caju.webp` |
+| Tangerina Spritz | gin Beefeater, cordial de tangerina, angostura | "Cítrico, vivo e amargo delicado." | R$ 45,00 | `public/img/tangerina-spritz.webp` |
+| Veraneio | vinho rosé, acerola, toque de bourbon whisky | "Acerola vibrante, fresco, cítrico e um…" (cortado no print) | R$ 45,00 | `public/img/veraneio.webp` |
+
+Fotos: recortadas do print (≈370 px), fundo removido com `rembg` (isnet), o coração do app apagado e a base da
+taça do Veraneio refeita espelhando o lado esquerdo (o botão "voltar ao topo" cobria). Resolução baixa:
+trocar pelas originais quando possível.
 
 ### 3.1 Exclusivos Brass (têm foto no site)
 | Drink | Ingredientes | Status | Foto (site oficial) |

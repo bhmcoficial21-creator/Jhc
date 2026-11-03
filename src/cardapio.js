@@ -18,7 +18,7 @@ window.BB = window.BB || {};
 
   const cat = (id) => BB.categorias.find((c) => c.id === id);
   const itensDe = (c) => BB.itens.filter((i) => i.categoria === c);
-  let catAtual = 'exclusivos';
+  let catAtual = 'novos';
   let sacola = 0;
 
   /* ---------- Visual do drink: foto (quando houver) ou copo desenhado ---------- */
@@ -68,7 +68,7 @@ window.BB = window.BB || {};
         { duration: 420, delay: i * 45, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }));
   }
   function showCategory(id) {
-    catAtual = cat(id) ? id : 'exclusivos';
+    catAtual = cat(id) ? id : 'novos';
     tabs.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.cat === catAtual));
     const ativo = tabs.querySelector(`[data-cat="${catAtual}"]`);
     if (ativo) ativo.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
@@ -109,7 +109,7 @@ window.BB = window.BB || {};
       </div>
       <div class="slide__stage">
         <div class="vessel-wrap" data-tilt>${visual(item)}</div>
-        <p class="slide__hint">Arraste o copo · toque para encher de novo</p>
+        <p class="slide__hint">${item.foto ? 'Arraste o drink para os lados' : 'Arraste o copo · toque para encher de novo'}</p>
       </div>
       <div class="slide__info">
         <p class="slide__meta">${esc(meta)}${item.selos.length ? ` · <b>${esc(item.selos.join(' · '))}</b>` : ''}</p>
@@ -126,6 +126,21 @@ window.BB = window.BB || {};
     </article>`;
   }
 
+  /* Desenho: enche camada por camada. Foto: entra "quadro a quadro", também em stop motion. */
+  function entra(wrap, delay) {
+    const svg = wrap.querySelector('svg');
+    if (svg) return BB.vessel.fill(svg, { delay });
+    const img = wrap.querySelector('img');
+    if (!img || reduceMotion) return;
+    img.getAnimations().forEach((a) => a.cancel());
+    img.animate([
+      { transform: 'translateY(-60px) rotate(-8deg) scale(.9)', opacity: 0 },
+      { opacity: 1, offset: 0.3 },
+      { transform: 'translateY(8px) rotate(3deg) scale(1.02)', offset: 0.75 },
+      { transform: 'none', opacity: 1 },
+    ], { duration: 640, delay, easing: 'steps(6, end)', fill: 'backwards' });
+  }
+
   function buildReel(catId) {
     const itens = itensDe(catId);
     reelTrack.innerHTML = itens.map((it, i) => slide(it, i, itens.length)).join('');
@@ -136,8 +151,7 @@ window.BB = window.BB || {};
       const s = { el, wrap, tilt: BB.vessel.tilt(wrap), seen: false };
       wrap.addEventListener('click', () => {
         if (s.tilt.wasDrag()) return;
-        const svg = wrap.querySelector('svg');
-        if (svg) BB.vessel.fill(svg, { delay: 0 });
+        entra(wrap, 0);
       });
       return s;
     });
@@ -147,8 +161,7 @@ window.BB = window.BB || {};
         if (!s) return;
         if (en.isIntersecting) {
           s.tilt.start();
-          const svg = s.wrap.querySelector('svg');
-          if (svg) BB.vessel.fill(svg);
+          entra(s.wrap, 150);
           if (!reduceMotion) s.wrap.animate([{ scale: 0.86, translate: '0 30px' }, { scale: 1.03, offset: 0.6 }, { scale: 1, translate: '0 0' }],
             { duration: 650, easing: 'cubic-bezier(.2,1.2,.4,1)' }); // "splash" leve ao entrar
           const idx = slides.indexOf(s);

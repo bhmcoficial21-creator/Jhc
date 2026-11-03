@@ -167,5 +167,5 @@
     toast('Chamado cancelado');
   });
   $('btnBill').addEventListener('click', () => toast('Conta solicitada. O garçom já traz para você.'));
-  $('btnDrinks').addEventListener('click', () => { location.hash = '#drinks/exclusivos'; });
+  $('btnDrinks').addEventListener('click', () => { location.hash = '#drinks/novos'; });
 })();

@@ -587,3 +587,10 @@ body[data-view="reel"] { overflow: hidden; }
 .vessel .v-glass-solid { fill: rgba(255, 255, 255, 0.32); stroke: rgba(255, 255, 255, 0.7); stroke-width: 2; }
 .vessel .v-cap { fill: var(--brass); stroke: var(--brass-hi); stroke-width: 1.5; }
 .vessel .v-cap-ring { fill: var(--brass-lo); }
+
+/* Foto real no cartão: cabe na área do meio sem passar por cima do preço */
+.card__visual { position: relative; z-index: 1; }
+.card__visual .vessel--foto {
+  position: absolute; inset: 4px 0; width: 100%; height: calc(100% - 8px); max-height: none;
+  object-fit: contain;
+}
