@@ -108,7 +108,7 @@
       track.classList.remove('is-loop');
       track.innerHTML = '<span>Brass Brew</span>';
       track.style.left = '50%';
-      track.style.fontSize = '30cqh';
+      track.style.fontSize = '25cqh';
       track.style.transform = 'translate3d(-50%, -50%, 0)';
       track.style.opacity = 1;
       return;
