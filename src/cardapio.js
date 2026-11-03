@@ -42,6 +42,8 @@ window.BB = window.BB || {};
       <span class="card__name">${esc(item.nome)}</span>
       ${selo}
       <span class="card__visual">${visual(item)}</span>
+      <span class="card__ingr${item.ingredientes.length ? '' : ' is-pending'}">${item.ingredientes.length
+        ? esc(item.ingredientes.join(' · ')) : 'Ingredientes a confirmar'}</span>
       <span class="card__foot"><span class="card__price">${BB.preco(item.preco)}</span><span class="card__go" aria-hidden="true">→</span></span>
     </button>`;
   }

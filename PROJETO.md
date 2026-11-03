@@ -267,7 +267,7 @@ preço e marcar esgotado, e chamados do garçom em tempo real. Deploy no Netlify
 ## 8. Pendências (para resolver com o material que vai chegar)
 
 - [ ] Prints do cardápio dguests com **descrição e preço** de cada drink
-- [ ] Ingredientes dos **Exclusivos**, dos **Spritz** e dos **Maquiados**
+- [ ] Ingredientes dos **Exclusivos**, dos **Spritz** e dos **Maquiados** (pesquisa na web em 03/11/2026 não achou nada além dos nomes; a fonte é o cardápio dguests, aba Drinks)
 - [ ] Confirmar como o bar faz os **Clássicos**
 - [ ] **Fotos** de cada drink, de preferência recortadas e no mesmo ângulo (liberar `www.dguests.com.br` e `framerusercontent.com` na rede do ambiente, ou enviar os arquivos)
 - [ ] Logo do Brass em vetor (SVG) e fontes ou cores oficiais, se existirem
