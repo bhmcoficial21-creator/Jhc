@@ -40,6 +40,7 @@
     return window.innerHeight / 2 - (r.top + r.height / 2);
   }
   function placeSignCentered() {
+    sign.style.transform = ''; // mede sem o deslocamento anterior
     sign.style.transform = `translate3d(0, ${centerOffset()}px, 0) scale(1.04)`;
   }
 
@@ -129,6 +130,9 @@
 
   $('skip').addEventListener('click', finish);
   sign.addEventListener('click', () => { if (!finished) finish(); });
+
+  // Centraliza já, antes da fonte carregar, para o letreiro não "pular" do topo
+  if (!reduceMotion) placeSignCentered();
 
   const fontsReady = document.fonts ? Promise.race([document.fonts.ready, wait(1500)]) : Promise.resolve();
   fontsReady.then(() => {
