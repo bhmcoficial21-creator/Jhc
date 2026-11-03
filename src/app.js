@@ -136,7 +136,7 @@
 
   const fontsReady = document.fonts ? Promise.race([document.fonts.ready, wait(1500)]) : Promise.resolve();
   // Quem abre direto num drink (link compartilhado) não vê a entrada
-  const direto = /^#drinks?\//.test(location.hash);
+  const direto = /^#drinks?-/.test(location.hash);
   if (direto) finish();
 
   fontsReady.then(() => {
@@ -167,5 +167,5 @@
     toast('Chamado cancelado');
   });
   $('btnBill').addEventListener('click', () => toast('Conta solicitada. O garçom já traz para você.'));
-  $('btnDrinks').addEventListener('click', () => { location.hash = '#drinks/novos'; });
+  $('btnDrinks').addEventListener('click', () => { location.hash = '#drinks-novos'; });
 })();

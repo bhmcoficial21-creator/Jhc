@@ -12,10 +12,10 @@ BB.categorias = [
   { id: 'classicos', nome: 'Clássicos', reels: true },
   { id: 'maquiados', nome: 'Maquiados', reels: true },
   { id: 'spritz', nome: 'Spritzzzz', reels: true },
-  { id: 'doses', nome: 'Doses', reels: false },
-  { id: 'garrafas', nome: 'Garrafas', reels: false },
-  { id: 'combos', nome: 'Combos', reels: false },
-  { id: 'sem-alcool', nome: 'Sem álcool', reels: false },
+  { id: 'doses', nome: 'Doses', reels: false, oculta: true },
+  { id: 'garrafas', nome: 'Garrafas', reels: false, oculta: true },
+  { id: 'combos', nome: 'Combos', reels: false, oculta: true },
+  { id: 'sem-alcool', nome: 'Sem álcool', reels: false, oculta: true },
 ];
 
 (function () {
@@ -158,6 +158,13 @@ BB.categorias = [
     'espumante': { cor: '#f1df98', tipo: 'liquido' },
     'bourbon': { cor: '#b5651d', tipo: 'liquido' },
   };
+
+  // Escopo atual: só drinks e coquetéis. Doses, garrafas, combos e sem álcool ficam guardados aqui,
+  // mas fora do cardápio (para voltar, é só tirar `oculta: true` da categoria).
+  const ocultas = BB.categorias.filter((c) => c.oculta).map((c) => c.id);
+  BB.categorias = BB.categorias.filter((c) => !c.oculta);
+  BB.itensOcultos = BB.itens.filter((i) => ocultas.includes(i.categoria));
+  BB.itens = BB.itens.filter((i) => !ocultas.includes(i.categoria));
 
   BB.preco = (v) => (v == null ? 'Consulte' : v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
   BB.statusTexto = {

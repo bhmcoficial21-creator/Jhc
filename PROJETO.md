@@ -34,7 +34,9 @@ Referências: dois elementos do Awwwards da Bucks Sauce.
   e o aviso "Ingredientes a confirmar com o bar". Clássicos mostram "Receita clássica · a confirmar".
 - Doses, garrafas, combos e sem álcool aparecem como lista simples, com "+".
 - Busca procura por nome e por ingrediente, em todas as categorias.
-- Rotas: `#drinks/<categoria>` e `#drink/<id>` (link direto pula a entrada).
+- Rotas: `#drinks-<categoria>` e `#drink-<id>` (só hífen, para funcionar também na amostra publicada; link direto pula a entrada).
+- **Escopo atual: só drinks e coquetéis.** Doses, Garrafas, Combos e Sem álcool ficam guardados no `data.js` com `oculta: true`, fora do cardápio.
+- Amostra para ver no celular: https://claude.ai/artifact/Jr3VwjkcmkbGAEyhfVUiTy (privada).
 - **Fotos:** quando chegarem, basta preencher `foto: 'public/img/<id>.png'` no `data.js`; o cartão e o reels
   trocam o desenho pela foto automaticamente (a inclinação continua funcionando).
 - As cores de cada drink e de cada ingrediente são só visuais e ficam em `data.js` (`cor` e `BB.camadas`).

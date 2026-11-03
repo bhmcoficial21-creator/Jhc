@@ -1,5 +1,5 @@
 /* Brass Brew · Doses e Drinks: grade colorida, lista simples, busca e reels.
-   Rotas: #drinks/<categoria>  ·  #drink/<id> */
+   Rotas: #drinks-<categoria>  ·  #drink-<id> */
 window.BB = window.BB || {};
 
 (function () {
@@ -32,7 +32,7 @@ window.BB = window.BB || {};
     `<button class="tab" type="button" role="tab" data-cat="${c.id}">${esc(c.nome)}</button>`).join('');
   tabs.addEventListener('click', (e) => {
     const b = e.target.closest('.tab');
-    if (b) { search.value = ''; location.hash = '#drinks/' + b.dataset.cat; }
+    if (b) { search.value = ''; location.hash = '#drinks-' + b.dataset.cat; }
   });
 
   /* ---------- Grade (categorias com reels) e lista (doses, garrafas...) ---------- */
@@ -168,7 +168,7 @@ window.BB = window.BB || {};
             { duration: 650, easing: 'cubic-bezier(.2,1.2,.4,1)' }); // "splash" leve ao entrar
           const idx = slides.indexOf(s);
           $('reelCount').textContent = `${idx + 1}/${slides.length}`;
-          history.replaceState(null, '', '#drink/' + s.el.dataset.id);
+          history.replaceState(null, '', '#drink-' + s.el.dataset.id);
         } else {
           s.tilt.stop();
         }
@@ -181,7 +181,7 @@ window.BB = window.BB || {};
     const add = e.target.closest('[data-add]');
     if (add) adicionar(BB.itens.find((i) => i.id === add.dataset.add));
   });
-  $('reelClose').addEventListener('click', () => { location.hash = '#drinks/' + catAtual; });
+  $('reelClose').addEventListener('click', () => { location.hash = '#drinks-' + catAtual; });
   $('menuBack').addEventListener('click', () => { location.hash = ''; });
 
   function adicionar(item) {
@@ -195,7 +195,7 @@ window.BB = window.BB || {};
   let reelCat = null;
 
   function openDrink(id, fromCard) {
-    const go = () => { location.hash = '#drink/' + id; };
+    const go = () => { location.hash = '#drink-' + id; };
     if (fromCard && document.startViewTransition && !reduceMotion) {
       const v = fromCard.querySelector('.card__visual');
       v.style.viewTransitionName = 'drink';
@@ -214,14 +214,17 @@ window.BB = window.BB || {};
 
   function route() {
     const h = location.hash.slice(1);
-    const [tipo, valor] = h.split('/');
+    // Formato "#drinks-<categoria>" ou "#drink-<id>" (só letras, números e hífen, para funcionar em qualquer link)
+    const m = h.match(/^(drinks|drink)[-\/](.+)$/);
+    const tipo = m ? m[1] : '';
+    const valor = m ? m[2] : '';
     if (tipo === 'drinks') {
       show('menu');
       if (!search.value) showCategory(valor);
       window.scrollTo(0, 0);
     } else if (tipo === 'drink') {
       const item = BB.itens.find((i) => i.id === valor);
-      if (!item || !cat(item.categoria).reels) { location.hash = '#drinks/' + catAtual; return; }
+      if (!item || !cat(item.categoria).reels) { location.hash = '#drinks-' + catAtual; return; }
       catAtual = item.categoria;
       show('reel');
       if (reelCat !== item.categoria || !reelTrack.children.length) { buildReel(item.categoria); reelCat = item.categoria; }
