@@ -6,7 +6,10 @@ pronta. O objetivo é oferecer plaquinhas NFC que levam o cliente direto à pág
 
 > O número de avaliações serve só para achar oportunidades. Não diz nada sobre a qualidade do lugar.
 
-**Fase atual: 1 (MVP), Google Sheets + Apps Script.** O código fica em [`apps-script/`](apps-script/).
+Há duas versões:
+
+- **Fase 1, planilha (`apps-script/`):** busca e organiza os leads, e você envia cada mensagem pelo botão de WhatsApp.
+- **Fase 2, robô (`supabase/` + `web/`):** busca, manda a primeira mensagem, conversa com IA, envia o link de pagamento e marca a venda sozinho quando o pagamento cai. Tem painel web e pausas automáticas de segurança. Guia completo: **[docs/robo-whatsapp.md](docs/robo-whatsapp.md)**.
 
 ## O que o MVP faz
 
@@ -115,8 +118,8 @@ avaliação só a quem ficou satisfeito. As políticas do Google proíbem as dua
 
 ## Desenvolvimento
 
-As funções puras (telefone, links, filtro, dedupe, template) ficam em `apps-script/Utils.gs` e são
-testadas com Node:
+As funções puras ficam em `apps-script/Utils.gs` (planilha) e `supabase/functions/_shared/core.ts`
+(robô) e são testadas com Node (22.18 ou mais novo, que roda TypeScript direto):
 
 ```bash
 npm test
@@ -124,7 +127,5 @@ npm test
 
 ## Próximas fases
 
-2. **Painel web:** Supabase (Postgres + Edge Function chamando a Places API, com a chave como
-   secret) + front no Netlify, pensado para o celular. A tabela `leads` segue as colunas da aba Leads.
 3. **Pós-venda:** QR code do link de avaliação para cada cliente e acompanhamento de avaliações
    antes e depois (`avaliacoes_na_venda` já é guardado).

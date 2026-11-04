@@ -4,6 +4,6 @@
   "private": true,
   "description": "Prospecção de estabelecimentos com poucas avaliações no Google para plaquinhas NFC (MVP em Google Sheets + Apps Script).",
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js tests/*.test.ts"
   }
 }

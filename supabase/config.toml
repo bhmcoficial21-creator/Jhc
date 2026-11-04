@@ -1,0 +1,16 @@
+# As funções abaixo não usam o JWT do Supabase: cada uma confere o próprio segredo
+# (assinatura da Meta, assinatura do Mercado Pago, CRON_SECRET ou PAINEL_TOKEN).
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.mercadopago-webhook]
+verify_jwt = false
+
+[functions.disparar]
+verify_jwt = false
+
+[functions.buscar-leads]
+verify_jwt = false
+
+[functions.painel]
+verify_jwt = false
