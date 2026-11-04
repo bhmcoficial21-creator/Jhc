@@ -40,7 +40,9 @@ var LEADS_HEADERS = [
   'observacoes',         // 15
   'link_avaliacao',      // 16 (fórmula, preenchido quando vendido)
   'avaliacoes_na_venda', // 17 (para comparar antes/depois)
-  'atualizado_em'        // 18 (última vez que os dados do Google foram atualizados)
+  'atualizado_em',       // 18 (última vez que os dados do Google foram atualizados)
+  'encontrado_em',       // 19 (primeira vez que a busca achou o lugar; usado no painel)
+  'data_venda'           // 20 (preenchida ao marcar "vendido"; usada no painel)
 ];
 
 var COL = {};
@@ -77,6 +79,8 @@ var DEFAULT_SEGMENTOS = ['salão de beleza', 'barbearia', 'pizzaria', 'restauran
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Prospecção')
+    .addItem('Abrir painel', 'abrirPainel')
+    .addSeparator()
     .addItem('1. Preparar planilha', 'prepararPlanilha')
     .addItem('2. Configurar chave da API', 'configurarChaveApi')
     .addSeparator()
@@ -128,7 +132,15 @@ function prepararPlanilha() {
 function ensureLeadsSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(SHEET_LEADS);
-  if (sh) return sh;
+  if (sh) {
+    // Planilhas criadas antes de novas colunas: completa o cabeçalho.
+    var header = sh.getRange(LEADS_HEADER_ROW, 1, 1, LEADS_HEADERS.length);
+    if (header.getValues()[0].join('|') !== LEADS_HEADERS.join('|')) {
+      header.setValues([LEADS_HEADERS]).setFontWeight('bold').setBackground('#e8f0fe');
+      applyStatusValidation_(sh);
+    }
+    return sh;
+  }
 
   sh = ss.insertSheet(SHEET_LEADS);
   sh.getRange(LEADS_BANNER_ROW, 1)
@@ -163,8 +175,10 @@ function applyStatusValidation_(sh) {
     .setDataValidation(rule);
   sh.getRange(LEADS_FIRST_DATA_ROW, COL.data_ultimo_contato,
     sh.getMaxRows() - LEADS_HEADER_ROW, 1).setNumberFormat('dd/mm/yyyy');
-  sh.getRange(LEADS_FIRST_DATA_ROW, COL.atualizado_em,
-    sh.getMaxRows() - LEADS_HEADER_ROW, 1).setNumberFormat('dd/mm/yyyy');
+  ['atualizado_em', 'encontrado_em', 'data_venda'].forEach(function (h) {
+    sh.getRange(LEADS_FIRST_DATA_ROW, COL[h], sh.getMaxRows() - LEADS_HEADER_ROW, 1)
+      .setNumberFormat('dd/mm/yyyy');
+  });
 }
 
 function configurarChaveApi() {
@@ -404,6 +418,7 @@ function upsertLeads_(leads, cfg) {
       row[COL.bairro_busca - 1] = lead.bairro_busca;
       row[COL.categoria - 1] = lead.categoria;
       row[COL.status - 1] = STATUS.NOVO;
+      row[COL.encontrado_em - 1] = agora;
       index[lead.place_id] = rows.length;
       rows.push(row);
       novos++;
@@ -526,7 +541,8 @@ function aplicarNaoContatar() {
 /**
  * Gatilho simples: reage à mudança de status na aba Leads.
  *  - nao_contatar: remove a linha e bloqueia o place_id;
- *  - vendido: gera o link de avaliação e guarda a quantidade de avaliações no momento da venda;
+ *  - vendido: gera o link de avaliação, registra a data da venda e guarda a quantidade
+ *    de avaliações no momento da venda;
  *  - outros status (exceto novo): registra hoje como data do último contato.
  */
 function onEdit(e) {
@@ -558,8 +574,13 @@ function onEdit(e) {
       if (row[COL.avaliacoes_na_venda - 1] === '') {
         sh.getRange(r, COL.avaliacoes_na_venda).setValue(row[COL.avaliacoes - 1]);
       }
+      if (!(row[COL.data_venda - 1] instanceof Date)) {
+        sh.getRange(r, COL.data_venda).setValue(hoje);
+      }
     } else {
+      // Saiu de "vendido" (ex.: marcado por engano): desfaz o que a venda gerou.
       sh.getRange(r, COL.link_avaliacao).clearContent();
+      sh.getRange(r, COL.data_venda).clearContent();
     }
   }
   if (precisaBloquear) aplicarNaoContatar();
@@ -590,4 +611,41 @@ function limparDadosAntigos() {
   });
   if (limpos) writeRows_(sh, rows, cfg);
   SpreadsheetApp.getActiveSpreadsheet().toast(limpos + ' linha(s) limpa(s).', 'Prospecção');
+}
+
+// ---------------------------------------------------------------------------
+// Painel (barra lateral com gráfico de leads encontrados × convertidos)
+// ---------------------------------------------------------------------------
+
+function abrirPainel() {
+  var html = HtmlService.createHtmlOutputFromFile('Painel').setTitle('Painel de prospecção');
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+/** Chamado pelo painel (google.script.run). Retorna só tipos simples (sem Date). */
+function getPainelData(dias) {
+  var leadsSh = ensureLeadsSheet_();
+  var leads = readLeadRows_(leadsSh).filter(function (r) { return r[COL.place_id - 1]; })
+    .map(function (r) {
+      return {
+        status: r[COL.status - 1],
+        encontrado_em: r[COL.encontrado_em - 1],
+        // Linhas vendidas antes da coluna data_venda existir usam a data do último contato.
+        data_venda: r[COL.data_venda - 1] || r[COL.data_ultimo_contato - 1]
+      };
+    });
+
+  var blockedSh = ensureBlockedSheet_();
+  var optOuts = blockedSh.getLastRow() < 2 ? [] :
+    blockedSh.getRange(2, 2, blockedSh.getLastRow() - 1, 1).getValues()
+      .map(function (r) { return r[0]; });
+
+  var data = buildDashboard(leads, optOuts, Number(dias) || 7, new Date());
+  data.atualizadoEm = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'HH:mm');
+  return data;
+}
+
+/** Botão "Ver leads" do painel. */
+function abrirLeads() {
+  SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(ensureLeadsSheet_());
 }

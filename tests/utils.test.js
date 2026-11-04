@@ -117,3 +117,45 @@ test('monthKey e daysBetween', () => {
   assert.equal(U.monthKey(new Date(2026, 10, 4)), '2026-11');
   assert.equal(U.daysBetween(new Date(2026, 0, 1), new Date(2026, 0, 31)), 30);
 });
+
+test('buildDashboard: 7 dias, comparação e funil', () => {
+  const now = new Date(2026, 10, 4, 15, 0);     // 04/11/2026
+  const d = (dia, mes = 10) => new Date(2026, mes, dia, 10, 0);
+  const leads = [
+    { status: 'novo', encontrado_em: d(4) },
+    { status: 'contatado', encontrado_em: d(4) },
+    { status: 'vendido', encontrado_em: d(29, 9), data_venda: d(3) }, // chegou no período anterior
+    { status: 'vendido', encontrado_em: d(1), data_venda: d(4) },
+    { status: 'interessado', encontrado_em: d(25, 9) },              // período anterior
+    { status: 'respondeu', encontrado_em: '' },                      // sem data: só no funil
+    { status: 'vendido', encontrado_em: d(1, 9), data_venda: d(1, 9) } // fora dos dois períodos
+  ];
+  const r = U.buildDashboard(leads, [d(2)], 7, now);
+  assert.equal(r.dias, 7);
+  assert.equal(r.inicio, '29/10');
+  assert.equal(r.fim, '04/11');
+  assert.equal(r.buckets.length, 7);
+  assert.equal(r.chegaram, 4);            // 4/11 ×2, 29/10, 1/11
+  assert.equal(r.convertidos, 2);         // 3/11 e 4/11
+  assert.equal(r.variacaoChegaram, 300);  // 1 no período anterior (25/10)
+  assert.equal(r.variacaoConvertidos, null);
+  assert.equal(r.taxaPeriodo, 50);
+  assert.deepEqual(r.buckets[0], { label: '29/10', chegaram: 1, convertidos: 0 });
+  assert.deepEqual(r.buckets[6], { label: '04/11', chegaram: 2, convertidos: 1 });
+  assert.deepEqual(r.funil, { novo: 1, contatado: 1, respondeu: 1, interessado: 1, vendido: 3, nao_contatar: 1 });
+  assert.equal(r.total, 8);
+  assert.equal(r.taxaGeral, 37.5);
+});
+
+test('buildDashboard: períodos longos agrupam por semana', () => {
+  const now = new Date(2026, 10, 4);
+  const r = U.buildDashboard([{ status: 'novo', encontrado_em: new Date(2026, 10, 4) }], [], 84, now);
+  assert.equal(r.porSemana, true);
+  assert.equal(r.buckets.length, 12);
+  assert.equal(r.buckets[11].label, '29/10–04/11');
+  assert.equal(r.buckets[11].chegaram, 1);
+  const vazio = U.buildDashboard([], [], 30, now);
+  assert.equal(vazio.chegaram, 0);
+  assert.equal(vazio.taxaGeral, null);
+  assert.equal(vazio.buckets.length, 30);
+});

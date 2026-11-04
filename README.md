@@ -25,6 +25,12 @@ pronta. O objetivo é oferecer plaquinhas NFC que levam o cliente direto à pág
     venda, para comparar depois.
   - `nao_contatar` tira o lead da lista e guarda o `place_id` na aba **Nao contatar**. Esse lugar
     **nunca mais aparece** nas buscas.
+- **Painel** (menu *Prospecção › Abrir painel*): barra lateral com quantos leads **chegaram**
+  (foram encontrados pela busca) e quantos foram **convertidos** (marcados como `vendido`) nos últimos
+  7 dias, 30 dias ou 12 semanas. Mostra também a variação em relação ao período anterior, um gráfico
+  por dia ou semana, o funil por status, a taxa de conversão geral e os botões *Buscar leads*,
+  *Atualizar painel* e *Ver leads*.
+  O visual vem do cartão "Performance Analytics" do Uiverse.io (themrsami, MIT).
 - Proteção de custo: limite de chamadas por execução e limite mensal (contador próprio).
 - Limpeza: apaga o conteúdo vindo do Google das linhas sem atualização há mais de N dias e mantém
   só o `place_id` e os seus dados.
@@ -60,7 +66,8 @@ O sistema **encontra e organiza**. **Quem envia a mensagem é você**, uma conve
 
 1. Crie uma planilha nova no Google Sheets.
 2. Vá em *Extensões › Apps Script*.
-3. Copie o conteúdo de `apps-script/Code.gs` e `apps-script/Utils.gs` para dois arquivos com esses nomes.
+3. Copie `apps-script/Code.gs` e `apps-script/Utils.gs` para dois arquivos de script com esses nomes,
+   e `apps-script/Painel.html` para um arquivo **HTML** chamado `Painel`.
 4. Em *Configurações do projeto*, marque "Mostrar arquivo de manifesto `appsscript.json`" e cole o
    conteúdo de `apps-script/appsscript.json`.
 5. Salve e recarregue a planilha. Vai aparecer o menu **Prospecção**.

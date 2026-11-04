@@ -180,6 +180,114 @@ function daysBetween(a, b) {
   return Math.floor((b.getTime() - a.getTime()) / 86400000);
 }
 
+// ---------------------------------------------------------------------------
+// Painel: leads que chegaram × convertidos
+// ---------------------------------------------------------------------------
+
+function startOfDay_(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function addDays_(d, n) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+}
+
+function asDate_(v) {
+  return v instanceof Date && !isNaN(v.getTime()) ? v : null;
+}
+
+function ddmm_(d) {
+  var dd = d.getDate(), mm = d.getMonth() + 1;
+  return (dd < 10 ? '0' : '') + dd + '/' + (mm < 10 ? '0' : '') + mm;
+}
+
+/** Variação percentual arredondada; null quando não há base de comparação. */
+function percentChange(atual, anterior) {
+  if (!anterior) return null;
+  return Math.round(((atual - anterior) / anterior) * 1000) / 10;
+}
+
+/**
+ * Monta os números do painel.
+ *  - "chegaram": leads encontrados pela busca (encontrado_em) no período;
+ *  - "convertidos": leads marcados como vendido (data_venda) no período;
+ *  - compara com o período anterior de mesmo tamanho;
+ *  - barras por dia (até 31 dias) ou por semana (períodos maiores);
+ *  - funil com a situação atual de todos os leads.
+ *
+ * @param {Object[]} leads {status, encontrado_em: Date, data_venda: Date}
+ * @param {Date[]} optOutDates datas dos pedidos de "não contatar"
+ * @param {number} days tamanho do período em dias
+ * @param {Date} now
+ */
+function buildDashboard(leads, optOutDates, days, now) {
+  var bucketDays = days > 31 ? 7 : 1;
+  var n = Math.max(1, Math.ceil(days / bucketDays));
+  var totalDays = n * bucketDays;
+  var end = addDays_(startOfDay_(now), 1); // exclusivo
+  var start = addDays_(end, -totalDays);
+  var prevStart = addDays_(start, -totalDays);
+
+  var buckets = [];
+  for (var i = 0; i < n; i++) {
+    var bStart = addDays_(start, i * bucketDays);
+    var bEnd = addDays_(bStart, bucketDays - 1);
+    buckets.push({
+      label: bucketDays === 1 ? ddmm_(bStart) : ddmm_(bStart) + '–' + ddmm_(bEnd),
+      chegaram: 0,
+      convertidos: 0
+    });
+  }
+
+  function bucketIndex(d) {
+    // Math.round tolera diferenças de horário de verão.
+    var diff = Math.round((startOfDay_(d).getTime() - start.getTime()) / 86400000);
+    return Math.floor(diff / bucketDays);
+  }
+
+  var resumo = { chegaram: 0, chegaramAnterior: 0, convertidos: 0, convertidosAnterior: 0 };
+  function count(d, campo) {
+    d = asDate_(d);
+    if (!d) return;
+    if (d >= start && d < end) {
+      resumo[campo]++;
+      buckets[bucketIndex(d)][campo]++;
+    } else if (d >= prevStart && d < start) {
+      resumo[campo + 'Anterior']++;
+    }
+  }
+
+  var funil = {};
+  STATUS_LIST.forEach(function (s) { funil[s] = 0; });
+
+  (leads || []).forEach(function (l) {
+    count(l.encontrado_em, 'chegaram');
+    if (l.status === STATUS.VENDIDO) count(l.data_venda, 'convertidos');
+    if (funil.hasOwnProperty(l.status)) funil[l.status]++;
+  });
+  // Quem pediu para sair é apagado da aba Leads; contamos pela aba "Nao contatar".
+  funil[STATUS.NAO_CONTATAR] = (optOutDates || []).length;
+
+  var total = 0;
+  STATUS_LIST.forEach(function (s) { total += funil[s]; });
+
+  return {
+    dias: totalDays,
+    porSemana: bucketDays === 7,
+    inicio: ddmm_(start),
+    fim: ddmm_(addDays_(end, -1)),
+    chegaram: resumo.chegaram,
+    convertidos: resumo.convertidos,
+    variacaoChegaram: percentChange(resumo.chegaram, resumo.chegaramAnterior),
+    variacaoConvertidos: percentChange(resumo.convertidos, resumo.convertidosAnterior),
+    taxaPeriodo: resumo.chegaram ? Math.round(resumo.convertidos / resumo.chegaram * 1000) / 10 : null,
+    buckets: buckets,
+    funil: funil,
+    total: total,
+    taxaGeral: total ? Math.round(funil[STATUS.VENDIDO] / total * 1000) / 10 : null
+  };
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     STATUS: STATUS,
@@ -199,6 +307,8 @@ if (typeof module !== 'undefined' && module.exports) {
     escapeFormulaString: escapeFormulaString,
     hyperlinkFormula: hyperlinkFormula,
     monthKey: monthKey,
-    daysBetween: daysBetween
+    daysBetween: daysBetween,
+    percentChange: percentChange,
+    buildDashboard: buildDashboard
   };
 }

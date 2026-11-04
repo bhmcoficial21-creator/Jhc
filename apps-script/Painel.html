@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    Visual do cartão baseado no elemento "Performance Analytics" de Uiverse.io (by themrsami, licença MIT),
+    convertido de Tailwind para CSS puro e ligado aos dados da aba Leads.
+  -->
+  <style>
+    :root {
+      --slate-950: #020617;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --purple-500: #a855f7;
+      --purple-600: #9333ea;
+      --pink-500: #ec4899;
+      --emerald-500: #10b981;
+      --rose-500: #f43f5e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 12px;
+      background: #0b1120;
+      color: #fff;
+      font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    /* Cartão (group relative flex flex-col rounded-xl bg-slate-950 p-4 shadow-2xl ...) */
+    .card {
+      position: relative;
+      border-radius: 12px;
+      background: var(--slate-950);
+      padding: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .6);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .card:hover { transform: scale(1.02); box-shadow: 0 25px 50px -12px rgba(99, 102, 241, .2); }
+    .card-glow {
+      position: absolute; inset: 0; border-radius: 12px;
+      background: linear-gradient(to right, var(--indigo-500), var(--purple-500), var(--pink-500));
+      opacity: .2; filter: blur(4px); transition: opacity .3s;
+    }
+    .card:hover .card-glow { opacity: .3; }
+    .card-bg { position: absolute; inset: 1px; border-radius: 11px; background: var(--slate-950); }
+    .card-content { position: relative; }
+
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .gap-2 { display: flex; align-items: center; gap: 8px; }
+    .mb-4 { margin-bottom: 16px; }
+    .mb-2 { margin-bottom: 8px; }
+
+    .icon-box {
+      display: flex; width: 32px; height: 32px; align-items: center; justify-content: center;
+      border-radius: 8px; background: linear-gradient(to bottom right, var(--indigo-500), var(--purple-500));
+    }
+    .icon { width: 16px; height: 16px; color: #fff; }
+    h3 { margin: 0; font-size: 14px; font-weight: 600; }
+
+    .badge {
+      display: flex; align-items: center; gap: 4px; border-radius: 999px;
+      background: rgba(16, 185, 129, .1); padding: 4px 8px;
+      font-size: 12px; font-weight: 500; color: var(--emerald-500); white-space: nowrap;
+    }
+    .badge .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--emerald-500); }
+    .loading .badge .dot { animation: pulse 1s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .25; } }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat { border-radius: 8px; background: rgba(15, 23, 42, .5); padding: 12px; }
+    .stat-label { margin: 0; font-size: 12px; font-weight: 500; color: var(--slate-400); }
+    .stat-value { margin: 0; font-size: 18px; font-weight: 600; }
+    .delta { font-size: 12px; font-weight: 500; color: var(--slate-500); }
+    .delta.up { color: var(--emerald-500); }
+    .delta.down { color: var(--rose-500); }
+
+    /* Gráfico: barra clara = chegaram, barra cheia = convertidos (mesma escala) */
+    .chart-box { position: relative; border-radius: 8px; background: rgba(15, 23, 42, .5); padding: 12px; }
+    .bars { display: flex; height: 96px; align-items: flex-end; justify-content: space-between; gap: 3px; }
+    .bar { position: relative; flex: 1; max-width: 12px; height: 100%; cursor: default; }
+    .bar span { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 2px; transition: height .3s; }
+    .bar .b-chegaram { background: rgba(99, 102, 241, .3); }
+    .bar .b-convertidos { background: var(--indigo-500); }
+    .bar:hover .b-chegaram { background: rgba(99, 102, 241, .5); }
+    .axis { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--slate-500); }
+    .empty {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 12px; text-align: center; font-size: 12px; color: var(--slate-400);
+    }
+    .empty[hidden] { display: none; }
+    .tooltip {
+      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      padding: 4px 8px; border-radius: 6px; background: var(--slate-800);
+      font-size: 11px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s;
+    }
+    .tooltip.show { opacity: 1; }
+    .legend { display: flex; gap: 10px; margin-top: 8px; font-size: 11px; color: var(--slate-400); white-space: nowrap; }
+    .legend #taxa-periodo { margin-left: auto; color: #fff; }
+    .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+
+    /* Funil */
+    .funnel { border-radius: 8px; background: rgba(15, 23, 42, .5); padding: 12px; }
+    .f-row { display: grid; grid-template-columns: 84px 1fr 28px; align-items: center; gap: 8px; font-size: 12px; margin-top: 6px; }
+    .f-row:first-of-type { margin-top: 0; }
+    .f-label { color: var(--slate-400); }
+    .f-track { height: 6px; border-radius: 999px; background: rgba(99, 102, 241, .12); overflow: hidden; }
+    .f-fill { height: 100%; border-radius: 999px; background: var(--indigo-500); transition: width .3s; }
+    .f-fill.vendido { background: var(--emerald-500); }
+    .f-fill.nao_contatar { background: var(--slate-500); }
+    .f-num { text-align: right; font-variant-numeric: tabular-nums; }
+    .f-foot { margin-top: 10px; font-size: 12px; color: var(--slate-400); }
+    .f-foot b { color: #fff; font-weight: 600; }
+
+    /* Rodapé: seletor de período + botão */
+    .period { position: relative; display: flex; align-items: center; }
+    .period select {
+      appearance: none; -webkit-appearance: none; border: 0; background: transparent;
+      color: var(--slate-400); font: 500 12px/1 inherit; padding: 4px 20px 4px 0; cursor: pointer;
+    }
+    .period select:focus-visible { outline: 2px solid var(--indigo-500); border-radius: 4px; }
+    .period option { background: var(--slate-900); color: #fff; }
+    .period svg { position: absolute; right: 0; width: 16px; height: 16px; color: var(--slate-400); pointer-events: none; }
+
+    /* Botão do cartão, reutilizado nas ações */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      border: 0; border-radius: 8px; padding: 4px 12px; cursor: pointer;
+      background: linear-gradient(to right, var(--indigo-500), var(--purple-500));
+      color: #fff; font: 500 12px/1.6 inherit; white-space: nowrap; flex-shrink: 0;
+      transition: background .3s, opacity .2s;
+    }
+    .btn:hover { background: linear-gradient(to right, var(--indigo-600), var(--purple-600)); }
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .btn svg { width: 12px; height: 12px; }
+    .btn.ghost { background: rgba(15, 23, 42, .8); box-shadow: inset 0 0 0 1px var(--slate-800); }
+    .btn.ghost:hover { background: var(--slate-800); }
+    .btn.big { padding: 8px 12px; font-size: 13px; }
+
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .error { margin-top: 12px; padding: 8px 10px; border-radius: 8px; background: rgba(244, 63, 94, .12); color: #fda4af; font-size: 12px; display: none; }
+    .note { margin-top: 10px; font-size: 11px; color: var(--slate-500); }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="card-glow"></div>
+    <div class="card-bg"></div>
+
+    <div class="card-content">
+      <div class="row mb-4">
+        <div class="gap-2">
+          <div class="icon-box">
+            <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+          </div>
+          <h3>Desempenho</h3>
+        </div>
+        <span class="badge"><span class="dot"></span><span id="updated">Carregando</span></span>
+      </div>
+
+      <div class="grid-2 mb-4">
+        <div class="stat">
+          <p class="stat-label">Chegaram</p>
+          <p class="stat-value" id="v-chegaram">–</p>
+          <span class="delta" id="d-chegaram">&nbsp;</span>
+        </div>
+        <div class="stat">
+          <p class="stat-label">Convertidos</p>
+          <p class="stat-value" id="v-convertidos">–</p>
+          <span class="delta" id="d-convertidos">&nbsp;</span>
+        </div>
+      </div>
+
+      <div class="chart-box mb-4">
+        <div class="tooltip" id="tooltip"></div>
+        <div class="bars" id="bars" aria-label="Gráfico de leads que chegaram e convertidos"></div>
+        <div class="empty" id="empty" hidden>Nenhum lead no período.<br>Use “Buscar leads” para começar.</div>
+        <div class="axis"><span id="axis-start"></span><span id="axis-end"></span></div>
+        <div class="legend">
+          <span><i style="background: rgba(99,102,241,.3)"></i>Chegaram</span>
+          <span><i style="background: var(--indigo-500)"></i>Convertidos</span>
+          <span id="taxa-periodo"></span>
+        </div>
+      </div>
+
+      <div class="funnel mb-4" id="funnel"></div>
+
+      <div class="row">
+        <label class="period">
+          <select id="period" aria-label="Período">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="84">Últimas 12 semanas</option>
+          </select>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </label>
+
+        <button class="btn" id="btn-leads" type="button">
+          Ver leads
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn big" id="btn-buscar" type="button">Buscar leads</button>
+    <button class="btn big ghost" id="btn-atualizar" type="button">Atualizar painel</button>
+  </div>
+
+  <div class="error" id="error"></div>
+  <p class="note">Chegaram = encontrados pela busca no período. Convertidos = marcados como “vendido” no período.
+    A variação compara com o período anterior de mesmo tamanho.</p>
+
+  <script>
+    var STATUS_LABELS = [
+      ['novo', 'Novos'],
+      ['contatado', 'Contatados'],
+      ['respondeu', 'Responderam'],
+      ['interessado', 'Interessados'],
+      ['vendido', 'Vendidos'],
+      ['nao_contatar', 'Não contatar']
+    ];
+    var nf = new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 });
+    var pf = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+
+    function $(id) { return document.getElementById(id); }
+
+    function setLoading(on) {
+      document.body.classList.toggle('loading', on);
+      if (on) $('updated').textContent = 'Carregando';
+    }
+
+    function showError(err) {
+      setLoading(false);
+      $('updated').textContent = 'Erro';
+      var box = $('error');
+      box.textContent = (err && err.message) || String(err);
+      box.style.display = 'block';
+    }
+
+    function renderDelta(el, v) {
+      el.className = 'delta';
+      if (v === null || v === undefined) {
+        el.textContent = '—';
+        el.title = 'Sem dados no período anterior para comparar';
+        return;
+      }
+      el.title = 'Comparado ao período anterior';
+      if (v > 0) el.classList.add('up');
+      if (v < 0) el.classList.add('down');
+      el.textContent = (v > 0 ? '+' : '') + pf.format(v) + '%';
+    }
+
+    function renderBars(d) {
+      var bars = $('bars');
+      bars.innerHTML = '';
+      var max = 0;
+      d.buckets.forEach(function (b) { max = Math.max(max, b.chegaram, b.convertidos); });
+      $('empty').hidden = max > 0;
+
+      d.buckets.forEach(function (b) {
+        var bar = document.createElement('div');
+        bar.className = 'bar';
+        var tip = b.label + ': ' + b.chegaram + ' chegaram, ' + b.convertidos + ' convertidos';
+        bar.setAttribute('aria-label', tip);
+
+        var c = document.createElement('span');
+        c.className = 'b-chegaram';
+        c.style.height = (max ? b.chegaram / max * 100 : 0) + '%';
+        var v = document.createElement('span');
+        v.className = 'b-convertidos';
+        v.style.height = (max ? b.convertidos / max * 100 : 0) + '%';
+        bar.appendChild(c);
+        bar.appendChild(v);
+
+        bar.addEventListener('mouseenter', function () { $('tooltip').textContent = tip; $('tooltip').classList.add('show'); });
+        bar.addEventListener('mouseleave', function () { $('tooltip').classList.remove('show'); });
+        bars.appendChild(bar);
+      });
+
+      $('axis-start').textContent = d.buckets.length ? d.buckets[0].label.split('–')[0] : '';
+      $('axis-end').textContent = d.fim;
+      $('taxa-periodo').textContent = d.taxaPeriodo === null ? '' : 'Taxa ' + pf.format(d.taxaPeriodo) + '%';
+    }
+
+    function renderFunnel(d) {
+      var max = 0;
+      STATUS_LABELS.forEach(function (s) { max = Math.max(max, d.funil[s[0]] || 0); });
+      var box = $('funnel');
+      box.innerHTML = '';
+      STATUS_LABELS.forEach(function (s) {
+        var n = d.funil[s[0]] || 0;
+        var row = document.createElement('div');
+        row.className = 'f-row';
+        row.innerHTML = '<span class="f-label"></span><div class="f-track"><div class="f-fill"></div></div><span class="f-num"></span>';
+        row.querySelector('.f-label').textContent = s[1];
+        row.querySelector('.f-fill').classList.add(s[0]);
+        row.querySelector('.f-fill').style.width = (max ? n / max * 100 : 0) + '%';
+        row.querySelector('.f-num').textContent = nf.format(n);
+        box.appendChild(row);
+      });
+      var foot = document.createElement('div');
+      foot.className = 'f-foot';
+      foot.innerHTML = 'Conversão geral: <b></b> de <b></b> leads';
+      var bs = foot.querySelectorAll('b');
+      bs[0].textContent = d.taxaGeral === null ? '–' : pf.format(d.taxaGeral) + '%';
+      bs[1].textContent = nf.format(d.total);
+      box.appendChild(foot);
+    }
+
+    function render(d) {
+      setLoading(false);
+      $('error').style.display = 'none';
+      $('updated').textContent = d.atualizadoEm;
+      $('updated').parentNode.title = 'Atualizado às ' + d.atualizadoEm;
+      $('v-chegaram').textContent = nf.format(d.chegaram);
+      $('v-convertidos').textContent = nf.format(d.convertidos);
+      renderDelta($('d-chegaram'), d.variacaoChegaram);
+      renderDelta($('d-convertidos'), d.variacaoConvertidos);
+      renderBars(d);
+      renderFunnel(d);
+    }
+
+    function load() {
+      setLoading(true);
+      google.script.run.withSuccessHandler(render).withFailureHandler(showError)
+        .getPainelData(Number($('period').value));
+    }
+
+    $('period').addEventListener('change', load);
+    $('btn-atualizar').addEventListener('click', load);
+    $('btn-leads').addEventListener('click', function () {
+      google.script.run.withFailureHandler(showError).abrirLeads();
+    });
+    $('btn-buscar').addEventListener('click', function () {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Buscando…';
+      google.script.run
+        .withSuccessHandler(function () { btn.disabled = false; btn.textContent = 'Buscar leads'; load(); })
+        .withFailureHandler(function (e) { btn.disabled = false; btn.textContent = 'Buscar leads'; showError(e); })
+        .buscarLeads();
+    });
+
+    load();
+  </script>
+</body>
+</html>
