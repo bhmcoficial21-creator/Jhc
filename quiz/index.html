@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa da Dor · Religar</title>
+  <meta name="description" content="Descubra em 1 minuto o que está travando seu corpo.">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <style>
+    .quiz { min-height: 100vh; display: flex; flex-direction: column; padding: 24px 0 48px; }
+    .quiz-topo { margin-bottom: 24px; }
+    .quiz-acoes { margin-top: 24px; display: flex; gap: 8px; }
+    .quiz-acoes .botao { flex: 1; }
+    .resultado-cor { padding: 16px; border-radius: var(--raio); border: 2px solid var(--cor-borda); }
+  </style>
+</head>
+<body>
+  <main class="container quiz">
+    <div class="quiz-topo">
+      <span class="etiqueta">Mapa da Dor · grátis</span>
+      <div class="barra" style="margin-top:12px"><span id="barra" style="width:0%"></span></div>
+    </div>
+    <section id="tela"></section>
+    <div class="quiz-acoes" id="acoes">
+      <button class="botao botao-secundario" id="voltar">Voltar</button>
+      <button class="botao" id="avancar">Continuar</button>
+    </div>
+    <p class="rodape">Conteúdo educativo de prevenção e rotina. Não substitui avaliação de médico ou fisioterapeuta.</p>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/logic.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/quiz.js"></script>
+</body>
+</html>

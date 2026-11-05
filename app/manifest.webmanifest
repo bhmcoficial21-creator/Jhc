@@ -1,0 +1,12 @@
+{
+  "name": "Corpo Descongelado · Religar",
+  "short_name": "Descongelar",
+  "start_url": "./index.html#hoje",
+  "display": "standalone",
+  "background_color": "#f6f6f4",
+  "theme_color": "#2f6f5e",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "../assets/img/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

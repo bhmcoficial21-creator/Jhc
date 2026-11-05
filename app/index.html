@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Painel · Corpo Descongelado</title>
+  <meta name="theme-color" content="#2f6f5e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../assets/img/icone.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="app-topo">
+    <div class="container linha" style="justify-content:space-between">
+      <strong>Corpo Descongelado</strong>
+      <span class="etiqueta" id="topo-dia"></span>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="lembrete-banner" class="aviso oculto" role="status"></div>
+  </div>
+
+  <main class="container app-conteudo" id="tela"></main>
+
+  <button class="botao-estranho" id="botao-estranho">Senti algo estranho</button>
+
+  <nav class="app-nav" id="nav">
+    <a href="#hoje" data-r="hoje"><span>🏠</span>Hoje</a>
+    <a href="#pausa" data-r="pausa"><span>⏱️</span>Pausa</a>
+    <a href="#progresso" data-r="progresso"><span>📈</span>Progresso</a>
+    <a href="#aulas" data-r="aulas"><span>🎬</span>Aulas</a>
+    <a href="#mais" data-r="mais"><span>☰</span>Mais</a>
+  </nav>
+
+  <dialog id="modal"></dialog>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/logic.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

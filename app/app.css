@@ -1,0 +1,62 @@
+/* Estilos específicos do painel. Cores e fontes vêm de base.css */
+body { padding-bottom: 140px; }
+.app-topo { position: sticky; top: 0; z-index: 10; background: var(--cor-superficie); border-bottom: 1px solid var(--cor-borda); padding: 12px 0; }
+.app-conteudo { padding-top: 16px; }
+.app-conteudo h1 { font-size: 1.5rem; }
+
+.app-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  background: var(--cor-superficie); border-top: 1px solid var(--cor-borda);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app-nav a { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; font-size: .7rem; color: var(--cor-texto-suave); text-decoration: none; }
+.app-nav a span { font-size: 1.2rem; }
+.app-nav a.ativo { color: var(--cor-primaria); font-weight: 700; }
+
+.botao-estranho {
+  position: fixed; right: 12px; bottom: 76px; z-index: 9;
+  border: 2px solid var(--cor-vermelho); color: var(--cor-vermelho); background: var(--cor-superficie);
+  border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: .85rem; cursor: pointer; box-shadow: var(--sombra);
+}
+
+dialog { border: 0; border-radius: var(--raio); padding: 20px; max-width: 520px; width: calc(100% - 32px); }
+dialog::backdrop { background: rgba(0, 0, 0, .4); }
+
+.contador { display: flex; align-items: baseline; gap: 6px; }
+.contador strong { font-size: 2.2rem; }
+
+.bloco { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--cor-borda); }
+.bloco:last-child { border-bottom: 0; }
+.check { width: 24px; height: 24px; flex-shrink: 0; accent-color: var(--cor-primaria); }
+.check-linha { display: flex; gap: 10px; align-items: center; padding: 8px 0; cursor: pointer; }
+
+.lista-ex { margin: 8px 0 0; padding-left: 18px; font-size: .9rem; }
+.lista-ex li { margin-bottom: 6px; }
+
+/* Pausa guiada */
+.timer { font-size: 4rem; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; margin: 8px 0; }
+.etapas-r { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
+.etapas-r div { text-align: center; padding: 8px 4px; border-radius: 8px; background: var(--cor-borda); font-size: .8rem; font-weight: 600; }
+.etapas-r div.atual { background: var(--cor-primaria); color: var(--cor-primaria-texto); }
+.etapas-r div.feita { background: var(--cor-primaria-suave); color: var(--cor-primaria); }
+
+/* Calendário */
+.calendario { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.calendario div { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .85rem; background: var(--cor-superficie); border: 1px solid var(--cor-borda); }
+.calendario .feito { background: var(--cor-primaria); color: var(--cor-primaria-texto); border-color: var(--cor-primaria); }
+.calendario .hoje { outline: 2px solid var(--cor-primaria); outline-offset: 1px; }
+.calendario .futuro { opacity: .45; }
+
+.stat { text-align: center; }
+.stat strong { display: block; font-size: 1.8rem; }
+
+.bloqueado { opacity: .55; }
+
+.certificado { border: 3px double var(--cor-primaria); border-radius: var(--raio); padding: 28px 20px; text-align: center; background: var(--cor-superficie); }
+
+@media print {
+  body * { visibility: hidden; }
+  .certificado, .certificado * { visibility: visible; }
+  .certificado { position: absolute; left: 0; top: 0; width: 100%; }
+}

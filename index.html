@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desafio Corpo Descongelado 21 Dias · Religar</title>
+  <meta name="description" content="Alivie e previna a dor do trabalho com micro-pausas de 2 minutos, sem academia.">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <style>
+    .hero { padding: 56px 0 40px; }
+    .hero h1 { font-size: 2.1rem; }
+    .frases { display: grid; gap: 8px; margin: 20px 0; }
+    .frase { background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio); padding: 10px 14px; font-style: italic; }
+    .ciclo { counter-reset: c; list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .ciclo li { counter-increment: c; background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio); padding: 12px 14px 12px 48px; position: relative; }
+    .ciclo li::before { content: counter(c); position: absolute; left: 14px; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--cor-primaria); color: var(--cor-primaria-texto); font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .destaque { font-size: 1.2rem; font-weight: 600; border-left: 4px solid var(--cor-primaria); padding-left: 14px; margin: 20px 0; }
+    .preco { font-size: 2.2rem; font-weight: 800; }
+    .bump { display: flex; gap: 12px; align-items: flex-start; border: 2px dashed var(--cor-borda); border-radius: var(--raio); padding: 14px; background: var(--cor-superficie); }
+    .bump + .bump { margin-top: 10px; }
+    .bump input { width: 22px; height: 22px; margin-top: 2px; flex-shrink: 0; }
+    details { background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio); padding: 14px 16px; }
+    details + details { margin-top: 8px; }
+    summary { font-weight: 600; cursor: pointer; }
+    .barra-fixa { position: sticky; bottom: 0; background: var(--cor-superficie); border-top: 1px solid var(--cor-borda); padding: 10px var(--espaco); z-index: 5; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. HERO + problema comum -->
+  <header class="hero">
+    <div class="container">
+      <span class="etiqueta">Desafio Corpo Descongelado 21 Dias</span>
+      <h1 style="margin-top:12px">A dor do seu trabalho não é falta de força. É falta de pausa.</h1>
+      <p class="suave">Alivie e previna a dor no pescoço, ombro, punho, lombar e pernas com micro-pausas de 2 minutos, sem academia. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>
+      <div class="video-placeholder">[Vídeo de abertura da página · até 60 s]</div>
+      <div class="cta">
+        <a class="botao botao-grande" href="#oferta">Quero descongelar meu corpo</a>
+        <span class="beneficio">2 minutos entre uma reunião e outra, sem academia</span>
+      </div>
+      <p class="centro pequeno" style="margin-top:12px"><a href="quiz/index.html">Ainda não sabe onde começar? Faça o Mapa da Dor grátis →</a></p>
+    </div>
+  </header>
+
+  <!-- 2. Problema comum -->
+  <section class="secao">
+    <div class="container">
+      <h2>Você se reconhece?</h2>
+      <div class="frases">
+        <div class="frase">"Termino o dia com o pescoço travado."</div>
+        <div class="frase">"Minha mão formiga quando fico muito no mouse."</div>
+        <div class="frase">"Sei que deveria alongar, mas sempre esqueço."</div>
+        <div class="frase">"Chego em casa moído e ainda não consigo dormir."</div>
+        <div class="frase">"Não tenho tempo para academia."</div>
+      </div>
+      <p>A dor aparece no fim do dia e, com o tempo, já começa logo de manhã. Você trata com remédio, massagem ou um alongamento de vez em quando, sente alívio por algumas horas… e a dor volta no dia seguinte.</p>
+    </div>
+  </section>
+
+  <!-- 3. Erro principal e mistério -->
+  <section class="secao">
+    <div class="container">
+      <h2>O erro que quase todo mundo comete</h2>
+      <p>Achar que a dor se resolve com academia, remédio ou um alongamento de vez em quando. Ou pior: achar que ela é "normal de quem trabalha muito".</p>
+      <p class="destaque">A dor não vem do esforço. Vem da falta de movimento.</p>
+      <p>O problema é ficar horas na mesma posição. E a dor é o <strong>último</strong> aviso, não o primeiro. Antes dela, o corpo dá sinais que quase ninguém percebe: formigamento, sensação de peso, perda de força, "mão cansada".</p>
+      <p>E tem um segundo fator invisível: estresse, pressão, carga horária, falta de pausas e hábitos de vida também alimentam a dor. Por isso quem só alonga não resolve: trata o músculo e ignora o resto.</p>
+      <div class="grade-2">
+        <div class="cartao"><strong>"Uma hora de academia não compensa nove horas parado."</strong></div>
+        <div class="cartao"><strong>"Ginástica laboral uma vez por semana é como escovar os dentes uma vez por semana."</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Mecanismo do problema -->
+  <section class="secao">
+    <div class="container">
+      <span class="etiqueta">O mecanismo do problema</span>
+      <h2 style="margin-top:8px">O Corpo Congelado</h2>
+      <p>Ficar horas na mesma posição "congela" o corpo: os músculos ficam em tensão constante, o sangue circula menos, as articulações enrijecem e o sistema nervoso fica em alerta. E o Corpo Congelado alimenta a si mesmo num ciclo:</p>
+      <ol class="ciclo">
+        <li>Horas parado na mesma posição.</li>
+        <li>Músculos travam e a circulação cai.</li>
+        <li>Surgem sinais silenciosos (formigamento, peso, cansaço) e depois dor.</li>
+        <li>A dor e o estresse atrapalham o sono.</li>
+        <li>Dormindo mal, você tem menos energia, mais tensão e mais fome por comida rápida.</li>
+        <li>Cansado, não faz pausas, e o corpo congela ainda mais.</li>
+      </ol>
+      <p class="destaque">Seu corpo não está pedindo academia. Está pedindo para ser descongelado.</p>
+    </div>
+  </section>
+
+  <!-- 5. Mecanismo da solução -->
+  <section class="secao">
+    <div class="container">
+      <span class="etiqueta">O mecanismo da solução</span>
+      <h2 style="margin-top:8px">O Método Descongelar</h2>
+      <p><strong>Pausas curtas e frequentes vencem esforço longo e raro.</strong> O corpo descongela com micro-pausas de 2 minutos ao longo do dia, com a rotina certa para a região da dor, apoiado pelo Tripé Religar: movimento, sono e alimentação.</p>
+      <div class="tabela-rolagem">
+        <table class="tabela">
+          <thead><tr><th>Chave</th><th>O que resolve</th><th>Como</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Descongelar</strong><br><span class="suave">semana 1</span></td><td>Rigidez e circulação</td><td>Regra 50/2: a cada 50 minutos, 2 minutos de pausa com os 3 Rs; mobilidade de pescoço, ombro, punho e coluna</td></tr>
+            <tr><td><strong>2. Destravar</strong><br><span class="suave">semana 2</span></td><td>A dor específica</td><td>Rotina pelo Mapa da Dor; ritual de desligar do trabalho para dormir melhor</td></tr>
+            <tr><td><strong>3. Fortalecer</strong><br><span class="suave">semana 3</span></td><td>A dor voltar</td><td>Força leve para sustentar a postura, sem equipamento</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:20px"><strong>O ciclo inverso:</strong> pausas → menos tensão e dor → sono melhor → mais energia → mais disposição para se mexer → corpo cada vez menos congelado.</p>
+      <p class="destaque">"Dois minutos entre uma reunião e outra fazem mais pela sua coluna do que uma hora de academia no fim de semana."</p>
+      <div class="cta">
+        <a class="botao" href="#oferta">Quero minha rotina de pausas</a>
+        <span class="beneficio">Funciona até em reunião de câmera ligada</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Passo a passo dos 21 dias -->
+  <section class="secao">
+    <div class="container">
+      <h2>Como funcionam os 21 dias</h2>
+      <p>Cada dia tem: 1 vídeo curto (2 a 5 min), as pausas do dia, 1 tarefa e os checks dos três pilares (movimento, sono e alimentação).</p>
+      <div class="pilha" id="semanas"></div>
+      <h3 style="margin-top:28px">Os 3 Rs da pausa</h3>
+      <div class="grade-2" id="tres-rs"></div>
+    </div>
+  </section>
+
+  <!-- 7. Diferenciais -->
+  <section class="secao">
+    <div class="container">
+      <h2>Não é mais um app de alongamento genérico</h2>
+      <div class="grade-2">
+        <div class="cartao"><h3>🗺️ Mapa da Dor</h3><p class="pequeno">Você marca onde dói, a intensidade e sua rotina. O desafio monta a região de foco e a trilha certa para você.</p></div>
+        <div class="cartao"><h3>🚦 Semáforo dos Sinais</h3><p class="pequeno">Aprenda a reconhecer o corpo antes da lesão e saiba exatamente quando parar e procurar um profissional.</p></div>
+        <div class="cartao"><h3>🌙 Plano pela noite</h3><p class="pequeno">Toda manhã o painel pergunta "Como foi sua noite?" e ajusta o plano do dia. Noite ruim não tira você do desafio.</p></div>
+        <div class="cartao"><h3>👀 Pausas invisíveis</h3><p class="pequeno">Exercícios para fazer em reunião de câmera ligada ou no atendimento. Ninguém percebe e o corpo descongela.</p></div>
+      </div>
+      <h3 style="margin-top:28px">3 trilhas para a sua rotina</h3>
+      <div class="pilha" id="trilhas"></div>
+    </div>
+  </section>
+
+  <!-- 8. Para quem é -->
+  <section class="secao">
+    <div class="container">
+      <h2>Para quem é</h2>
+      <ul class="lista-check">
+        <li>Quem passa de 6 a 10 horas por dia sentado ou repetindo o mesmo movimento</li>
+        <li>Escritório, home office, caixa, atendimento, call center, motorista de aplicativo, cabeleireiro, dentista, costureira, linha de produção</li>
+        <li>Quem sabe que deveria se cuidar, mas não tem tempo nem energia para academia</li>
+        <li>Quem já se acostumou a "conviver com a dor" e quer terminar o dia sem ela</li>
+      </ul>
+      <p class="aviso" style="margin-top:16px"><strong>Para quem não é:</strong> quem tem diagnóstico, dor forte ou está em tratamento deve conversar com o médico ou fisioterapeuta antes de começar. Este é um programa de educação, prevenção e rotina, não um tratamento.</p>
+    </div>
+  </section>
+
+  <!-- 9. Oferta + bumps -->
+  <section class="secao" id="oferta">
+    <div class="container">
+      <h2 class="centro">Tudo o que você recebe</h2>
+      <div class="cartao">
+        <ul class="lista-check" id="entregaveis"></ul>
+        <p class="centro" style="margin:20px 0 0"><s class="suave" id="preco-ancora"></s></p>
+        <p class="centro preco" id="preco-principal"></p>
+        <p class="centro pequeno suave">Pagamento único · acesso imediato · assiste pelo celular</p>
+      </div>
+
+      <h3 style="margin-top:28px">Adicione ao seu pedido</h3>
+      <p class="pequeno suave">Prévia dos order bumps. Na versão final eles aparecem no checkout da Cakto.</p>
+      <div id="bumps"></div>
+
+      <div class="cta">
+        <a class="botao botao-grande" id="botao-comprar" href="#">Garantir por R$ 29,90</a>
+        <span class="beneficio">Acesso imediato, assiste pelo celular</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Garantia -->
+  <section class="secao">
+    <div class="container centro">
+      <h2>Garantia de <span id="garantia-dias">7</span> dias</h2>
+      <p>Comece o desafio. Se nos primeiros dias você sentir que não é para você, pede o reembolso e recebe 100% do valor de volta. Sem perguntas.</p>
+    </div>
+  </section>
+
+  <!-- 11. Perguntas frequentes -->
+  <section class="secao">
+    <div class="container">
+      <h2>Perguntas frequentes</h2>
+      <details><summary>Preciso de academia ou equipamento?</summary><p>Não. Tudo é feito de roupa de trabalho, na cadeira ou de pé. Quando aparece elástico, uma toalha substitui.</p></details>
+      <details><summary>Quanto tempo por dia?</summary><p>Pausas de 2 minutos ao longo do dia (mínimo 4) e um vídeo de 2 a 5 minutos. Em dia caótico, 2 pausas já valem o check.</p></details>
+      <details><summary>Trabalho em reunião o dia inteiro. Funciona?</summary><p>Sim. As pausas invisíveis foram feitas para reunião de câmera ligada: ninguém percebe.</p></details>
+      <details><summary>Serve para homens também?</summary><p>Sim. O desafio é para homens e mulheres que trabalham sentados ou repetindo movimento.</p></details>
+      <details><summary>Vai curar minha tendinite, hérnia ou LER/DORT?</summary><p>Não. O desafio é educação, prevenção e rotina, não tratamento. Ele ensina a aliviar, prevenir e criar o hábito. Se você tem diagnóstico ou dor forte, converse com seu médico ou fisioterapeuta antes de começar.</p></details>
+      <details><summary>E se eu esquecer de fazer as pausas?</summary><p>O painel lembra você dentro do seu horário de trabalho, no intervalo que você escolher (padrão: 50 minutos).</p></details>
+      <details><summary>Como recebo o acesso?</summary><p>Logo após a compra, pelo e-mail usado no checkout. Você salva o painel na tela inicial do celular.</p></details>
+    </div>
+  </section>
+
+  <!-- 12. CTA final -->
+  <section class="secao">
+    <div class="container centro">
+      <h2>Seu corpo não está pedindo academia. Está pedindo para ser descongelado.</h2>
+      <div class="cta">
+        <a class="botao botao-grande" href="#oferta">Começar o desafio hoje</a>
+        <span class="beneficio">Termine o dia sem o pescoço travado</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="rodape container">
+    <p>Religar · Autocuidado que cabe na vida real</p>
+    <p>Conteúdo educativo de prevenção e rotina. Não substitui avaliação, diagnóstico ou tratamento de médico ou fisioterapeuta. Resultados variam de pessoa para pessoa.</p>
+    <p><a href="#">Política de privacidade</a> · <a href="#">Termos de uso</a></p>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script>
+    (function () {
+      const C = window.RELIGAR_CONFIG, D = window.RELIGAR_DADOS;
+      const $ = (id) => document.getElementById(id);
+
+      $("semanas").innerHTML = D.SEMANAS.map((s) => `
+        <div class="cartao">
+          <span class="etiqueta">Semana ${s.n} · dias ${(s.n - 1) * 7 + 1} a ${s.n * 7}</span>
+          <h3 style="margin-top:8px">${s.nome}</h3>
+          <p class="pequeno" style="margin:0">Resolve: ${s.resolve}. Marco: ${s.marco.toLowerCase()}.</p>
+        </div>`).join("");
+
+      $("tres-rs").innerHTML = D.OS_3_RS.map((r) => `
+        <div class="cartao"><h3>${r.nome}</h3><p class="pequeno" style="margin:0">${r.texto}</p></div>`).join("");
+
+      $("trilhas").innerHTML = Object.values(D.TRILHAS).map((t) => `
+        <div class="cartao"><h3>${t.nome}</h3><p class="pequeno suave" style="margin:0 0 4px">${t.paraQuem}</p><p class="pequeno" style="margin:0">${t.como}</p></div>`).join("")
+        + `<div class="cartao"><h3>+ ${D.DIA_CAOTICO.nome}</h3><p class="pequeno" style="margin:0">${D.DIA_CAOTICO.como}</p></div>`;
+
+      const entregaveis = [
+        "Mini curso: 5 aulas curtas em vídeo (cerca de 45 min no total)",
+        "Desafio de 21 dias: 1 vídeo de 2 a 5 min por dia + micro-pausas + check no painel",
+        "Biblioteca de exercícios por região, em vídeos curtos",
+        "3 trilhas por rotina + Trilha Dia Caótico",
+        "Quiz Mapa da Dor: sua região de foco e sua trilha",
+        "Semáforo dos Sinais: quando parar e procurar um profissional",
+        "Painel do desafio no celular, que ajusta o plano pela sua noite",
+        "PDFs: Guia Descongelar, Planner de 21 dias, Cartão das Pausas Invisíveis",
+        "Celebração do Dia 21: comparação da Escala da Dor e certificado"
+      ];
+      $("entregaveis").innerHTML = entregaveis.map((e) => `<li>${e}</li>`).join("");
+      $("preco-ancora").textContent = "Valor de " + formatarPreco(C.precos.ancora);
+      $("preco-principal").textContent = formatarPreco(C.precos.principal);
+      $("garantia-dias").textContent = C.garantiaDias;
+
+      const bumps = D.BONUS.filter((b) => b.id.startsWith("bump"));
+      $("bumps").innerHTML = bumps.map((b) => `
+        <label class="bump">
+          <input type="checkbox" data-preco="${b.preco}">
+          <span><strong>Sim, quero o ${b.nome} por + ${formatarPreco(b.preco)}</strong><br>
+          <span class="pequeno suave">${b.descricao}</span></span>
+        </label>`).join("");
+
+      const botao = $("botao-comprar");
+      botao.href = C.checkout.principal;
+      function total() {
+        let t = C.precos.principal;
+        document.querySelectorAll("#bumps input:checked").forEach((i) => t += Number(i.dataset.preco));
+        botao.textContent = "Garantir por " + formatarPreco(t);
+      }
+      document.querySelectorAll("#bumps input").forEach((i) => i.onchange = total);
+      total();
+    })();
+  </script>
+</body>
+</html>
