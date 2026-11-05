@@ -253,11 +253,14 @@
       $("preco-principal").textContent = formatarPreco(C.precos.principal);
       $("garantia-dias").textContent = C.garantiaDias;
 
+      // Se a pessoa fez o Mapa da Dor, os bumps recomendados aparecem destacados (sem vir marcados: CDC)
+      let recomendados = [];
+      try { recomendados = (JSON.parse(localStorage.getItem("religar_quiz_v1")) || {}).recomendados || []; } catch (e) {}
       const bumps = D.BONUS.filter((b) => b.id.startsWith("bump"));
       $("bumps").innerHTML = bumps.map((b) => `
         <label class="bump">
           <input type="checkbox" data-preco="${b.preco}">
-          <span><strong>Sim, quero o ${b.nome} por + ${formatarPreco(b.preco)}</strong><br>
+          <span>${recomendados.includes(b.id) ? `<span class="etiqueta">Recomendado pelo seu Mapa da Dor</span><br>` : ""}<strong>Sim, quero o ${b.nome} por + ${formatarPreco(b.preco)}</strong><br>
           <span class="pequeno suave">${b.descricao}</span></span>
         </label>`).join("");
 

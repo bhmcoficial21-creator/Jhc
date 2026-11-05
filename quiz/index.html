@@ -12,6 +12,38 @@
     .quiz-acoes { margin-top: 24px; display: flex; gap: 8px; }
     .quiz-acoes .botao { flex: 1; }
     .resultado-cor { padding: 16px; border-radius: var(--raio); border: 2px solid var(--cor-borda); }
+
+    /* Calculando */
+    .calculando { padding: 32px 0; }
+    .calc-lista { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 12px; }
+    .calc-lista li { padding-left: 32px; position: relative; color: var(--cor-texto-suave); transition: color .3s; }
+    .calc-lista li::before { content: ""; position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--cor-borda); }
+    .calc-lista li.feito { color: var(--cor-texto); }
+    .calc-lista li.feito::before { content: "✓"; background: var(--cor-primaria); border-color: var(--cor-primaria); color: var(--cor-primaria-texto); font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    /* Índice de Congelamento */
+    .indice-numero { display: flex; align-items: baseline; gap: 4px; margin: 4px 0 12px; }
+    .indice-numero strong { font-size: 3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+    .indice-numero span { color: var(--cor-texto-suave); }
+    .indice-barra { position: relative; height: 12px; border-radius: 999px; background: linear-gradient(90deg, var(--cor-verde), var(--cor-amarelo), var(--cor-vermelho)); }
+    .indice-barra span { position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: var(--cor-superficie); border: 3px solid var(--cor-texto); transform: translate(-50%, -50%); }
+
+    /* Ciclo */
+    .ciclo-quiz { margin: 8px 0 0; padding-left: 22px; display: grid; gap: 8px; }
+    .ciclo-quiz li { color: var(--cor-texto-suave); }
+    .ciclo-quiz li.ativo { color: var(--cor-texto); font-weight: 600; }
+    .voce { display: inline-block; margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: var(--cor-vermelho); color: #fff; font-size: .7rem; font-weight: 700; vertical-align: middle; }
+
+    .tripe-linha { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--cor-borda); }
+    .tripe-linha .bolinha { margin-top: 6px; flex-shrink: 0; }
+    .plano-dia { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--cor-borda); }
+    .plano-dia .etiqueta { flex-shrink: 0; }
+    .destaque-quiz { font-weight: 700; border-left: 4px solid var(--cor-primaria); padding-left: 12px; margin: 12px 0 0; }
+    .oferta { border: 2px solid var(--cor-primaria); }
+    .recomendado { border: 2px dashed var(--cor-borda); border-radius: var(--raio); padding: 12px; }
+    .recomendado + .recomendado { margin-top: 10px; }
+    .recomendado .etiqueta { white-space: nowrap; flex-shrink: 0; }
+    .ciclo-quiz li.ativo::marker { color: var(--cor-vermelho); }
   </style>
 </head>
 <body>
