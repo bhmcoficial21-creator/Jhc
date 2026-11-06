@@ -107,7 +107,7 @@ const ESTILOS = [
   { nome: "Mid fade",          grupo: "Degradê",    tipos: ["liso","ondulado","cacheado","crespo"], servico: "degrade",   desc: "Transição na altura das têmporas. O equilíbrio clássico." },
   { nome: "High fade",         grupo: "Degradê",    tipos: ["liso","ondulado","cacheado","crespo"], servico: "degrade",   desc: "Degradê sobe até perto do topo. Visual marcante." },
   { nome: "Skin fade",         grupo: "Degradê",    tipos: ["liso","ondulado","cacheado","crespo"], servico: "navalhado", desc: "Base zerada na navalha, pele aparecendo." },
-  { nome: "Taper fade",        grupo: "Degradê",    tipos: ["cacheado","crespo","ondulado"],        servico: "degrade",   desc: "Só costeletas e nuca degradadas. Valoriza cachos e crespos." },
+  { nome: "Taper fade", foto: "img/corte-taper.jpg",        grupo: "Degradê",    tipos: ["cacheado","crespo","ondulado"],        servico: "degrade",   desc: "Só costeletas e nuca degradadas. Valoriza cachos e crespos." },
   { nome: "Burst fade",        grupo: "Degradê",    tipos: ["liso","ondulado","cacheado","crespo"], servico: "degrade",   desc: "Meia-lua ao redor da orelha. Combina com mullet e moicano." },
   { nome: "Corte americano",   grupo: "Clássico",   tipos: ["liso","ondulado"],                     servico: "degrade",   desc: "Laterais em fade e topo médio. Líder no Brasil." },
   { nome: "Crop texturizado",  grupo: "Clássico",   tipos: ["liso","ondulado","cacheado"],          servico: "degrade",   desc: "Franja curta texturizada com laterais em fade. Tendência 2026." },
@@ -117,13 +117,13 @@ const ESTILOS = [
   { nome: "Mullet moderno",    grupo: "Brasileiro", tipos: ["liso","ondulado","cacheado"],          servico: "degrade",   desc: "Curto na frente e laterais, longo na nuca. Com pezinho é assinatura." },
   { nome: "Nevou",             grupo: "Brasileiro", tipos: ["liso","ondulado","cacheado","crespo"], servico: "nevou",     desc: "Platinado quase branco, geralmente com degradê." },
   { nome: "Luzes",             grupo: "Brasileiro", tipos: ["ondulado","cacheado","crespo"],        servico: "luzes",     desc: "Reflexo no topo — destaca o cacho." },
-  { nome: "Freestyle",         grupo: "Brasileiro", tipos: ["liso","ondulado","cacheado","crespo"], servico: "freestyle", desc: "Riscos e desenhos na lateral, feitos na navalha." },
+  { nome: "Freestyle", foto: "img/corte-risco.jpg",         grupo: "Brasileiro", tipos: ["liso","ondulado","cacheado","crespo"], servico: "degrade",   desc: "Degradê com riscos e desenhos na lateral, feitos na navalha. Risco: + R$ 15." },
   { nome: "Corte disfarçado",  grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "disfarcado", desc: "Topo cheio e degradê suave até a nuca na navalha. O queridinho da quebrada." },
-  { nome: "Corte do Jaca",     grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "jaca",       desc: "Mid fade a dois dedos da orelha + risco freestyle. Do Jacarezinho para as barbearias de SP." },
+  { nome: "Corte do Jaca", foto: "img/corte-jaca-x.jpg",     grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "jaca",       desc: "Mid fade a dois dedos da orelha + risco freestyle. Do Jacarezinho para as barbearias de SP." },
   { nome: "Degradê navalhado", grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "deg-naval",  desc: "Fade finalizado na navalha, pele aparecendo na base." },
   { nome: "Mullet chavoso",    grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado"],          servico: "mullet-ch",  desc: "Mullet com burst fade e pezinho na régua, estilo MC do funk." },
   { nome: "Cabelo blindado",   grupo: "Quebrada SP", tipos: ["liso","ondulado"],                     servico: "blindado",   desc: "Topete alto e firme, criado na periferia paulista." },
-  { nome: "Nevou com risco",   grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "nevou",      desc: "Platinado branco com degradê e risco na lateral." },
+  { nome: "Nevou com risco", foto: "img/corte-nevou-x.jpg",   grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "nevou",      desc: "Platinado branco com degradê e risco na lateral." },
   { nome: "Sobrancelha riscada", grupo: "Quebrada SP", tipos: ["liso","ondulado","cacheado","crespo"], servico: "so-sobrancelha", desc: "1, 2 ou 3 riscos na navalha. Combina com o degradê." },
   { nome: "Black power",       grupo: "Afro",       tipos: ["crespo","cacheado"],                   servico: "afro",      desc: "Volume natural arredondado, moldado na tesoura." },
   { nome: "Afro com taper",    grupo: "Afro",       tipos: ["crespo","cacheado"],                   servico: "afro",      desc: "Volume no topo, laterais e nuca degradadas." },
@@ -156,3 +156,11 @@ const HERO_FOTOS = [
   { src: "img/hero-maos.jpg", alt: "Mãos tatuadas de barbeiro segurando tesoura e pente" },
 ];
 /* Para colocar foto em um corte do catálogo, adicione  foto: "img/nome.jpg"  no item de ESTILOS. */
+
+/* Proprietário (aparece na seção "Sobre a casa") */
+const DONO = {
+  nome: "",                       // ex.: "Messias" — vazio mostra só o cargo
+  cargo: "Fundador & barbeiro",
+  foto: "img/dono-poltrona.jpg",
+  foto2: "img/dono-maquina.jpg",
+};

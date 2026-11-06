@@ -35,7 +35,8 @@ function renderEstilos() {
   const opts = [{ id: "todos", nome: "Todos" }, ...TIPOS_CABELO];
   $("#styleFilter").innerHTML = opts
     .map((o) => `<button class="chip${o.id === filtroCabelo ? " is-active" : ""}" data-hair="${o.id}" aria-pressed="${o.id === filtroCabelo}">${o.nome}</button>`).join("");
-  const lista = ESTILOS.filter((e) => filtroCabelo === "todos" || e.tipos.includes(filtroCabelo));
+  const lista = ESTILOS.filter((e) => filtroCabelo === "todos" || e.tipos.includes(filtroCabelo))
+    .sort((a, b) => (b.foto ? 1 : 0) - (a.foto ? 1 : 0)); // cortes com foto real aparecem primeiro
   $("#styleGrid").innerHTML = lista.map((e, i) => {
     const s = servById[e.servico];
     const fundo = e.foto
@@ -422,4 +423,17 @@ $("#authSlot").addEventListener("click", (e) => {
   if (!state.servicos.size || state.hora === null) state.step = 1;
 })();
 
-renderAuth(); renderServicos(); renderPlanos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();
+/* ===================== PROPRIETÁRIO ===================== */
+function renderDono() {
+  const el = $("#donoMedia"); if (!el || typeof DONO === "undefined" || !DONO.foto) { el?.remove(); return; }
+  const nome = DONO.nome ? esc(DONO.nome) : "Barbe Skin";
+  el.innerHTML = `
+    <div class="dono-main">
+      <img src="${esc(DONO.foto)}" alt="${DONO.nome ? esc(DONO.nome) + ", " : ""}${esc(DONO.cargo)} da Barbe Skin" loading="lazy">
+      <span class="cut-strip dono-strip" aria-hidden="true"><span>${Array(6).fill(nome).join(" · ")} · ${Array(6).fill(nome).join(" · ")}</span></span>
+    </div>
+    ${DONO.foto2 ? `<div class="dono-second"><img src="${esc(DONO.foto2)}" alt="Na cadeira da Barbe Skin" loading="lazy"></div>` : ""}
+    <figcaption><span>${DONO.nome ? esc(DONO.nome) : "O fundador"}</span><span class="muted">${esc(DONO.cargo)}</span></figcaption>`;
+}
+
+renderDono(); renderAuth(); renderServicos(); renderPlanos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();
