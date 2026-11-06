@@ -150,3 +150,9 @@ const PLANOS = [
     info: "Corte e barba ilimitados em todos os dias de funcionamento.",
     itens: ["Corte e barba ilimitados (todos os dias)", "1 barboterapia por mês", "15% off em química (nevou, luzes)", "Agendamento prioritário com seu barbeiro"] },
 ];
+
+/* Fotos da capa (passam em sequência). Adicione mais caminhos aqui. */
+const HERO_FOTOS = [
+  { src: "img/hero-maos.jpg", alt: "Mãos tatuadas de barbeiro segurando tesoura e pente" },
+];
+/* Para colocar foto em um corte do catálogo, adicione  foto: "img/nome.jpg"  no item de ESTILOS. */

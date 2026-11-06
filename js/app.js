@@ -36,17 +36,24 @@ function renderEstilos() {
   $("#styleFilter").innerHTML = opts
     .map((o) => `<button class="chip${o.id === filtroCabelo ? " is-active" : ""}" data-hair="${o.id}" aria-pressed="${o.id === filtroCabelo}">${o.nome}</button>`).join("");
   const lista = ESTILOS.filter((e) => filtroCabelo === "todos" || e.tipos.includes(filtroCabelo));
-  $("#styleGrid").innerHTML = lista.map((e) => {
+  $("#styleGrid").innerHTML = lista.map((e, i) => {
     const s = servById[e.servico];
+    const fundo = e.foto
+      ? `<img src="${esc(e.foto)}" alt="${esc(e.nome)}" loading="lazy">`
+      : `<span class="cut-ph" aria-hidden="true">${esc(e.nome.split(" ")[0])}</span>`;
+    const faixa = Array(4).fill(esc(e.nome)).join(" · ");
     return `
-      <article class="style-card">
-        <span class="tag">${esc(e.grupo)}</span>
-        <h3>${esc(e.nome)}</h3>
-        <p class="muted">${esc(e.desc)}</p>
-        <div class="style-foot">
-          <span>a partir de <strong>${brl(s.preco)}</strong></span>
-          <button class="link-btn" data-add="${s.id}">Quero esse →</button>
+      <article class="cut-card">
+        <button class="cut-media" data-add="${s.id}" aria-label="Agendar ${esc(e.nome)}">
+          ${fundo}
+          <span class="cut-num">${String(i + 1).padStart(2, "0")}</span>
+          <span class="cut-strip" aria-hidden="true"><span>${faixa} · ${faixa}</span></span>
+        </button>
+        <div class="cut-info">
+          <div><h3>${esc(e.nome)}</h3><p>${esc(e.grupo)} · a partir de ${brl(s.preco)}</p></div>
+          <button class="cut-go" data-add="${s.id}" aria-label="Agendar ${esc(e.nome)}">→</button>
         </div>
+        <p class="cut-desc">${esc(e.desc)}</p>
       </article>`;
   }).join("");
 }

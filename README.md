@@ -10,6 +10,7 @@ Site da barbearia **Barbe Skin**, com tabela de preços, catálogo de estilos (i
 ## Onde editar
 - **Preços, serviços, barbeiros, horários, endereço, WhatsApp:** `js/data.js`
 - **Planos de assinatura:** `PLANOS` em `js/data.js`
+- **Fotos da capa:** `HERO_FOTOS` em `js/data.js` (arquivos em `img/`). Fotos dos cortes: campo `foto` em cada item de `ESTILOS`
 - **Cores:** variáveis no topo de `css/style.css` (azul-marinho `--navy`, vermelho `--accent`, fundo `--bg`)
 
 ## Rodar localmente

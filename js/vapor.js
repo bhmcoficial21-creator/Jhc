@@ -4,7 +4,7 @@
   const h1 = document.querySelector(".hero-title");
   if (!h1 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const linhas = (h1.dataset.text || h1.textContent).toUpperCase().split(/\s+/).filter(Boolean);
+  const linhas = (h1.dataset.text || h1.textContent).toUpperCase().split("|").map((t) => t.trim()).filter(Boolean);
   const canvas = document.createElement("canvas");
   canvas.className = "vapor-canvas";
   canvas.setAttribute("aria-hidden", "true");
@@ -28,7 +28,7 @@
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     fs = parseFloat(cs.fontSize);
     cor = cs.getPropertyValue("--vapor-color").trim() || "#fff";
-    const lh = fs * 0.85;
+    const lh = parseFloat(cs.lineHeight) || fs * 0.85;
     padL = fs * 0.5; padT = fs * 0.5;
     const cw = r.width + padL + fs * 2.2, ch = r.height + padT * 2;
     Object.assign(canvas.style, { left: -padL + "px", top: -padT + "px", width: cw + "px", height: ch + "px" });
@@ -37,7 +37,8 @@
 
     octx.setTransform(dpr, 0, 0, dpr, 0, 0);
     octx.clearRect(0, 0, cw, ch);
-    octx.font = `400 ${fs}px ${cs.fontFamily}`;
+    octx.font = `${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+    if ("letterSpacing" in octx) octx.letterSpacing = cs.letterSpacing;
     octx.fillStyle = cor;
     octx.textBaseline = "alphabetic";
     const m = octx.measureText("H");
@@ -120,7 +121,7 @@
   const tocar = () => { if (!raf && visivel && !document.hidden) raf = requestAnimationFrame(quadro); };
 
   async function iniciar() {
-    try { await document.fonts.load(`400 100px "Bebas Neue"`); await document.fonts.ready; } catch {}
+    try { await document.fonts.load(`600 100px "Inter Tight"`); await document.fonts.ready; } catch {}
     // Espera a tela de carregamento sair para o nome se formar à vista
     if (document.getElementById("pageLoader")) await new Promise((ok) => { addEventListener("barbeskin:pronto", ok, { once: true }); setTimeout(ok, 6000); });
     h1.appendChild(canvas);
