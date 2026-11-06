@@ -186,7 +186,7 @@ Valores de referência de mercado. **Substituir pelos preços reais da barbearia
 ---
 
 ## 6. Sugestão de tecnologia
-- **Front-end:** site responsivo e PWA (abre como app no celular), foco em mobile, porque mais de 80% dos agendamentos vêm do Instagram e do WhatsApp.
+- **Front-end:** site responsivo e PWA (abre como app no celular), foco em mobile, porque a maior parte dos clientes chega pelo link do Instagram e do WhatsApp.
 - **Back-end:** Supabase (banco Postgres + login + armazenamento das fotos da ficha), com custo zero no início.
 - **Hospedagem:** Netlify ou Vercel (grátis no começo).
 - **WhatsApp:** fase 1 com links de mensagem pronta (grátis); fase 2 com a API oficial para lembretes automáticos.
