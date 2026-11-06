@@ -432,8 +432,12 @@ function renderDono() {
       <img src="${esc(DONO.foto)}" alt="${DONO.nome ? esc(DONO.nome) + ", " : ""}${esc(DONO.cargo)} da Barbe Skin" loading="lazy">
       <span class="cut-strip dono-strip" aria-hidden="true"><span>${Array(6).fill(nome).join(" · ")} · ${Array(6).fill(nome).join(" · ")}</span></span>
     </div>
-    ${DONO.foto2 ? `<div class="dono-second"><img src="${esc(DONO.foto2)}" alt="Na cadeira da Barbe Skin" loading="lazy"></div>` : ""}
     <figcaption><span>${DONO.nome ? esc(DONO.nome) : "O fundador"}</span><span class="muted">${esc(DONO.cargo)}</span></figcaption>`;
+  const banner = $("#crewBanner");
+  if (banner) {
+    if (DONO.foto2) banner.innerHTML = `<img src="${esc(DONO.foto2)}" alt="Barbeiro trabalhando na Barbe Skin" loading="lazy"><figcaption><small>Na cadeira</small>Degradê na régua, risco na navalha.</figcaption>`;
+    else banner.remove();
+  }
 }
 
 renderDono(); renderAuth(); renderServicos(); renderPlanos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();

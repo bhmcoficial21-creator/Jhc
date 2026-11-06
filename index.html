@@ -17,15 +17,26 @@
 </head>
 <body class="home">
   <div class="page-loader" id="pageLoader" role="progressbar" aria-label="Carregando o site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <div class="loader-bg" aria-hidden="true"></div>
-    <figure class="loader-photo" aria-hidden="true">
-      <img src="img/poste-loader.jpg" alt="" fetchpriority="high">
-      <span class="loader-stripes" id="loaderStripes"><span class="loader-stripes-in"></span></span>
-      <span class="loader-logo"><img src="img/logo-messin.png" alt=""></span>
-    </figure>
-    <p class="loader-name">Barbe Skin</p>
-    <div class="loader-progress">
-      <span class="loader-pct"><span id="loaderPct">0</span>%</span>
+    <div class="ld-scene" aria-hidden="true">
+      <div class="ld-photo" id="ldPhoto">
+        <img src="img/poste-loader.jpg" alt="" fetchpriority="high">
+        <span class="loader-stripes" id="loaderStripes"><span class="loader-stripes-in"></span></span>
+      </div>
+    </div>
+    <div class="ld-vignette" aria-hidden="true"></div>
+    <div class="ld-warm" aria-hidden="true"></div>
+    <div class="ld-brand"><div class="logo3d" data-intro aria-hidden="true"><div class="l3-stage">
+        <span class="l3-edge"></span>
+        <img class="l3-base" src="img/logo3d/base.png" alt="">
+        <img class="l3-ring" src="img/logo3d/ring.png" alt="">
+        <img class="l3-poles" src="img/logo3d/poles.png" alt="">
+        <img class="l3-msn" src="img/logo3d/msn.png" alt="">
+        <img class="l3-chair" src="img/logo3d/chair.png" alt="">
+        <span class="l3-shine"></span>
+      </div></div></div>
+    <div class="ld-ui">
+      <p class="ld-kicker" id="ldKicker">Chegando na barbearia</p>
+      <div class="ld-row"><span class="ld-pct"><span id="loaderPct">0</span>%</span></div>
       <span class="loader-bar"><span id="loaderBar"></span></span>
     </div>
   </div>
@@ -68,7 +79,15 @@
           <defs><path id="sealPath" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
           <text><textPath href="#sealPath" textLength="512">MESSIN DO CORTE • BARBEARIA • AGENDE JÁ • </textPath></text>
         </svg>
-        <img class="seal-logo" src="img/logo-messin.png" alt="">
+        <span class="seal-logo"><div class="logo3d" aria-hidden="true"><div class="l3-stage">
+        <span class="l3-edge"></span>
+        <img class="l3-base" src="img/logo3d/base.png" alt="">
+        <img class="l3-ring" src="img/logo3d/ring.png" alt="">
+        <img class="l3-poles" src="img/logo3d/poles.png" alt="">
+        <img class="l3-msn" src="img/logo3d/msn.png" alt="">
+        <img class="l3-chair" src="img/logo3d/chair.png" alt="">
+        <span class="l3-shine"></span>
+      </div></div></span>
       </a>
       <div class="hero-inner">
         <div class="hero-row">
@@ -138,6 +157,7 @@
         <p class="eyebrow">Equipe</p>
         <h2>Nossos barbeiros</h2>
       </div>
+      <figure class="crew-banner" id="crewBanner"></figure>
       <div class="barber-grid" id="barberGrid"></div>
     </section>
 
@@ -170,6 +190,21 @@
     </section>
   </main>
 
+  <section class="brand3d" id="marca" aria-label="Símbolo da barbearia">
+    <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">A marca</span></div>
+    <div class="brand3d-logo"><div class="logo3d" data-interactive aria-hidden="true"><div class="l3-stage">
+        <span class="l3-edge"></span>
+        <img class="l3-base" src="img/logo3d/base.png" alt="">
+        <img class="l3-ring" src="img/logo3d/ring.png" alt="">
+        <img class="l3-poles" src="img/logo3d/poles.png" alt="">
+        <img class="l3-msn" src="img/logo3d/msn.png" alt="">
+        <img class="l3-chair" src="img/logo3d/chair.png" alt="">
+        <span class="l3-shine"></span>
+      </div></div></div>
+    <p class="brand3d-motto">Estilo · Confiança · Atitude</p>
+    <p class="brand3d-hint muted">Passe o dedo ou o mouse sobre o selo</p>
+  </section>
+
   <footer class="footer">
     <span class="brand-mark">BS</span>
     <p>© <span id="year"></span> Barbe Skin · <a href="agenda.html">Área do barbeiro</a></p>
@@ -188,6 +223,7 @@
 
   <a href="#agendar" class="fab btn btn-primary is-hidden" id="fab">Agendar</a>
 
+  <script src="js/logo3d.js"></script>
   <script src="js/loader.js"></script>
   <script src="js/data.js"></script>
   <script src="js/common.js"></script>

@@ -327,32 +327,64 @@ button:disabled { cursor: not-allowed; }
 .hero-title.is-vapor { color: transparent; animation: none; }
 .vapor-canvas { position: absolute; pointer-events: none; }
 
-/* ---------- Tela de carregamento: foto do poste com listras girando + 0–100% ---------- */
-.page-loader { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 24px 16px;
-  background: #07090f; color: #fff; transition: opacity .7s ease, visibility .7s; }
-.page-loader.is-done { opacity: 0; visibility: hidden; }
-.loader-bg { position: absolute; inset: -40px; background: url("../img/poste-loader.jpg") center / cover no-repeat; filter: blur(28px) brightness(.35) saturate(1.2); transform: scale(1.1); }
-.loader-photo { position: relative; margin: 0; height: min(56vh, 520px); aspect-ratio: 494 / 588; max-width: calc(100vw - 32px); border-radius: 14px; overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
-.loader-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-/* Área exata do tubo listrado na foto (medida em % da imagem 494×588) */
+/* ---------- Carregamento: entrando na barbearia ---------- */
+html.is-loading body { overflow: hidden; }
+.page-loader { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: #050505; color: #fff; --warm: 0;
+  transition: transform .9s cubic-bezier(.7,0,.2,1), opacity .9s; }
+.page-loader.is-done { transform: translateY(-100%); opacity: .6; pointer-events: none; }
+.ld-scene { position: absolute; inset: 0; overflow: hidden; }
+/* a foto mantém a proporção (494×588) e cobre a tela; as listras usam % dessa caixa */
+.ld-photo { position: absolute; left: 50%; top: 50%; width: max(100vw, calc(100vh * 494 / 588)); aspect-ratio: 494 / 588; translate: -50% -50%;
+  transform-origin: 50% 44%; will-change: transform; filter: contrast(1.05) saturate(1.05); transition: filter .8s; }
+.ld-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.page-loader.is-entering .ld-photo { transition: transform .85s cubic-bezier(.6,0,.4,1), filter .85s; transform: scale(5.5) !important; filter: blur(6px) brightness(1.5) sepia(.35); }
+.ld-vignette { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 45%, transparent 40%, rgba(0,0,0,.75) 100%), linear-gradient(180deg, rgba(0,0,0,.35), transparent 25%, transparent 60%, rgba(0,0,0,.85)); }
+.ld-warm { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 60% at 50% 45%, #ffcf85, #7a4a14 60%, #120b05); mix-blend-mode: soft-light; opacity: var(--warm); transition: opacity .8s, background .8s; }
+.page-loader.is-entering .ld-warm { opacity: 1; mix-blend-mode: normal; background: radial-gradient(60% 50% at 50% 45%, #3a2611, #120b05 70%, #050403); transition-delay: .35s; }
+.ld-ui { position: absolute; left: 16px; right: 16px; bottom: max(28px, env(safe-area-inset-bottom)); display: grid; gap: .6rem; max-width: 520px; margin: 0 auto; text-align: center; transition: opacity .4s; }
+.page-loader.is-inside .ld-ui { opacity: 0; }
+.ld-kicker { font: 600 .72rem/1 var(--font-body); letter-spacing: .24em; text-transform: uppercase; color: rgba(255,255,255,.75); }
+.ld-pct { font: 600 clamp(3rem, 14vw, 5rem)/1 var(--font-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.loader-bar { width: 100%; height: 2px; border-radius: 2px; background: rgba(255,255,255,.18); overflow: hidden; }
+.loader-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #c9a25a, #f3dc9c 50%, #c9a25a); transition: width .15s linear; }
+/* logo 3D aparece lá dentro */
+.ld-brand { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; perspective: 1000px; }
+.ld-brand .logo3d { width: min(70vw, 380px); opacity: 0; transform: scale(.6) translateZ(-200px); transition: opacity .6s, transform 1s cubic-bezier(.2,1.2,.3,1); }
+.page-loader.is-inside .ld-brand .logo3d { opacity: 1; transform: none; }
+.ld-brand .logo3d img:not(.l3-base) { transition: transform 1.1s cubic-bezier(.2,1.1,.3,1), opacity .8s; }
+.page-loader:not(.is-inside) .ld-brand .l3-msn { transform: translateZ(calc(var(--u) * 400)) translateY(-30%); opacity: 0; }
+.page-loader:not(.is-inside) .ld-brand .l3-chair { transform: translateZ(calc(var(--u) * 500)) translateY(30%); opacity: 0; }
+.page-loader:not(.is-inside) .ld-brand .l3-poles { transform: translateZ(calc(var(--u) * 260)) scaleY(.4); opacity: 0; }
+.page-loader:not(.is-inside) .ld-brand .l3-ring { transform: translateZ(calc(var(--u) * 120)) rotate(-25deg); opacity: 0; }
+.ld-brand .l3-chair { transition-delay: .25s !important; }
+.ld-brand .l3-msn { transition-delay: .1s !important; }
+
+/* Listras animadas em cima do tubo da foto */
 .loader-stripes { position: absolute; left: 15.6%; top: 20.2%; width: 17%; height: 37.9%; border-radius: 3px / 6px; overflow: hidden; opacity: 0; transition: opacity .4s; }
 .loader-stripes.is-ready { opacity: 1; }
-/* faixa contínua bem maior que o tubo: desliza 1 ciclo e recomeça sem emenda */
 .loader-stripes-in { position: absolute; left: 0; right: 0; top: -100%; height: 300%;
   background: repeating-linear-gradient(145deg, #cf2a2f 0 var(--q1, 25px), #f2eee6 var(--q1, 25px) var(--q2, 50px), #2343a6 var(--q2, 50px) var(--q3, 75px), #f2eee6 var(--q3, 75px) var(--q4, 100px)); }
-.loader-stripes.is-ready .loader-stripes-in { animation: pole-roll var(--speed, 1.6s) linear infinite; }
+.loader-stripes.is-ready .loader-stripes-in { animation: pole-roll 1.6s linear infinite; }
 @keyframes pole-roll { from { transform: translateY(0); } to { transform: translateY(calc(var(--pv, 120px) * -1)); } }
-/* volume de cilindro + vidro por cima das listras */
 .loader-stripes::after { content: ""; position: absolute; inset: 0;
   background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.06) 18%, rgba(255,255,255,.34) 29%, rgba(255,255,255,0) 42%, rgba(0,0,0,.05) 70%, rgba(0,0,0,.5) 100%),
     linear-gradient(180deg, rgba(0,0,0,.3), transparent 8%, transparent 92%, rgba(0,0,0,.3)); }
 @media (prefers-reduced-motion: reduce) { .loader-stripes.is-ready .loader-stripes-in { animation: none; } }
-.loader-name { position: relative; font: 600 clamp(1.6rem, 6vw, 2.4rem)/1 var(--font-display); letter-spacing: -.02em; text-transform: uppercase; }
-.loader-progress { position: relative; width: min(320px, 80vw); display: grid; gap: .55rem; justify-items: center; }
-.loader-pct { font: 600 1rem/1 var(--font-body); font-variant-numeric: tabular-nums; letter-spacing: .06em; color: rgba(255,255,255,.85); }
-.loader-bar { width: 100%; height: 3px; border-radius: 3px; background: rgba(255,255,255,.14); overflow: hidden; }
-.loader-bar span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #d3262d, #f4f1ea 50%, #2141a8); transition: width .15s linear; }
+
+/* ---------- Logo 3D em camadas ---------- */
+.logo3d { --u: 1px; --rx: 0deg; --ry: 0deg; --shine: 50%; position: relative; aspect-ratio: 1; perspective: calc(var(--u) * 1400); }
+.l3-stage { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
+.l3-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.l3-base  { transform: translateZ(0); filter: drop-shadow(0 calc(var(--u) * 14) calc(var(--u) * 30) rgba(0,0,0,.6)); }
+.l3-ring  { transform: translateZ(calc(var(--u) * 14)); }
+.l3-poles { transform: translateZ(calc(var(--u) * 26)); }
+.l3-msn   { transform: translateZ(calc(var(--u) * 44)); filter: drop-shadow(0 calc(var(--u) * 6) calc(var(--u) * 6) rgba(0,0,0,.7)); }
+.l3-chair { transform: translateZ(calc(var(--u) * 62)); filter: drop-shadow(0 calc(var(--u) * 10) calc(var(--u) * 10) rgba(0,0,0,.75)); }
+/* espessura de moeda dourada atrás */
+.l3-edge { position: absolute; inset: 6%; border-radius: 50%; transform: translateZ(calc(var(--u) * -10)); background: radial-gradient(circle, #3a2a12, #a67c3a 70%, #4a3414 100%); box-shadow: 0 0 0 calc(var(--u) * 3) #6b4e22; }
+.l3-shine { position: absolute; inset: 6%; border-radius: 50%; transform: translateZ(calc(var(--u) * 70)); pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, transparent calc(var(--shine) - 18%), rgba(255,228,170,.22) var(--shine), transparent calc(var(--shine) + 18%)); }
 
 /* ---------- Barra de pesquisa (estilo da lista de referência) ---------- */
 .search-btn { display: flex; align-items: center; gap: .5rem; min-height: 40px; padding: 0 .7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: .88rem; }
@@ -561,13 +593,26 @@ body.menu-open { overflow: hidden; }
 @media (max-width: 640px) { .seal { top: auto; bottom: 132px; width: 92px; } }
 @media (prefers-reduced-motion: reduce) { .seal-ring { animation: none; } }
 
-/* ---------- Símbolo no fim do carregamento ---------- */
-.loader-logo { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(7,9,15,.55); backdrop-filter: blur(10px); opacity: 0; transition: opacity .45s ease; }
-.loader-logo img { width: 62%; max-width: 300px; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 50%; box-shadow: 0 20px 60px rgba(0,0,0,.6); transform: scale(.7) rotate(-20deg); transition: transform .7s cubic-bezier(.2,1.3,.3,1); }
-.page-loader.is-logo .loader-logo { opacity: 1; }
-.page-loader.is-logo .loader-logo img { transform: none; }
 
 /* Logo preto e dourado: aro dourado fino e texto do selo em dourado */
-.seal-logo, .loader-logo img { box-shadow: 0 0 0 1px rgba(214,178,106,.55), 0 10px 30px rgba(0,0,0,.6); }
+
 .seal-ring text { fill: #e2c27f; }
-.seal-logo { inset: 20%; width: 60%; height: 60%; }
+.seal-logo { inset: 17%; width: 66%; height: 66%; box-shadow: none; border-radius: 0; }
+.seal-logo .logo3d { width: 100%; }
+
+/* ---------- Seção da marca: logo 3D interativo ---------- */
+.brand3d { display: grid; justify-items: center; text-align: center; gap: 1rem; padding: 4.5rem 16px 5rem; border-top: 1px solid var(--line); touch-action: pan-y;
+  background: radial-gradient(60% 50% at 50% 45%, rgba(201,162,90,.12), transparent 70%); }
+.brand3d-logo { width: min(82vw, 460px); }
+.brand3d-motto { font: 600 clamp(1.1rem, 3vw, 1.6rem)/1.2 var(--font-display); letter-spacing: .18em; text-transform: uppercase; color: #e2c27f; }
+.brand3d-hint { font-size: .8rem; }
+
+/* ---------- Banner com a foto na cadeira (seção barbeiros) ---------- */
+.crew-banner { position: relative; margin: 0 0 1.4rem; border-radius: 8px; overflow: hidden; aspect-ratio: 16 / 9; max-height: 520px; width: 100%; }
+@media (max-width: 640px) { .crew-banner { aspect-ratio: 4 / 5; } }
+.crew-banner img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+.crew-banner figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 3rem 1.2rem 1.1rem; background: linear-gradient(transparent, rgba(0,0,0,.85));
+  font: 600 clamp(1.2rem, 4vw, 2rem)/1.05 var(--font-display); text-transform: uppercase; letter-spacing: -.01em; }
+.crew-banner figcaption small { display: block; font: 600 .68rem/1 var(--font-body); letter-spacing: .14em; color: rgba(255,255,255,.7); margin-bottom: .4rem; }
+/* Celular em pé: enquadra poste + vitrine e mira a câmera na porta */
+@media (max-aspect-ratio: 3/4) { .ld-photo { translate: -38% -50%; transform-origin: 46% 44%; } }
