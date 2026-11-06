@@ -321,3 +321,8 @@ button:disabled { cursor: not-allowed; }
 .auth-google svg { width: 18px; height: 18px; }
 .auth-switch { margin-top: 1.6rem; font-size: .88rem; color: rgba(255,255,255,.75); }
 .plan-badge { display: inline-block; font-size: .7rem; font-weight: 700; color: var(--accent); background: rgba(184,32,46,.08); padding: .15rem .5rem; border-radius: 999px; }
+
+/* ---------- Efeito vapor no nome ---------- */
+.hero-title { position: relative; --vapor-color: #ffffff; }
+.hero-title.is-vapor { color: transparent; animation: none; }
+.vapor-canvas { position: absolute; pointer-events: none; }
