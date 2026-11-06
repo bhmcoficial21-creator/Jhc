@@ -36,6 +36,10 @@
       <a href="#planos">Planos</a>
       <a href="#horarios">Horários</a>
     </nav>
+    <button class="search-btn" id="searchBtn" aria-label="Buscar (Ctrl+K)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>Buscar</span><kbd>Ctrl K</kbd>
+    </button>
     <div class="auth-slot" id="authSlot"><a href="entrar.html" class="nav-login">Entrar</a></div>
     <a href="#agendar" class="btn btn-primary btn-sm">Agendar</a>
   </header>
@@ -140,12 +144,24 @@
     <p>© <span id="year"></span> Barbe Skin · <a href="agenda.html">Área do barbeiro</a></p>
   </footer>
 
+  <dialog class="search-dialog" id="searchDialog" aria-label="Buscar no site">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="searchInput" type="search" placeholder="Buscar corte, barba, barbeiro, plano…" autocomplete="off"
+        role="combobox" aria-expanded="true" aria-controls="searchList" aria-autocomplete="list">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-list" id="searchList" role="listbox"></div>
+    <p class="search-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></p>
+  </dialog>
+
   <a href="#agendar" class="fab btn btn-primary is-hidden" id="fab">Agendar</a>
 
   <script src="js/loader.js"></script>
   <script src="js/data.js"></script>
   <script src="js/common.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/search.js"></script>
   <script src="js/vapor.js"></script>
 </body>
 </html>
