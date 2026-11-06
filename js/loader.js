@@ -42,11 +42,12 @@
     el.setAttribute("aria-valuenow", v);
     if (v >= 100 && !fim) {
       fim = true;
+      el.classList.add("is-logo");             // mostra o símbolo da barbearia antes de abrir
       setTimeout(() => {
         el.classList.add("is-done");
         dispatchEvent(new Event("barbeskin:pronto"));
         setTimeout(() => el.remove(), 800);
-      }, 350);
+      }, 1100);
       return;
     }
     requestAnimationFrame(quadro);

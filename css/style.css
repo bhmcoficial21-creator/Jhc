@@ -334,7 +334,7 @@ button:disabled { cursor: not-allowed; }
 .loader-bg { position: absolute; inset: -40px; background: url("../img/poste-loader.jpg") center / cover no-repeat; filter: blur(28px) brightness(.35) saturate(1.2); transform: scale(1.1); }
 .loader-photo { position: relative; margin: 0; height: min(56vh, 520px); aspect-ratio: 494 / 588; max-width: calc(100vw - 32px); border-radius: 14px; overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
-.loader-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.loader-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* Área exata do tubo listrado na foto (medida em % da imagem 494×588) */
 .loader-stripes { position: absolute; left: 15.6%; top: 20.2%; width: 17%; height: 37.9%; border-radius: 3px / 6px; overflow: hidden; opacity: 0; transition: opacity .4s; }
 .loader-stripes.is-ready { opacity: 1; }
@@ -549,3 +549,20 @@ body.menu-open { overflow: hidden; }
 .about-media figcaption { position: absolute; right: 0; bottom: 0; display: grid; justify-items: end; gap: .15rem; text-align: right;
   font: 600 .78rem/1.2 var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
 .about-media figcaption .muted { font-weight: 500; font-size: .7rem; }
+
+/* ---------- Selo girando com o símbolo da barbearia ---------- */
+.seal { position: absolute; right: 16px; top: 78px; z-index: 3; width: clamp(96px, 12vw, 150px); aspect-ratio: 1; display: block; border-radius: 50%; }
+.seal-ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: seal-spin 14s linear infinite; }
+.seal-ring text { fill: #fff; font: 700 15.5px var(--font-body); letter-spacing: .5px; }
+.seal-logo { position: absolute; inset: 22%; width: 56%; height: 56%; border-radius: 50%; box-shadow: 0 8px 24px rgba(0,0,0,.45); transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+.seal:hover .seal-logo { transform: scale(1.08) rotate(-6deg); }
+.seal:hover .seal-ring { animation-duration: 5s; }
+@keyframes seal-spin { to { transform: rotate(360deg); } }
+@media (max-width: 640px) { .seal { top: auto; bottom: 132px; width: 92px; } }
+@media (prefers-reduced-motion: reduce) { .seal-ring { animation: none; } }
+
+/* ---------- Símbolo no fim do carregamento ---------- */
+.loader-logo { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(7,9,15,.55); backdrop-filter: blur(10px); opacity: 0; transition: opacity .45s ease; }
+.loader-logo img { width: 62%; max-width: 300px; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 50%; box-shadow: 0 20px 60px rgba(0,0,0,.6); transform: scale(.7) rotate(-20deg); transition: transform .7s cubic-bezier(.2,1.3,.3,1); }
+.page-loader.is-logo .loader-logo { opacity: 1; }
+.page-loader.is-logo .loader-logo img { transform: none; }
