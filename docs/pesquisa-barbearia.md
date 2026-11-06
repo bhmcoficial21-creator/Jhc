@@ -93,6 +93,36 @@
 - **Cortes inspirados em jogadores:** em ano de Copa (2026) os pedidos disparam. Vale uma seção "em alta" no catálogo que o barbeiro atualiza.
 - **Progressiva / selagem masculina:** alisamento, ou redução de volume, muito comum no Brasil.
 
+### 3.4.1 Pesquisa regional: cortes da quebrada em São Paulo
+Pesquisa feita em novembro de 2026 em tabelas de barbearias paulistanas e guias de estilo. **O perfil do Instagram de referência (@messin_do_corte) não pôde ser acessado neste ambiente**; os cortes dele entram quando as fotos forem enviadas.
+
+| Estilo | Como é | Observação |
+|---|---|---|
+| **Corte disfarçado** | Topo com mais volume, laterais bem curtas descendo num degradê suave até a nuca, finalizada na navalha | Popular no Brasil desde os anos 2010; muitas vezes é o nome popular do degradê |
+| **Corte do Jaca** | Mid fade começando cerca de dois dedos acima da orelha, normalmente com risco freestyle | Origem atribuída ao Jacarezinho (RJ); ganhou força em 2025 nas barbearias de SP e RJ |
+| **Degradê navalhado** | Degradê com acabamento na navalha em vez da máquina | Citado entre os mais pedidos nas barbearias de SP |
+| **Corte chavoso** | Visual inspirado em MCs de funk: mullet, burst fade, luzes ou nevou, pezinho na régua | Estilo jovem da periferia |
+| **Cabelo blindado** | Topete alto e firme (estilo pompadour) | Fonte aponta criação na periferia de São Paulo |
+| **Nevou / platinado** | Descoloração global até o branco | Preços em SP de R$ 80 a R$ 120 só o platinado; combos com corte e barba vão até R$ 280 |
+| **Luzes / luzes brancas** | Mechas no topo | Corte + luzes chega a R$ 160 na Zona Leste |
+| **Pezinho / perfil** | Contorno na navalha | R$ 10 a R$ 20 em SP |
+
+**Faixa de preço na periferia de SP:** a barbearia popular de bairro cobra R$ 25 a R$ 45 pelo corte, contra R$ 80 a R$ 150 em regiões nobres.
+
+**Fontes:** [Los Campos Barbearia (Jardim Helena, ZL) – Booksy](https://booksy.com/pt-br/265132_los-campos-barbearia_barbearias_1047773_sao-paulo) · [Barbearia KS Cortes – Booksy](https://booksy.com/pt-br/268999_barbearia-ks-cortes_barbearias_1047773_sao-paulo) · [Ribeiro Cortes](https://ribeirocortes.netlify.app/) · [Fresha – São Paulo](https://www.fresha.com/lp/en/tt/men's-haircuts/in/br-s%C3%A3o-paulo) · [Preço do corte em SP 2026 – Barbearia 215](https://barbearia215.com.br/blog/quanto-custa-corte-cabelo-masculino-sao-paulo) · [Corte do Jaca – Cortevibe](https://cortevibe.com.br/corte-jaca/) · [Corte do Jaca – All Things Hair](https://www.allthingshair.com/br/cabelos-masculinos/corte-do-jaca.html) · [Corte chavoso – All Things Hair](https://www.allthingshair.com/br/cabelos-masculinos/cabelo-chavoso.html) · [Corte disfarçado – Daquidali](https://daquidali.com.br/cortes-de-cabelo-masculino-disfarcado/)
+
+### Tabela adotada no site (Barbe Skin)
+| Pacote | Preço |
+|---|---|
+| Só corte | R$ 50 |
+| Só barba | R$ 40 |
+| Só sobrancelha | R$ 40 |
+| Corte + Sobrancelha | R$ 60 |
+| Corte + Barba | R$ 70 |
+| Corte + Barba + Sobrancelha | R$ 80 |
+| Platinado + Corte (sem progressiva) | R$ 120 |
+| Platinado + Corte + Barba (sem progressiva) | R$ 130 |
+
 ### 3.5 Estilos afro: cabelo crespo e cacheado (tipos 3A a 4C)
 **Classificação rápida:** 3A–3C são cachos (de largos a fechados); 4A–4C são crespos (de molas definidas ao zigue-zague bem fechado). O tipo muda a técnica, o tempo e o produto, por isso **o agendamento deve perguntar o tipo de cabelo**.
 

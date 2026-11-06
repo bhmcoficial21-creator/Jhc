@@ -1,5 +1,5 @@
 /* ===================== SERVIÇOS ===================== */
-let catAtual = "combos";
+let catAtual = "pacotes";
 function renderServicos() {
   $("#servTabs").innerHTML = Object.entries(CATEGORIAS)
     .map(([id, nome]) => `<button role="tab" class="tab${id === catAtual ? " is-active" : ""}" aria-selected="${id === catAtual}" data-cat="${id}">${nome}</button>`)
