@@ -104,3 +104,19 @@ const ESTILOS = [
   { nome: "Dreads",            grupo: "Afro",       tipos: ["crespo","cacheado"],                   servico: "dreads",    desc: "Início e manutenção de locs; com ou sem degradê." },
   { nome: "Tranças nagô",      grupo: "Afro",       tipos: ["crespo","cacheado"],                   servico: "nago",      desc: "Tranças rentes ao couro, retas ou desenhadas." },
 ];
+
+/* Planos de assinatura (valores provisórios) */
+const PLANOS = [
+  { id: "avulso", nome: "Avulso", icone: "user", desc: "Para quem vem de vez em quando e quer liberdade total.",
+    preco: 50, sufixo: "por corte", nota: "Sem mensalidade", cta: "Agendar agora", destaque: false,
+    info: "Pague só quando vier. Sem fidelidade.",
+    itens: ["Qualquer barbeiro da casa", "Ficha técnica do seu corte salva", "Lembrete de retorno no WhatsApp"] },
+  { id: "clube", nome: "Clube Corte", icone: "star", desc: "Para quem não deixa o degradê crescer.",
+    preco: 99, sufixo: "por mês", nota: "Cancele quando quiser", cta: "Assinar o Clube", destaque: true,
+    info: "Cortes ilimitados. Sai mais barato a partir do 2º corte no mês.",
+    itens: ["Cortes ilimitados (terça a quinta)", "Pezinho e sobrancelha inclusos", "Prioridade nos horários de sexta e sábado", "10% off em produtos"] },
+  { id: "premium", nome: "Clube Corte + Barba", icone: "crown", desc: "O pacote completo para quem cuida do visual toda semana.",
+    preco: 159, sufixo: "por mês", nota: "Cancele quando quiser", cta: "Assinar o Premium", destaque: false,
+    info: "Corte e barba ilimitados em todos os dias de funcionamento.",
+    itens: ["Corte e barba ilimitados (todos os dias)", "1 barboterapia por mês", "15% off em química (nevou, luzes)", "Agendamento prioritário com seu barbeiro"] },
+];

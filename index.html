@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Barbe Skin — Barbearia</title>
   <meta name="description" content="Barbe Skin: degradê, navalhado, afro, barba e nevou. Agende seu horário online.">
-  <meta name="theme-color" content="#0e0e0e">
+  <meta name="theme-color" content="#0f2147">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,10 @@
       <a href="#servicos">Preços</a>
       <a href="#estilos">Estilos</a>
       <a href="#barbeiros">Barbeiros</a>
+      <a href="#planos">Planos</a>
       <a href="#horarios">Horários</a>
     </nav>
+    <div class="auth-slot" id="authSlot"><a href="entrar.html" class="nav-login">Entrar</a></div>
     <a href="#agendar" class="btn btn-primary btn-sm">Agendar</a>
   </header>
 
@@ -60,6 +62,16 @@
       </div>
       <div class="tabs" role="tablist" id="servTabs"></div>
       <ul class="price-list" id="servList"></ul>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="planos" class="section plans-section">
+      <div class="section-head center">
+        <p class="eyebrow">Clube Barbe Skin</p>
+        <h2>Seu visual em dia, todo mês.</h2>
+        <p class="muted">Sem letra miúda. Escolha como prefere vir: avulso ou no clube, e cancele quando quiser.</p>
+      </div>
+      <div class="plans" id="plansGrid"></div>
     </section>
 
     <!-- ESTILOS -->

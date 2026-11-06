@@ -4,6 +4,10 @@ const telKey = (t) => String(t).replace(/\D/g, "");
 const inp = $("#dia");
 inp.value = ymd(new Date());
 
+const planoDe = (b) => {
+  const c = getContas().find((x) => x.id === b.clienteId); const p = c?.plano && PLANOS.find((x) => x.id === c.plano.id);
+  return p ? ` <span class="plan-badge">${esc(p.nome)}${c.plano.status === "pendente" ? " · pendente" : ""}</span>` : "";
+};
 const STATUS = { confirmado: "Confirmado", concluido: "Concluído", faltou: "Faltou", cancelado: "Cancelado" };
 
 function render() {
@@ -25,7 +29,7 @@ function render() {
     return `<section class="col"><h3>${esc(barb.nome)}</h3>${lista.length ? lista.map((b) => `
       <article class="appt st-${b.status}">
         <div class="appt-head"><span>${fromMin(b.inicio)}–${fromMin(b.fim)}</span><span>${brl(b.preco)}</span></div>
-        <div><strong>${esc(b.nome)}</strong> · <a href="https://wa.me/55${telKey(b.tel)}" target="_blank" rel="noopener">${esc(b.tel)}</a></div>
+        <div><strong>${esc(b.nome)}</strong>${planoDe(b)} · <a href="https://wa.me/55${telKey(b.tel)}" target="_blank" rel="noopener">${esc(b.tel)}</a></div>
         <div class="muted">${b.servicos.map((id) => esc(servById[id]?.nome || id)).join(" + ")}${b.cabelo ? ` · cabelo ${esc(b.cabelo)}` : ""}</div>
         ${b.obs ? `<div>“${esc(b.obs)}”</div>` : ""}
         <div class="muted">Status: ${STATUS[b.status]}</div>

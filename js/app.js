@@ -86,7 +86,7 @@ function renderInfo() {
 }
 
 /* ===================== AGENDAMENTO ===================== */
-const cliente = store.get(CLIENT_KEY, null);
+let cliente = usuarioAtual();
 const state = {
   step: 1,
   servicos: new Set(),
@@ -94,8 +94,6 @@ const state = {
   barbeiro: "any",
   data: "",
   hora: null,      // minutos desde 00:00
-  nome: cliente?.nome || "",
-  tel: cliente?.tel || "",
   obs: "",
   ultimo: null,
 };
@@ -214,15 +212,29 @@ function stepDados() {
   const { lista, preco, dur: d } = totais();
   const dia = parseYmd(state.data);
   const barb = state.barbeiro === "any" ? "Primeiro disponível" : barberById[state.barbeiro].nome;
-  return `
-    <h3 class="wiz-title">4. Seus dados</h3>
+  const recap = `
     <div class="recap">
       <p><strong>${DIAS[dia.getDay()]}, ${dia.getDate()} de ${MESES[dia.getMonth()]}</strong> às <strong>${fromMin(state.hora)}</strong> · ${esc(barb)}</p>
       <p class="muted">${lista.map((s) => esc(s.nome)).join(" + ")} · ${dur(d)} · <strong>${brl(preco)}</strong></p>
-    </div>
+    </div>`;
+  if (!cliente) return `
+    <h3 class="wiz-title">4. Entre na sua conta</h3>
+    ${recap}
+    <div class="gate">
+      <p>Para confirmar, entre ou crie sua conta. Leva 30 segundos e seu horário fica guardado.</p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" data-go="3">Voltar</button>
+        <span class="gate-actions">
+          <button type="button" class="btn btn-outline" data-auth="login">Entrar</button>
+          <button type="button" class="btn btn-primary" data-auth="cadastro">Criar conta</button>
+        </span>
+      </div>
+    </div>`;
+  return `
+    <h3 class="wiz-title">4. Confirme seu horário</h3>
+    ${recap}
     <form id="formDados" class="form" novalidate>
-      <label class="field"><span>Nome</span><input name="nome" autocomplete="name" required value="${esc(state.nome)}" placeholder="Como te chamamos?"></label>
-      <label class="field"><span>WhatsApp</span><input name="tel" type="tel" inputmode="tel" autocomplete="tel" required value="${esc(state.tel)}" placeholder="(00) 00000-0000"></label>
+      <p class="who">Agendando como <strong>${esc(cliente.nome)}</strong> · ${esc(cliente.tel)}</p>
       <label class="field"><span>Observação <small class="muted">(opcional)</small></span><textarea name="obs" rows="2" placeholder="Ex.: quero o degradê mais baixo, risco do lado esquerdo">${esc(state.obs)}</textarea></label>
       <p class="form-error" id="formError" role="alert"></p>
       <div class="form-actions">
@@ -271,11 +283,11 @@ function salvarAgendamento() {
     criadoEm: new Date().toISOString(),
     data: state.data, inicio: ini, fim, barbeiro,
     servicos: lista.map((s) => s.id), preco,
-    nome: state.nome.trim(), tel: state.tel.trim(), cabelo: state.cabelo, obs: state.obs.trim(),
+    clienteId: cliente.id, nome: cliente.nome, tel: cliente.tel, cabelo: state.cabelo, obs: state.obs.trim(),
     status: "confirmado",
   };
   all.push(booking); saveBookings(all);
-  store.set(CLIENT_KEY, { nome: booking.nome, tel: booking.tel, cabelo: booking.cabelo, ultimo: { servicos: booking.servicos, barbeiro } });
+  cliente = atualizarConta(cliente.id, { cabelo: booking.cabelo, ultimo: { servicos: booking.servicos, barbeiro } });
   return booking;
 }
 
@@ -296,13 +308,6 @@ function baixarIcs(b) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-const maskTel = (v) => {
-  const d = v.replace(/\D/g, "").slice(0, 11);
-  if (d.length <= 2) return d.length ? `(${d}` : "";
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-};
 
 /* Eventos do assistente */
 const area = $("#agendar");
@@ -314,8 +319,7 @@ area.addEventListener("change", (e) => {
   }
 });
 area.addEventListener("input", (e) => {
-  if (e.target.name === "tel") e.target.value = maskTel(e.target.value);
-  if (["nome", "tel", "obs"].includes(e.target.name)) state[e.target.name] = e.target.value;
+  if (e.target.name === "obs") state.obs = e.target.value;
 });
 area.addEventListener("click", (e) => {
   const t = e.target.closest("button"); if (!t || t.disabled) return;
@@ -329,14 +333,17 @@ area.addEventListener("click", (e) => {
     if (cliente.ultimo.barbeiro) state.barbeiro = cliente.ultimo.barbeiro;
     state.step = 3; renderWizard();
   }
+  else if (t.dataset.auth) {
+    sessionStorage.setItem(PENDENTE_KEY, JSON.stringify({ servicos: [...state.servicos], barbeiro: state.barbeiro, cabelo: state.cabelo, data: state.data, hora: state.hora, obs: state.obs }));
+    location.href = `entrar.html?modo=${t.dataset.auth}&volta=agendar`;
+  }
   else if ("ics" in t.dataset) baixarIcs(state.ultimo);
   else if ("novo" in t.dataset) { Object.assign(state, { step: 1, servicos: new Set(), hora: null, obs: "", barbeiro: "any" }); renderWizard(); }
 });
 area.addEventListener("submit", (e) => {
   e.preventDefault();
   const err = $("#formError");
-  if (state.nome.trim().length < 2) { err.textContent = "Informe seu nome."; return; }
-  if (state.tel.replace(/\D/g, "").length < 10) { err.textContent = "Informe um WhatsApp válido com DDD."; return; }
+  if (!cliente) { state.step = 4; renderWizard(); return; }
   const b = salvarAgendamento();
   if (!b) { err.textContent = "Esse horário acabou de ser ocupado. Escolha outro."; state.hora = null; state.step = 3; renderWizard(); return; }
   state.ultimo = b; state.step = 5; renderWizard();
@@ -351,4 +358,61 @@ const fabObs = new IntersectionObserver((ents) => {
 }, { threshold: 0.1 });
 ["inicio", "agendar"].forEach((id) => fabObs.observe($("#" + id)));
 
-renderServicos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();
+/* ===================== PLANOS ===================== */
+const ICONES = {
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/>',
+  crown: '<path d="m3 8 4.5 4L12 5l4.5 7L21 8l-2 11H5Z"/>',
+};
+function renderPlanos() {
+  const meu = cliente?.plano;
+  $("#plansGrid").innerHTML = PLANOS.map((p) => {
+    const ativoAqui = meu?.id === p.id;
+    return `
+    <article class="plan${p.destaque ? " is-featured" : ""}">
+      ${p.destaque ? `<span class="plan-flag">Mais escolhido</span>` : ""}
+      <h3 class="plan-name"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[p.icone]}</svg>${esc(p.nome)}</h3>
+      <p class="plan-desc">${esc(p.desc)}</p>
+      <div class="plan-price">
+        <span class="cur">R$</span><span class="val">${p.preco}</span>
+        <span class="per">${esc(p.sufixo)}<small>${esc(p.nota)}</small></span>
+      </div>
+      ${ativoAqui
+        ? `<div class="plan-btn is-done">✓ Pedido enviado — finalize na barbearia</div>`
+        : `<button class="plan-btn${p.id === "avulso" ? " is-light" : ""}" data-plano="${p.id}">${esc(p.cta)}</button>`}
+      <p class="plan-info">${esc(p.info)}</p>
+      <ul class="plan-list">${p.itens.map((i) => `<li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>${esc(i)}</li>`).join("")}</ul>
+    </article>`;
+  }).join("");
+}
+$("#plansGrid").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-plano]"); if (!b) return;
+  const id = b.dataset.plano;
+  if (id === "avulso") { $("#agendar").scrollIntoView({ behavior: "smooth" }); return; }
+  if (!cliente) { location.href = `entrar.html?modo=cadastro&plano=${id}&volta=planos`; return; }
+  cliente = atualizarConta(cliente.id, { plano: { id, status: "pendente", desde: new Date().toISOString() } });
+  renderPlanos();
+});
+
+/* ===================== CONTA NO TOPO ===================== */
+function renderAuth() {
+  $("#authSlot").innerHTML = cliente
+    ? `<span class="nav-user">Olá, <strong>${esc(cliente.nome.split(" ")[0])}</strong></span><button class="nav-login" id="logout">Sair</button>`
+    : `<a href="entrar.html" class="nav-login">Entrar</a>`;
+}
+$("#authSlot").addEventListener("click", (e) => {
+  if (e.target.id !== "logout") return;
+  sair(); cliente = null; renderAuth(); renderPlanos(); renderWizard();
+});
+
+/* Volta do login com um agendamento em andamento */
+(function retomar() {
+  let p; try { p = JSON.parse(sessionStorage.getItem(PENDENTE_KEY)); } catch {}
+  if (!p) return;
+  sessionStorage.removeItem(PENDENTE_KEY);
+  if (!cliente) return;
+  Object.assign(state, { servicos: new Set(p.servicos.filter((id) => servById[id])), barbeiro: p.barbeiro, cabelo: p.cabelo, data: p.data, hora: p.hora, obs: p.obs || "", step: 4 });
+  if (!state.servicos.size || state.hora === null) state.step = 1;
+})();
+
+renderAuth(); renderServicos(); renderPlanos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();
