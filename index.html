@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barbe Skin — Barbearia</title>
+  <meta name="description" content="Barbe Skin: degradê, navalhado, afro, barba e nevou. Agende seu horário online.">
+  <meta name="theme-color" content="#0e0e0e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="#inicio" class="brand" aria-label="Barbe Skin — início">
+      <span class="brand-mark">BS</span><span class="brand-name">Barbe Skin</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#servicos">Preços</a>
+      <a href="#estilos">Estilos</a>
+      <a href="#barbeiros">Barbeiros</a>
+      <a href="#horarios">Horários</a>
+    </nav>
+    <a href="#agendar" class="btn btn-primary btn-sm">Agendar</a>
+  </header>
+
+  <main>
+    <!-- CAPA -->
+    <section id="inicio" class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Barbearia · Degradê · Afro · Barba</p>
+        <h1 class="hero-title">Barbe<br>Skin</h1>
+        <p class="hero-sub">Do low fade ao nevou, do twist à barba na toalha quente. Escolha o corte, o barbeiro e o horário em menos de 1 minuto.</p>
+        <div class="hero-cta">
+          <a href="#agendar" class="btn btn-primary">Agendar horário</a>
+          <a href="#servicos" class="btn btn-ghost">Ver preços</a>
+        </div>
+        <ul class="hero-facts">
+          <li><strong>3</strong> barbeiros</li>
+          <li><strong>Ter–Sáb</strong> até 22h30</li>
+          <li><strong>Todos</strong> os tipos de cabelo</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS -->
+    <section class="perks" aria-label="Diferenciais">
+      <div class="perk"><span class="perk-ico">✂</span><h3>Seu corte salvo</h3><p>Guardamos pente, altura e detalhes. Repita o mesmo corte com um toque.</p></div>
+      <div class="perk"><span class="perk-ico">◷</span><h3>Horário real</h3><p>A agenda soma a duração de cada serviço — sem atraso, sem espera.</p></div>
+      <div class="perk"><span class="perk-ico">◉</span><h3>Especialista em crespo</h3><p>Afro, twist, tranças e barba sem encravar com técnica certa.</p></div>
+    </section>
+
+    <!-- SERVIÇOS E PREÇOS -->
+    <section id="servicos" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Tabela</p>
+        <h2>Serviços & preços</h2>
+      </div>
+      <div class="tabs" role="tablist" id="servTabs"></div>
+      <ul class="price-list" id="servList"></ul>
+    </section>
+
+    <!-- ESTILOS -->
+    <section id="estilos" class="section section-alt">
+      <div class="section-head">
+        <p class="eyebrow">Catálogo</p>
+        <h2>Encontre seu estilo</h2>
+        <p class="muted">Filtre pelo seu tipo de cabelo e veja os cortes que funcionam pra você.</p>
+      </div>
+      <div class="chips" id="styleFilter"></div>
+      <div class="style-grid" id="styleGrid"></div>
+    </section>
+
+    <!-- BARBEIROS -->
+    <section id="barbeiros" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Equipe</p>
+        <h2>Nossos barbeiros</h2>
+      </div>
+      <div class="barber-grid" id="barberGrid"></div>
+    </section>
+
+    <!-- AGENDAMENTO -->
+    <section id="agendar" class="section section-alt">
+      <div class="section-head">
+        <p class="eyebrow">Agendamento</p>
+        <h2>Marque seu horário</h2>
+      </div>
+      <ol class="steps" id="steps" aria-label="Etapas">
+        <li>Serviços</li><li>Barbeiro</li><li>Dia & hora</li><li>Seus dados</li>
+      </ol>
+      <div class="wizard" id="wizard" aria-live="polite"></div>
+      <div class="summary" id="summary" hidden></div>
+    </section>
+
+    <!-- HORÁRIOS E LOCAL -->
+    <section id="horarios" class="section">
+      <div class="info-grid">
+        <div>
+          <div class="section-head"><p class="eyebrow">Funcionamento</p><h2>Horários</h2></div>
+          <table class="hours" id="hoursTable"></table>
+        </div>
+        <div>
+          <div class="section-head"><p class="eyebrow">Onde estamos</p><h2>Endereço</h2></div>
+          <p class="address" id="address"></p>
+          <a class="btn btn-ghost" id="mapLink" target="_blank" rel="noopener">Abrir no mapa</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="brand-mark">BS</span>
+    <p>© <span id="year"></span> Barbe Skin · <a href="agenda.html">Área do barbeiro</a></p>
+  </footer>
+
+  <a href="#agendar" class="fab btn btn-primary is-hidden" id="fab">Agendar</a>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

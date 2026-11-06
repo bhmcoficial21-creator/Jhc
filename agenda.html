@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda — Barbe Skin</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0e0e0e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand"><span class="brand-mark">BS</span><span class="brand-name">Agenda</span></a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Ver site</a>
+  </header>
+  <main class="section">
+    <div>
+      <p class="note-demo">Versão de demonstração: os agendamentos ficam salvos neste navegador. Na versão final, eles serão sincronizados entre os celulares dos barbeiros, com login.</p>
+      <div class="panel-bar">
+        <button class="btn btn-ghost btn-sm" data-shift="-1" aria-label="Dia anterior">←</button>
+        <input type="date" id="dia" aria-label="Data">
+        <button class="btn btn-ghost btn-sm" data-shift="1" aria-label="Próximo dia">→</button>
+        <button class="btn btn-ghost btn-sm" data-hoje>Hoje</button>
+        <strong id="diaLabel"></strong>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="col-grid" id="cols"></div>
+    </div>
+  </main>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/agenda.js"></script>
+</body>
+</html>
