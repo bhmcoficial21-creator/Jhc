@@ -121,6 +121,8 @@
 
   async function iniciar() {
     try { await document.fonts.load(`400 100px "Bebas Neue"`); await document.fonts.ready; } catch {}
+    // Espera a tela de carregamento sair para o nome se formar à vista
+    if (document.getElementById("pageLoader")) await new Promise((ok) => { addEventListener("barbeskin:pronto", ok, { once: true }); setTimeout(ok, 6000); });
     h1.appendChild(canvas);
     h1.classList.add("is-vapor");
     montar();

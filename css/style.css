@@ -326,3 +326,36 @@ button:disabled { cursor: not-allowed; }
 .hero-title { position: relative; --vapor-color: #ffffff; }
 .hero-title.is-vapor { color: transparent; animation: none; }
 .vapor-canvas { position: absolute; pointer-events: none; }
+
+/* ---------- Tela de carregamento: poste de barbearia 3D ---------- */
+.page-loader { position: fixed; inset: 0; z-index: 1000; display: grid; place-content: center; justify-items: center; gap: .4rem; color: #fff;
+  background: radial-gradient(60% 45% at 50% 40%, rgba(90,130,220,.35), transparent 70%), linear-gradient(180deg, #1c3a74, #0f2147 65%, #0a1733);
+  transition: opacity .6s ease, visibility .6s; }
+.page-loader.is-done { opacity: 0; visibility: hidden; }
+.pole-loader { --r: 22px; --h: 130px; --face: 9px; position: relative; width: 140px; height: 240px; perspective: 700px; transform-style: preserve-3d; }
+.pole-wrapper { position: absolute; inset: 0; transform-style: preserve-3d; animation: pole-spin 2.4s linear infinite; }
+@keyframes pole-spin { to { transform: rotateY(360deg); } }
+.pole-side { position: absolute; left: 50%; top: 50%; width: calc(var(--face) + .6px); height: var(--h); margin: calc(var(--h) / -2) 0 0 calc(var(--face) / -2);
+  transform: rotateY(calc(var(--i) * 22.5deg)) translateZ(var(--r)); backface-visibility: hidden; outline: 1px solid transparent;
+  background: repeating-linear-gradient(-45deg, #ffffff 0 9px, #c8202f 9px 18px, #ffffff 18px 27px, #2453b3 27px 36px);
+  background-size: calc(var(--face) * 16) 100%; background-position: calc(var(--i) * var(--face) * -1) 0; }
+/* brilho de vidro fixo por cima — dá volume de cilindro enquanto as listras giram */
+.pole-glass { position: absolute; left: 50%; top: 50%; width: calc(var(--r) * 2); height: var(--h); margin: calc(var(--h) / -2) 0 0 calc(var(--r) * -1);
+  border-radius: 4px; transform: translateZ(calc(var(--r) + 2px)); pointer-events: none;
+  background: linear-gradient(90deg, rgba(10,20,45,.55) 0%, rgba(255,255,255,.05) 22%, rgba(255,255,255,.55) 34%, rgba(255,255,255,.05) 48%, rgba(10,20,45,.15) 70%, rgba(10,20,45,.6) 100%); }
+.pole-cap { position: absolute; left: 50%; width: 60px; height: 16px; margin-left: -30px; border-radius: 8px; transform: translateZ(calc(var(--r) + 3px));
+  background: linear-gradient(90deg, #5d6678, #e9edf3 32%, #ffffff 40%, #b9c0cc 60%, #4d5566); box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.pole-cap-top { top: calc(50% - var(--h) / 2 - 14px); }
+.pole-cap-bottom { top: calc(50% + var(--h) / 2 - 2px); }
+.pole-ball { position: absolute; left: 50%; top: calc(50% - var(--h) / 2 - 38px); width: 28px; height: 28px; margin-left: -14px; border-radius: 50%;
+  transform: translateZ(calc(var(--r) + 3px)); background: radial-gradient(circle at 35% 30%, #fff 0 8%, #e0414a 30%, #8f1520 75%); box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+.pole-shadow { position: absolute; left: 50%; top: calc(50% + var(--h) / 2 + 22px); width: 90px; height: 18px; margin-left: -45px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(5,10,25,.75), rgba(5,10,25,.35) 55%, transparent); animation: pole-shadow 2.4s ease-in-out infinite; }
+@keyframes pole-shadow { 50% { transform: scaleX(.85); opacity: .7; } }
+.loader-name { font: 400 2.4rem/1 var(--font-display); letter-spacing: .08em; margin-top: .4rem; }
+.loader-txt { font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+.loader-txt span { animation: blink 1.2s infinite; }
+.loader-txt span:nth-child(2) { animation-delay: .2s; }
+.loader-txt span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pole-wrapper, .pole-shadow, .loader-txt span { animation: none; } }
