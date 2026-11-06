@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbe9b4"/>
+      <stop offset=".45" stop-color="#d9b062"/>
+      <stop offset=".75" stop-color="#a77a2e"/>
+      <stop offset="1" stop-color="#6e4d1c"/>
+    </linearGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a6326"/>
+      <stop offset=".3" stop-color="#f6dfa0"/>
+      <stop offset=".55" stop-color="#c39443"/>
+      <stop offset="1" stop-color="#7a5620"/>
+    </linearGradient>
+    <radialGradient id="j" cx=".35" cy=".35" r=".7">
+      <stop offset="0" stop-color="#fff6dc"/>
+      <stop offset=".5" stop-color="#e2be72"/>
+      <stop offset="1" stop-color="#7a5620"/>
+    </radialGradient>
+  </defs>
+  <!-- corpo da coroa: 5 pontas -->
+  <path d="M14 92 L8 30 L50 62 L72 14 L100 56 L128 14 L150 62 L192 30 L186 92 Z" fill="url(#g)" stroke="#5a3e14" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- brilho interno -->
+  <path d="M22 86 L18 44 L50 70 L72 28 L100 66 L128 28 L150 70 L182 44 L178 86 Z" fill="none" stroke="#fff3cf" stroke-opacity=".45" stroke-width="2"/>
+  <!-- faixa -->
+  <rect x="12" y="88" width="176" height="22" rx="4" fill="url(#b)" stroke="#5a3e14" stroke-width="2.5"/>
+  <line x1="18" y1="94" x2="182" y2="94" stroke="#fff3cf" stroke-opacity=".5" stroke-width="1.5"/>
+  <!-- pedras da faixa -->
+  <circle cx="56" cy="99" r="5" fill="#141210" stroke="#f3d892" stroke-width="2"/>
+  <circle cx="100" cy="99" r="6.5" fill="#141210" stroke="#f3d892" stroke-width="2"/>
+  <circle cx="144" cy="99" r="5" fill="#141210" stroke="#f3d892" stroke-width="2"/>
+  <!-- bolinhas nas pontas -->
+  <circle cx="8" cy="28" r="7" fill="url(#j)" stroke="#5a3e14" stroke-width="2"/>
+  <circle cx="72" cy="12" r="8" fill="url(#j)" stroke="#5a3e14" stroke-width="2"/>
+  <circle cx="128" cy="12" r="8" fill="url(#j)" stroke="#5a3e14" stroke-width="2"/>
+  <circle cx="192" cy="28" r="7" fill="url(#j)" stroke="#5a3e14" stroke-width="2"/>
+  <!-- ponta central maior (sobre o S) -->
+  <circle cx="100" cy="54" r="6" fill="#141210" stroke="#f3d892" stroke-width="2"/>
+</svg>

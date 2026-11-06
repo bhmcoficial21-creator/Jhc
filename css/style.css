@@ -616,3 +616,17 @@ body.menu-open { overflow: hidden; }
 .crew-banner figcaption small { display: block; font: 600 .68rem/1 var(--font-body); letter-spacing: .14em; color: rgba(255,255,255,.7); margin-bottom: .4rem; }
 /* Celular em pé: enquadra poste + vitrine e mira a câmera na porta */
 @media (max-aspect-ratio: 3/4) { .ld-photo { translate: -38% -50%; transform-origin: 46% 44%; } }
+
+/* ---------- Coroa 3D sobre o MSN (faz parte do símbolo e gira junto) ---------- */
+.l3-crown { position: absolute; left: 40.5%; top: 17.4%; width: 19%; aspect-ratio: 200 / 120; transform-style: preserve-3d;
+  transform: translateZ(calc(var(--u) * 84)); pointer-events: none; }
+.l3-crown-spin { position: absolute; inset: 0; transform-style: preserve-3d; animation: crown-spin 8s linear infinite; }
+/* 8 cópias empilhadas = espessura de metal; as de trás mais escuras */
+.l3-crown-spin img { position: absolute; inset: 0; width: 100%; height: 100%;
+  transform: translateZ(calc(var(--u) * (3.5 - var(--k)) * 1.1)); filter: brightness(calc(1 - var(--k) * .075)); }
+.l3-crown-spin img:first-child { filter: drop-shadow(0 0 calc(var(--u) * 6) rgba(255,214,140,.35)); }
+@keyframes crown-spin { to { transform: rotateY(360deg); } }
+@media (prefers-reduced-motion: reduce) { .l3-crown-spin { animation: none; } }
+/* no carregamento, a coroa é a última peça: desce e encaixa sobre o S */
+.ld-brand .l3-crown { transition: transform 1s cubic-bezier(.2,1.3,.3,1) .55s, opacity .6s .55s; }
+.page-loader:not(.is-inside) .ld-brand .l3-crown { transform: translateZ(calc(var(--u) * 300)) translateY(-160%); opacity: 0; }
