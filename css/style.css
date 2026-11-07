@@ -609,7 +609,7 @@ body.menu-open { overflow: hidden; }
   background:
     linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.05) 22%, rgba(255,255,255,.55) 30%, rgba(255,255,255,.08) 40%, rgba(0,0,0,0) 62%, rgba(0,0,0,.25) 82%, rgba(0,0,0,.6) 100%); }
 .ph-glass::after { content: ""; position: absolute; left: 4%; right: 4%; top: 24%; height: 2px; border-radius: 2px; background: rgba(255,255,255,.75); filter: blur(.6px); }
-@media (prefers-reduced-motion: reduce) { .ph-stripes, .tool * { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { .ph-stripes,  }
 .page-loader.is-open .embers { opacity: 0; transition: opacity .6s; }
 
 /* ---------- Vídeo de fundo "Na cadeira" (template Hero Background Video) ---------- */
@@ -740,27 +740,7 @@ html.is-loading body { overflow: hidden; }
 @keyframes flare { 0% { opacity: 0; transform: scale(.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: scale(1.3); } }
 
 /* palco das ferramentas */
-.ld-tools { position: absolute; z-index: 3; left: 50%; top: 42%; width: min(62vw, 300px); aspect-ratio: 1; translate: -50% -50%; }
-.tool { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; opacity: 0; transition: opacity .45s, filter .45s, transform .6s cubic-bezier(.2,.8,.2,1); }
-.tool-tesoura { transform: rotate(-32deg) scale(.92); }
-.tool-navalha { transform: rotate(-6deg) scale(1.05); }
-.tool-maquina { transform: rotate(16deg) scale(.95); }
-.tool.is-draw { opacity: 1; }
-.tool.is-out { opacity: 0; filter: blur(10px); transform: scale(1.25); }
-/* traço de luz dourada se desenhando */
-.t-line * { fill: none; stroke: #ffd98f; stroke-width: 2.2; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 1 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 3px rgba(255,210,130,.95)) drop-shadow(0 0 10px rgba(255,170,60,.7)); }
-.tool.is-draw .t-line * { animation: trace .95s cubic-bezier(.6,0,.3,1) forwards; }
-@keyframes trace { to { stroke-dashoffset: 0; } }
-.t-line { transition: opacity .5s; }
-.tool.is-solid .t-line { opacity: .0; }
-/* a ferramenta real aparece de baixo para cima, como se materializasse */
-.t-solid { opacity: 0; filter: drop-shadow(0 14px 18px rgba(0,0,0,.7)); }
-.tool.is-solid .t-solid { opacity: 1; -webkit-mask: linear-gradient(0deg, #000 45%, transparent 55%) 0 100% / 100% 220% no-repeat; mask: linear-gradient(0deg, #000 45%, transparent 55%) 0 100% / 100% 220% no-repeat;
-  animation: materialize .55s ease-out forwards; }
-@keyframes materialize { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 100%; mask-position: 0 100%; } }
-/* brilho que passa pelo metal */
-.tool.is-solid::after { content: none; }
+.ld-tools { position: absolute; z-index: 3; left: 50%; top: 42%; translate: -50% -50%; }
 
 /* logo final */
 .ld-logo { position: absolute; z-index: 3; left: 50%; top: 42%; width: min(66vw, 340px); translate: -50% -50%; display: grid; justify-items: center; gap: 1rem; opacity: 0; transform: scale(.75); pointer-events: none;
@@ -776,3 +756,28 @@ html.is-loading body { overflow: hidden; }
 .page-loader.is-leaving .ld-ui { opacity: 0; }
 .ld-kicker { font: 600 .7rem/1 var(--font-body); letter-spacing: .26em; text-transform: uppercase; color: #e2c27f; min-height: 1em; }
 .ld-pct { font: 600 clamp(2.4rem, 11vw, 3.4rem)/1 var(--font-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; text-shadow: 0 4px 20px rgba(0,0,0,.6); margin-bottom: .5rem; }
+
+/* ---------- Ferramentas reais (fotos) surgindo da fumaça ---------- */
+/* o grupo todo se mistura com a fumaça: o preto da foto some e só o metal aparece */
+.ld-tools { width: min(84vw, 460px); aspect-ratio: 1; }
+.tool { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; opacity: 0;
+  transform: scale(1.12); filter: blur(14px) brightness(.25);
+  transition: opacity .7s ease, filter .9s cubic-bezier(.2,.8,.2,1), transform 1.4s cubic-bezier(.2,.8,.2,1); }
+.tool-pic { position: relative; display: block; isolation: isolate; line-height: 0; filter: drop-shadow(0 18px 22px rgba(0,0,0,.75)) drop-shadow(0 0 18px rgba(226,180,90,.18)); }
+.tool-pic img { display: block; width: 100%; height: auto; }
+.tool-tesoura .tool-pic, .tool-pente .tool-pic { width: 100%; }
+.tool-navalha .tool-pic { width: 84%; }
+.tool-maquina .tool-pic { width: 80%; }
+.tool.is-draw { opacity: 1; filter: blur(5px) brightness(.55); transform: scale(1.04); }
+.tool.is-solid { opacity: 1; filter: none; transform: scale(1); }
+.tool.is-out { opacity: 0; filter: blur(16px) brightness(.4); transform: scale(.94); transition-duration: .45s; }
+/* luz dourada passando pelo metal: color-dodge sobre preto continua preto, então só o metal brilha */
+.tool-shine { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: 0;
+  -webkit-mask: var(--src) center / 100% 100% no-repeat; mask: var(--src) center / 100% 100% no-repeat;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,214,150,.35) 47%, rgba(255,244,220,.75) 50%, rgba(255,214,150,.35) 53%, transparent 60%) 120% 0 / 250% 100% no-repeat; }
+.tool.is-solid .tool-shine { animation: tool-shine 1s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes tool-shine { 0% { opacity: 1; background-position: 120% 0; } 85% { opacity: 1; } 100% { opacity: 0; background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .tool, .tool-shine { transition: none; animation: none; } }
+
+.tool-tesoura .tool-pic { width: 96%; transform: rotate(-12deg); }
+.tool-pente .tool-pic { width: 92%; transform: rotate(-8deg); }

@@ -8,7 +8,7 @@
   const $id = (i) => document.getElementById(i);
   const pct = $id("loaderPct"), bar = $id("loaderBar"), kicker = $id("ldKicker"), canvas = $id("ldSmoke"), flare = $id("ldFlare");
   const ferramentas = [...el.querySelectorAll(".tool")];
-  const nomes = ["Afiando a tesoura", "Passando a navalha", "Ligando a máquina"];
+  const nomes = ["Afiando a tesoura", "Passando a navalha", "Penteando", "Ligando a máquina"];
   const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("is-loading");
 
@@ -76,7 +76,7 @@
   setTimeout(() => (carregado = true), 8000);  // segurança
 
   /* ---------- Linha do tempo ---------- */
-  const DESENHO = 800, SOLIDO = 650, SAIDA = 200;          // ms de cada ferramenta
+  const DESENHO = 550, SOLIDO = 900, SAIDA = 150;          // ms de cada ferramenta
   const CICLO = DESENHO + SOLIDO + SAIDA;
   const usar = visto || reduz ? [] : ferramentas;           // visitas seguintes: direto ao logo
   const TOTAL = Math.max(700, usar.length * CICLO);
