@@ -1,99 +1,118 @@
-/* Abertura do site:
-   1) carregando: parede de madeira, rachadura brilhando, brasas, logo 3D e poste girando (0–100%)
-   2) 100%: a tesoura desce cortando a madeira na rachadura (faíscas + linha de corte)
-   3) a parede abre ao meio e aparece o barbeiro na poltrona; depois o site entra */
+/* Abertura:
+   salão escuro com fumaça dourada → tesoura, navalha e máquina surgem desenhadas em luz
+   e "viram reais" com faíscas → logo 3D com a coroa → site.
+   O poste embaixo mostra o carregamento real (0–100%). */
 (function () {
   const el = document.getElementById("pageLoader");
   if (!el) return;
   const $id = (i) => document.getElementById(i);
-  const pct = $id("loaderPct"), bar = $id("loaderBar"), kicker = $id("ldKicker"), canvas = $id("embers");
+  const pct = $id("loaderPct"), bar = $id("loaderBar"), kicker = $id("ldKicker"), canvas = $id("ldSmoke"), flare = $id("ldFlare");
+  const ferramentas = [...el.querySelectorAll(".tool")];
+  const nomes = ["Afiando a tesoura", "Passando a navalha", "Ligando a máquina"];
   const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("is-loading");
 
   let visto = false;
   try { visto = sessionStorage.getItem("ld-visto") === "1"; sessionStorage.setItem("ld-visto", "1"); } catch {}
 
-  /* ---------- Brasas e faíscas (canvas) ---------- */
+  /* ---------- Fumaça dourada, pó e faíscas ---------- */
   const ctx = canvas.getContext("2d");
-  let W = 0, H = 0, dpr = 1, parts = [], corteY = -1, rodando = true;
-  function tamanho() {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    W = canvas.width = innerWidth * dpr; H = canvas.height = innerHeight * dpr;
-  }
+  let W = 0, H = 0, dpr = 1, rodando = true;
+  function tamanho() { dpr = Math.min(devicePixelRatio || 1, 1.5); W = canvas.width = innerWidth * dpr; H = canvas.height = innerHeight * dpr; }
   tamanho(); addEventListener("resize", tamanho);
-  const xRacha = () => W * 0.49;
-  function brasa() {   // sobe devagar da rachadura
-    parts.push({ x: xRacha() + (Math.random() - 0.5) * 40 * dpr, y: H * (0.35 + Math.random() * 0.5), vx: (Math.random() - 0.5) * 0.3 * dpr,
-      vy: -(0.3 + Math.random() * 0.8) * dpr, r: (0.6 + Math.random() * 1.6) * dpr, vida: 1, dec: 0.004 + Math.random() * 0.006, cor: 30 + Math.random() * 15 });
-  }
-  function faisca(y) { // espirra da ponta da tesoura
-    for (let i = 0; i < 6; i++) parts.push({ x: xRacha(), y, vx: (Math.random() - 0.5) * 7 * dpr, vy: (Math.random() - 0.9) * 5 * dpr,
-      r: (0.6 + Math.random() * 1.4) * dpr, vida: 1, dec: 0.025 + Math.random() * 0.03, cor: 40 + Math.random() * 15, g: 0.18 * dpr });
+  // uma "nuvem" pré-desenhada, reaproveitada em vários tamanhos
+  const nuvem = document.createElement("canvas"); nuvem.width = nuvem.height = 256;
+  (function () {
+    const c = nuvem.getContext("2d");
+    for (let i = 0; i < 26; i++) {
+      const x = 128 + (Math.random() - 0.5) * 120, y = 128 + (Math.random() - 0.5) * 120, r = 30 + Math.random() * 70;
+      const g = c.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, "rgba(190,150,95,0.07)"); g.addColorStop(1, "rgba(190,150,95,0)");
+      c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill();
+    }
+  })();
+  const fumaca = Array.from({ length: 10 }, () => ({ x: Math.random(), y: 0.15 + Math.random() * 0.95, s: 0.45 + Math.random() * 0.6, a: Math.random() * 6.28,
+    va: (Math.random() - 0.5) * 0.002, vx: (Math.random() - 0.5) * 0.0004, vy: -0.0002 - Math.random() * 0.0004, o: 0.35 + Math.random() * 0.4 }));
+  let parts = [];
+  const po = () => parts.push({ x: Math.random() * W, y: H * (0.3 + Math.random() * 0.7), vx: (Math.random() - 0.5) * 0.25 * dpr, vy: -(0.15 + Math.random() * 0.4) * dpr,
+    r: (0.5 + Math.random() * 1.3) * dpr, vida: 1, dec: 0.003 + Math.random() * 0.004, h: 38 + Math.random() * 10 });
+  function faiscas() {
+    const cx = W / 2, cy = H * 0.42;
+    for (let i = 0; i < 70; i++) {
+      const ang = Math.random() * 6.283, v = (2 + Math.random() * 7) * dpr;
+      parts.push({ x: cx + Math.cos(ang) * 30 * dpr, y: cy + Math.sin(ang) * 30 * dpr, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v - 2 * dpr, g: 0.12 * dpr,
+        r: (0.6 + Math.random() * 1.5) * dpr, vida: 1, dec: 0.018 + Math.random() * 0.02, h: 40 + Math.random() * 12 });
+    }
+    flare.classList.remove("is-on"); void flare.offsetWidth; flare.classList.add("is-on");
   }
   function desenhar() {
     if (!rodando) return;
     ctx.clearRect(0, 0, W, H);
-    if (!reduz && !el.classList.contains("is-open") && Math.random() < 0.5) brasa();
-    if (corteY >= 0) faisca(corteY * dpr);
+    ctx.globalCompositeOperation = "screen";
+    for (const f of fumaca) {
+      if (!reduz) { f.x += f.vx; f.y += f.vy; f.a += f.va; if (f.y < -0.3) { f.y = 1.2; f.x = Math.random(); } }
+      const tam = Math.max(W, H) * 0.55 * f.s;
+      ctx.save(); ctx.globalAlpha = f.o; ctx.translate(f.x * W, f.y * H); ctx.rotate(f.a);
+      ctx.drawImage(nuvem, -tam / 2, -tam / 2, tam, tam); ctx.restore();
+    }
+    ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "lighter";
+    if (!reduz && Math.random() < 0.35) po();
     parts = parts.filter((p) => p.vida > 0);
     for (const p of parts) {
-      p.x += p.vx; p.y += p.vy; if (p.g) p.vy += p.g; p.vida -= p.dec;
+      p.x += p.vx; p.y += p.vy; if (p.g) { p.vy += p.g; p.vx *= 0.985; } p.vida -= p.dec;
       const a = Math.max(0, p.vida);
-      ctx.fillStyle = `hsla(${p.cor}, 100%, ${55 + a * 25}%, ${a})`;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.6 + a * 0.6), 0, 6.283); ctx.fill();
+      ctx.fillStyle = `hsla(${p.h},100%,${60 + a * 25}%,${a})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.5 + a * 0.7), 0, 6.283); ctx.fill();
     }
     ctx.globalCompositeOperation = "source-over";
     requestAnimationFrame(desenhar);
   }
   requestAnimationFrame(desenhar);
 
-  /* ---------- Progresso real (nunca anda para trás) ---------- */
-  const MIN = visto ? 700 : 2200;
+  /* ---------- Carregamento real ---------- */
+  let carregado = document.readyState === "complete";
+  if (!carregado) addEventListener("load", () => (carregado = true));
+  setTimeout(() => (carregado = true), 8000);  // segurança
+
+  /* ---------- Linha do tempo ---------- */
+  const DESENHO = 800, SOLIDO = 650, SAIDA = 200;          // ms de cada ferramenta
+  const CICLO = DESENHO + SOLIDO + SAIDA;
+  const usar = visto || reduz ? [] : ferramentas;           // visitas seguintes: direto ao logo
+  const TOTAL = Math.max(700, usar.length * CICLO);
   const inicio = performance.now();
-  let alvo = 35, mostrado = 0, fim = false;
-  const subir = (v) => { alvo = Math.max(alvo, v); };
-  if (document.readyState !== "loading") subir(60); else document.addEventListener("DOMContentLoaded", () => subir(60));
-  document.fonts?.ready.then(() => subir(85));
-  if (document.readyState === "complete") subir(100); else addEventListener("load", () => subir(100));
-  setTimeout(() => subir(100), 7000);
-  const frases = [[0, "Preparando a cadeira"], [40, "Afiando a tesoura"], [75, "Ligando a máquina"], [100, "Pronto"]];
+  let mostrado = 0, fase = -1, final = false;
+
+  function mostrarFerramenta(i) {
+    ferramentas.forEach((t, k) => { if (k !== i) t.classList.remove("is-draw", "is-solid"); });
+    const t = ferramentas[i]; kicker.textContent = nomes[i];
+    t.classList.remove("is-out"); t.classList.add("is-draw");
+    setTimeout(() => { t.classList.add("is-solid"); faiscas(); }, DESENHO);
+    setTimeout(() => t.classList.add("is-out"), DESENHO + SOLIDO);
+  }
 
   function quadro(agora) {
-    const tempo = Math.max(0, Math.min(1, (agora - inicio) / MIN)) * 100;
-    const teto = Math.min(alvo, tempo);
-    mostrado += Math.max(0.35, (teto - mostrado) * 0.1);
-    if (mostrado > teto) mostrado = teto;
+    const t = agora - inicio;
+    const i = Math.min(usar.length - 1, Math.floor(t / CICLO));
+    if (usar.length && i !== fase && t < TOTAL) { fase = i; mostrarFerramenta(i); }
+    // a % acompanha a sequência, mas só chega a 100 quando a página terminou de carregar
+    const alvo = Math.min(carregado ? 100 : 92, (t / TOTAL) * 100);
+    mostrado += Math.max(0.3, (alvo - mostrado) * 0.12);
+    if (mostrado > alvo) mostrado = alvo;
     const v = Math.max(0, Math.floor(mostrado));
     pct.textContent = v; bar.style.width = v + "%"; el.setAttribute("aria-valuenow", v);
-    kicker.textContent = frases.filter((f) => v >= f[0]).pop()[1];
-    if (v >= 100 && !fim) { fim = true; cortar(); return; }
+    if (v >= 100 && t >= TOTAL && !final) { final = true; mostrarLogo(); return; }
     requestAnimationFrame(quadro);
   }
   requestAnimationFrame(quadro);
 
-  /* ---------- Corte com a tesoura, abertura e revelação ---------- */
-  const DUR_CORTE = visto ? 550 : 1250;
-  function cortar() {
-    if (reduz) return abrir();
-    el.classList.add("is-cutting");
-    const t0 = performance.now(), tesoura = el.querySelector(".tesoura-wrap"), linha = el.querySelector(".cut-line");
-    (function descer(agora) {
-      const p = Math.min(1, (agora - t0) / DUR_CORTE);
-      const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;      // acelera e freia
-      const y = -0.25 * innerHeight + e * 1.35 * innerHeight;               // de cima para fora da tela
-      tesoura.style.transform = `translate3d(-50%, ${y}px, 0)`;
-      const ponta = y + tesoura.offsetHeight * 0.96;                          // ponta das lâminas
-      corteY = Math.min(innerHeight, Math.max(0, ponta));
-      linha.style.transform = `scaleY(${(corteY / innerHeight).toFixed(4)})`;
-      if (p < 1) requestAnimationFrame(descer);
-      else { corteY = -1; abrir(); }
-    })(t0);
-  }
-  function abrir() {
-    el.classList.add("is-open");                    // portas de madeira se abrem
-    setTimeout(() => { kicker.textContent = ""; }, 200);
-    const espera = reduz ? 500 : visto ? 700 : 2000;   // tempo mostrando o barbeiro
+  function mostrarLogo() {
+    ferramentas.forEach((t) => t.classList.add("is-out"));
+    kicker.textContent = "Bem-vindo";
+    el.classList.add("is-logo");
+    if (!reduz) setTimeout(faiscas, 250);
+    const espera = reduz ? 400 : visto ? 800 : 1800;
+    setTimeout(() => el.classList.add("is-leaving"), espera - 500);
     setTimeout(() => {
       el.classList.add("is-done");
       document.documentElement.classList.remove("is-loading");

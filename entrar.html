@@ -15,51 +15,20 @@
 </head>
 <body class="auth-page">
   <div class="page-loader" id="pageLoader" role="progressbar" aria-label="Carregando o site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <div class="cut-reveal" aria-hidden="true">
-      <img src="img/dono-poltrona.jpg" alt="">
-      <div class="reveal-cap"><small>Fundador &amp; barbeiro</small><strong>Messin do Corte</strong></div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+      <linearGradient id="aco" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3b4249"/><stop offset=".28" stop-color="#c9d0d7"/><stop offset=".42" stop-color="#fff"/><stop offset=".58" stop-color="#9aa3ad"/><stop offset="1" stop-color="#2c3238"/></linearGradient>
+      <linearGradient id="aco2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".35" stop-color="#b9c1c9"/><stop offset=".6" stop-color="#e9edf0"/><stop offset="1" stop-color="#6b737b"/></linearGradient>
+      <linearGradient id="cabo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4f56"/><stop offset=".35" stop-color="#16181b"/><stop offset=".7" stop-color="#2b2f34"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
+      <radialGradient id="ouro" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff4cf"/><stop offset=".45" stop-color="#d8ad55"/><stop offset="1" stop-color="#6e4b17"/></radialGradient>
+    </defs></svg>
+    <div class="ld-room" aria-hidden="true"></div>
+    <canvas class="ld-smoke" id="ldSmoke" aria-hidden="true"></canvas>
+    <div class="ld-flare" id="ldFlare" aria-hidden="true"></div>
+    <div class="ld-tools" aria-hidden="true">
+      <svg class="tool tool-tesoura" viewBox="0 0 200 430" aria-hidden="true"><g class="t-solid"><path d="M93 168 C 97 240, 104 330, 109 418 L 113 412 C 121 322, 125 236, 121 172 Z" fill="url(#aco)" stroke="#20252a" stroke-width="1"/><path d="M121 172 C 112 140, 92 118, 78 98" fill="none" stroke="url(#cabo)" stroke-width="15" stroke-linecap="round"/><circle cx="58" cy="66" r="38" fill="none" stroke="url(#cabo)" stroke-width="13"/><path d="M28 96 C 18 118, 22 138, 40 146" fill="none" stroke="url(#cabo)" stroke-width="9" stroke-linecap="round"/><path d="M107 168 C 103 240, 96 330, 91 418 L 87 412 C 79 322, 75 236, 79 172 Z" fill="url(#aco)" stroke="#20252a" stroke-width="1"/><path d="M79 172 C 88 140, 108 118, 122 98" fill="none" stroke="url(#cabo)" stroke-width="15" stroke-linecap="round"/><circle cx="142" cy="66" r="38" fill="none" stroke="url(#cabo)" stroke-width="13"/><circle cx="100" cy="170" r="11" fill="url(#ouro)" stroke="#4a3210" stroke-width="1.5"/><path d="M109 418 C 104 330, 97 240, 93 168" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.2"/><path d="M93 167 L107 173" stroke="#4a3210" stroke-width="2.4" stroke-linecap="round"/></g><g class="t-line"><path d="M93 168 C 97 240, 104 330, 109 418 L 113 412 C 121 322, 125 236, 121 172 Z" pathLength="1"/><path d="M121 172 C 112 140, 92 118, 78 98" pathLength="1"/><circle cx="58" cy="66" r="38" pathLength="1"/><path d="M28 96 C 18 118, 22 138, 40 146" pathLength="1"/><path d="M107 168 C 103 240, 96 330, 91 418 L 87 412 C 79 322, 75 236, 79 172 Z" pathLength="1"/><path d="M79 172 C 88 140, 108 118, 122 98" pathLength="1"/><circle cx="142" cy="66" r="38" pathLength="1"/><circle cx="100" cy="170" r="11" pathLength="1"/></g></svg>
+      <svg class="tool tool-navalha" viewBox="0 0 300 300" aria-hidden="true"><g class="t-solid"><path d="M70 128 C 92 170, 150 236, 222 268 C 236 274, 248 262, 240 250 C 176 214, 116 160, 86 118 Z" fill="url(#cabo)" stroke="#000" stroke-width="1"/><path d="M58 60 L 236 30 C 246 28, 252 36, 250 46 L 246 74 C 190 96, 120 110, 70 118 C 62 119, 56 112, 56 104 Z" fill="url(#aco2)" stroke="#20252a" stroke-width="1"/><path d="M58 100 C 46 104, 40 116, 48 126 C 54 132, 62 128, 64 120" fill="url(#aco)" stroke="#20252a" stroke-width="1"/><circle cx="72" cy="112" r="6" fill="url(#ouro)" stroke="#4a3210" stroke-width="1"/><circle cx="228" cy="262" r="4.5" fill="url(#ouro)" stroke="#4a3210" stroke-width="1"/><path d="M62 64 L 236 34" stroke="#fff" stroke-opacity=".7" stroke-width="2.2"/><path d="M72 116 C 122 108, 190 94, 245 72" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="1.4"/><path d="M96 150 C 130 192, 170 228, 214 252" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="5" stroke-linecap="round"/></g><g class="t-line"><path d="M70 128 C 92 170, 150 236, 222 268 C 236 274, 248 262, 240 250 C 176 214, 116 160, 86 118 Z" pathLength="1"/><path d="M58 60 L 236 30 C 246 28, 252 36, 250 46 L 246 74 C 190 96, 120 110, 70 118 C 62 119, 56 112, 56 104 Z" pathLength="1"/><path d="M58 100 C 46 104, 40 116, 48 126 C 54 132, 62 128, 64 120" pathLength="1"/><circle cx="72" cy="112" r="6" pathLength="1"/><circle cx="228" cy="262" r="4.5" pathLength="1"/></g></svg>
+      <svg class="tool tool-maquina" viewBox="0 0 300 320" aria-hidden="true"><g class="t-solid"><path d="M112 92 L 188 92 C 198 92, 204 100, 204 110 L 210 260 C 211 282, 196 296, 176 296 L 124 296 C 104 296, 89 282, 90 260 L 96 110 C 96 100, 102 92, 112 92 Z" fill="url(#cabo)" stroke="#000" stroke-width="1"/><path d="M98 52 L 202 52 L 206 92 L 94 92 Z" fill="url(#aco)" stroke="#20252a" stroke-width="1"/><rect x="94" y="92" width="112" height="9" rx="2" fill="url(#ouro)"/><rect x="136" y="130" width="28" height="46" rx="12" fill="#0b0c0e" stroke="#5a6068" stroke-width="2"/><circle cx="150" cy="268" r="7" fill="url(#ouro)"/><path d="M98 52 L 202 52" stroke="#1c2024" stroke-width="5" stroke-dasharray="2.5 3"/><path d="M108 206 H192 M107 218 H193 M106 230 H194 M105 242 H195" stroke="#3a3f45" stroke-width="3"/><path d="M118 104 L 114 270" stroke="#fff" stroke-opacity=".14" stroke-width="7" stroke-linecap="round"/><rect x="141" y="136" width="18" height="16" rx="7" fill="#c9a25a"/></g><g class="t-line"><path d="M112 92 L 188 92 C 198 92, 204 100, 204 110 L 210 260 C 211 282, 196 296, 176 296 L 124 296 C 104 296, 89 282, 90 260 L 96 110 C 96 100, 102 92, 112 92 Z" pathLength="1"/><path d="M98 52 L 202 52 L 206 92 L 94 92 Z" pathLength="1"/><rect x="94" y="92" width="112" height="9" rx="2" pathLength="1"/><rect x="136" y="130" width="28" height="46" rx="12" pathLength="1"/><circle cx="150" cy="268" r="7" pathLength="1"/></g></svg>
     </div>
-    <div class="cut-half cut-left" aria-hidden="true"><span class="wood"></span></div>
-    <div class="cut-half cut-right" aria-hidden="true"><span class="wood"></span></div>
-    <canvas class="embers" id="embers" aria-hidden="true"></canvas>
-    <span class="cut-line" aria-hidden="true"></span>
-    <div class="tesoura-wrap" aria-hidden="true"><svg class="tesoura" viewBox="0 0 200 430" aria-hidden="true">
-        <defs>
-          <linearGradient id="aco" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#3b4249"/><stop offset=".28" stop-color="#c9d0d7"/><stop offset=".42" stop-color="#ffffff"/>
-            <stop offset=".58" stop-color="#9aa3ad"/><stop offset="1" stop-color="#2c3238"/>
-          </linearGradient>
-          <linearGradient id="cabo" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#4a4f56"/><stop offset=".35" stop-color="#16181b"/><stop offset=".7" stop-color="#2b2f34"/><stop offset="1" stop-color="#0b0c0e"/>
-          </linearGradient>
-          <radialGradient id="parafuso" cx=".35" cy=".3" r=".75">
-            <stop offset="0" stop-color="#fff4cf"/><stop offset=".45" stop-color="#d8ad55"/><stop offset="1" stop-color="#6e4b17"/>
-          </radialGradient>
-          <filter id="somb" x="-30%" y="-10%" width="160%" height="130%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity=".6"/></filter>
-        </defs>
-        <g filter="url(#somb)">
-          <!-- metade A: argola esquerda + lâmina da direita -->
-          <g class="tes-a">
-            <path d="M93 168 C 97 240, 104 330, 109 418 L 113 412 C 121 322, 125 236, 121 172 Z" fill="url(#aco)" stroke="#20252a" stroke-width="1"/>
-            <path d="M109 418 C 104 330, 97 240, 93 168" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.2"/>
-            <path d="M121 172 C 112 140, 92 118, 78 98" fill="none" stroke="url(#cabo)" stroke-width="15" stroke-linecap="round"/>
-            <circle cx="58" cy="66" r="38" fill="none" stroke="url(#cabo)" stroke-width="13"/>
-            <circle cx="58" cy="66" r="38" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2" stroke-dasharray="40 200" transform="rotate(-140 58 66)"/>
-            <path d="M28 96 C 18 118, 22 138, 40 146" fill="none" stroke="url(#cabo)" stroke-width="9" stroke-linecap="round"/>
-          </g>
-          <!-- metade B: argola direita + lâmina da esquerda (espelhada) -->
-          <g class="tes-b">
-            <path d="M107 168 C 103 240, 96 330, 91 418 L 87 412 C 79 322, 75 236, 79 172 Z" fill="url(#aco)" stroke="#20252a" stroke-width="1"/>
-            <path d="M91 418 C 96 330, 103 240, 107 168" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.2"/>
-            <path d="M79 172 C 88 140, 108 118, 122 98" fill="none" stroke="url(#cabo)" stroke-width="15" stroke-linecap="round"/>
-            <circle cx="142" cy="66" r="38" fill="none" stroke="url(#cabo)" stroke-width="13"/>
-            <circle cx="142" cy="66" r="38" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2" stroke-dasharray="40 200" transform="rotate(-40 142 66)"/>
-          </g>
-          <!-- parafuso dourado -->
-          <circle cx="100" cy="170" r="11" fill="url(#parafuso)" stroke="#4a3210" stroke-width="1.5"/>
-          <path d="M93 167 L107 173" stroke="#4a3210" stroke-width="2.4" stroke-linecap="round"/>
-        </g>
-      </svg></div>
     <div class="ld-logo"><div class="logo3d" aria-hidden="true"><div class="l3-stage">
           <span class="l3-edge"></span>
           <img class="l3-base" src="img/logo3d/base.png" alt="">
@@ -69,9 +38,11 @@
           <img class="l3-chair" src="img/logo3d/chair.png" alt="">
           <span class="l3-crown"><span class="l3-crown-spin"><img src="img/logo3d/crown.svg" alt="" style="--k:0"><img src="img/logo3d/crown.svg" alt="" style="--k:1"><img src="img/logo3d/crown.svg" alt="" style="--k:2"><img src="img/logo3d/crown.svg" alt="" style="--k:3"><img src="img/logo3d/crown.svg" alt="" style="--k:4"><img src="img/logo3d/crown.svg" alt="" style="--k:5"><img src="img/logo3d/crown.svg" alt="" style="--k:6"><img src="img/logo3d/crown.svg" alt="" style="--k:7"></span></span>
           <span class="l3-shine"></span>
-        </div></div></div>
+        </div></div>
+      <p class="ld-motto">Estilo · Confiança · Atitude</p>
+    </div>
     <div class="ld-ui">
-      <p class="ld-kicker" id="ldKicker">Preparando a cadeira</p>
+      <p class="ld-kicker" id="ldKicker">Afiando a tesoura</p>
       <p class="ld-pct"><span id="loaderPct">0</span>%</p>
       <div class="pole-h" aria-hidden="true">
           <span class="ph-knob ph-knob-l"></span><span class="ph-cap ph-cap-l"></span>
