@@ -5,7 +5,7 @@ const planoEscolhido = PLANOS.find((p) => p.id === params.get("plano"));
 
 function destino() {
   const volta = params.get("volta");
-  return volta === "planos" ? "index.html#planos" : volta === "agendar" ? "index.html#agendar" : "index.html";
+  return volta === "planos" ? "index.html#planos" : volta === "agendar" ? "index.html#agendar" : volta === "perfil" ? "perfil.html" : "index.html";
 }
 
 function render() {
@@ -76,5 +76,37 @@ const logado = usuarioAtual();
 if (logado && planoEscolhido) {
   atualizarConta(logado.id, { plano: { id: planoEscolhido.id, status: "pendente", desde: new Date().toISOString() } });
   location.replace(destino());
-} else if (logado) location.replace(destino());
+} else if (logado && params.get("perfil") !== "barbeiro") location.replace(destino());
 render();
+
+
+/* ---------- Área do barbeiro ---------- */
+let perfil = params.get("perfil") === "barbeiro" ? "barbeiro" : "cliente";
+let barbEscolhido = BARBEIROS[0].id;
+const barbForm = $("#barbForm");
+function renderPerfil() {
+  const b = perfil === "barbeiro";
+  $$(".auth-tab").forEach((t) => { const on = t.dataset.perfil === perfil; t.classList.toggle("is-active", on); t.setAttribute("aria-selected", on); });
+  barbForm.hidden = !b;
+  [form, $(".auth-or"), $("#google"), $("#authSwitch")].forEach((el) => el && (el.hidden = b));
+  if (b) {
+    $("#authTitle").textContent = "Agenda do barbeiro";
+    $("#authSub").textContent = "Veja quem está marcado em cada horário";
+    $("#barbPick").innerHTML = BARBEIROS.map((x) => `<button type="button" role="radio" aria-checked="${x.id === barbEscolhido}" class="barb-opt${x.id === barbEscolhido ? " is-active" : ""}" data-barb="${x.id}"><span>${esc(x.nome[0])}</span>${esc(x.nome)}</button>`).join("");
+  } else render();
+}
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.perfil) { perfil = t.dataset.perfil; renderPerfil(); }
+  else if (t.dataset.barb) { barbEscolhido = t.dataset.barb; renderPerfil(); barbForm.pin.focus(); }
+});
+barbForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const m = $("#barbMsg");
+  if (barbForm.pin.value !== SENHAS_BARBEIROS[barbEscolhido]) { m.textContent = "Senha incorreta."; m.className = "auth-msg is-error"; return; }
+  entrarBarbeiro(barbEscolhido, barbForm.lembrar.checked);
+  m.textContent = `Bem-vindo, ${barberById[barbEscolhido].nome}! Abrindo sua agenda…`; m.className = "auth-msg is-ok";
+  setTimeout(() => (location.href = "agenda.html"), 500);
+});
+if (perfil === "barbeiro" && barbeiroLogado()) location.replace("agenda.html");
+renderPerfil();

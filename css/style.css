@@ -681,3 +681,110 @@ html.is-loading body { overflow: hidden; }
 .ph-glass::after { content: ""; position: absolute; left: 4%; right: 4%; top: 24%; height: 2px; border-radius: 2px; background: rgba(255,255,255,.75); filter: blur(.6px); }
 @media (prefers-reduced-motion: reduce) { .ph-stripes, .page-loader .tes-a, .page-loader .tes-b { animation: none; } }
 .page-loader.is-open .embers { opacity: 0; transition: opacity .6s; }
+
+/* ---------- Vídeo de fundo "Na cadeira" (template Hero Background Video) ---------- */
+.reel { position: relative; min-height: 92svh; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 22px 16px 28px; color: #fff; isolation: isolate; background: #000; }
+.reel-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; filter: saturate(.85) contrast(1.05); }
+.reel-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.15) 30%, rgba(0,0,0,.2) 55%, rgba(0,0,0,.85)); }
+.reel-top { display: flex; justify-content: space-between; align-items: center; }
+.reel-top .label-pill { border-color: rgba(255,255,255,.7); }
+.reel-tag { font: 500 .78rem/1 var(--font-body); letter-spacing: .04em; color: rgba(255,255,255,.8); }
+.reel-title { font: 600 clamp(2.4rem, 8vw, 6.4rem)/.95 var(--font-display); letter-spacing: -.035em; text-transform: none; max-width: 14ch; }
+.reel-title em { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; color: #e9d3a1; }
+.reel-actions { display: flex; align-items: center; gap: .8rem; margin-top: 1.2rem; }
+.reel-actions .pill-btn { margin-top: 0; }
+.reel-toggle { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.5); background: rgba(0,0,0,.25); color: #fff; font-size: .7rem; backdrop-filter: blur(6px); }
+.reel-toggle:hover { background: #fff; color: #000; }
+
+/* =========================================================
+   PERFIS: agenda do barbeiro e perfil do cliente
+   ========================================================= */
+.app-page { min-height: 100svh; background: radial-gradient(70% 40% at 50% 0%, rgba(201,162,90,.1), transparent 70%), var(--bg); }
+.app-top { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 12px 16px;
+  background: rgba(10,10,10,.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.app-brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; font: 600 .82rem/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; }
+.app-brand img { width: 34px; height: 34px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(214,178,106,.5); }
+.app-who { display: flex; align-items: center; gap: .8rem; font-size: .88rem; }
+.app-link { background: none; border: 0; padding: 0; color: var(--muted); font-size: .85rem; text-decoration: underline; text-underline-offset: 3px; }
+.app-link:hover { color: var(--text); }
+.app-main { max-width: 1100px; margin: 0 auto; padding: 1.6rem 16px 4rem; display: grid; gap: 1.4rem; }
+.app-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; }
+.app-head .chips { margin: 0; }
+.app-title { font: 600 clamp(2rem, 7vw, 3.2rem)/1 var(--font-display); letter-spacing: -.03em; text-transform: uppercase; }
+.app-h2 { font: 600 1.1rem/1.2 var(--font-body); margin-bottom: .8rem; }
+.app-block { display: grid; }
+
+/* faixa de dias */
+.day-strip { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .3rem; scrollbar-width: none; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.day-strip::-webkit-scrollbar { display: none; }
+.dstrip { flex: none; display: grid; justify-items: center; gap: .15rem; width: 74px; padding: .6rem .2rem; border-radius: 12px; border: 1px solid var(--line); background: var(--surface);
+  font-size: .7rem; text-transform: uppercase; color: var(--muted); }
+.dstrip strong { font: 600 1.5rem/1 var(--font-display); color: var(--text); }
+.dstrip em { font-style: normal; font-size: .62rem; letter-spacing: .02em; text-transform: none; color: #e2c27f; white-space: nowrap; }
+.dstrip.is-closed { opacity: .45; } .dstrip.is-closed em { color: var(--muted); }
+.dstrip.is-active { background: #e2c27f; border-color: #e2c27f; color: #1a1408; }
+.dstrip.is-active strong, .dstrip.is-active em { color: #1a1408; }
+.app-page .stats { margin: 0; }
+.app-page .stat strong { color: #e2c27f; font-family: var(--font-display); }
+.next-card { display: grid; gap: .3rem; padding: 1rem 1.1rem; border-radius: 14px; border: 1px solid rgba(226,194,127,.45);
+  background: linear-gradient(135deg, rgba(226,194,127,.14), rgba(226,194,127,.03)); }
+.next-card .eyebrow { margin: 0; color: #e2c27f; border-color: rgba(226,194,127,.6); justify-self: start; }
+.next-card strong { font: 600 1.4rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: -.01em; }
+
+/* linha do tempo do dia */
+.app-page .col h3 { font: 600 1rem/1.2 var(--font-body); text-transform: capitalize; letter-spacing: 0; margin-bottom: .8rem; color: var(--muted); }
+.tl-free { display: flex; align-items: center; gap: .7rem; padding: .55rem .8rem; margin-bottom: .5rem; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: .82rem; }
+.tl-free span { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.app-page .appt { border-left-color: #e2c27f; }
+.appt.is-past { opacity: .7; }
+.appt-time { font: 600 1.05rem/1 var(--font-body); font-variant-numeric: tabular-nums; }
+.appt-client { font-size: .98rem; }
+.appt-obs { font-size: .85rem; color: #e9d3a1; }
+.new-badge { font-size: .64rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #0a0a0a; background: #e2c27f; padding: .12rem .45rem; border-radius: 999px; vertical-align: 2px; }
+.appt-actions .wa { display: inline-flex; align-items: center; min-height: 32px; padding: 0 .8rem; border-radius: 999px; background: #1f8a54; color: #fff; font-size: .76rem; font-weight: 600; text-decoration: none; }
+.appt-ficha summary, .tl-canc summary { cursor: pointer; font-size: .78rem; color: var(--muted); margin-top: .2rem; }
+.tl-canc { margin-top: .4rem; }
+
+/* perfil do cliente */
+.profile-card { display: flex; gap: 1.1rem; align-items: center; padding: 1.3rem; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); }
+.pf-avatar { flex: none; width: 72px; height: 72px; display: grid; place-items: center; border-radius: 50%; background: #e2c27f; color: #1a1408; font: 600 2rem/1 var(--font-display); }
+.profile-card .app-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+.profile-card .muted { font-size: .85rem; margin-top: .3rem; }
+.pf-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .7rem; }
+.pf-tag { font-size: .72rem; padding: .2rem .6rem; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.appt-list { display: grid; gap: .6rem; }
+.pf-appt { display: flex; gap: .9rem; padding: .9rem; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.pf-appt.st-cancelado, .pf-appt.st-faltou { opacity: .55; }
+.pf-date { flex: none; width: 58px; display: grid; justify-items: center; align-content: center; gap: .1rem; border-radius: 10px; background: var(--surface-2); font-size: .66rem; text-transform: uppercase; color: var(--muted); padding: .4rem 0; }
+.pf-date strong { font: 600 1.5rem/1 var(--font-display); color: var(--text); }
+.pf-info { display: grid; gap: .25rem; font-size: .9rem; min-width: 0; }
+.pf-info .muted { font-size: .8rem; }
+.pf-actions { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .35rem; }
+.pf-actions button { min-height: 32px; padding: 0 .8rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; font-size: .76rem; }
+.pf-actions button:hover { border-color: var(--text); }
+.pf-actions .danger { color: #ff8f86; border-color: rgba(255,143,134,.4); }
+.ficha-card { display: grid; gap: .7rem; justify-items: start; padding: 1.1rem; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.ficha-txt { font: 600 1.05rem/1.4 var(--font-body); color: #e9d3a1; }
+.app-page .empty a { color: #e2c27f; }
+
+/* abas cliente / barbeiro no login */
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-top: 1.3rem; border-radius: 12px; background: rgba(255,255,255,.08); }
+.auth-tab { min-height: 40px; border: 0; border-radius: 9px; background: transparent; color: rgba(255,255,255,.75); font-weight: 600; font-size: .88rem; }
+.auth-tab.is-active { background: #fff; color: #0f2147; }
+.barb-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.barb-opt { display: grid; justify-items: center; gap: .35rem; padding: .7rem .3rem; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: #fff; font-size: .85rem; font-weight: 600; }
+.barb-opt span { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.14); font: 600 1.1rem/1 var(--font-display); }
+.barb-opt.is-active { border-color: #e2c27f; background: rgba(226,194,127,.16); }
+.barb-opt.is-active span { background: #e2c27f; color: #1a1408; }
+.auth-form[hidden] { display: none; }
+
+/* elementos marcados como ocultos nunca aparecem */
+[hidden] { display: none !important; }
+/* login no tema preto e dourado do logo */
+.auth-page { background: radial-gradient(60% 45% at 50% 25%, rgba(201,162,90,.22), transparent 70%), radial-gradient(50% 40% at 85% 90%, rgba(120,70,20,.3), transparent 70%), linear-gradient(180deg, #17110a, #0a0806 60%, #050403); background-attachment: fixed; }
+.auth-logo { width: 74px; height: 74px; padding: 0; border: 0; background: none; }
+.auth-logo img { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 0 1px rgba(214,178,106,.55), 0 10px 30px rgba(0,0,0,.6); }
+.auth-submit { color: #1a1408; }
+.auth-submit:hover { box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 3px rgba(226,194,127,.55); }
+.auth-tab.is-active { color: #1a1408; }
+.check input { accent-color: #c9a25a; }

@@ -164,3 +164,7 @@ const DONO = {
   foto: "img/dono-poltrona.jpg",
   foto2: "img/dono-maquina.jpg",
 };
+
+/* Senhas provisórias da área do barbeiro (troque antes de colocar no ar).
+   Na versão online cada barbeiro terá login próprio com e-mail e senha. */
+const SENHAS_BARBEIROS = { joao: "1111", miguel: "2222", henrique: "3333" };

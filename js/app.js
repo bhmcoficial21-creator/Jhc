@@ -266,6 +266,7 @@ function stepSucesso() {
       <div class="form-actions center">
         <button class="btn btn-outline" data-ics>Adicionar ao calendário</button>
         ${SHOP.whatsapp ? `<a class="btn btn-primary" target="_blank" rel="noopener" href="https://wa.me/${SHOP.whatsapp}?text=${encodeURIComponent(texto)}">Enviar no WhatsApp</a>` : ""}
+        <a class="btn btn-outline" href="perfil.html">Ver meus horários</a>
         <button class="btn btn-ghost" data-novo>Novo agendamento</button>
       </div>
     </div>`;
@@ -405,8 +406,8 @@ $("#plansGrid").addEventListener("click", (e) => {
 /* ===================== CONTA NO TOPO ===================== */
 function renderAuth() {
   $("#authSlot").innerHTML = cliente
-    ? `<span class="nav-user">Olá, <strong>${esc(cliente.nome.split(" ")[0])}</strong></span><button class="nav-login" id="logout">Sair</button>`
-    : `<a href="entrar.html" class="nav-login">Entrar</a>`;
+    ? `<span class="nav-user">Olá, <strong>${esc(cliente.nome.split(" ")[0])}</strong></span><a href="perfil.html" class="nav-login">Meu perfil</a><button class="nav-login" id="logout">Sair</button>`
+    : `<a href="entrar.html" class="nav-login">Entrar / Cadastrar</a>`;
 }
 $("#authSlot").addEventListener("click", (e) => {
   if (e.target.id !== "logout") return;
@@ -420,7 +421,9 @@ $("#authSlot").addEventListener("click", (e) => {
   sessionStorage.removeItem(PENDENTE_KEY);
   if (!cliente) return;
   Object.assign(state, { servicos: new Set(p.servicos.filter((id) => servById[id])), barbeiro: p.barbeiro, cabelo: p.cabelo, data: p.data, hora: p.hora, obs: p.obs || "", step: 4 });
-  if (!state.servicos.size || state.hora === null) state.step = 1;
+  if (!state.servicos.size) state.step = 1;
+  else if (state.hora === null) state.step = 3;   // veio do perfil ("repetir corte"): já cai na escolha do dia
+  setTimeout(() => $("#agendar")?.scrollIntoView(), 50);
 })();
 
 /* ===================== PROPRIETÁRIO ===================== */

@@ -55,3 +55,30 @@ function sair() { try { sessionStorage.removeItem(SESSAO_KEY); localStorage.remo
 function atualizarConta(id, patch) {
   const l = getContas(); const c = l.find((x) => x.id === id); if (c) { Object.assign(c, patch); saveContas(l); } return c;
 }
+
+/* ---- Sessão do barbeiro ---- */
+const SESSAO_BARB_KEY = "barbeskin:sessao-barbeiro";
+function barbeiroLogado() {
+  let id = null; try { id = sessionStorage.getItem(SESSAO_BARB_KEY) || localStorage.getItem(SESSAO_BARB_KEY); } catch {}
+  return id && barberById[id] ? barberById[id] : null;
+}
+function entrarBarbeiro(id, lembrar) { try { (lembrar ? localStorage : sessionStorage).setItem(SESSAO_BARB_KEY, id); } catch {} }
+function sairBarbeiro() { try { sessionStorage.removeItem(SESSAO_BARB_KEY); localStorage.removeItem(SESSAO_BARB_KEY); } catch {} }
+
+/* ---- Agendamentos do cliente ---- */
+const agora = () => { const d = new Date(); return { data: ymd(d), min: d.getHours() * 60 + d.getMinutes() }; };
+const jaPassou = (b) => { const n = agora(); return b.data < n.data || (b.data === n.data && b.fim <= n.min); };
+function agendamentosDoCliente(c) {
+  if (!c) return [];
+  const tel = String(c.tel).replace(/\D/g, "");
+  return getBookings().filter((b) => b.clienteId === c.id || String(b.tel).replace(/\D/g, "") === tel)
+    .sort((a, b) => (a.data + fromMin(a.inicio)).localeCompare(b.data + fromMin(b.inicio)));
+}
+function atualizarAgendamento(id, patch) {
+  const all = getBookings(); const b = all.find((x) => x.id === id);
+  if (b) { Object.assign(b, patch); saveBookings(all); } return b;
+}
+const FICHA_KEY = "barbeskin:fichas";
+const getFichas = () => store.get(FICHA_KEY, {});
+const telKey = (t) => String(t).replace(/\D/g, "");
+function dataLonga(s) { const d = parseYmd(s); return `${DIAS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}`; }

@@ -83,3 +83,17 @@
   menu.addEventListener("click", (e) => { if (e.target.closest("a")) abrir(false); });
   addEventListener("keydown", (e) => { if (e.key === "Escape" && btn.getAttribute("aria-expanded") === "true") abrir(false); });
 })();
+
+/* Vídeo "Na cadeira": toca só quando aparece na tela (economiza bateria e internet) */
+(function () {
+  const v = document.getElementById("reelVideo"), btn = document.getElementById("reelToggle");
+  if (!v) return;
+  let pausadoPeloCliente = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const marcar = () => { btn.textContent = v.paused ? "▶" : "❚❚"; btn.setAttribute("aria-label", v.paused ? "Tocar vídeo" : "Pausar vídeo"); };
+  new IntersectionObserver(([en]) => {
+    if (en.isIntersecting && !pausadoPeloCliente) { v.preload = "auto"; v.play().catch(() => {}); }
+    else v.pause();
+  }, { threshold: 0.25 }).observe(v);
+  btn.addEventListener("click", () => { if (v.paused) { pausadoPeloCliente = false; v.play().catch(() => {}); } else { pausadoPeloCliente = true; v.pause(); } });
+  v.addEventListener("play", marcar); v.addEventListener("pause", marcar); marcar();
+})();

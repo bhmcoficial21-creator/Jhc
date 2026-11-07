@@ -83,9 +83,25 @@
   <a href="index.html" class="auth-back">← Voltar ao site</a>
   <main class="auth-wrap">
     <section class="auth-card" aria-labelledby="authTitle">
-      <div class="auth-logo" aria-hidden="true">BS</div>
+      <div class="auth-logo" aria-hidden="true"><img src="img/logo-messin.png" alt=""></div>
       <h1 id="authTitle">Bem-vindo de volta</h1>
       <p class="auth-sub" id="authSub">Entre para agendar na Barbe Skin</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button type="button" role="tab" class="auth-tab is-active" data-perfil="cliente" aria-selected="true">Sou cliente</button>
+        <button type="button" role="tab" class="auth-tab" data-perfil="barbeiro" aria-selected="false">Sou barbeiro</button>
+      </div>
+
+      <form id="barbForm" class="auth-form" novalidate hidden>
+        <div class="barb-pick" id="barbPick" role="radiogroup" aria-label="Quem é você"></div>
+        <label class="auth-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input name="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha da agenda" aria-label="Senha da agenda">
+        </label>
+        <label class="check"><input type="checkbox" name="lembrar" checked> Manter conectado neste celular</label>
+        <p class="auth-msg" id="barbMsg" role="alert"></p>
+        <button type="submit" class="auth-submit">Abrir minha agenda <span aria-hidden="true">→</span></button>
+      </form>
 
       <form id="authForm" class="auth-form" novalidate>
         <label class="auth-field" data-only="cadastro">
