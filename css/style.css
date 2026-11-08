@@ -834,3 +834,85 @@ html.is-loading body { overflow: hidden; }
 .page-loader .ld-ui { z-index: 5; }
 .page-loader.is-entering .ld-ui { opacity: 0; transition: opacity .4s; }
 @media (prefers-reduced-motion: reduce) { .st-bg, .st-walker, .st-bob, .st-shadow, .st-title { animation: none !important; } }
+
+/* =========================================================
+   ENTRADA IMPACTANTE: gradiente prisma animado + boneco caminhando
+   ========================================================= */
+.page-loader.intro { background: #07040f; overflow: hidden; transition: none; }
+.in-grad { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.1s ease; }
+.intro.is-on .in-grad { opacity: 1; }
+.in-grain { position: absolute; inset: -50%; pointer-events: none; opacity: .14; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: in-grain .5s steps(3) infinite; }
+@keyframes in-grain { 33% { transform: translate(-3%, 2%); } 66% { transform: translate(2%, -3%); } }
+.in-top { position: absolute; z-index: 4; left: 16px; right: 16px; top: max(18px, env(safe-area-inset-top)); display: flex; justify-content: space-between;
+  font: 700 .68rem/1 var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: #fff; opacity: 0; transition: opacity .8s .3s; }
+.intro.is-on .in-top { opacity: .85; }
+
+/* título gigante que sobe por máscara */
+.in-title { position: absolute; z-index: 1; left: 0; right: 0; top: 14%; display: grid; justify-items: center; margin: 0; pointer-events: none;
+  font: 700 clamp(4.4rem, 24vw, 16rem)/.84 var(--font-display); letter-spacing: -.06em; text-transform: uppercase; color: #fff; }
+.in-title .ln { display: block; overflow: hidden; padding: 0 .04em; }
+.in-title .ln > span { display: block; transform: translateY(105%); transition: transform 1s cubic-bezier(.2,.9,.1,1); }
+.in-title .ln2 { font-size: .58em; }
+.in-title .ln2 > span { color: transparent; -webkit-text-stroke: 1.6px rgba(255,255,255,.9); transition-delay: .12s; }
+.intro.is-on .in-title .ln > span { transform: none; }
+.intro.is-hit .in-title { animation: in-slam .55s cubic-bezier(.2,1.6,.4,1); }
+@keyframes in-slam { 0% { transform: scale(1); } 35% { transform: scale(1.09); letter-spacing: -.035em; } 100% { transform: scale(1); } }
+.intro.is-hit .in-title .ln2 > span { color: #fff; transition: color .3s; }
+
+/* boneco vindo do fundo na direção da câmera */
+.in-stage { position: absolute; inset: 0; z-index: 2; display: grid; place-items: end center; padding-bottom: max(70px, 9svh); perspective: 900px; }
+.in-walker { position: relative; height: min(66svh, 600px); aspect-ratio: 536 / 1379; transform-origin: 50% 100%;
+  transform: translateY(-14%) scale(.28); opacity: 0; filter: blur(3px) brightness(.6); }
+.intro.is-walk .in-walker { animation: in-walk 2.7s cubic-bezier(.35,0,.45,1) forwards; }
+@keyframes in-walk {
+  0%   { transform: translateY(-14%) scale(.28); opacity: 0; filter: blur(3px) brightness(.6); }
+  15%  { opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; filter: none; }
+}
+.in-bob { width: 100%; height: 100%; transform-origin: 50% 100%; }
+.intro.is-walk .in-bob { animation: in-step .46s ease-in-out infinite; }
+@keyframes in-step {
+  0%, 100% { transform: translateY(0) rotate(-2.6deg); }
+  25%, 75% { transform: translateY(-3.5%) rotate(0deg) scaleY(1.012); }
+  50%      { transform: translateY(0) rotate(2.6deg) scaleY(.99); }
+}
+.in-bob img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 30px 40px rgba(0,0,0,.45)); }
+.in-shadow { position: absolute; left: 6%; right: 6%; bottom: -2.5%; height: 6%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.6), transparent); }
+.intro.is-walk .in-shadow { animation: in-sh .46s ease-in-out infinite; }
+@keyframes in-sh { 25%, 75% { transform: scaleX(.8); opacity: .6; } }
+/* parada: pose */
+.intro.is-hit .in-bob { animation: in-pose .6s cubic-bezier(.2,1.5,.4,1) forwards; }
+@keyframes in-pose { 0% { transform: translateY(0) rotate(-2deg); } 40% { transform: translateY(-5%) scale(1.04); } 100% { transform: none; } }
+.intro.is-hit .in-shadow { animation: none; }
+
+/* clarão na batida */
+.in-flash { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: radial-gradient(60% 50% at 50% 55%, #fff, rgba(255,255,255,.4) 40%, transparent 75%); mix-blend-mode: overlay; }
+.intro.is-hit .in-flash { animation: in-flash .7s ease-out; }
+@keyframes in-flash { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+
+.in-tag { position: absolute; z-index: 4; left: 0; right: 0; bottom: max(28px, 3.5svh); margin: 0; text-align: center;
+  font: 700 .74rem/1 var(--font-body); letter-spacing: .32em; text-transform: uppercase; color: #fff; opacity: 0; transform: translateY(10px); transition: opacity .6s, transform .6s; }
+.intro.is-hit .in-tag { opacity: 1; transform: none; }
+.in-skip { position: absolute; z-index: 5; right: 16px; bottom: max(20px, 2.5svh); min-height: 40px; padding: 0 1.1rem; border: 1px solid rgba(255,255,255,.55); border-radius: 999px;
+  background: rgba(255,255,255,.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font: 700 .72rem/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; opacity: 0; transition: opacity .5s .8s; }
+.intro.is-on .in-skip { opacity: 1; }
+.in-skip:hover { background: #fff; color: #0a0a0a; }
+@media (max-width: 560px) { .intro.is-hit .in-tag { bottom: 76px; } }
+
+/* saída: o boneco "pula" na câmera e o site entra por um círculo */
+.intro.is-out { pointer-events: none; animation: in-hole .9s cubic-bezier(.7,0,.2,1) forwards;
+  -webkit-mask: radial-gradient(circle at 50% 55%, transparent var(--r, 0%), #000 calc(var(--r, 0%) + .5%)); mask: radial-gradient(circle at 50% 55%, transparent var(--r, 0%), #000 calc(var(--r, 0%) + .5%)); }
+@property --r { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@keyframes in-hole { to { --r: 120%; } }
+.intro.is-out .in-walker { animation: none; opacity: 1; filter: none; transform: scale(1.9) translateY(6%); transition: transform .9s cubic-bezier(.7,0,.2,1), filter .9s; }
+.intro.is-out .in-title, .intro.is-out .in-tag, .intro.is-out .in-skip { opacity: 0; transition: opacity .3s; }
+@media (prefers-reduced-motion: reduce) { .in-grain, .in-bob, .in-shadow, .in-walker, .in-title { animation: none !important; } }
+/* o boneco fica na pose final depois que para de andar */
+.intro.is-hit .in-walker, .intro.is-out .in-walker { opacity: 1; filter: none; }
+.intro.is-hit:not(.is-out) .in-walker { transform: none; }
+.in-title .ln2 { word-spacing: .18em; }
+.in-stage { padding-bottom: max(124px, 15svh); }
+.in-walker { height: min(60svh, 560px); }
+.in-tag, .intro.is-hit .in-tag { bottom: max(84px, 10svh); }

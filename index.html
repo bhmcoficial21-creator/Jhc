@@ -13,27 +13,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="img/boneco.webp">
+  <link rel="preload" as="image" href="img/boneco-pe.webp">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="home">
-  <div class="page-loader" id="pageLoader" role="progressbar" aria-label="Carregando o site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <div class="ld-room" aria-hidden="true"></div>
-    <div class="ld-street" aria-hidden="true">
-      <div class="st-bg"></div>
-      <div class="st-light"></div>
-      <div class="st-walker"><span class="st-shadow"></span><div class="st-bob"><img src="img/boneco.webp" alt=""></div></div>
-      <p class="st-title"><span>Messin</span><span>do Corte</span></p>
+  <div class="page-loader intro" id="pageLoader" role="dialog" aria-label="Entrada do site Messin do Corte">
+    <canvas class="in-grad" id="inGrad" aria-hidden="true"></canvas>
+    <div class="in-grain" aria-hidden="true"></div>
+    <div class="in-top" aria-hidden="true"><span>Barbearia</span><span>São Paulo</span></div>
+    <p class="in-title" aria-hidden="true"><span class="ln"><span>MESSIN</span></span><span class="ln ln2"><span>DO CORTE</span></span></p>
+    <div class="in-stage" aria-hidden="true">
+      <div class="in-walker" id="inWalker"><span class="in-shadow"></span><div class="in-bob"><img src="img/boneco-pe.webp" alt=""></div></div>
     </div>
-    <div class="ld-ui">
-      <p class="ld-kicker" id="ldKicker">Preparando a cadeira</p>
-      <p class="ld-pct"><span id="loaderPct">0</span>%</p>
-      <div class="pole-h" aria-hidden="true">
-          <span class="ph-knob ph-knob-l"></span><span class="ph-cap ph-cap-l"></span>
-          <span class="ph-tube"><span class="ph-fill" id="loaderBar"><span class="ph-stripes"></span></span><span class="ph-glass"></span></span>
-          <span class="ph-cap ph-cap-r"></span><span class="ph-knob ph-knob-r"></span>
-        </div>
-    </div>
+    <div class="in-flash" aria-hidden="true"></div>
+    <p class="in-tag" aria-hidden="true">Estilo · Confiança · Atitude</p>
+    <button class="in-skip" id="inSkip" type="button">Entrar <span aria-hidden="true">→</span></button>
   </div>
   <header class="topbar" id="topbar">
     <a href="#inicio" class="brand" aria-label="Barbe Skin, início">Barbe Skin</a>
