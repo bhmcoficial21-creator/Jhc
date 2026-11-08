@@ -2,7 +2,7 @@
    DADOS DA BARBEARIA — edite aqui (preços, barbeiros, horários)
    ========================================================= */
 const SHOP = {
-  nome: "Barbe Skin",
+  nome: "Messin do Corte",
   endereco: "Rua Gilberto Duarte de Azevedo, 44",
   whatsapp: "",   // ex.: "5511999999999" (com DDI + DDD, só números). Vazio = botão oculto.
   instagram: "",  // ex.: "barbeskin"

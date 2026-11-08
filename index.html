@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Barbe Skin — Barbearia</title>
-  <meta name="description" content="Barbe Skin: degradê, navalhado, afro, barba e nevou. Agende seu horário online.">
+  <title>Messin do Corte — Barbearia</title>
+  <meta name="description" content="Messin do Corte: degradê, navalhado, afro, barba e nevou. Agende seu horário em 1 minuto, sem cadastro.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Messin do Corte — Barbearia">
+  <meta property="og:description" content="Degradê, navalhado, afro, barba e nevou. Agende seu horário em 1 minuto, sem cadastro.">
+  <meta property="og:image" content="img/og-messin.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png">
@@ -30,7 +35,7 @@
     <button class="in-skip" id="inSkip" type="button">Entrar <span aria-hidden="true">→</span></button>
   </div>
   <header class="topbar" id="topbar">
-    <a href="#inicio" class="brand" aria-label="Barbe Skin, início">Barbe Skin</a>
+    <a href="#inicio" class="brand" aria-label="Messin do Corte, início">Messin do Corte</a>
     <span class="topbar-role">Barbearia · São Paulo</span>
     <div class="topbar-actions">
       <button class="search-btn" id="searchBtn" aria-label="Buscar (Ctrl+K)">
@@ -60,7 +65,7 @@
 
   <main>
     <!-- CAPA -->
-    <section id="inicio" class="hero" aria-label="Barbe Skin">
+    <section id="inicio" class="hero" aria-label="Messin do Corte">
       <div class="hero-media" id="heroMedia" aria-hidden="true"></div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-cursor" id="heroCursor" aria-hidden="true">Agendar</div>
@@ -85,7 +90,7 @@
           <p class="hero-tag">Degradê · Afro · Barba · Nevou</p>
           <a href="#agendar" class="hero-count"><span class="dot"></span><span id="heroCount">Agendar</span></a>
         </div>
-        <h1 class="hero-title" data-text="Barbe Skin">Barbe Skin</h1>
+        <h1 class="hero-title" data-text="Messin do Corte">Messin do Corte</h1>
       </div>
     </section>
 
@@ -93,8 +98,8 @@
     <section class="about section" id="sobre">
       <div class="about-grid">
         <div class="about-copy">
-          <div class="label-row"><span class="label-ico">BS</span><span class="label-pill">Sobre a casa</span></div>
-          <p class="about-text">A Barbe Skin é onde o degradê encontra a quebrada: corte na régua, barba na navalha e respeito com todo tipo de cabelo, do liso ao crespo.</p>
+          <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">Sobre a casa</span></div>
+          <p class="about-text">A Messin do Corte é onde o degradê encontra a quebrada: corte na régua, barba na navalha e respeito com todo tipo de cabelo, do liso ao crespo.</p>
           <a href="#agendar" class="pill-btn">Agendar</a>
         </div>
         <figure class="about-media" id="donoMedia"></figure>
@@ -125,7 +130,7 @@
       <div class="arte-grid">
         <figure class="arte-vid"><video src="video/arte-1.mp4" poster="img/arte-1-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video></figure>
         <div class="arte-copy">
-          <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">Na cadeira</span></div>
+          <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">A arte</span></div>
           <h2 class="arte-title">Cabelo é mais que estilo.<br><em>É paixão e a arte de transformar.</em></h2>
           <a href="#agendar" class="pill-btn">Agendar</a>
         </div>
@@ -136,7 +141,7 @@
     <!-- CORTES (galeria) -->
     <section id="cortes" class="cuts">
       <div class="cuts-head">
-        <div class="label-row"><span class="label-ico">BS</span><span class="label-pill">Cortes da casa</span></div>
+        <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">Cortes da casa</span></div>
         <a href="#servicos" class="all-link">Ver preços <span aria-hidden="true">→</span></a>
       </div>
       <div class="marquee" aria-hidden="true"><div class="marquee-track">
@@ -162,7 +167,7 @@
     <!-- PLANOS -->
     <section id="planos" class="section plans-section">
       <div class="section-head center">
-        <p class="eyebrow">Clube Barbe Skin</p>
+        <p class="eyebrow">Clube Messin do Corte</p>
         <h2>Seu visual em dia, todo mês.</h2>
         <p class="muted">Sem letra miúda. Escolha como prefere vir: avulso ou no clube, e cancele quando quiser.</p>
       </div>
@@ -225,8 +230,8 @@
   </section>
 
   <footer class="footer">
-    <span class="brand-mark">BS</span>
-    <p>© <span id="year"></span> Barbe Skin · <a href="agenda.html">Área do barbeiro</a></p>
+    <span class="brand-mark">MS</span>
+    <p>© <span id="year"></span> Messin do Corte · <a href="agenda.html">Área do barbeiro</a></p>
   </footer>
 
   <dialog class="search-dialog" id="searchDialog" aria-label="Buscar no site">

@@ -1002,3 +1002,42 @@ html.is-loading body { overflow: hidden; }
 /* login agora é só da equipe */
 .auth-tabs { display: none; }
 .form-note { font-size: .8rem; text-align: center; }
+
+/* =========================================================
+   AJUSTES DA AUTOANÁLISE
+   ========================================================= */
+/* dourado da marca no lugar do vermelho */
+:root { --accent: #c9a25a; --accent-2: #e8cc8a; --accent-ink: #17110a; }
+.btn-primary { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-ink); box-shadow: 0 6px 18px rgba(201,162,90,.25); }
+.btn-outline { border-color: var(--accent); color: var(--accent-2); }
+.btn-outline:hover { background: var(--accent); color: var(--accent-ink); }
+.fab { box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(232,204,138,.4); }
+.price, .summary strong, .stat strong { color: var(--accent-2); }
+.steps li.is-current { border-color: var(--accent-2); }
+.steps li.is-done { border-color: rgba(201,162,90,.5); }
+.day.is-active, .time-btn.is-active { background: var(--accent-2); border-color: var(--accent-2); color: var(--accent-ink); }
+.day.is-active strong { color: var(--accent-ink); }
+.svc.is-checked { border-color: var(--accent); background: rgba(201,162,90,.08); }
+.svc input { accent-color: var(--accent); }
+.svc-group legend, .tag { color: var(--accent-2); }
+.avatar { box-shadow: 0 0 0 2px var(--accent); color: var(--accent-2); }
+.hero-count .dot { background: var(--accent-2); box-shadow: 0 0 0 0 rgba(232,204,138,.6); }
+/* planos no mesmo visual escuro do site */
+.plans-section { --text: #f2f0eb; --muted: #9b978e; --line: #272727; --surface: #151515; background: #0d0d0d; color: var(--text); }
+.plan { background: #151515; border-color: #272727; box-shadow: none; }
+.plan.is-featured { background: radial-gradient(120% 45% at 50% 0%, rgba(201,162,90,.16), transparent 70%), #151515; border-color: rgba(201,162,90,.45); }
+.plan.is-featured::before { background: linear-gradient(90deg, transparent, var(--accent-2), transparent); }
+.plan-flag { color: var(--accent-ink); background: var(--accent-2); }
+.plan-btn { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-ink); box-shadow: 0 6px 16px rgba(201,162,90,.25); }
+.plan-btn.is-light { background: transparent; color: var(--text); border: 1px solid #3a3a3a; }
+.plan.is-featured .plan-list svg { color: var(--accent-2); }
+.plan-price .val { color: var(--text); }
+/* botões e links com área de toque confortável (mín. ~44px) */
+.all-link, .hero-count, .footer a, .nav-login, .auth-back, .home .topbar .brand { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .3rem; }
+.menu-pill { min-height: 38px; padding: 0 1.1rem; }
+.home .topbar .search-btn { min-height: 38px; }
+/* abas dentro do passo 1 */
+.wiz-tabs { margin: 0 0 1rem; }
+.tab-n { display: inline-grid; place-items: center; min-width: 1.3em; height: 1.3em; margin-left: .3em; border-radius: 999px; background: var(--accent-2); color: var(--accent-ink); font-size: .72em; }
+.tab.is-active .tab-n { background: var(--bg); color: var(--text); }
+#times-load .btn { margin-top: .8rem; }

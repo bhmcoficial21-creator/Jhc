@@ -25,6 +25,7 @@ $("#servTabs").addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   const add = e.target.closest("[data-add]"); if (!add) return;
   state.servicos.add(add.dataset.add);
+  catWizard = servById[add.dataset.add]?.cat || catWizard;
   state.step = 1; renderWizard();
   $("#agendar").scrollIntoView({ behavior: "smooth" });
 });
@@ -165,23 +166,26 @@ function renderSummary() {
     </div>`;
 }
 
+let catWizard = "pacotes";
 function stepServicos() {
   const ult = meusDados().ultimo;
   const repetir = ult && ult.servicos?.every((id) => servById[id])
     ? `<button class="repeat" data-repeat>↻ Repetir meu último: <strong>${ult.servicos.map((id) => esc(servById[id].nome)).join(" + ")}</strong>${ult.barbeiro && barberById[ult.barbeiro] ? ` com ${esc(barberById[ult.barbeiro].nome)}` : ""}</button>` : "";
+  const qtd = (cat) => SERVICOS.filter((s) => s.cat === cat && state.servicos.has(s.id)).length;
   return `
     <h3 class="wiz-title">1. O que vamos fazer hoje?</h3>
     ${repetir}
-    ${Object.entries(CATEGORIAS).map(([cat, nome]) => `
-      <fieldset class="svc-group">
-        <legend>${nome}</legend>
-        ${SERVICOS.filter((s) => s.cat === cat).map((s) => `
-          <label class="svc${state.servicos.has(s.id) ? " is-checked" : ""}">
-            <input type="checkbox" value="${s.id}" ${state.servicos.has(s.id) ? "checked" : ""}>
-            <span class="svc-name">${esc(s.nome)}</span>
-            <span class="svc-meta">${dur(s.dur)} · <strong>${brl(s.preco)}</strong></span>
-          </label>`).join("")}
-      </fieldset>`).join("")}`;
+    <div class="tabs wiz-tabs" role="tablist">${Object.entries(CATEGORIAS).map(([cat, nome]) =>
+      `<button type="button" role="tab" class="tab${cat === catWizard ? " is-active" : ""}" aria-selected="${cat === catWizard}" data-wcat="${cat}">${nome}${qtd(cat) ? ` <b class="tab-n">${qtd(cat)}</b>` : ""}</button>`).join("")}</div>
+    <fieldset class="svc-group">
+      <legend class="sr-only">${CATEGORIAS[catWizard]}</legend>
+      ${SERVICOS.filter((s) => s.cat === catWizard).map((s) => `
+        <label class="svc${state.servicos.has(s.id) ? " is-checked" : ""}">
+          <input type="checkbox" value="${s.id}" ${state.servicos.has(s.id) ? "checked" : ""}>
+          <span class="svc-name">${esc(s.nome)}</span>
+          <span class="svc-meta">${dur(s.dur)} · <strong>${brl(s.preco)}</strong></span>
+        </label>`).join("")}
+    </fieldset>`;
 }
 
 function stepBarbeiro() {
@@ -210,7 +214,7 @@ function stepDataHora() {
   const lista = slots(state.data, d);
   if (!lista) {                                   // busca os horários ocupados no banco
     buscarOcupados(state.data).then(() => state.step === 3 && renderWizard()).catch(() => {
-      const t = $("#times-load"); if (t) t.textContent = "Não foi possível carregar os horários. Verifique a internet e tente de novo.";
+      const t = $("#times-load"); if (t) t.innerHTML = `Não conseguimos falar com a agenda online agora.<br><button type="button" class="btn btn-outline btn-sm" data-recarregar>Tentar de novo</button>`;
     });
   }
   const livres = (lista || []).filter((s) => s.livres.length);
@@ -258,7 +262,7 @@ function stepDados() {
 function stepSucesso() {
   const b = state.ultimo;
   const dia = parseYmd(b.data);
-  const texto = `Olá! Agendei na Barbe Skin: ${b.servicos.map((id) => servById[id].nome).join(" + ")} com ${barberById[b.barbeiro].nome}, ${DIAS[dia.getDay()]} ${dia.getDate()}/${dia.getMonth() + 1} às ${fromMin(b.inicio)}. Nome: ${b.nome}.`;
+  const texto = `Olá! Agendei na Messin do Corte: ${b.servicos.map((id) => servById[id].nome).join(" + ")} com ${barberById[b.barbeiro].nome}, ${DIAS[dia.getDay()]} ${dia.getDate()}/${dia.getMonth() + 1} às ${fromMin(b.inicio)}. Nome: ${b.nome}.`;
   return `
     <div class="success">
       <div class="success-ico">✓</div>
@@ -303,16 +307,16 @@ function baixarIcs(b) {
   const dia = parseYmd(b.data);
   const stamp = (min) => `${b.data.replace(/-/g, "")}T${fromMin(min).replace(":", "")}00`;
   const ics = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Barbe Skin//Agenda//PT-BR", "BEGIN:VEVENT",
-    `UID:${b.id}@barbeskin`, `DTSTART:${stamp(b.inicio)}`, `DTEND:${stamp(b.fim)}`,
-    `SUMMARY:Barbe Skin – ${b.servicos.map((id) => servById[id].nome).join(" + ")}`,
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Messin do Corte//Agenda//PT-BR", "BEGIN:VEVENT",
+    `UID:${b.id}@messindocorte`, `DTSTART:${stamp(b.inicio)}`, `DTEND:${stamp(b.fim)}`,
+    `SUMMARY:Messin do Corte – ${b.servicos.map((id) => servById[id].nome).join(" + ")}`,
     `DESCRIPTION:Com ${barberById[b.barbeiro].nome} · ${brl(b.preco)}`,
-    `LOCATION:${SHOP.endereco}`, "BEGIN:VALARM", "TRIGGER:-PT2H", "ACTION:DISPLAY", "DESCRIPTION:Seu horário na Barbe Skin", "END:VALARM",
+    `LOCATION:${SHOP.endereco}`, "BEGIN:VALARM", "TRIGGER:-PT2H", "ACTION:DISPLAY", "DESCRIPTION:Seu horário na Messin do Corte", "END:VALARM",
     "END:VEVENT", "END:VCALENDAR",
   ].join("\r\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-  a.download = `barbe-skin-${dia.getDate()}-${dia.getMonth() + 1}.ics`; a.click();
+  a.download = `messin-do-corte-${dia.getDate()}-${dia.getMonth() + 1}.ics`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
@@ -332,6 +336,8 @@ area.addEventListener("input", (e) => {
 });
 area.addEventListener("click", (e) => {
   const t = e.target.closest("button"); if (!t || t.disabled) return;
+  if ("recarregar" in t.dataset) { delete OCUPADOS[state.data]; renderWizard(); return; }
+  if (t.dataset.wcat) { catWizard = t.dataset.wcat; renderWizard(); return; }
   if (t.dataset.go) { state.step = +t.dataset.go; renderWizard(); $("#agendar").scrollIntoView({ behavior: "smooth" }); }
   else if (t.dataset.cabelo) { state.cabelo = state.cabelo === t.dataset.cabelo ? "" : t.dataset.cabelo; renderWizard(); }
   else if (t.dataset.barbeiro) { state.barbeiro = t.dataset.barbeiro; state.hora = null; renderWizard(); }
@@ -443,16 +449,16 @@ function retomar() {
 /* ===================== PROPRIETÁRIO ===================== */
 function renderDono() {
   const el = $("#donoMedia"); if (!el || typeof DONO === "undefined" || !DONO.foto) { el?.remove(); return; }
-  const nome = DONO.nome ? esc(DONO.nome) : "Barbe Skin";
+  const nome = DONO.nome ? esc(DONO.nome) : "Messin do Corte";
   el.innerHTML = `
     <div class="dono-main">
-      <img src="${esc(DONO.foto)}" alt="${DONO.nome ? esc(DONO.nome) + ", " : ""}${esc(DONO.cargo)} da Barbe Skin" loading="lazy">
+      <img src="${esc(DONO.foto)}" alt="${DONO.nome ? esc(DONO.nome) + ", " : ""}${esc(DONO.cargo)} da Messin do Corte" loading="lazy">
       <span class="cut-strip dono-strip" aria-hidden="true"><span>${Array(6).fill(nome).join(" · ")} · ${Array(6).fill(nome).join(" · ")}</span></span>
     </div>
     <figcaption><span>${DONO.nome ? esc(DONO.nome) : "O fundador"}</span><span class="muted">${esc(DONO.cargo)}</span></figcaption>`;
   const banner = $("#crewBanner");
   if (banner) {
-    if (DONO.foto2) banner.innerHTML = `<img src="${esc(DONO.foto2)}" alt="Barbeiro trabalhando na Barbe Skin" loading="lazy"><figcaption><small>Na cadeira</small>Degradê na régua, risco na navalha.</figcaption>`;
+    if (DONO.foto2) banner.innerHTML = `<img src="${esc(DONO.foto2)}" alt="Barbeiro trabalhando na Messin do Corte" loading="lazy"><figcaption><small>Na cadeira</small>Degradê na régua, risco na navalha.</figcaption>`;
     else banner.remove();
   }
 }
