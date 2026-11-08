@@ -53,6 +53,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 
 .bloqueado { opacity: .55; }
 
+.express-atalho { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--cor-texto); border: 2px solid var(--cor-primaria); background: var(--cor-primaria-suave); }
+#ae-tempo .opcao { flex-direction: column; align-items: flex-start; gap: 0; }
+
 .certificado { border: 3px double var(--cor-primaria); border-radius: var(--raio); padding: 28px 20px; text-align: center; background: var(--cor-superficie); }
 
 @media print {
@@ -60,3 +63,5 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
   .certificado, .certificado * { visibility: visible; }
   .certificado { position: absolute; left: 0; top: 0; width: 100%; }
 }
+
+#ae-video { max-height: 220px; }

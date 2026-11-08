@@ -17,7 +17,7 @@
 
   const r = {
     horas: null, levanta: null, regioes: [], regiaoFoco: null, intensidade: null,
-    quando: null, sinais: [], sono: null, estresse: null, comida: [], tentativas: [], rotina: null
+    quando: null, sinais: [], sono: null, estresse: null, comida: [], tentativas: [], rotina: null, tempo: null
   };
 
   /* ---------- Perguntas ---------- */
@@ -49,6 +49,10 @@
       multi: true,
       opcoes: [["mesa", "Almoço na frente da tela ou correndo"], ["pulo", "Pulo refeições"], ["belisco", "Belisco besteira ou peço comida rápida"], ["agua", "Bebo pouca água"], ["bem", "Como bem e bebo água"]]
     },
+    tempo: {
+      titulo: "Quando a dor aperta no meio do expediente, quanto tempo você consegue parar?",
+      opcoes: [["1", "1 minuto, no máximo"], ["2", "Uns 2 minutos"], ["3", "Até 3 minutos"], ["reuniao", "Não posso sair do lugar (reunião, atendimento, volante)"]]
+    },
     tentativas: {
       titulo: "O que você já tentou para a dor?",
       sub: "Pode marcar mais de uma.",
@@ -71,7 +75,8 @@
     { id: "estresse", render: (el) => renderEscolha(el, "estresse"), valido: () => !!r.estresse, auto: true },
     { id: "comida", render: (el) => renderEscolha(el, "comida"), valido: () => r.comida.length > 0 },
     { id: "tentativas", render: (el) => renderEscolha(el, "tentativas"), valido: () => r.tentativas.length > 0 },
-    { id: "rotina", render: renderRotina, valido: () => !!r.rotina, textoBotao: "Montar meu Mapa da Dor" },
+    { id: "rotina", render: renderRotina, valido: () => !!r.rotina, auto: true },
+    { id: "tempo", render: (el) => renderEscolha(el, "tempo"), valido: () => !!r.tempo, textoBotao: "Montar meu Mapa da Dor" },
     { id: "calculando", render: renderCalculando, valido: () => false, final: true },
     { id: "resultado", render: renderResultado, valido: () => true, final: true }
   ];
@@ -85,6 +90,7 @@
         <li>Onde você está no ciclo do Corpo Congelado</li>
         <li>A cor do seu Semáforo dos Sinais</li>
         <li>Por que o que você já tentou não resolveu</li>
+        <li>O seu Alívio Express: o protocolo de 1 a 3 minutos para a hora que a dor aperta</li>
         <li>O seu plano para os 3 primeiros dias</li>
       </ul>
       <p class="pequeno suave">Sem cadastro. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>`;
@@ -253,6 +259,12 @@
     ];
   }
 
+  function alivioExpress(res) {
+    const minutos = r.tempo === "reuniao" ? 2 : Number(r.tempo);
+    const local = r.tempo === "reuniao" ? "reuniao" : r.rotina === "escritorio" ? "sentado" : "em_pe";
+    return L.montarProtocolo({ regiao: res.regiaoFoco, minutos, local, semaforo: res.cor });
+  }
+
   function ofertasRecomendadas() {
     const b = (id) => D.BONUS.find((x) => x.id === id);
     const lista = [];
@@ -273,7 +285,8 @@
     const sem = D.SEMAFORO[res.cor];
     const trilha = D.TRILHAS[res.trilha];
     const ofertas = ofertasRecomendadas();
-    window.RELIGAR_STORE.salvarQuiz({ ...r, ...res, indice: ind, recomendados: ofertas.map((o) => o.id), data: new Date().toISOString() });
+    const express = alivioExpress(res);
+    window.RELIGAR_STORE.salvarQuiz({ ...r, ...res, indice: ind, recomendados: ofertas.map((o) => o.id), tempoLivre: express.minutos, localPadrao: express.local, data: new Date().toISOString() });
 
     const ICONE_TRIPE = { ok: "verde", atencao: "amarelo", ruim: "vermelho" };
     const ROTULO_TRIPE = { ok: "Em dia", atencao: "Atenção", ruim: "Precisa de cuidado" };
@@ -319,6 +332,14 @@
         <p class="destaque-quiz">A sua dor não é falta de força. É falta de pausa.</p>
       </div>
 
+      <div class="cartao express">
+        <span class="etiqueta">⚡ Seu Alívio Express</span>
+        <h3 style="margin-top:8px">Doeu ${reg.no} no meio do expediente? ${express.minutos} ${express.minutos === 1 ? "minuto" : "minutos"}, ${{ sentado: "aí na cadeira", em_pe: "perto da sua mesa", reuniao: "sem ninguém perceber" }[express.local]}.</h3>
+        ${express.aviso ? `<p class="aviso" style="margin:8px 0">${express.aviso}</p>` : ""}
+        <ol class="express-lista">${express.passos.map((x) => `<li><span>${x.nome}</span><span class="suave">${x.segundos} s</span></li>`).join("")}</ol>
+        <p class="pequeno suave" style="margin:12px 0 0">No painel, cada passo é um microvídeo com cronômetro. Você abre o celular, toca em "Alívio" e segue.</p>
+      </div>
+
       <div class="cartao">
         <h3>Seu plano para os 3 primeiros dias</h3>
         <p class="pequeno suave">Região de foco: ${reg.emoji} ${reg.nome} · Trilha: ${trilha.nome}</p>
@@ -333,6 +354,7 @@
         <p>O plano completo ${reg.para}, montado para a trilha ${trilha.nome}. Micro-pausas de 2 minutos, sem academia.</p>
         <ul class="lista-check">
           <li>5 aulas curtas + 21 dias de desafio</li>
+          <li>Alívio Express: protocolo de microvídeos de 1 a 3 minutos na hora da dor</li>
           <li>Painel no celular que já começa com o seu Mapa da Dor</li>
           <li>Plano que muda pela sua noite e pelo seu semáforo</li>
           <li>Pausas invisíveis para reunião e atendimento</li>

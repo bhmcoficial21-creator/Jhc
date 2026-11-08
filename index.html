@@ -22,6 +22,10 @@
     details { background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio); padding: 14px 16px; }
     details + details { margin-top: 8px; }
     summary { font-weight: 600; cursor: pointer; }
+    .express-passos { display: grid; gap: 12px; grid-template-columns: 1fr; margin: 20px 0; }
+    @media (min-width: 640px) { .express-passos { grid-template-columns: repeat(3, 1fr); } .express-passos .cartao + .cartao { margin-top: 0; } }
+    .express-passos h3 { margin: 8px 0 4px; }
+    .express-passos p { margin: 0; }
     .barra-fixa { position: sticky; bottom: 0; background: var(--cor-superficie); border-top: 1px solid var(--cor-borda); padding: 10px var(--espaco); z-index: 5; }
   </style>
 </head>
@@ -115,6 +119,26 @@
     </div>
   </section>
 
+  <!-- 5b. Alívio Express -->
+  <section class="secao" id="alivio-express">
+    <div class="container">
+      <span class="etiqueta">⚡ Alívio Express</span>
+      <h2 style="margin-top:8px">Doeu no meio do expediente? Três minutos, aí na cadeira.</h2>
+      <p>Bateu aquela fisgada na lombar ou o peso no pescoço no meio da tarde. Você abre o celular, toca em <strong>Alívio</strong>, diz onde dói, quanto tempo tem e onde está. Em segundos aparece o seu protocolo: microvídeos de 30 a 40 segundos, com cronômetro, que você segue ali mesmo, de roupa de trabalho.</p>
+      <div class="express-passos">
+        <div class="cartao"><span class="etiqueta">1</span><h3>Onde dói agora</h3><p class="pequeno">Pescoço, ombros, punho e mão, lombar ou pernas.</p></div>
+        <div class="cartao"><span class="etiqueta">2</span><h3>Quanto tempo você tem</h3><p class="pequeno">1, 2 ou 3 minutos. O protocolo cabe no seu tempo, não o contrário.</p></div>
+        <div class="cartao"><span class="etiqueta">3</span><h3>Onde você está</h3><p class="pequeno">Na cadeira, podendo levantar ou em reunião de câmera ligada, com movimentos que ninguém percebe.</p></div>
+      </div>
+      <p class="destaque">Você para de esperar a dor passar e passa a ter o que fazer na hora que ela aparece.</p>
+      <p class="suave">Sem academia, sem equipamento, sem precisar sair do trabalho. Feito sob medida para a sua dor e para o tempo que sobra no seu dia.</p>
+      <div class="cta">
+        <a class="botao" href="quiz/index.html">Descobrir meu Alívio Express grátis</a>
+        <span class="beneficio">O Mapa da Dor já monta o seu primeiro protocolo</span>
+      </div>
+    </div>
+  </section>
+
   <!-- 6. Passo a passo dos 21 dias -->
   <section class="secao">
     <div class="container">
@@ -129,7 +153,8 @@
   <!-- 7. Diferenciais -->
   <section class="secao">
     <div class="container">
-      <h2>Não é mais um app de alongamento genérico</h2>
+      <h2>Não é mais um e-book de postura que ninguém lê</h2>
+      <p class="suave">Enquanto o mercado vende PDF de 50 páginas e alongamento genérico, aqui o plano é montado para a sua dor, a sua rotina e o tempo que você realmente tem.</p>
       <div class="grade-2">
         <div class="cartao"><h3>🗺️ Mapa da Dor</h3><p class="pequeno">Você marca onde dói, a intensidade e sua rotina. O desafio monta a região de foco e a trilha certa para você.</p></div>
         <div class="cartao"><h3>🚦 Semáforo dos Sinais</h3><p class="pequeno">Aprenda a reconhecer o corpo antes da lesão e saiba exatamente quando parar e procurar um profissional.</p></div>
@@ -240,6 +265,7 @@
       const entregaveis = [
         "Mini curso: 5 aulas curtas em vídeo (cerca de 45 min no total)",
         "Desafio de 21 dias: 1 vídeo de 2 a 5 min por dia + micro-pausas + check no painel",
+        "Alívio Express: protocolo de microvídeos de 1 a 3 minutos para a dor de agora",
         "Biblioteca de exercícios por região, em vídeos curtos",
         "3 trilhas por rotina + Trilha Dia Caótico",
         "Quiz Mapa da Dor: sua região de foco e sua trilha",

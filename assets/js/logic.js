@@ -130,8 +130,65 @@
     return lista.length ? lista[numeroPausa % lista.length] : D.EXERCICIOS[0];
   }
 
+  /* =========================================================
+     ALÍVIO EXPRESS
+     A pessoa sente a dor no meio do expediente e escolhe:
+     onde dói agora, quanto tempo tem (1, 2 ou 3 min) e onde está.
+     O painel monta um protocolo de microvídeos que cabe nesse tempo.
+     ========================================================= */
+  const TEMPOS_EXPRESS = [
+    { min: 1, nome: "1 minuto", texto: "Só um respiro entre uma tarefa e outra" },
+    { min: 2, nome: "2 minutos", texto: "A pausa da Regra 50/2" },
+    { min: 3, nome: "3 minutos", texto: "Alívio mais completo da região" }
+  ];
+  const LOCAIS_EXPRESS = [
+    { id: "sentado", nome: "Na cadeira", texto: "Sem levantar, de roupa de trabalho", emoji: "🪑" },
+    { id: "em_pe", nome: "Posso levantar", texto: "Perto da mesa, de uma parede ou de uma porta", emoji: "🧍" },
+    { id: "reuniao", nome: "Em reunião ou atendimento", texto: "Só movimentos que ninguém percebe", emoji: "👀" }
+  ];
+  // Exercícios que pedem ficar em pé ou usar porta/parede
+  const SO_EM_PE = ["abertura-peito", "extensao-pe", "flexor-quadril", "sentar-levantar"];
+  // Regiões vizinhas, usadas para completar o tempo
+  const VIZINHAS = { pescoco: ["ombros"], ombros: ["pescoco", "punho"], punho: ["ombros"], lombar: ["pernas"], pernas: ["lombar"] };
+  const RESPIRA = { id: "respira", nome: "3 respirações profundas", passos: "Inspire pelo nariz, solte o ar devagar pela boca e deixe os ombros caírem a cada saída do ar.", resolve: "Tira o corpo do modo alerta" };
+
+  const duracaoExercicio = (e) => (e.invisivel ? 30 : 40);
+
+  function montarProtocolo({ regiao, minutos, local, semaforo }) {
+    const alvo = minutos * 60;
+    const protocolo = { regiao, minutos, local, passos: [], aviso: null };
+    protocolo.passos.push({ ...RESPIRA, segundos: 20 });
+
+    if (semaforo === "vermelho") {
+      protocolo.aviso = "Seu semáforo de hoje está vermelho: sem exercícios para essa região. Faça só a respiração e procure um médico ou fisioterapeuta.";
+      protocolo.passos[0].segundos = alvo;
+      return protocolo;
+    }
+
+    const serve = (e) => e.regiao !== "forca" && e.regiao !== "olhos" &&
+      (local === "reuniao" ? e.invisivel : local === "sentado" ? !SO_EM_PE.includes(e.id) : true);
+    const ordem = [regiao, ...(VIZINHAS[regiao] || [])];
+    const candidatos = ordem.flatMap((r) => D.EXERCICIOS.filter((e) => e.regiao === r && serve(e)));
+    if (local === "reuniao") D.EXERCICIOS.filter((e) => serve(e) && !candidatos.includes(e)).forEach((e) => candidatos.push(e));
+
+    let total = 20;
+    for (const e of candidatos) {
+      const s = duracaoExercicio(e);
+      if (total + s > alvo + 10) continue;
+      protocolo.passos.push({ ...e, segundos: s });
+      total += s;
+      if (total >= alvo - 10) break;
+    }
+    // Ajusta o último passo para fechar o tempo exato
+    const ultimo = protocolo.passos[protocolo.passos.length - 1];
+    ultimo.segundos += alvo - total;
+    if (semaforo === "amarelo") protocolo.aviso = "Semáforo amarelo: faça cada movimento mais devagar e com metade da amplitude.";
+    return protocolo;
+  }
+
   window.RELIGAR_LOGICA = {
     SINAIS, ROTINAS_TRABALHO, corDoSemaforo, diagnosticar, planoDoDia,
-    metaPausas, paraMinutos, exercicioRemexe
+    metaPausas, paraMinutos, exercicioRemexe,
+    TEMPOS_EXPRESS, LOCAIS_EXPRESS, montarProtocolo
   };
 })();

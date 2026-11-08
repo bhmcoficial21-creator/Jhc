@@ -43,7 +43,7 @@
   const diasFeitos = () => Object.values(estado.dias).filter((d) => d.feito).length;
 
   /* ---------- Roteamento ---------- */
-  const ROTAS = { boasvindas, hoje, pausa, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
+  const ROTAS = { boasvindas, hoje, pausa, alivio, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
   function navegar() {
     pararTimer();
     let rota = (location.hash || "#hoje").slice(1);
@@ -67,7 +67,8 @@
       regioes: q.regioes || [], regiaoFoco: q.regiaoFoco || null,
       intensidadeInicial: q.intensidade ?? null, sinais: q.sinais || [],
       rotina: q.rotina || null, inicioTrabalho: "09:00", fimTrabalho: "18:00",
-      intervaloMin: C.intervaloPadraoMin
+      intervaloMin: C.intervaloPadraoMin,
+      tempoLivre: q.tempoLivre || 2, localPadrao: q.localPadrao || "sentado"
     };
     tela.innerHTML = `
       <h1>Boas-vindas ao Desafio Corpo Descongelado</h1>
@@ -212,6 +213,11 @@
       </p>
 
       ${plano.avisos.map((a) => `<div class="aviso ${plano.versao === "vermelho" ? "aviso-vermelho" : ""}" style="margin-bottom:8px">${a}</div>`).join("")}
+
+      <a class="cartao express-atalho" href="#alivio">
+        <span style="font-size:1.6rem">⚡</span>
+        <span><strong>Doeu agora? Alívio Express</strong><br><span class="pequeno suave">Protocolo de 1 a 3 minutos para a dor de agora, aí na cadeira</span></span>
+      </a>
 
       <div class="cartao">
         <div class="video-placeholder">[Vídeo do dia ${n} · 2 a 5 min]<br>${info.titulo}</div>
@@ -376,6 +382,127 @@
     atualizar();
   }
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+  /* =========================================================
+     3b. ALÍVIO EXPRESS (protocolo sob medida na hora da dor)
+     ========================================================= */
+  function alivio() {
+    const p = estado.perfil;
+    const n = Math.min(diaAtual(), 21);
+    const reg = registroDia(n);
+    const esc = { regiao: p.regiaoFoco, minutos: p.tempoLivre || 2, local: p.localPadrao || "sentado" };
+
+    tela.innerHTML = `
+      <span class="etiqueta">Alívio Express</span>
+      <h1 style="margin-top:8px">Doeu agora? Monte seu alívio</h1>
+      <p class="suave">Três toques e o protocolo cabe no tempo que você tem, aí mesmo onde você está.</p>
+
+      <div class="cartao">
+        <h3>Onde está doendo agora?</h3>
+        <div class="grade-2" id="ae-regiao">${Object.entries(D.REGIOES).map(([id, r]) =>
+          `<button class="opcao" data-id="${id}" aria-pressed="${esc.regiao === id}"><span class="emoji">${r.emoji}</span>${r.nome}</button>`).join("")}</div>
+      </div>
+      <div class="cartao">
+        <h3>Quanto tempo você tem?</h3>
+        <div class="opcoes" id="ae-tempo">${L.TEMPOS_EXPRESS.map((t) =>
+          `<button class="opcao" data-id="${t.min}" aria-pressed="${esc.minutos === t.min}"><strong>${t.nome}</strong><span class="pequeno suave">${t.texto}</span></button>`).join("")}</div>
+      </div>
+      <div class="cartao">
+        <h3>Onde você está?</h3>
+        <div class="opcoes" id="ae-local">${L.LOCAIS_EXPRESS.map((l) =>
+          `<button class="opcao" data-id="${l.id}" aria-pressed="${esc.local === l.id}"><span class="emoji">${l.emoji}</span><span><strong>${l.nome}</strong><br><span class="pequeno suave">${l.texto}</span></span></button>`).join("")}</div>
+      </div>
+      <button class="botao botao-grande" id="ae-ok" style="margin-top:12px">Montar meu alívio</button>`;
+
+    const grupo = (sel, chave, conv) => $$(sel + " .opcao").forEach((b) => b.onclick = () => {
+      esc[chave] = conv ? conv(b.dataset.id) : b.dataset.id;
+      $$(sel + " .opcao").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    });
+    grupo("#ae-regiao", "regiao");
+    grupo("#ae-tempo", "minutos", Number);
+    grupo("#ae-local", "local");
+    $("#ae-ok").onclick = () => {
+      p.tempoLivre = esc.minutos; p.localPadrao = esc.local; salvar();
+      executarProtocolo(L.montarProtocolo({ ...esc, semaforo: reg.semaforo }), reg);
+    };
+  }
+
+  function executarProtocolo(prot, reg) {
+    const passos = prot.passos;
+    let k = 0, restante = passos[0].segundos, rodando = false;
+    const total = passos.reduce((s, x) => s + x.segundos, 0);
+
+    tela.innerHTML = `
+      <span class="etiqueta">Alívio Express · ${prot.minutos} min · ${D.REGIOES[prot.regiao].nome}</span>
+      ${prot.aviso ? `<div class="aviso ${reg.semaforo === "vermelho" ? "aviso-vermelho" : ""}" style="margin-top:12px">${prot.aviso}</div>` : ""}
+      <div class="cartao" style="margin-top:12px">
+        <div class="video-placeholder vertical" id="ae-video"></div>
+        <p class="pequeno suave" style="margin:12px 0 0" id="ae-contagem"></p>
+        <h2 id="ae-nome" style="margin:4px 0"></h2>
+        <p id="ae-passos"></p>
+        <div class="timer" id="ae-timer"></div>
+        <div class="barra"><span id="ae-barra" style="width:0%"></span></div>
+      </div>
+      <div class="linha" style="margin-top:12px;flex-wrap:nowrap">
+        <button class="botao botao-secundario" id="ae-pular" style="flex:1">Próximo</button>
+        <button class="botao" id="ae-play" style="flex:2">Começar</button>
+      </div>
+      <div class="cartao">
+        <h3>Seu protocolo</h3>
+        <ol class="lista-ex" id="ae-lista">${passos.map((x) => `<li>${x.nome} <span class="suave">· ${x.segundos} s</span></li>`).join("")}</ol>
+      </div>`;
+
+    function mostrarPasso() {
+      const x = passos[k];
+      $("#ae-video").innerHTML = `[Microvídeo]<br>${x.nome}<br>${x.segundos} s`;
+      $("#ae-contagem").textContent = `Passo ${k + 1} de ${passos.length}`;
+      $("#ae-nome").textContent = x.nome;
+      $("#ae-passos").textContent = x.passos;
+      $("#ae-timer").textContent = fmt(restante);
+      const feito = passos.slice(0, k).reduce((s, y) => s + y.segundos, 0) + (x.segundos - restante);
+      $("#ae-barra").style.width = Math.round((feito / total) * 100) + "%";
+      $$("#ae-lista li").forEach((li, i) => li.style.fontWeight = i === k ? "700" : "400");
+    }
+    function proximo() {
+      k++;
+      if (k >= passos.length) return concluir();
+      restante = passos[k].segundos; mostrarPasso();
+    }
+    function concluir() {
+      pararTimer();
+      reg.pausas++; reg.alivios = (reg.alivios || 0) + 1; salvar(); ultimaPausa = Date.now();
+      tela.innerHTML = `<div class="centro">
+        <h1>✓ Alívio feito</h1>
+        <p>Conta como pausa de hoje: ${reg.pausas} pausa(s).</p>
+        <div class="cartao" style="text-align:left">
+          <h3>Como está agora?</h3>
+          <div class="opcoes" id="ae-depois">
+            <button class="opcao" data-v="melhor">😌 Aliviou</button>
+            <button class="opcao" data-v="igual">😐 Ficou igual</button>
+            <button class="opcao" data-v="pior">😣 Piorou</button>
+          </div>
+          <p class="pequeno" id="ae-resposta" style="margin:12px 0 0"></p>
+        </div>
+        <a class="botao botao-grande" href="#hoje" style="margin-top:12px">Voltar para Hoje</a></div>`;
+      const RESP = {
+        melhor: "Ótimo. Esse protocolo fica salvo como seu atalho para a próxima vez.",
+        igual: "Normal no começo: o alívio vem da repetição ao longo do dia, não de uma pausa só. Tente de novo daqui a 50 minutos.",
+        pior: "Pare os exercícios dessa região hoje e confira o Semáforo dos Sinais. Se a dor for forte, irradiar ou vier com dormência, procure um médico ou fisioterapeuta."
+      };
+      $$("#ae-depois .opcao").forEach((b) => b.onclick = () => {
+        $$("#ae-depois .opcao").forEach((x) => x.setAttribute("aria-pressed", x === b));
+        $("#ae-resposta").textContent = RESP[b.dataset.v];
+        if (b.dataset.v === "pior") abrirSemaforo();
+      });
+    }
+    $("#ae-play").onclick = () => {
+      if (rodando) { pararTimer(); rodando = false; $("#ae-play").textContent = "Continuar"; return; }
+      rodando = true; $("#ae-play").textContent = "Pausar";
+      timerId = setInterval(() => { restante--; if (restante <= 0) return proximo(); mostrarPasso(); }, 1000);
+    };
+    $("#ae-pular").onclick = proximo;
+    mostrarPasso();
+  }
 
   /* =========================================================
      4. PAUSAS INVISÍVEIS
