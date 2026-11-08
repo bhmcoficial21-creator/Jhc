@@ -76,7 +76,7 @@
   setTimeout(() => (carregado = true), 8000);  // segurança
 
   /* ---------- Linha do tempo ---------- */
-  const DESENHO = 550, SOLIDO = 900, SAIDA = 150;          // ms de cada ferramenta
+  const DESENHO = 450, SOLIDO = 650, SAIDA = 120;          // ms de cada ferramenta
   const CICLO = DESENHO + SOLIDO + SAIDA;
   const usar = visto || reduz ? [] : ferramentas;           // visitas seguintes: direto ao logo
   const TOTAL = Math.max(700, usar.length * CICLO);
@@ -101,10 +101,78 @@
     if (mostrado > alvo) mostrado = alvo;
     const v = Math.max(0, Math.floor(mostrado));
     pct.textContent = v; bar.style.width = v + "%"; el.setAttribute("aria-valuenow", v);
-    if (v >= 100 && t >= TOTAL && !final) { final = true; mostrarCapa(); return; }
+    if (v >= 100 && t >= TOTAL && !final) { final = true; (visto || reduz ? mostrarCapa : mostrarGancho)(); return; }
     requestAnimationFrame(quadro);
   }
   requestAnimationFrame(quadro);
+
+
+  /* ---------- Gancho: boneco + "segure para mudar o estilo" ---------- */
+  function mostrarGancho() {
+    const hook = $id("hook");
+    if (!hook) return mostrarCapa();
+    ferramentas.forEach((t) => t.classList.add("is-out"));
+    el.classList.add("is-hook");
+    const modos = [...hook.querySelectorAll(".hook-mode")];
+    const nomes = ["Modo Ouro", "Modo Gelo", "Modo Brasa"];
+    const nomeEl = $id("hookModo"), btn = $id("holdBtn"), anel = $id("holdRing");
+    let atual = 0, trocando = false, interagiu = false, acabou = false, auto, inativo;
+
+    function trocar(xPct, yPct) {
+      if (trocando) return; trocando = true;
+      const prox = (atual + 1) % modos.length, entra = modos[prox];
+      entra.style.setProperty("--cx", xPct + "%"); entra.style.setProperty("--cy", yPct + "%");
+      entra.classList.add("is-in");
+      nomeEl.textContent = nomes[prox];
+      if (navigator.vibrate) try { navigator.vibrate(12); } catch {}
+      setTimeout(() => {
+        modos[atual].classList.remove("is-on");
+        entra.classList.remove("is-in"); entra.classList.add("is-on");
+        atual = prox; trocando = false;
+      }, 900);
+    }
+    const doBotao = () => { const r = btn.getBoundingClientRect(); return [((r.left + r.width / 2) / innerWidth) * 100, ((r.top + r.height / 2) / innerHeight) * 100]; };
+
+    // segurar o botão enche o anel; cheio = troca de modo
+    let segurando = 0, prog = 0;
+    function encher(agora) {
+      if (!segurando) return;
+      prog = Math.min(1, (agora - segurando) / 650);
+      anel.style.strokeDashoffset = 1 - prog;
+      if (prog >= 1) { trocar(...doBotao()); segurando = agora; }   // continua trocando se não soltar
+      requestAnimationFrame(encher);
+    }
+    const apertar = (e) => { e.preventDefault(); interagiu = true; clearTimeout(auto); reiniciarInativo(); btn.classList.add("is-down"); segurando = performance.now(); requestAnimationFrame(encher); };
+    const soltar = () => { segurando = 0; btn.classList.remove("is-down"); anel.style.transition = "stroke-dashoffset .3s"; anel.style.strokeDashoffset = 1; setTimeout(() => (anel.style.transition = ""), 300); };
+    btn.addEventListener("pointerdown", apertar);
+    ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => btn.addEventListener(ev, soltar));
+    btn.addEventListener("keydown", (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); interagiu = true; reiniciarInativo(); trocar(...doBotao()); } });
+
+    // o boneco acompanha o dedo/mouse
+    const figs = [...hook.querySelectorAll(".hook-fig")];
+    hook.addEventListener("pointermove", (e) => {
+      const nx = e.clientX / innerWidth - 0.5, ny = e.clientY / innerHeight - 0.5;
+      figs.forEach((f) => { f.style.setProperty("--ry", (nx * 22).toFixed(1) + "deg"); f.style.setProperty("--rx", (-ny * 10).toFixed(1) + "deg"); });
+    });
+
+    function sair() {
+      if (acabou) return; acabou = true;
+      clearTimeout(auto); clearTimeout(inativo);
+      mostrarCapa();
+    }
+    function reiniciarInativo() { clearTimeout(inativo); inativo = setTimeout(sair, 6000); }
+    $id("hookEnter").addEventListener("click", sair);
+
+    // sem interação: mostra os 3 modos sozinho e segue para a capa
+    let passos = 0;
+    (function ciclo() {
+      auto = setTimeout(() => {
+        if (interagiu) return;
+        if (passos < modos.length - 1) { passos++; trocar(...doBotao()); ciclo(); }
+        else setTimeout(() => !interagiu && sair(), 400);
+      }, 1700);
+    })();
+  }
 
   /* ---------- Final: a capa com o nosso símbolo é puxada do cliente ---------- */
   const capa = new Image(); capa.src = "img/capa-messin.jpg";
@@ -158,7 +226,8 @@
   function mostrarCapa() {
     ferramentas.forEach((t) => t.classList.add("is-out"));
     kicker.textContent = "Finalizando o corte";
-    const HOLD = reduz ? 200 : visto ? 450 : 1500, PUXAR = reduz ? 1 : 1400;
+    el.classList.remove("is-hook-ui");
+    const HOLD = reduz ? 200 : visto ? 450 : 1100, PUXAR = reduz ? 1 : 1400;
     const ir = () => {
       el.classList.add("is-cape");
       const t0 = performance.now();
