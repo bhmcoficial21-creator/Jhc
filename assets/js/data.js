@@ -10,7 +10,8 @@
     ombros:  { nome: "Ombros", emoji: "🎒", no: "nos ombros", para: "para os ombros" },
     punho:   { nome: "Punho e mão", emoji: "✋", no: "no punho e na mão", para: "para o punho e a mão" },
     lombar:  { nome: "Lombar", emoji: "🪑", no: "na lombar", para: "para a lombar" },
-    pernas:  { nome: "Quadril e pernas", emoji: "🦵", no: "no quadril e nas pernas", para: "para o quadril e as pernas" }
+    pernas:  { nome: "Quadril e pernas", emoji: "🚶", no: "no quadril e nas pernas", para: "para o quadril e as pernas" },
+    joelhos: { nome: "Joelhos", emoji: "🦵", no: "nos joelhos", para: "para os joelhos" }
   };
 
   /* Biblioteca de exercícios (seção 10 do briefing).
@@ -32,6 +33,24 @@
     { id: "flexor-quadril", regiao: "pernas", nome: "Alongamento do flexor do quadril de pé", resolve: "Quadril encurtado de ficar sentado", passos: "Dê um passo à frente, contraia o glúteo da perna de trás e leve o quadril para frente. 20 segundos de cada lado." },
     { id: "panturrilha", regiao: "pernas", nome: "Elevação dos calcanhares", resolve: "Perna inchada, circulação", passos: "Suba na ponta dos pés e desça devagar. 15 vezes (sentado também vale).", invisivel: true },
     { id: "sentar-levantar", regiao: "pernas", nome: "Sentar e levantar da cadeira", resolve: "Força e circulação", passos: "Levante da cadeira sem usar as mãos e sente devagar. 10 vezes." },
+    // Joelhos (Trilha 3)
+    { id: "isometria-quadriceps", regiao: "joelhos", nome: "Isometria de coxa sentado", resolve: "Joelho sem apoio da musculatura", passos: "Sentado, estique uma perna e contraia a coxa por 5 segundos, sem travar o joelho. Solte. 5 vezes de cada lado.", invisivel: true },
+    { id: "extensao-joelho-sentado", regiao: "joelhos", nome: "Extensão de joelho sentado", resolve: "Joelho rígido de ficar dobrado", passos: "Sentado, estique o joelho devagar até onde não doer e desça devagar. 8 vezes de cada lado." },
+    { id: "bombinha-tornozelo", regiao: "joelhos", nome: "Bombinha de tornozelo", resolve: "Perna pesada, circulação", passos: "Leve as pontas dos pés para cima e para baixo, sem pressa. 20 vezes.", invisivel: true },
+    { id: "alongamento-posterior-sentado", regiao: "joelhos", nome: "Alongamento da parte de trás da coxa sentado", resolve: "Coxa encurtada que puxa o joelho", passos: "Na beira da cadeira ou da cama, perna esticada com o calcanhar no chão. Incline o tronco com a coluna reta até sentir uma tensão leve. 20 segundos de cada lado." },
+    { id: "deslizamento-calcanhar", regiao: "joelhos", nome: "Deslizamento do calcanhar", resolve: "Joelho travado ao acordar", passos: "Deitado de barriga para cima, deslize o calcanhar em direção ao bumbum até onde não doer e volte. 10 vezes de cada lado.", chao: true },
+    { id: "toalha-joelho", regiao: "joelhos", nome: "Toalha sob o joelho", resolve: "Força da coxa sem impacto", passos: "Sentado no chão ou na cama, toalha enrolada embaixo do joelho. Empurre o joelho contra a toalha por 5 segundos. 8 vezes de cada lado.", chao: true },
+    { id: "abducao-lado", regiao: "joelhos", nome: "Abertura de perna deitado de lado", resolve: "Quadril fraco que sobrecarrega o joelho", passos: "Deitado de lado, perna de baixo dobrada. Suba a perna de cima esticada até a altura do quadril e desça devagar. 10 vezes de cada lado.", chao: true },
+    // Cama e chão (protocolos matinal e noturno)
+    { id: "joelhos-peito", regiao: "lombar", nome: "Joelhos ao peito", resolve: "Lombar travada ao acordar", passos: "Deitado, abrace os joelhos e balance o corpo de leve, de um lado para o outro.", chao: true },
+    { id: "torcao-deitado", regiao: "lombar", nome: "Torção deitado", resolve: "Rigidez da coluna", passos: "Deitado, joelhos dobrados e juntos. Deixe os joelhos caírem para um lado e depois para o outro, devagar.", chao: true },
+    { id: "gato-vaca-4-apoios", regiao: "lombar", nome: "Gato e vaca em 4 apoios", resolve: "Coluna inteira travada", passos: "Mãos e joelhos no chão ou na cama. Arredonde as costas olhando para o umbigo e depois afunde suavemente olhando para frente. 8 vezes.", chao: true },
+    { id: "postura-crianca", regiao: "lombar", nome: "Postura de descanso", resolve: "Costas tensas no fim do dia", passos: "Sente sobre os calcanhares e leve o tronco e os braços para frente, testa apoiada. Respire devagar.", chao: true },
+    { id: "pernas-parede", regiao: "pernas", nome: "Pernas na parede", resolve: "Perna inchada e corpo agitado", passos: "Deitado com o bumbum perto da parede, apoie as pernas esticadas na parede. Respire devagar.", chao: true },
+    { id: "figura-4", regiao: "pernas", nome: "Alongamento do glúteo deitado", resolve: "Quadril e glúteo tensos", passos: "Deitado, cruze o tornozelo sobre o joelho oposto e puxe a perna de baixo em direção ao peito. 30 segundos de cada lado.", chao: true },
+    { id: "espreguicar", regiao: "ombros", nome: "Espreguiçar completo", resolve: "Sensação de corpo pesado ao acordar", passos: "Deitado, estique os braços acima da cabeça e as pontas dos pés para longe, como se crescesse. Solte. 3 vezes.", chao: true },
+    { id: "anjo-no-chao", regiao: "ombros", nome: "Anjo no chão", resolve: "Ombros fechados e pescoço tenso", passos: "Deitado de barriga para cima, braços em W no chão. Deslize os braços para cima e para baixo sem tirar do chão. 10 vezes.", chao: true },
+    { id: "respiracao-4-6", regiao: "relaxamento", nome: "Respiração 4-6", resolve: "Corpo em alerta, sono difícil", passos: "Inspire contando até 4 e solte o ar contando até 6. A saída mais longa avisa o corpo que pode relaxar.", invisivel: true },
     { id: "regra-20-20-20", regiao: "olhos", nome: "Regra 20-20-20", resolve: "Vista cansada e tensão facial", passos: "A cada 20 minutos, olhe para algo a 6 metros por 20 segundos." },
     { id: "ponte-gluteo", regiao: "forca", nome: "Ponte de glúteo", resolve: "Sustentação da postura", passos: "Deitado, joelhos dobrados, suba o quadril e desça devagar. 3 séries de 10." },
     { id: "remada-toalha", regiao: "forca", nome: "Remada com toalha ou elástico", resolve: "Costas fortes para a postura", passos: "Prenda a toalha na maçaneta, puxe aproximando as escápulas. 3 séries de 10." },
@@ -168,8 +187,120 @@
     { nome: "Cartão das Pausas Invisíveis", arquivo: "#pdf-cartao-pausas-invisiveis" }
   ];
 
+  /* =========================================================
+     CENTRAL DE ALÍVIO EXPRESS
+     Trilhas por zona de dor × 3 formatos de aplicação.
+     Cada protocolo: lista de [id do exercício, segundos].
+     "respira" é a abertura padrão de 20 s.
+     ========================================================= */
+  const TRILHAS_ZONA = {
+    lombar: {
+      nome: "Descompressão da Lombar e Quadril",
+      paraQuem: "Para quem passa horas sentado ou de pé.",
+      regioes: ["lombar", "pernas"], emoji: "🪑"
+    },
+    cervical: {
+      nome: "Destrava de Ombros, Cervical e Pescoço",
+      paraQuem: "Para quem acumula tensão do trabalho e da postura.",
+      regioes: ["pescoco", "ombros"], emoji: "🦒"
+    },
+    joelhos: {
+      nome: "Estabilização e Alívio de Joelhos",
+      paraQuem: "Para quem sente impacto ao andar ou subir escadas.",
+      regioes: ["joelhos"], emoji: "🦵"
+    },
+    punho: {
+      nome: "Alívio de Punho e Mão",
+      paraQuem: "Para quem vive no mouse, no teclado ou repetindo movimento com as mãos.",
+      regioes: ["punho"], emoji: "✋"
+    }
+  };
+  const trilhaDaRegiao = (regiao) =>
+    Object.keys(TRILHAS_ZONA).find((k) => TRILHAS_ZONA[k].regioes.includes(regiao)) || "cervical";
+
+  const FORMATOS = {
+    expediente: { nome: "Protocolo Express de Expediente", curto: "Expediente", min: 3, emoji: "💼", texto: "Movimentos discretos para fazer na cadeira do trabalho ou em pé no intervalo, sem trocar de roupa." },
+    matinal: { nome: "Protocolo Matinal de Destrava", curto: "Matinal", min: 5, emoji: "☀️", texto: "Para acordar sem a sensação de corpo pesado ou travado. Dá para fazer na cama." },
+    noturno: { nome: "Protocolo Noturno de Descompressão", curto: "Noturno", min: 5, emoji: "🌙", texto: "Para soltar a musculatura antes de dormir e ajudar o corpo a relaxar." }
+  };
+
+  const PROTOCOLOS = {
+    lombar: {
+      expediente: [["respira", 20], ["inclinacao-pelve", 30], ["gato-vaca-sentado", 40], ["rotacao-tronco", 40], ["flexor-quadril", 30], ["panturrilha", 20]],
+      matinal: [["respira", 20], ["joelhos-peito", 50], ["torcao-deitado", 50], ["ponte-gluteo", 50], ["gato-vaca-4-apoios", 60], ["postura-crianca", 40], ["extensao-pe", 30]],
+      noturno: [["respiracao-4-6", 40], ["joelhos-peito", 50], ["figura-4", 60], ["torcao-deitado", 50], ["pernas-parede", 70], ["respiracao-4-6", 30]]
+    },
+    cervical: {
+      expediente: [["respira", 20], ["retracao-queixo", 30], ["inclinacao-lateral", 30], ["encolher-ombros", 30], ["juncao-escapulas", 30], ["rotacao-pescoco", 40]],
+      matinal: [["respira", 20], ["espreguicar", 30], ["anjo-no-chao", 60], ["retracao-queixo", 40], ["rotacao-pescoco", 40], ["gato-vaca-4-apoios", 50], ["abertura-peito", 60]],
+      noturno: [["respiracao-4-6", 40], ["encolher-ombros", 30], ["inclinacao-lateral", 50], ["anjo-no-chao", 60], ["postura-crianca", 60], ["respiracao-4-6", 60]]
+    },
+    joelhos: {
+      expediente: [["respira", 20], ["bombinha-tornozelo", 30], ["isometria-quadriceps", 40], ["extensao-joelho-sentado", 40], ["alongamento-posterior-sentado", 30], ["panturrilha", 20]],
+      matinal: [["respira", 20], ["bombinha-tornozelo", 40], ["deslizamento-calcanhar", 60], ["toalha-joelho", 50], ["ponte-gluteo", 50], ["abducao-lado", 50], ["sentar-levantar", 30]],
+      noturno: [["respiracao-4-6", 40], ["alongamento-posterior-sentado", 50], ["figura-4", 60], ["pernas-parede", 70], ["bombinha-tornozelo", 40], ["respiracao-4-6", 40]]
+    },
+    punho: {
+      expediente: [["respira", 20], ["abrir-fechar-mao", 30], ["deslizamento-tendoes", 40], ["flexores-extensores", 40], ["encolher-ombros", 20], ["juncao-escapulas", 30]],
+      matinal: [["respira", 20], ["espreguicar", 30], ["abrir-fechar-mao", 40], ["deslizamento-tendoes", 50], ["flexores-extensores", 60], ["abertura-peito", 50], ["encolher-ombros", 50]],
+      noturno: [["respiracao-4-6", 40], ["flexores-extensores", 60], ["deslizamento-tendoes", 50], ["encolher-ombros", 40], ["postura-crianca", 60], ["respiracao-4-6", 50]]
+    }
+  };
+
+  /* Bônus incluídos no produto principal (matam o medo de errar) */
+  const BONUS_INCLUSOS = {
+    seguranca: {
+      nome: "Trava de Segurança Articular",
+      formato: "Vídeo de 4 min",
+      promessa: "O que nunca fazer ao sentir dor. Tira o medo de fazer o movimento errado e piorar.",
+      regraDeOuro: {
+        pode: ["Tensão leve", "Calor no músculo", "Sensação de alívio"],
+        pare: ["Pontada ou fisgada", "Choque", "Formigamento que aumenta", "Dor que corre para o braço ou a perna"]
+      },
+      nunca: [
+        ["Alongar até doer", "O certo é sentir uma tensão leve. Fisgada é sinal de parar e diminuir a amplitude."],
+        ["Fazer movimento com embalo", "Balançar para ir mais longe puxa o músculo de surpresa. Vá devagar e segure."],
+        ["Prender a respiração", "Respiração presa aumenta a tensão. Solte o ar na parte mais difícil do movimento."],
+        ["Girar o pescoço em círculos rápidos", "Prefira movimentos separados e lentos: olhar para o lado, inclinar, levar o queixo para trás."],
+        ["Forçar a lombar travada a encostar a mão no chão", "Com a lombar travada, comece pelos movimentos pequenos da pelve e da respiração."],
+        ["Deixar o joelho entrar para dentro ou agachar fundo com dor", "Joelho alinhado com o pé e só até onde não dói."],
+        ["Insistir quando formiga, adormece ou a dor corre", "Pare o exercício da região e confira o Semáforo dos Sinais."],
+        ["Tomar remédio para aguentar o exercício", "A dor é o aviso. Se precisa de remédio para se mexer, fale com um profissional."],
+        ["Ficar dias parado esperando passar", "Na maioria das dores comuns, o repouso total aumenta a rigidez. Mexa-se de leve, dentro do que não dói."]
+      ]
+    },
+    socorro: {
+      nome: "Guia de Socorro para Crises Agudas",
+      formato: "Guia passo a passo",
+      promessa: "O que fazer quando a coluna, o pescoço ou o joelho travar no meio do dia.",
+      passos: [
+        ["Pare e respire", "Faça 1 minuto de Respiração 4-6. O susto contrai ainda mais o músculo."],
+        ["Procure a posição de alívio", "Escolha abaixo a posição para a região que travou e fique nela de 3 a 5 minutos."],
+        ["Faça só movimentos mínimos, sem dor", "Movimentos bem pequenos dentro do que não dói: a pelve rolando de leve, o queixo indo para trás, a bombinha de tornozelo."],
+        ["Use calor, se fizer bem", "Uma bolsa morna por 15 a 20 minutos, sempre com um pano entre ela e a pele, ajuda o músculo a relaxar."],
+        ["Volte a se mexer aos poucos", "Ainda no mesmo dia, caminhe alguns passos a cada hora. Para levantar da cama com a lombar travada, role de lado e empurre com os braços."]
+      ],
+      posicoes: {
+        lombar: "Deitado de barriga para cima com as pernas apoiadas numa cadeira (joelhos dobrados), ou de lado com um travesseiro entre os joelhos.",
+        cervical: "Sentado com as costas e a cabeça apoiadas, braços apoiados nas coxas ou numa almofada. Deitado, use um travesseiro baixo.",
+        joelhos: "Sentado com a perna esticada e apoiada, sem nada embaixo do joelho que o deixe dobrado por muito tempo.",
+        punho: "Antebraço apoiado na mesa, punho reto e solto, mão relaxada. Evite mouse e celular por alguns minutos."
+      },
+      alertas: [
+        "A dor começou depois de uma queda, batida ou acidente",
+        "Perda de força no braço ou na perna",
+        "Dormência entre as pernas ou na região íntima, ou perda de controle do xixi ou do cocô",
+        "Febre junto com dor nas costas",
+        "Dor no pescoço, ombro, mandíbula ou braço esquerdo com aperto no peito, falta de ar ou suor frio (pode ser o coração)",
+        "Joelho muito inchado, quente ou que não aguenta o peso do corpo",
+        "Dor que piora muito, não alivia com a posição de alívio ou não melhora em poucos dias"
+      ]
+    }
+  };
+
   window.RELIGAR_DADOS = {
     REGIOES, EXERCICIOS, ex, ROTINAS, OS_3_RS, TRILHAS, DIA_CAOTICO,
-    SEMAFORO, DIAS, SEMANAS, REVISOES, AULAS, BONUS, PDFS
+    SEMAFORO, DIAS, SEMANAS, REVISOES, AULAS, BONUS, PDFS,
+    TRILHAS_ZONA, trilhaDaRegiao, FORMATOS, PROTOCOLOS, BONUS_INCLUSOS
   };
 })();

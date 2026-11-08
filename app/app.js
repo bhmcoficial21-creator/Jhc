@@ -43,14 +43,16 @@
   const diasFeitos = () => Object.values(estado.dias).filter((d) => d.feito).length;
 
   /* ---------- Roteamento ---------- */
-  const ROTAS = { boasvindas, hoje, pausa, alivio, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
+  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
   function navegar() {
     pararTimer();
     let rota = (location.hash || "#hoje").slice(1);
     if (!estado.perfil && rota !== "boasvindas") return (location.hash = "#boasvindas");
     if (rota === "hoje" && diaAtual() > 21) rota = "dia21";
-    (ROTAS[rota] || hoje)();
-    $$("#nav a").forEach((a) => a.classList.toggle("ativo", a.dataset.r === rota));
+    if (rota.startsWith("trilha-") && D.TRILHAS_ZONA[rota.slice(7)]) trilha(rota.slice(7));
+    else (ROTAS[rota] || hoje)();
+    const aba = rota.startsWith("trilha-") || ["montar", "seguranca", "socorro"].includes(rota) ? "alivio" : rota;
+    $$("#nav a").forEach((a) => a.classList.toggle("ativo", a.dataset.r === aba));
     $("#nav").classList.toggle("oculto", rota === "boasvindas");
     $("#botao-estranho").classList.toggle("oculto", rota === "boasvindas");
     $("#topo-dia").textContent = estado.perfil ? (diaAtual() > 21 ? "Desafio concluído" : `Dia ${diaAtual()} de 21`) : "";
@@ -152,7 +154,8 @@
     tela.innerHTML = `
       <span class="etiqueta">Seu plano</span>
       <h1 style="margin-top:8px">Região de foco: ${reg.emoji} ${reg.nome}</h1>
-      <div class="cartao"><h3>Trilha: ${trilha.nome}</h3><p class="pequeno">${trilha.dica}</p></div>
+      <div class="cartao"><h3>Sua trilha de alívio: ${D.TRILHAS_ZONA[D.trilhaDaRegiao(diag.regiaoFoco)].nome}</h3><p class="pequeno">Na aba Alívio: protocolos de Expediente (3 min), Matinal (5 min) e Noturno (5 min).</p></div>
+      <div class="cartao"><h3>Sua rotina: ${trilha.nome}</h3><p class="pequeno">${trilha.dica}</p></div>
       <div class="cartao"><h3><span class="bolinha ${diag.cor}"></span> Semáforo inicial: ${sem.nome}</h3><p class="pequeno">${sem.fazer}</p></div>
       <div class="cartao">
         <h3>Antes de começar: salve o painel na tela inicial</h3>
@@ -384,6 +387,127 @@
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
   /* =========================================================
+     3a. CENTRAL DE ALÍVIO EXPRESS
+     Trilhas por zona de dor × formatos (expediente, matinal, noturno)
+     ========================================================= */
+  function central() {
+    const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
+    const ordem = [minha, ...Object.keys(D.TRILHAS_ZONA).filter((k) => k !== minha)];
+    tela.innerHTML = `
+      <span class="etiqueta">Central de Alívio Express</span>
+      <h1 style="margin-top:8px">Qual alívio você precisa agora?</h1>
+
+      <a class="cartao socorro-atalho" href="#socorro">
+        <span style="font-size:1.6rem">🚨</span>
+        <span><strong>Travou agora?</strong><br><span class="pequeno">Guia de Socorro para Crises Agudas</span></span>
+      </a>
+
+      <a class="cartao express-atalho" href="#montar">
+        <span style="font-size:1.6rem">⚡</span>
+        <span><strong>Montar meu alívio agora</strong><br><span class="pequeno suave">Diga onde dói, quanto tempo tem e onde está: de 1 a 3 minutos</span></span>
+      </a>
+
+      <h2 style="margin-top:28px">Trilhas por zona de dor</h2>
+      <p class="pequeno suave">Cada trilha tem 3 protocolos: Expediente (3 min), Matinal (5 min) e Noturno (5 min).</p>
+      ${ordem.map((k) => { const t = D.TRILHAS_ZONA[k]; return `
+        <a class="cartao trilha-card" href="#trilha-${k}">
+          <span style="font-size:1.8rem">${t.emoji}</span>
+          <span style="flex:1;min-width:0">
+            ${k === minha ? `<span class="etiqueta">Sua trilha</span><br>` : ""}
+            <strong>${t.nome}</strong><br><span class="pequeno suave">${t.paraQuem}</span>
+          </span>
+          <span aria-hidden="true">›</span>
+        </a>`; }).join("")}
+
+      <a class="cartao trilha-card" href="#seguranca" style="margin-top:24px">
+        <span style="font-size:1.6rem">🛡️</span>
+        <span style="flex:1"><span class="etiqueta">Bônus</span><br><strong>${D.BONUS_INCLUSOS.seguranca.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.seguranca.promessa}</span></span>
+        <span aria-hidden="true">›</span>
+      </a>`;
+  }
+
+  function trilha(id) {
+    const t = D.TRILHAS_ZONA[id];
+    const reg = registroDia(Math.min(diaAtual(), 21));
+    const hora = new Date().getHours();
+    const sugerido = hora < 10 ? "matinal" : hora >= 19 ? "noturno" : "expediente";
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
+      <span class="etiqueta">Trilha</span>
+      <h1 style="margin-top:8px">${t.emoji} ${t.nome}</h1>
+      <p class="suave">${t.paraQuem}</p>
+      ${["expediente", "matinal", "noturno"].map((f) => {
+        const fm = D.FORMATOS[f];
+        const passos = D.PROTOCOLOS[id][f];
+        return `
+        <div class="cartao formato ${f === sugerido ? "sugerido" : ""}">
+          <div class="linha" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start">
+            <div><span style="font-size:1.4rem">${fm.emoji}</span> <strong>${fm.nome}</strong></div>
+            <span class="etiqueta" style="white-space:nowrap">${fm.min} min</span>
+          </div>
+          ${f === sugerido ? `<p class="pequeno" style="margin:6px 0 0"><strong>Indicado para agora</strong></p>` : ""}
+          <p class="pequeno suave" style="margin:6px 0 8px">${fm.texto}</p>
+          <details><summary class="pequeno">ver os ${passos.length} microvídeos</summary>
+            <ol class="lista-ex">${passos.map(([ex, seg]) => `<li>${ex === "respira" ? "3 respirações profundas" : D.ex(ex).nome} <span class="suave">· ${seg} s</span></li>`).join("")}</ol>
+          </details>
+          <button class="botao botao-bloco" data-f="${f}" style="margin-top:10px">Começar ${fm.curto.toLowerCase()}</button>
+        </div>`; }).join("")}`;
+    $$("[data-f]").forEach((b) => b.onclick = () => executarProtocolo(L.protocoloDaTrilha(id, b.dataset.f, reg.semaforo), reg));
+  }
+
+  function seguranca() {
+    const b = D.BONUS_INCLUSOS.seguranca;
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
+      <span class="etiqueta">Bônus · ${b.formato}</span>
+      <h1 style="margin-top:8px">🛡️ ${b.nome}</h1>
+      <p class="suave">${b.promessa}</p>
+      <div class="cartao"><div class="video-placeholder">[Vídeo · 4 min]<br>${b.nome}</div></div>
+      <div class="cartao">
+        <h3>Regra de ouro</h3>
+        <div class="grade-2">
+          <div><p class="pequeno" style="margin:0 0 4px"><span class="bolinha verde"></span> <strong>Pode sentir</strong></p><ul class="pequeno" style="margin:0;padding-left:18px">${b.regraDeOuro.pode.map((x) => `<li>${x}</li>`).join("")}</ul></div>
+          <div><p class="pequeno" style="margin:0 0 4px"><span class="bolinha vermelho"></span> <strong>Pare se sentir</strong></p><ul class="pequeno" style="margin:0;padding-left:18px">${b.regraDeOuro.pare.map((x) => `<li>${x}</li>`).join("")}</ul></div>
+        </div>
+      </div>
+      <div class="cartao">
+        <h3>O que nunca fazer ao sentir dor</h3>
+        ${b.nunca.map(([t, d]) => `<div class="nunca"><strong>✕ ${t}</strong><p class="pequeno" style="margin:2px 0 0">${d}</p></div>`).join("")}
+      </div>`;
+  }
+
+  function socorro() {
+    const b = D.BONUS_INCLUSOS.socorro;
+    const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
+      <span class="etiqueta">Bônus · ${b.formato}</span>
+      <h1 style="margin-top:8px">🚨 ${b.nome}</h1>
+      <p class="suave">${b.promessa}</p>
+
+      <div class="cartao alerta-emergencia">
+        <h3>Antes de tudo: algum destes sinais?</h3>
+        <ul class="pequeno" style="margin:0;padding-left:18px">${b.alertas.map((a) => `<li>${a}</li>`).join("")}</ul>
+        <p style="margin:12px 0 0"><strong>Se sim, não faça os passos abaixo. Procure atendimento médico agora. Emergência: SAMU 192.</strong></p>
+      </div>
+
+      ${b.passos.map(([t, d], k) => `
+        <div class="cartao plano-socorro"><span class="etiqueta">Passo ${k + 1}</span><div><strong>${t}</strong><p class="pequeno" style="margin:4px 0 0">${d}</p></div></div>`).join("")}
+
+      <div class="cartao">
+        <h3>Posição de alívio</h3>
+        <div class="linha" id="pos-abas" style="margin-bottom:12px">${Object.keys(b.posicoes).map((k) =>
+          `<button class="opcao" style="width:auto;min-height:40px" data-k="${k}" aria-pressed="${k === minha}">${D.TRILHAS_ZONA[k].emoji} ${{ lombar: "Lombar", cervical: "Pescoço", joelhos: "Joelho", punho: "Punho" }[k]}</button>`).join("")}</div>
+        <p id="pos-texto" style="margin:0">${b.posicoes[minha]}</p>
+      </div>
+      <a class="botao botao-bloco" href="#trilha-${minha}">Quando aliviar: protocolo leve da sua trilha</a>`;
+    $$("#pos-abas .opcao").forEach((x) => x.onclick = () => {
+      $$("#pos-abas .opcao").forEach((y) => y.setAttribute("aria-pressed", y === x));
+      $("#pos-texto").textContent = b.posicoes[x.dataset.k];
+    });
+  }
+
+  /* =========================================================
      3b. ALÍVIO EXPRESS (protocolo sob medida na hora da dor)
      ========================================================= */
   function alivio() {
@@ -395,6 +519,7 @@
     tela.innerHTML = `
       <span class="etiqueta">Alívio Express</span>
       <h1 style="margin-top:8px">Doeu agora? Monte seu alívio</h1>
+      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
       <p class="suave">Três toques e o protocolo cabe no tempo que você tem, aí mesmo onde você está.</p>
 
       <div class="cartao">
@@ -433,7 +558,7 @@
     const total = passos.reduce((s, x) => s + x.segundos, 0);
 
     tela.innerHTML = `
-      <span class="etiqueta">Alívio Express · ${prot.minutos} min · ${D.REGIOES[prot.regiao].nome}</span>
+      <span class="etiqueta">${prot.titulo || `Alívio Express · ${prot.minutos} min · ${D.REGIOES[prot.regiao].nome}`}</span>
       ${prot.aviso ? `<div class="aviso ${reg.semaforo === "vermelho" ? "aviso-vermelho" : ""}" style="margin-top:12px">${prot.aviso}</div>` : ""}
       <div class="cartao" style="margin-top:12px">
         <div class="video-placeholder vertical" id="ae-video"></div>
@@ -643,6 +768,10 @@
         <h3>PDFs de apoio</h3>
         ${D.PDFS.map((p) => `<p style="margin:6px 0">📄 <a href="${p.arquivo}">${p.nome}</a></p>`).join("")}
       </div>
+      <h3 style="margin-top:20px">Incluídos no seu acesso</h3>
+      <a class="cartao trilha-card" href="#seguranca"><span style="font-size:1.5rem">🛡️</span><span><strong>${D.BONUS_INCLUSOS.seguranca.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.seguranca.promessa}</span></span></a>
+      <a class="cartao trilha-card" href="#socorro"><span style="font-size:1.5rem">🚨</span><span><strong>${D.BONUS_INCLUSOS.socorro.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.socorro.promessa}</span></span></a>
+      <h3 style="margin-top:20px">Adicionais</h3>
       ${bumps.map((b) => estado.compras[b.id] ? `
         <div class="cartao"><span class="etiqueta">Liberado</span><h3 style="margin-top:8px">${b.nome}</h3><p class="pequeno">${b.descricao}</p>
           <div class="video-placeholder">[Conteúdo do bônus]</div></div>` : `
@@ -711,7 +840,7 @@
         <p style="margin:6px 0"><a href="#" id="ver-semaforo">🚦 Semáforo dos Sinais</a></p>
       </div>
       <div class="cartao">
-        <h3>Minha trilha</h3>
+        <h3>Minha rotina de trabalho</h3>
         <div class="opcoes" id="cfg-trilha">${Object.entries(D.TRILHAS).map(([id, t]) =>
           `<button class="opcao" data-id="${id}" aria-pressed="${p.trilha === id}">${t.nome}</button>`).join("")}</div>
         <h3 style="margin-top:16px">Região de foco</h3>
@@ -757,6 +886,7 @@
   function abrirSemaforo() {
     abrirModal(`<h2>🚦 Semáforo dos Sinais</h2>${semaforoExplicado()}
       <p class="aviso aviso-vermelho" style="margin-top:12px">Sentiu algo do vermelho? Pare os exercícios da região e procure um médico ou fisioterapeuta.</p>
+      <a class="botao botao-secundario botao-bloco" href="#socorro" onclick="this.closest('dialog').close()" style="margin-top:12px">Travou agora? Guia de Socorro</a>
       <button class="botao botao-bloco" onclick="this.closest('dialog').close()" style="margin-top:12px">Entendi</button>`);
   }
   $("#botao-estranho").onclick = abrirSemaforo;

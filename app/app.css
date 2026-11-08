@@ -65,3 +65,12 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 }
 
 #ae-video { max-height: 220px; }
+
+.socorro-atalho, .trilha-card { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--cor-texto); }
+.socorro-atalho { border: 2px solid var(--cor-vermelho); color: var(--cor-vermelho); }
+.formato.sugerido { border: 2px solid var(--cor-primaria); }
+.nunca { padding: 10px 0; border-top: 1px solid var(--cor-borda); }
+.nunca strong { color: var(--cor-vermelho); }
+.alerta-emergencia { border: 2px solid var(--cor-vermelho); }
+.plano-socorro { display: flex; gap: 12px; align-items: flex-start; }
+.plano-socorro .etiqueta { flex-shrink: 0; }

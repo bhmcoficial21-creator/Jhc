@@ -24,6 +24,9 @@
     summary { font-weight: 600; cursor: pointer; }
     .express-passos { display: grid; gap: 12px; grid-template-columns: 1fr; margin: 20px 0; }
     @media (min-width: 640px) { .express-passos { grid-template-columns: repeat(3, 1fr); } .express-passos .cartao + .cartao { margin-top: 0; } }
+    .trilhas-zona { display: grid; gap: 12px; grid-template-columns: 1fr; }
+    @media (min-width: 560px) { .trilhas-zona { grid-template-columns: 1fr 1fr; } .trilhas-zona .cartao + .cartao { margin-top: 0; } }
+    .trilhas-zona p { margin: 0; }
     .express-passos h3 { margin: 8px 0 4px; }
     .express-passos p { margin: 0; }
     .barra-fixa { position: sticky; bottom: 0; background: var(--cor-superficie); border-top: 1px solid var(--cor-borda); padding: 10px var(--espaco); z-index: 5; }
@@ -36,7 +39,7 @@
     <div class="container">
       <span class="etiqueta">Desafio Corpo Descongelado 21 Dias</span>
       <h1 style="margin-top:12px">A dor do seu trabalho não é falta de força. É falta de pausa.</h1>
-      <p class="suave">Alivie e previna a dor no pescoço, ombro, punho, lombar e pernas com micro-pausas de 2 minutos, sem academia. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>
+      <p class="suave">Alivie e previna a dor no pescoço, ombros, punho, lombar, quadril e joelhos com microvídeos de 1 a 5 minutos para abrir no celular na hora que a dor bater, sem academia. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>
       <div class="video-placeholder">[Vídeo de abertura da página · até 60 s]</div>
       <div class="cta">
         <a class="botao botao-grande" href="#oferta">Quero descongelar meu corpo</a>
@@ -122,19 +125,44 @@
   <!-- 5b. Alívio Express -->
   <section class="secao" id="alivio-express">
     <div class="container">
-      <span class="etiqueta">⚡ Alívio Express</span>
-      <h2 style="margin-top:8px">Doeu no meio do expediente? Três minutos, aí na cadeira.</h2>
-      <p>Bateu aquela fisgada na lombar ou o peso no pescoço no meio da tarde. Você abre o celular, toca em <strong>Alívio</strong>, diz onde dói, quanto tempo tem e onde está. Em segundos aparece o seu protocolo: microvídeos de 30 a 40 segundos, com cronômetro, que você segue ali mesmo, de roupa de trabalho.</p>
-      <div class="express-passos">
-        <div class="cartao"><span class="etiqueta">1</span><h3>Onde dói agora</h3><p class="pequeno">Pescoço, ombros, punho e mão, lombar ou pernas.</p></div>
-        <div class="cartao"><span class="etiqueta">2</span><h3>Quanto tempo você tem</h3><p class="pequeno">1, 2 ou 3 minutos. O protocolo cabe no seu tempo, não o contrário.</p></div>
-        <div class="cartao"><span class="etiqueta">3</span><h3>Onde você está</h3><p class="pequeno">Na cadeira, podendo levantar ou em reunião de câmera ligada, com movimentos que ninguém percebe.</p></div>
+      <span class="etiqueta">⚡ Central de Alívio Express</span>
+      <h2 style="margin-top:8px">Um assistente de bolso para a hora que a dor bate</h2>
+      <p class="destaque">Você não está comprando um curso teórico de 30 horas. Está levando um assistente de bolso com microvídeos para abrir no celular no exato momento em que a dor bater, e voltar a trabalhar ou descansar sem o corpo pesado.</p>
+      <p>Nada de vídeo solto e aleatório. A Central é dividida em trilhas por zona de dor:</p>
+      <div class="trilhas-zona" id="trilhas-zona"></div>
+
+      <h3 style="margin-top:32px">Cada trilha cabe no seu dia: 3 formatos de aplicação</h3>
+      <p class="suave">"Não tenho tempo" deixa de ser desculpa. Você escolhe o protocolo pelo momento do dia.</p>
+      <div class="express-passos" id="formatos"></div>
+
+      <div class="cartao" style="margin-top:20px">
+        <h3>⚡ E quando a dor aperta fora do roteiro: Alívio Express sob medida</h3>
+        <p style="margin:0">Bateu a fisgada na lombar no meio da tarde? Abra o celular, diga onde dói, quanto tempo você tem (1, 2 ou 3 minutos) e onde está (na cadeira, de pé ou em reunião de câmera ligada). O painel monta o protocolo na hora, com cronômetro, para você seguir ali mesmo, de roupa de trabalho.</p>
       </div>
-      <p class="destaque">Você para de esperar a dor passar e passa a ter o que fazer na hora que ela aparece.</p>
-      <p class="suave">Sem academia, sem equipamento, sem precisar sair do trabalho. Feito sob medida para a sua dor e para o tempo que sobra no seu dia.</p>
+
       <div class="cta">
-        <a class="botao" href="quiz/index.html">Descobrir meu Alívio Express grátis</a>
-        <span class="beneficio">O Mapa da Dor já monta o seu primeiro protocolo</span>
+        <a class="botao" href="quiz/index.html">Descobrir minha trilha grátis</a>
+        <span class="beneficio">O Mapa da Dor indica sua trilha e já monta seu primeiro protocolo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5c. Bônus que matam objeções -->
+  <section class="secao" id="bonus">
+    <div class="container">
+      <h2>Bônus para você não ter medo de errar</h2>
+      <p class="suave">Quem sente dor tem medo de fazer o movimento errado e piorar. Esses dois bônus resolvem isso.</p>
+      <div class="grade-2">
+        <div class="cartao">
+          <span class="etiqueta">Bônus 1 · vídeo de 4 min</span>
+          <h3 style="margin-top:8px">🛡️ Trava de Segurança Articular</h3>
+          <p class="pequeno">O que <strong>nunca</strong> fazer ao sentir dor. A regra de ouro do que pode sentir e do que é sinal para parar, e os 9 erros que transformam um alívio em piora.</p>
+        </div>
+        <div class="cartao">
+          <span class="etiqueta">Bônus 2 · guia passo a passo</span>
+          <h3 style="margin-top:8px">🚨 Guia de Socorro para Crises Agudas</h3>
+          <p class="pequeno">Travou a coluna, o pescoço ou o joelho no meio do dia? O passo a passo do que fazer nos primeiros minutos, a posição de alívio para cada região e os sinais de que é caso de procurar atendimento na hora.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -161,7 +189,7 @@
         <div class="cartao"><h3>🌙 Plano pela noite</h3><p class="pequeno">Toda manhã o painel pergunta "Como foi sua noite?" e ajusta o plano do dia. Noite ruim não tira você do desafio.</p></div>
         <div class="cartao"><h3>👀 Pausas invisíveis</h3><p class="pequeno">Exercícios para fazer em reunião de câmera ligada ou no atendimento. Ninguém percebe e o corpo descongela.</p></div>
       </div>
-      <h3 style="margin-top:28px">3 trilhas para a sua rotina</h3>
+      <h3 style="margin-top:28px">E o desafio de 21 dias se adapta à sua rotina de trabalho</h3>
       <div class="pilha" id="trilhas"></div>
     </div>
   </section>
@@ -217,6 +245,8 @@
       <details><summary>Preciso de academia ou equipamento?</summary><p>Não. Tudo é feito de roupa de trabalho, na cadeira ou de pé. Quando aparece elástico, uma toalha substitui.</p></details>
       <details><summary>Quanto tempo por dia?</summary><p>Pausas de 2 minutos ao longo do dia (mínimo 4) e um vídeo de 2 a 5 minutos. Em dia caótico, 2 pausas já valem o check.</p></details>
       <details><summary>Trabalho em reunião o dia inteiro. Funciona?</summary><p>Sim. As pausas invisíveis foram feitas para reunião de câmera ligada: ninguém percebe.</p></details>
+      <details><summary>Tenho dor no joelho. Serve para mim?</summary><p>Sim. A trilha Estabilização e Alívio de Joelhos tem protocolos para quem sente impacto ao andar ou subir escadas, com movimentos sem impacto. Joelho muito inchado, quente ou que não aguenta o peso do corpo precisa de avaliação antes.</p></details>
+      <details><summary>E se eu travar no meio do dia?</summary><p>O Guia de Socorro para Crises Agudas mostra o que fazer nos primeiros minutos, a posição de alívio para cada região e quando é caso de procurar atendimento na hora.</p></details>
       <details><summary>Serve para homens também?</summary><p>Sim. O desafio é para homens e mulheres que trabalham sentados ou repetindo movimento.</p></details>
       <details><summary>Vai curar minha tendinite, hérnia ou LER/DORT?</summary><p>Não. O desafio é educação, prevenção e rotina, não tratamento. Ele ensina a aliviar, prevenir e criar o hábito. Se você tem diagnóstico ou dor forte, converse com seu médico ou fisioterapeuta antes de começar.</p></details>
       <details><summary>E se eu esquecer de fazer as pausas?</summary><p>O painel lembra você dentro do seu horário de trabalho, no intervalo que você escolher (padrão: 50 minutos).</p></details>
@@ -248,6 +278,12 @@
       const C = window.RELIGAR_CONFIG, D = window.RELIGAR_DADOS;
       const $ = (id) => document.getElementById(id);
 
+      $("trilhas-zona").innerHTML = Object.values(D.TRILHAS_ZONA).map((t, i) => `
+        <div class="cartao trilha-venda"><span class="etiqueta">Trilha ${i + 1}</span>
+          <h3 style="margin-top:8px">${t.emoji} ${t.nome}</h3><p class="pequeno" style="margin:0">${t.paraQuem}</p></div>`).join("");
+      $("formatos").innerHTML = Object.values(D.FORMATOS).map((f) => `
+        <div class="cartao"><span class="etiqueta">${f.min} min</span><h3>${f.emoji} ${f.nome}</h3><p class="pequeno">${f.texto}</p></div>`).join("");
+
       $("semanas").innerHTML = D.SEMANAS.map((s) => `
         <div class="cartao">
           <span class="etiqueta">Semana ${s.n} · dias ${(s.n - 1) * 7 + 1} a ${s.n * 7}</span>
@@ -265,7 +301,11 @@
       const entregaveis = [
         "Mini curso: 5 aulas curtas em vídeo (cerca de 45 min no total)",
         "Desafio de 21 dias: 1 vídeo de 2 a 5 min por dia + micro-pausas + check no painel",
-        "Alívio Express: protocolo de microvídeos de 1 a 3 minutos para a dor de agora",
+        "Central de Alívio Express: 4 trilhas por zona de dor (lombar e quadril, ombros e pescoço, joelhos, punho e mão)",
+        "12 protocolos prontos: Expediente (3 min), Matinal (5 min) e Noturno (5 min) para cada trilha",
+        "Alívio Express sob medida: o protocolo de 1 a 3 minutos para a dor de agora",
+        "Bônus 1: Trava de Segurança Articular (o que nunca fazer ao sentir dor)",
+        "Bônus 2: Guia de Socorro para Crises Agudas",
         "Biblioteca de exercícios por região, em vídeos curtos",
         "3 trilhas por rotina + Trilha Dia Caótico",
         "Quiz Mapa da Dor: sua região de foco e sua trilha",

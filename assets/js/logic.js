@@ -126,7 +126,7 @@
 
   /* Exercício do "Remexe": gira entre os exercícios da região de foco */
   function exercicioRemexe(regiaoFoco, numeroPausa) {
-    const lista = D.EXERCICIOS.filter((e) => e.regiao === regiaoFoco);
+    const lista = D.EXERCICIOS.filter((e) => e.regiao === regiaoFoco && !e.chao);
     return lista.length ? lista[numeroPausa % lista.length] : D.EXERCICIOS[0];
   }
 
@@ -149,7 +149,7 @@
   // Exercícios que pedem ficar em pé ou usar porta/parede
   const SO_EM_PE = ["abertura-peito", "extensao-pe", "flexor-quadril", "sentar-levantar"];
   // Regiões vizinhas, usadas para completar o tempo
-  const VIZINHAS = { pescoco: ["ombros"], ombros: ["pescoco", "punho"], punho: ["ombros"], lombar: ["pernas"], pernas: ["lombar"] };
+  const VIZINHAS = { pescoco: ["ombros"], ombros: ["pescoco", "punho"], punho: ["ombros"], lombar: ["pernas"], pernas: ["lombar", "joelhos"], joelhos: ["pernas"] };
   const RESPIRA = { id: "respira", nome: "3 respirações profundas", passos: "Inspire pelo nariz, solte o ar devagar pela boca e deixe os ombros caírem a cada saída do ar.", resolve: "Tira o corpo do modo alerta" };
 
   const duracaoExercicio = (e) => (e.invisivel ? 30 : 40);
@@ -165,7 +165,7 @@
       return protocolo;
     }
 
-    const serve = (e) => e.regiao !== "forca" && e.regiao !== "olhos" &&
+    const serve = (e) => !e.chao && !["forca", "olhos", "relaxamento"].includes(e.regiao) &&
       (local === "reuniao" ? e.invisivel : local === "sentado" ? !SO_EM_PE.includes(e.id) : true);
     const ordem = [regiao, ...(VIZINHAS[regiao] || [])];
     const candidatos = ordem.flatMap((r) => D.EXERCICIOS.filter((e) => e.regiao === r && serve(e)));
@@ -186,7 +186,24 @@
     return protocolo;
   }
 
+  /* Protocolo fixo da Central: trilha (zona de dor) × formato */
+  function protocoloDaTrilha(trilha, formato, semaforo) {
+    const t = D.TRILHAS_ZONA[trilha], f = D.FORMATOS[formato];
+    const prot = {
+      titulo: `${f.curto} · ${f.min} min · ${t.nome}`, minutos: f.min, regiao: t.regioes[0], aviso: null,
+      passos: D.PROTOCOLOS[trilha][formato].map(([id, seg]) => ({ ...(id === "respira" ? RESPIRA : D.ex(id)), segundos: seg }))
+    };
+    if (semaforo === "vermelho") {
+      prot.aviso = "Seu semáforo de hoje está vermelho: sem exercícios para essa região. Faça só a respiração e procure um médico ou fisioterapeuta.";
+      prot.passos = [{ ...D.ex("respiracao-4-6"), segundos: f.min * 60 }];
+    } else if (semaforo === "amarelo") {
+      prot.aviso = "Semáforo amarelo: faça cada movimento mais devagar e com metade da amplitude.";
+    }
+    return prot;
+  }
+
   window.RELIGAR_LOGICA = {
+    protocoloDaTrilha,
     SINAIS, ROTINAS_TRABALHO, corDoSemaforo, diagnosticar, planoDoDia,
     metaPausas, paraMinutos, exercicioRemexe,
     TEMPOS_EXPRESS, LOCAIS_EXPRESS, montarProtocolo

@@ -286,6 +286,7 @@
     const trilha = D.TRILHAS[res.trilha];
     const ofertas = ofertasRecomendadas();
     const express = alivioExpress(res);
+    const zona = D.TRILHAS_ZONA[D.trilhaDaRegiao(res.regiaoFoco)];
     window.RELIGAR_STORE.salvarQuiz({ ...r, ...res, indice: ind, recomendados: ofertas.map((o) => o.id), tempoLivre: express.minutos, localPadrao: express.local, data: new Date().toISOString() });
 
     const ICONE_TRIPE = { ok: "verde", atencao: "amarelo", ruim: "vermelho" };
@@ -338,11 +339,15 @@
         ${express.aviso ? `<p class="aviso" style="margin:8px 0">${express.aviso}</p>` : ""}
         <ol class="express-lista">${express.passos.map((x) => `<li><span>${x.nome}</span><span class="suave">${x.segundos} s</span></li>`).join("")}</ol>
         <p class="pequeno suave" style="margin:12px 0 0">No painel, cada passo é um microvídeo com cronômetro. Você abre o celular, toca em "Alívio" e segue.</p>
+        <div class="trilha-quiz">
+          <p class="pequeno" style="margin:0"><strong>Sua trilha na Central de Alívio:</strong> ${zona.emoji} ${zona.nome}</p>
+          <p class="pequeno suave" style="margin:4px 0 0">💼 Expediente 3 min · ☀️ Matinal 5 min · 🌙 Noturno 5 min</p>
+        </div>
       </div>
 
       <div class="cartao">
         <h3>Seu plano para os 3 primeiros dias</h3>
-        <p class="pequeno suave">Região de foco: ${reg.emoji} ${reg.nome} · Trilha: ${trilha.nome}</p>
+        <p class="pequeno suave">Região de foco: ${reg.emoji} ${reg.nome} · Rotina: ${trilha.nome}</p>
         ${plano3Dias(res.regiaoFoco).map((d, k) => `
           <div class="plano-dia"><span class="etiqueta">Dia ${k + 1}</span><div><strong>${d.titulo}</strong><br><span class="pequeno">${d.texto}</span></div></div>`).join("")}
         <p class="pequeno suave" style="margin:12px 0 0">Do dia 4 ao 21, o painel do desafio ajusta o plano todo dia pela sua noite e pelo seu semáforo.</p>
@@ -351,13 +356,15 @@
       <div class="cartao oferta">
         <span class="etiqueta">Seu próximo passo</span>
         <h2 style="margin-top:8px">Desafio Corpo Descongelado 21 Dias</h2>
-        <p>O plano completo ${reg.para}, montado para a trilha ${trilha.nome}. Micro-pausas de 2 minutos, sem academia.</p>
+        <p>Um assistente de bolso para a dor ${reg.no}: microvídeos de 1 a 5 minutos para abrir no celular na hora que a dor bater, mais o desafio de 21 dias montado para a sua rotina.</p>
         <ul class="lista-check">
           <li>5 aulas curtas + 21 dias de desafio</li>
-          <li>Alívio Express: protocolo de microvídeos de 1 a 3 minutos na hora da dor</li>
+          <li>Central de Alívio Express: trilha ${zona.nome} com protocolos de Expediente, Matinal e Noturno</li>
+          <li>Alívio Express sob medida: 1 a 3 minutos na hora da dor</li>
           <li>Painel no celular que já começa com o seu Mapa da Dor</li>
           <li>Plano que muda pela sua noite e pelo seu semáforo</li>
           <li>Pausas invisíveis para reunião e atendimento</li>
+          <li>Bônus: Trava de Segurança Articular e Guia de Socorro para Crises Agudas</li>
           <li>PDFs de apoio e certificado no dia 21</li>
         </ul>
         <p><s class="suave">${formatarPreco(C.precos.ancora)}</s> <strong style="font-size:1.5rem">${formatarPreco(C.precos.principal)}</strong></p>
