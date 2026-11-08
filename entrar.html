@@ -42,10 +42,17 @@
       <form id="barbForm" class="auth-form" novalidate hidden>
         <div class="barb-pick" id="barbPick" role="radiogroup" aria-label="Quem é você"></div>
         <label class="auth-field">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-          <input name="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha da agenda" aria-label="Senha da agenda">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <input name="email" type="email" autocomplete="email" placeholder="Seu e-mail" aria-label="E-mail">
         </label>
-        <label class="check"><input type="checkbox" name="lembrar" checked> Manter conectado neste celular</label>
+        <label class="auth-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input name="senha" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
+        </label>
+        <label class="auth-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7a4 4 0 1 1-3.9 5H3v3h3v3h3v-3h2.1A4 4 0 0 1 15 7Z"/></svg>
+          <input name="codigo" autocomplete="off" autocapitalize="characters" placeholder="Código da barbearia (só no 1º acesso)" aria-label="Código de ativação">
+        </label>
         <p class="auth-msg" id="barbMsg" role="alert"></p>
         <button type="submit" class="auth-submit">Abrir minha agenda <span aria-hidden="true">→</span></button>
       </form>
@@ -91,6 +98,7 @@
   </main>
   <script src="js/logo3d.js"></script>
   <script src="js/loader.js"></script>
+  <script src="js/vendor/supabase.js"></script>
   <script src="js/data.js"></script>
   <script src="js/common.js"></script>
   <script src="js/entrar.js"></script>

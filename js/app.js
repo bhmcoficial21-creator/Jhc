@@ -94,7 +94,7 @@ function renderInfo() {
 }
 
 /* ===================== AGENDAMENTO ===================== */
-let cliente = usuarioAtual();
+let cliente = null;
 const state = {
   step: 1,
   servicos: new Set(),
@@ -125,11 +125,11 @@ function slots(dataStr, duracao) {
   const abre = toMin(h[0]), fecha = toMin(h[1]);
   const agora = new Date();
   const minAgora = ymd(agora) === dataStr ? agora.getHours() * 60 + agora.getMinutes() + ANTECEDENCIA_MIN : -1;
-  const bookings = getBookings();
+  if (!OCUPADOS[dataStr]) return null;
   const candidatos = state.barbeiro === "any" ? BARBEIROS.map((b) => b.id) : [state.barbeiro];
   const out = [];
   for (let t = abre; t + duracao <= fecha; t += INTERVALO_SLOTS) {
-    const livres = t < minAgora ? [] : candidatos.filter((id) => barberFree(id, dataStr, t, t + duracao, bookings));
+    const livres = t < minAgora ? [] : candidatos.filter((id) => barberFree(id, dataStr, t, t + duracao));
     out.push({ min: t, livres });
   }
   return out;
@@ -200,7 +200,12 @@ function stepDataHora() {
   if (!state.data || !dias.some((d) => ymd(d) === state.data)) state.data = ymd(dias[0]);
   const { dur: d } = totais();
   const lista = slots(state.data, d);
-  const livres = lista.filter((s) => s.livres.length);
+  if (!lista) {                                   // busca os horários ocupados no banco
+    buscarOcupados(state.data).then(() => state.step === 3 && renderWizard()).catch(() => {
+      const t = $("#times-load"); if (t) t.textContent = "Não foi possível carregar os horários. Verifique a internet e tente de novo.";
+    });
+  }
+  const livres = (lista || []).filter((s) => s.livres.length);
   const dia = parseYmd(state.data); const h = HORARIOS[dia.getDay()];
   return `
     <h3 class="wiz-title">3. Escolha o dia</h3>
@@ -211,7 +216,7 @@ function stepDataHora() {
         </button>`; }).join("")}
     </div>
     <h3 class="wiz-title">Horário <span class="muted">· ${DIAS[dia.getDay()]} das ${h[0]} às ${h[1]} · seu atendimento dura ${dur(d)}</span></h3>
-    ${livres.length ? `<div class="times">
+    ${!lista ? `<p class="empty" id="times-load">Carregando horários livres…</p>` : livres.length ? `<div class="times">
       ${lista.map((s) => `<button class="time-btn${state.hora === s.min ? " is-active" : ""}" data-hora="${s.min}" ${s.livres.length ? "" : "disabled"}>${fromMin(s.min)}</button>`).join("")}
     </div>` : `<p class="empty">Sem horários livres neste dia. Tente outro dia${state.barbeiro !== "any" ? " ou outro barbeiro" : ""}.</p>`}`;
 }
@@ -278,25 +283,22 @@ function renderWizard() {
   renderSteps(); renderSummary();
 }
 
-function salvarAgendamento() {
+async function salvarAgendamento() {
   const { lista, preco, dur: d } = totais();
   const ini = state.hora, fim = ini + d;
+  await buscarOcupados(state.data);                       // confere de novo na hora de gravar
   const livre = slots(state.data, d).find((s) => s.min === ini)?.livres || [];
-  if (!livre.length) return null;
-  const all = getBookings();
-  // Sem preferência: escolhe o barbeiro livre com menos atendimentos no dia
-  const carga = (id) => all.filter((b) => ativo(b) && b.barbeiro === id && b.data === state.data).length;
+  if (!livre.length) { const e = new Error("ocupado"); e.ocupado = true; throw e; }
+  // sem preferência: escolhe o barbeiro livre com menos atendimentos no dia
+  const carga = (id) => (OCUPADOS[state.data] || []).filter((b) => b.barbeiro === id).length;
   const barbeiro = livre.sort((a, b) => carga(a) - carga(b))[0];
-  const booking = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    criadoEm: new Date().toISOString(),
-    data: state.data, inicio: ini, fim, barbeiro,
-    servicos: lista.map((s) => s.id), preco,
-    clienteId: cliente.id, nome: cliente.nome, tel: cliente.tel, cabelo: state.cabelo, obs: state.obs.trim(),
-    status: "confirmado",
-  };
-  all.push(booking); saveBookings(all);
-  cliente = atualizarConta(cliente.id, { cabelo: booking.cabelo, ultimo: { servicos: booking.servicos, barbeiro } });
+  const booking = await criarAgendamento({
+    data: state.data, inicio: ini, fim, barbeiro, servicos: lista.map((s) => s.id), preco,
+    nome: cliente.nome, tel: cliente.tel, cabelo: state.cabelo, obs: state.obs.trim(),
+  });
+  if (state.cabelo && state.cabelo !== cliente.cabelo) atualizarPerfil({ cabelo: state.cabelo }).catch(() => {});
+  cliente.ultimo = { servicos: booking.servicos, barbeiro };
+  delete OCUPADOS[state.data];
   return booking;
 }
 
@@ -349,12 +351,21 @@ area.addEventListener("click", (e) => {
   else if ("ics" in t.dataset) baixarIcs(state.ultimo);
   else if ("novo" in t.dataset) { Object.assign(state, { step: 1, servicos: new Set(), hora: null, obs: "", barbeiro: "any" }); renderWizard(); }
 });
-area.addEventListener("submit", (e) => {
+area.addEventListener("submit", async (e) => {
   e.preventDefault();
   const err = $("#formError");
   if (!cliente) { state.step = 4; renderWizard(); return; }
-  const b = salvarAgendamento();
-  if (!b) { err.textContent = "Esse horário acabou de ser ocupado. Escolha outro."; state.hora = null; state.step = 3; renderWizard(); return; }
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true; btn.textContent = "Confirmando…";
+  let b;
+  try { b = await salvarAgendamento(); }
+  catch (er) {
+    btn.disabled = false; btn.textContent = "Confirmar agendamento";
+    if (er.ocupado) { delete OCUPADOS[state.data]; state.hora = null; state.step = 3; renderWizard();
+      setTimeout(() => { const t = $("#times-load") || $(".times"); t?.insertAdjacentHTML("beforebegin", '<p class="form-error">Esse horário acabou de ser ocupado. Escolha outro.</p>'); }, 50); }
+    else err.textContent = "Não foi possível confirmar agora. Verifique a internet e tente de novo.";
+    return;
+  }
   state.ultimo = b; state.step = 5; renderWizard();
   $("#agendar").scrollIntoView({ behavior: "smooth" });
 });
@@ -399,23 +410,23 @@ $("#plansGrid").addEventListener("click", (e) => {
   const id = b.dataset.plano;
   if (id === "avulso") { $("#agendar").scrollIntoView({ behavior: "smooth" }); return; }
   if (!cliente) { location.href = `entrar.html?modo=cadastro&plano=${id}&volta=planos`; return; }
-  cliente = atualizarConta(cliente.id, { plano: { id, status: "pendente", desde: new Date().toISOString() } });
-  renderPlanos();
+  atualizarPerfil({ plano: id, plano_status: "pendente" }).then((c) => { cliente = c; renderPlanos(); }).catch(() => alert("Não foi possível registrar o plano agora."));
 });
 
 /* ===================== CONTA NO TOPO ===================== */
 function renderAuth() {
   $("#authSlot").innerHTML = cliente
-    ? `<span class="nav-user">Olá, <strong>${esc(cliente.nome.split(" ")[0])}</strong></span><a href="perfil.html" class="nav-login">Meu perfil</a><button class="nav-login" id="logout">Sair</button>`
+    ? `<span class="nav-user">Olá, <strong>${esc(cliente.nome.split(" ")[0])}</strong></span>${barbeiroLogado() ? `<a href="agenda.html" class="nav-login">Minha agenda</a>` : `<a href="perfil.html" class="nav-login">Meu perfil</a>`}<button class="nav-login" id="logout">Sair</button>`
     : `<a href="entrar.html" class="nav-login">Entrar / Cadastrar</a>`;
 }
 $("#authSlot").addEventListener("click", (e) => {
   if (e.target.id !== "logout") return;
-  sair(); cliente = null; renderAuth(); renderPlanos(); renderWizard();
+  sair().then(() => { cliente = null; renderAuth(); renderPlanos(); renderWizard(); });
 });
 
+
 /* Volta do login com um agendamento em andamento */
-(function retomar() {
+function retomar() {
   let p; try { p = JSON.parse(sessionStorage.getItem(PENDENTE_KEY)); } catch {}
   if (!p) return;
   sessionStorage.removeItem(PENDENTE_KEY);
@@ -424,7 +435,7 @@ $("#authSlot").addEventListener("click", (e) => {
   if (!state.servicos.size) state.step = 1;
   else if (state.hora === null) state.step = 3;   // veio do perfil ("repetir corte"): já cai na escolha do dia
   setTimeout(() => $("#agendar")?.scrollIntoView(), 50);
-})();
+}
 
 /* ===================== PROPRIETÁRIO ===================== */
 function renderDono() {
@@ -443,4 +454,15 @@ function renderDono() {
   }
 }
 
-renderDono(); renderAuth(); renderServicos(); renderPlanos(); renderEstilos(); renderBarbeiros(); renderInfo(); renderWizard();
+renderDono(); 
+renderServicos(); renderEstilos(); renderBarbeiros(); renderInfo();
+renderAuth(); renderPlanos(); renderWizard();
+carregarSessao().then(async () => {
+  cliente = usuarioAtual();
+  if (cliente) {
+    state.cabelo = state.cabelo || cliente.cabelo || "";
+    try { const ult = (await meusAgendamentos()).filter((b) => b.status !== "cancelado").pop(); if (ult) cliente.ultimo = { servicos: ult.servicos, barbeiro: ult.barbeiro }; } catch {}
+  }
+  retomar();
+  renderAuth(); renderPlanos(); renderWizard();
+}).catch(() => {});

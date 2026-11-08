@@ -97,3 +97,13 @@
   btn.addEventListener("click", () => { if (v.paused) { pausadoPeloCliente = false; v.play().catch(() => {}); } else { pausadoPeloCliente = true; v.pause(); } });
   v.addEventListener("play", marcar); v.addEventListener("pause", marcar); marcar();
 })();
+
+/* vídeos da seção "Arte": só tocam quando aparecem na tela */
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const vids = document.querySelectorAll(".arte-vid video");
+  const io = new IntersectionObserver((ents) => ents.forEach((en) => {
+    if (en.isIntersecting) { en.target.preload = "auto"; en.target.play().catch(() => {}); } else en.target.pause();
+  }), { threshold: 0.2 });
+  vids.forEach((v) => io.observe(v));
+})();

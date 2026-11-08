@@ -22,9 +22,8 @@ const ANTECEDENCIA_MIN = 30;  // minutos mínimos de antecedência no mesmo dia
 
 /* Especialidades provisórias — confirmar com cada barbeiro */
 const BARBEIROS = [
-  { id: "joao",     nome: "João",     esp: ["Degradê", "Navalhado", "Freestyle"],       tipos: ["liso", "ondulado", "cacheado", "crespo"] },
-  { id: "miguel",   nome: "Miguel",   esp: ["Afro", "Twist", "Tranças", "Na régua"],    tipos: ["cacheado", "crespo"] },
-  { id: "henrique", nome: "Henrique", esp: ["Barba", "Barboterapia", "Nevou / Luzes"], tipos: ["liso", "ondulado", "cacheado"] },
+  { id: "messinho", nome: "Messinho", esp: ["Degradê", "Navalhado", "Freestyle", "Nevou"], tipos: ["liso", "ondulado", "cacheado", "crespo"] },
+  { id: "shark",    nome: "Shark",    esp: ["Afro", "Twist", "Barba", "Na régua"],         tipos: ["liso", "ondulado", "cacheado", "crespo"] },
 ];
 
 const CATEGORIAS = {
@@ -165,6 +164,10 @@ const DONO = {
   foto2: "img/dono-maquina.jpg",
 };
 
-/* Senhas provisórias da área do barbeiro (troque antes de colocar no ar).
-   Na versão online cada barbeiro terá login próprio com e-mail e senha. */
-const SENHAS_BARBEIROS = { joao: "1111", miguel: "2222", henrique: "3333" };
+
+/* Banco online (Supabase). A chave abaixo é pública por natureza:
+   a segurança vem das regras de acesso (RLS) configuradas no banco. */
+const SUPABASE = {
+  url: "https://wgxpfgigwmixejzisooc.supabase.co",
+  chave: "sb_publishable_bmuRh4EF0ZETRxdEHhlGzA_vdFamszO",
+};
