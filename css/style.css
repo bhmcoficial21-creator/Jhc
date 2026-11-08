@@ -784,60 +784,54 @@ html.is-loading body { overflow: hidden; }
 .tool-tesoura .tool-pic { width: 96%; transform: rotate(-12deg); }
 .tool-pente .tool-pic { width: 92%; transform: rotate(-8deg); }
 
+
 /* =========================================================
-   GANCHO DA ABERTURA: boneco + "segure para mudar o estilo"
-   (inspirado no template de modos de cor)
+   ABERTURA: o boneco caminha até o salão → entra → capa → site
    ========================================================= */
-.hook { position: absolute; inset: 0; z-index: 4; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .7s ease; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-.page-loader.is-hook .hook { opacity: 1; pointer-events: auto; }
-.page-loader.is-hook .ld-tools, .page-loader.is-hook .ld-flare, .page-loader.is-hook .ld-ui { opacity: 0; transition: opacity .5s; }
-.page-loader.is-cape .hook { pointer-events: none; }
+.ld-street { position: absolute; inset: 0; z-index: 2; overflow: hidden; transition: opacity .6s ease .2s; }
+.st-bg { position: absolute; left: 50%; top: 50%; width: max(100vw, calc(100svh * 494 / 588)); aspect-ratio: 494 / 588; translate: -50% -50%;
+  background: url("../img/poste-loader.jpg") center / cover no-repeat; filter: brightness(.62) saturate(1.1);
+  transform-origin: 58% 52%; transform: scale(1.05); }
+.page-loader.is-walking .st-bg { animation: st-cam 3.6s cubic-bezier(.4,0,.6,1) forwards; }
+@keyframes st-cam { to { transform: scale(1.35) translateX(-2%); } }
+.st-light { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(45% 35% at 60% 52%, rgba(255,190,110,.28), transparent 70%), linear-gradient(180deg, rgba(0,0,0,.35), transparent 30%, transparent 60%, rgba(0,0,0,.8)); }
+/* título grande, como no template */
+.st-title { position: absolute; left: 0; right: 0; top: 9%; display: grid; justify-items: center; pointer-events: none; z-index: 1; opacity: 0;
+  font: 700 clamp(3.6rem, 19vw, 12rem)/.82 var(--font-display); letter-spacing: -.055em; text-transform: uppercase; color: #fff; mix-blend-mode: overlay; }
+.st-title span:last-child { font-size: .6em; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.85); }
+.page-loader.is-walking .st-title { animation: st-title 3.6s ease forwards; }
+@keyframes st-title { 0% { opacity: 0; transform: translateY(20px); } 20%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+/* o boneco: anda da esquerda/fundo até perto da porta */
+.st-walker { position: absolute; z-index: 2; left: 0; bottom: 6%; height: min(58svh, 520px); aspect-ratio: 642 / 1455;
+  transform-origin: 50% 100%; transform: translateX(-60%) scale(.55); }
+.page-loader.is-walking .st-walker { animation: st-walk 3.6s cubic-bezier(.3,0,.5,1) forwards; }
+@keyframes st-walk {
+  0%   { transform: translateX(-60%) scale(.55); }
+  100% { transform: translateX(calc(50vw - 50%)) scale(1); }
+}
+/* passo: sobe/desce e balança apoiando em cada pé */
+.st-bob { width: 100%; height: 100%; transform-origin: 50% 100%; }
+.page-loader.is-walking .st-bob { animation: st-step .52s ease-in-out infinite; }
+@keyframes st-step {
+  0%   { transform: translateY(0) rotate(-3deg) scaleY(1); }
+  25%  { transform: translateY(-4.5%) rotate(0deg) scaleY(1.01); }
+  50%  { transform: translateY(0) rotate(3deg) scaleY(.985); }
+  75%  { transform: translateY(-4.5%) rotate(0deg) scaleY(1.01); }
+  100% { transform: translateY(0) rotate(-3deg) scaleY(1); }
+}
+.st-bob img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 22px rgba(255,190,110,.18)) brightness(.95); }
+.st-shadow { position: absolute; left: 12%; right: 12%; bottom: -1.5%; height: 6%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.75), transparent); }
+.page-loader.is-walking .st-shadow { animation: st-shadow .52s ease-in-out infinite; }
+@keyframes st-shadow { 25%, 75% { transform: scaleX(.82); opacity: .7; } }
+/* entrada: a câmera mergulha na porta e escurece */
+.page-loader.is-entering .st-bg { animation: none; transform: scale(4.2) translateX(-2%); filter: brightness(.2) blur(6px); transition: transform 1s cubic-bezier(.6,0,.4,1), filter 1s; }
+.page-loader.is-entering .st-walker { animation: none; transform: translateX(calc(50vw - 50%)) translateY(-6%) scale(2.6); opacity: 0; transition: transform 1s cubic-bezier(.6,0,.4,1), opacity .8s .15s; }
+.page-loader.is-entering .st-title { opacity: 0; }
+.page-loader.is-cape .ld-street { opacity: 0; }
 
-.hook-mode { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; clip-path: circle(0 at var(--cx, 50%) var(--cy, 85%)); }
-.hook-mode.is-on { z-index: 1; clip-path: circle(150% at 50% 50%); }
-.hook-mode.is-in { z-index: 2; animation: hook-wipe .9s cubic-bezier(.7,0,.2,1) forwards; }
-@keyframes hook-wipe { from { clip-path: circle(0 at var(--cx) var(--cy)); } to { clip-path: circle(150% at var(--cx) var(--cy)); } }
-
-/* fundos dos 3 modos */
-.m-ouro  { background: radial-gradient(60% 50% at 50% 55%, #4a3414 0%, #1a1208 55%, #070605 100%); color: #e2c27f; }
-.m-gelo  { background: radial-gradient(60% 50% at 50% 55%, #ffffff 0%, #e4e4e6 55%, #b9b9bd 100%); color: #111; }
-.m-brasa { background: radial-gradient(60% 50% at 50% 55%, #e01f2c 0%, #9b0d16 55%, #3a0306 100%); color: #120203; }
-
-/* título gigante atrás do boneco */
-.hook-title { position: absolute; left: 0; right: 0; top: 13%; display: grid; justify-items: center; line-height: .82; pointer-events: none;
-  font: 700 clamp(4.2rem, 23vw, 15rem)/.82 var(--font-display); letter-spacing: -.055em; text-transform: uppercase; }
-.hook-title span:last-child { font-size: .62em; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.5px currentColor; }
-.m-ouro .hook-title span:first-child { background: linear-gradient(180deg, #f6e1a8, #b8862f); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.page-loader.is-hook .hook-title span { animation: hook-glitch .5s steps(2) 1; }
-@keyframes hook-glitch { 0% { opacity: 0; transform: translateX(-6px); } 50% { opacity: 1; transform: translateX(4px); } 100% { transform: none; } }
-
-/* boneco */
-.hook-fig { position: relative; margin: 0; height: min(72svh, 640px); aspect-ratio: 642 / 1455; translate: 0 5%;
-  transform: perspective(900px) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg)); animation: hook-float 4s ease-in-out infinite; will-change: transform; }
-@keyframes hook-float { 50% { translate: 0 calc(5% - 10px); } }
-.hook-fig img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.m-ouro .hook-fig img { filter: drop-shadow(0 30px 40px rgba(0,0,0,.65)) drop-shadow(0 0 30px rgba(226,180,90,.35)) contrast(1.05); }
-.m-gelo .hook-fig img { filter: grayscale(1) brightness(1.18) contrast(.95) drop-shadow(0 30px 40px rgba(0,0,0,.35)); }
-.m-brasa .hook-fig img { filter: grayscale(1) contrast(1.35) brightness(.9) drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
-/* tinta por cima, recortada no formato do boneco */
-.hook-tint { position: absolute; inset: 0; pointer-events: none; -webkit-mask: url("../img/boneco.webp") center / contain no-repeat; mask: url("../img/boneco.webp") center / contain no-repeat; }
-.m-ouro .hook-tint  { background: linear-gradient(115deg, transparent 30%, rgba(255,214,140,.35) 50%, transparent 70%) 200% 0 / 250% 100% no-repeat; mix-blend-mode: screen; animation: hook-shine 3.2s ease-in-out infinite; }
-.m-gelo .hook-tint  { background: rgba(200,220,255,.18); mix-blend-mode: screen; }
-.m-brasa .hook-tint { background: #e01f2c; mix-blend-mode: multiply; }
-@keyframes hook-shine { 0%, 30% { background-position: 200% 0; } 70%, 100% { background-position: -100% 0; } }
-
-/* textos e controles */
-.hook-top { position: absolute; z-index: 3; left: 16px; right: 16px; top: max(18px, env(safe-area-inset-top)); display: flex; justify-content: space-between;
-  font: 700 .68rem/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: #fff; mix-blend-mode: difference; }
-.hook-side { position: absolute; z-index: 3; right: 16px; top: 50%; translate: 0 -50%; text-align: right; font: 700 .66rem/1.5 var(--font-body); letter-spacing: .16em; text-transform: uppercase; color: #fff; mix-blend-mode: difference; }
-.hook-ui { position: absolute; z-index: 3; left: 16px; right: 16px; bottom: max(24px, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: .8rem; color: #fff; }
-.hold { position: relative; flex: none; width: 64px; height: 64px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); cursor: pointer; }
-.hold svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.hold-track { fill: none; stroke: rgba(255,255,255,.3); stroke-width: 2; }
-.hold-ring { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
-.hold-dot { position: absolute; inset: 24px; border-radius: 50%; background: #fff; transition: transform .2s; }
-.hold.is-down .hold-dot { transform: scale(.6); }
-.hold-txt { font: 700 .66rem/1.35 var(--font-body); letter-spacing: .14em; text-transform: uppercase; mix-blend-mode: difference; }
-.hook-enter { margin-left: auto; min-height: 44px; padding: 0 1.3rem; border: 0; border-radius: 999px; background: #fff; color: #0a0a0a; font: 700 .78rem/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; }
-.hook-enter:hover { background: #e2c27f; }
-@media (prefers-reduced-motion: reduce) { .hook-fig, .hook-tint, .hook-title span { animation: none !important; } .hook-mode.is-in { animation-duration: .01s; } }
+/* carregamento aparece junto com a capa */
+.ld-ui { opacity: 0; }
+.page-loader.is-cape .ld-ui { opacity: 1; z-index: 5; }
+.page-loader.is-pulling .ld-ui { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .st-bg, .st-walker, .st-bob, .st-shadow, .st-title { animation: none !important; } }

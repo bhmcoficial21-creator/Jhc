@@ -20,41 +20,15 @@
 <body class="home">
   <div class="page-loader" id="pageLoader" role="progressbar" aria-label="Carregando o site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div class="ld-room" aria-hidden="true"></div>
-    <canvas class="ld-smoke" id="ldSmoke" aria-hidden="true"></canvas>
-    <div class="ld-flare" id="ldFlare" aria-hidden="true"></div>
-    <div class="ld-tools" aria-hidden="true">
-      <figure class="tool tool-tesoura"><span class="tool-pic" style="--src:url(../img/ferramentas/tesoura.webp)"><img src="img/ferramentas/tesoura.webp" alt=""><span class="tool-shine"></span></span></figure>
-      <figure class="tool tool-navalha"><span class="tool-pic" style="--src:url(../img/ferramentas/navalha.webp)"><img src="img/ferramentas/navalha.webp" alt=""><span class="tool-shine"></span></span></figure>
-      <figure class="tool tool-pente"><span class="tool-pic" style="--src:url(../img/ferramentas/pente.webp)"><img src="img/ferramentas/pente.webp" alt=""><span class="tool-shine"></span></span></figure>
-      <figure class="tool tool-maquina"><span class="tool-pic" style="--src:url(../img/ferramentas/maquina.webp)"><img src="img/ferramentas/maquina.webp" alt=""><span class="tool-shine"></span></span></figure>
+    <div class="ld-street" aria-hidden="true">
+      <div class="st-bg"></div>
+      <div class="st-light"></div>
+      <div class="st-walker"><span class="st-shadow"></span><div class="st-bob"><img src="img/boneco.webp" alt=""></div></div>
+      <p class="st-title"><span>Messin</span><span>do Corte</span></p>
     </div>
-    <section class="hook" id="hook" aria-label="Messin do Corte">
-      <div class="hook-mode m-ouro is-on" data-i="0">
-        <p class="hook-title" aria-hidden="true"><span>MESSIN</span><span>DO CORTE</span></p>
-        <figure class="hook-fig"><img src="img/boneco.webp" alt=""><span class="hook-tint"></span></figure>
-      </div>
-      <div class="hook-mode m-gelo" data-i="1">
-        <p class="hook-title" aria-hidden="true"><span>MESSIN</span><span>DO CORTE</span></p>
-        <figure class="hook-fig"><img src="img/boneco.webp" alt=""><span class="hook-tint"></span></figure>
-      </div>
-      <div class="hook-mode m-brasa" data-i="2">
-        <p class="hook-title" aria-hidden="true"><span>MESSIN</span><span>DO CORTE</span></p>
-        <figure class="hook-fig"><img src="img/boneco.webp" alt=""><span class="hook-tint"></span></figure>
-      </div>
-      <div class="hook-top"><span>Messin do Corte</span><span id="hookModo">Modo Ouro</span></div>
-      <div class="hook-side">Estilo<br>Confiança<br>Atitude</div>
-      <div class="hook-ui">
-        <button class="hold" id="holdBtn" aria-label="Segure para mudar o estilo">
-          <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="26" class="hold-track"/><circle cx="30" cy="30" r="26" class="hold-ring" id="holdRing" pathLength="1"/></svg>
-          <span class="hold-dot"></span>
-        </button>
-        <span class="hold-txt">Segure para<br>mudar o estilo</span>
-        <button class="hook-enter" id="hookEnter">Entrar <span aria-hidden="true">→</span></button>
-      </div>
-    </section>
     <canvas class="ld-cape" id="ldCape" aria-hidden="true"></canvas>
     <div class="ld-ui">
-      <p class="ld-kicker" id="ldKicker">Afiando a tesoura</p>
+      <p class="ld-kicker" id="ldKicker">Preparando a cadeira</p>
       <p class="ld-pct"><span id="loaderPct">0</span>%</p>
       <div class="pole-h" aria-hidden="true">
           <span class="ph-knob ph-knob-l"></span><span class="ph-cap ph-cap-l"></span>
