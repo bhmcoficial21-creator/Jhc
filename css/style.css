@@ -803,7 +803,7 @@ html.is-loading body { overflow: hidden; }
 .page-loader.is-walking .st-title { animation: st-title 3.6s ease forwards; }
 @keyframes st-title { 0% { opacity: 0; transform: translateY(20px); } 20%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
 /* o boneco: anda da esquerda/fundo até perto da porta */
-.st-walker { position: absolute; z-index: 2; left: 0; bottom: 6%; height: min(58svh, 520px); aspect-ratio: 642 / 1455;
+.st-walker { position: absolute; z-index: 2; left: 0; bottom: 21%; height: min(52svh, 480px); aspect-ratio: 642 / 1455;
   transform-origin: 50% 100%; transform: translateX(-60%) scale(.55); }
 .page-loader.is-walking .st-walker { animation: st-walk 3.6s cubic-bezier(.3,0,.5,1) forwards; }
 @keyframes st-walk {
@@ -831,7 +831,6 @@ html.is-loading body { overflow: hidden; }
 .page-loader.is-cape .ld-street { opacity: 0; }
 
 /* carregamento aparece junto com a capa */
-.ld-ui { opacity: 0; }
-.page-loader.is-cape .ld-ui { opacity: 1; z-index: 5; }
-.page-loader.is-pulling .ld-ui { opacity: 0; }
+.page-loader .ld-ui { z-index: 5; }
+.page-loader.is-entering .ld-ui { opacity: 0; transition: opacity .4s; }
 @media (prefers-reduced-motion: reduce) { .st-bg, .st-walker, .st-bob, .st-shadow, .st-title { animation: none !important; } }
