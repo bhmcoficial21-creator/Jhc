@@ -15,7 +15,7 @@ async function carregar() {
   const sel = parseYmd(dia);
   const ini = ymd(sel < de ? sel : de), fim = ymd(sel > ate ? sel : ate);
   semana = await agendamentosEntre(ini, fim);
-  fichas = await lerFichas([...new Set(semana.map((b) => b.clienteId))]);
+  fichas = await lerFichas(semana.map((b) => b.tel));
 }
 
 function renderDias() {
@@ -48,9 +48,9 @@ function cartao(b) {
         ${b.status !== "faltou" ? `<button data-st="faltou" data-id="${b.id}">Faltou</button>` : ""}
         ${b.status !== "cancelado" ? `<button data-st="cancelado" data-id="${b.id}">Cancelar</button>` : `<button data-st="confirmado" data-id="${b.id}">Reativar</button>`}
       </div>
-      <details class="appt-ficha"${fichas[b.clienteId] ? " open" : ""}>
+      <details class="appt-ficha"${fichas[telKey(b.tel)] ? " open" : ""}>
         <summary>Ficha técnica do cliente</summary>
-        <textarea data-ficha="${b.clienteId}" placeholder="Ex.: low fade 0 → 1,5 · topo tesoura 4 cm · risco lado esq.">${esc(fichas[b.clienteId] || "")}</textarea>
+        <textarea data-ficha="${telKey(b.tel)}" placeholder="Ex.: low fade 0 → 1,5 · topo tesoura 4 cm · risco lado esq.">${esc(fichas[telKey(b.tel)] || "")}</textarea>
       </details>
     </article>`;
 }

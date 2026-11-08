@@ -1,5 +1,5 @@
-/* Perfil do cliente (banco online): próximos horários, cancelar, corte salvo e histórico */
-let cliente = null, meus = [], ficha = "";
+/* "Meus horários": sem cadastro. O celular guarda a chave de cada horário marcado. */
+let meus = [];
 const ROTULO = { confirmado: "Confirmado", concluido: "Concluído", faltou: "Não compareceu", cancelado: "Cancelado" };
 const servNomes = (b) => b.servicos.map((id) => servById[id]?.nome || id).join(" + ");
 
@@ -18,32 +18,27 @@ function cartaoAg(b, futuro) {
 }
 
 function render() {
-  const plano = cliente.plano && PLANOS.find((p) => p.id === cliente.plano.id);
+  const eu = meusDados();
   const futuros = meus.filter((b) => !jaPassou(b) && b.status !== "cancelado");
   const passados = meus.filter((b) => jaPassou(b) || b.status === "cancelado").reverse();
   const feitos = meus.filter((b) => b.status === "concluido").length;
   $("#cartao").innerHTML = `
-    <div class="pf-avatar">${esc((cliente.nome || "?")[0])}</div>
+    <div class="pf-avatar">${esc((eu.nome || "✂")[0])}</div>
     <div>
-      <h1 class="app-title">${esc(cliente.nome)}</h1>
-      <p class="muted">${esc(cliente.tel)} · ${esc(cliente.email)}</p>
-      <div class="pf-tags">
-        ${plano ? `<span class="plan-badge">${esc(plano.nome)}${cliente.plano.status === "pendente" ? " · pendente" : ""}</span>` : `<a class="plan-badge" href="index.html#planos">Conhecer os planos</a>`}
-        <span class="pf-tag">${feitos} corte${feitos === 1 ? "" : "s"} na casa</span>
-        ${cliente.cabelo ? `<span class="pf-tag">Cabelo ${esc(cliente.cabelo)}</span>` : ""}
-      </div>
+      <h1 class="app-title">${eu.nome ? esc(eu.nome.split(" ")[0]) : "Meus horários"}</h1>
+      <p class="muted">${eu.tel ? esc(eu.tel) + " · " : ""}salvo neste celular, sem cadastro</p>
+      <div class="pf-tags"><span class="pf-tag">${feitos} corte${feitos === 1 ? "" : "s"} na casa</span>${eu.cabelo ? `<span class="pf-tag">Cabelo ${esc(eu.cabelo)}</span>` : ""}</div>
     </div>`;
   $("#proximos").innerHTML = futuros.length ? futuros.map((b) => cartaoAg(b, true)).join("") : `<p class="empty">Nenhum horário marcado. <a href="index.html#agendar">Agendar agora →</a></p>`;
   $("#historico").innerHTML = passados.length ? passados.map((b) => cartaoAg(b, false)).join("") : `<p class="empty">Seu histórico aparece aqui depois do primeiro corte.</p>`;
   const ult = meus.filter((b) => b.status !== "cancelado").pop();
   $("#ficha").innerHTML = `
-    ${ficha ? `<p class="ficha-txt">${esc(ficha)}</p><p class="muted">Anotado pelo seu barbeiro: pente, altura e detalhes do seu corte.</p>`
-            : `<p class="muted">Depois do seu primeiro corte, o barbeiro anota aqui o pente, a altura e os detalhes para repetir igualzinho.</p>`}
+    <p class="muted">O barbeiro anota o pente, a altura e os detalhes do seu corte na ficha dele, para repetir igualzinho na próxima.</p>
     ${ult ? `<button class="btn btn-primary btn-sm" data-repetir="${ult.id}">↻ Repetir meu último corte</button>` : ""}`;
 }
 
 function irAgendar(servicos, barbeiro) {
-  try { sessionStorage.setItem(PENDENTE_KEY, JSON.stringify({ servicos, barbeiro: barbeiro || "any", cabelo: cliente.cabelo || "", data: "", hora: null, obs: "" })); } catch {}
+  try { sessionStorage.setItem(PENDENTE_KEY, JSON.stringify({ servicos, barbeiro: barbeiro || "any", cabelo: meusDados().cabelo || "", data: "", hora: null, obs: "" })); } catch {}
   location.href = "index.html#agendar";
 }
 function ics(b) {
@@ -54,8 +49,6 @@ function ics(b) {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([txt], { type: "text/calendar" })); a.download = "horario-barbearia.ics"; a.click();
 }
 
-async function carregar() { meus = await meusAgendamentos(); ficha = await lerFicha(cliente.id); }
-
 document.addEventListener("click", async (e) => {
   const t = e.target.closest("button"); if (!t) return;
   const ag = (id) => meus.find((b) => b.id === id);
@@ -63,20 +56,17 @@ document.addEventListener("click", async (e) => {
     const b = ag(t.dataset.cancelar);
     if (b && confirm(`Cancelar o horário de ${dataLonga(b.data)} às ${fromMin(b.inicio)}?`)) {
       t.disabled = true;
-      try { await mudarStatus(b.id, "cancelado"); b.status = "cancelado"; render(); } catch { t.disabled = false; alert("Não foi possível cancelar agora."); }
+      try { if (await cancelarMeuHorario(b.id)) { b.status = "cancelado"; render(); } else throw 0; }
+      catch { t.disabled = false; alert("Não foi possível cancelar agora."); }
     }
   }
   else if (t.dataset.ics) ics(ag(t.dataset.ics));
   else if (t.dataset.repetir) { const b = ag(t.dataset.repetir); irAgendar(b.servicos, b.barbeiro); }
-  else if (t.id === "sair") { await sair(); location.href = "index.html"; }
 });
 
 (async function iniciar() {
-  await carregarSessao();
-  cliente = usuarioAtual();
-  if (!cliente) return location.replace("entrar.html?volta=perfil");
-  if (barbeiroLogado()) return location.replace("agenda.html");
-  await carregar(); render();
-  // se o barbeiro mudar algo (concluído, ficha), atualiza sozinho
-  ouvirAgendamentos(async () => { await carregar(); render(); });
+  render();
+  try { meus = await meusAgendamentos(); } catch { $("#proximos").innerHTML = `<p class="empty">Não foi possível carregar agora. Verifique a internet.</p>`; return; }
+  render();
+  ouvirAgendamentos(async () => { try { meus = await meusAgendamentos(); render(); } catch {} });
 })();

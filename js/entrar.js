@@ -3,7 +3,7 @@
    - Barbeiro: entra com e-mail e senha; no 1º acesso usa o código da barbearia para virar conta de barbeiro. */
 const params = new URLSearchParams(location.search);
 let modo = params.get("modo") === "cadastro" ? "cadastro" : "login";
-let perfil = params.get("perfil") === "barbeiro" ? "barbeiro" : "cliente";
+let perfil = "barbeiro";   // clientes agendam sem cadastro; esta página é só da equipe
 const form = $("#authForm"), msg = $("#authMsg"), barbForm = $("#barbForm");
 const planoEscolhido = PLANOS.find((p) => p.id === params.get("plano"));
 let barbEscolhido = BARBEIROS[0].id;

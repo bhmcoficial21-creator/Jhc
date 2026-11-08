@@ -73,19 +73,40 @@ async function buscarOcupados(dia) {
 }
 const barberFree = (barberId, dia, ini, fim) => !(OCUPADOS[dia] || []).some((b) => b.barbeiro === barberId && ini < b.fim && fim > b.inicio);
 
+/* ---- cliente SEM cadastro: o celular guarda a "chave" de cada horário ---- */
+const MEUS_KEY = "barbeskin:meus-horarios", EU_KEY = "barbeskin:eu";
+const minhasChaves = () => store.get(MEUS_KEY, []);
+const meusDados = () => store.get(EU_KEY, { nome: "", tel: "" });
+const salvarMeusDados = (d) => store.set(EU_KEY, { ...meusDados(), ...d });
+
 async function criarAgendamento(b) {
-  const { data, error } = await SB.from("agendamentos").insert({
-    barbeiro_id: b.barbeiro, data: b.data, inicio: b.inicio, fim: b.fim, servicos: b.servicos, preco: b.preco,
-    nome: b.nome, tel: b.tel, cabelo: b.cabelo || "", obs: b.obs || "", pagamento: b.pagamento || "na_barbearia",
-  }).select().single();
-  if (error) { if (error.code === "23P01") { const e = new Error("ocupado"); e.ocupado = true; throw e; } throw error; }
-  return doBanco(data);
+  const { data, error } = await SB.rpc("agendar", {
+    p_barbeiro: b.barbeiro, p_data: b.data, p_inicio: b.inicio, p_fim: b.fim, p_servicos: b.servicos, p_preco: b.preco,
+    p_nome: b.nome, p_tel: b.tel, p_cabelo: b.cabelo || "", p_obs: b.obs || "",
+  });
+  if (error) {
+    const m = error.message || "";
+    const e = new Error(m);
+    if (error.code === "23P01") e.ocupado = true;
+    if (m.includes("limite_atingido")) e.limite = true;
+    throw e;
+  }
+  const r = data[0];
+  store.set(MEUS_KEY, [...minhasChaves().filter((x) => x.id !== r.id), { id: r.id, chave: r.chave }].slice(-30));
+  return { ...b, id: r.id, status: "confirmado", criadoEm: new Date().toISOString() };
 }
 async function meusAgendamentos() {
-  if (!AUTH.user) return [];
-  const { data, error } = await SB.from("agendamentos").select("*").eq("cliente_id", AUTH.user.id).order("data").order("inicio");
+  const itens = minhasChaves(); if (!itens.length) return [];
+  const { data, error } = await SB.rpc("meus_horarios", { p_itens: itens });
   if (error) throw error;
-  return data.map(doBanco);
+  return data.map((r) => ({ id: r.id, barbeiro: r.barbeiro_id, data: r.data, inicio: r.inicio, fim: r.fim, servicos: r.servicos,
+    preco: Number(r.preco), nome: r.nome, status: r.status, criadoEm: r.criado_em }));
+}
+async function cancelarMeuHorario(id) {
+  const it = minhasChaves().find((x) => x.id === id); if (!it) return false;
+  const { data, error } = await SB.rpc("cancelar_horario", { p_id: id, p_chave: it.chave });
+  if (error) throw error;
+  return data;
 }
 async function agendamentosEntre(de, ate) {   // barbeiro: agenda de um período
   const { data, error } = await SB.from("agendamentos").select("*").gte("data", de).lte("data", ate).order("data").order("inicio");
@@ -96,17 +117,13 @@ async function mudarStatus(id, status) {
   const { error } = await SB.from("agendamentos").update({ status }).eq("id", id);
   if (error) throw error;
 }
-async function lerFicha(clienteId) {
-  const { data } = await SB.from("fichas").select("texto").eq("cliente_id", clienteId).maybeSingle();
-  return data?.texto || "";
+async function lerFichas(tels) {      // barbeiro: fichas pelo WhatsApp do cliente
+  const ids = [...new Set(tels.map(telKey).filter(Boolean))]; if (!ids.length) return {};
+  const { data } = await SB.from("fichas").select("tel,texto").in("tel", ids);
+  return Object.fromEntries((data || []).map((r) => [r.tel, r.texto]));
 }
-async function lerFichas(ids) {
-  if (!ids.length) return {};
-  const { data } = await SB.from("fichas").select("cliente_id,texto").in("cliente_id", ids);
-  return Object.fromEntries((data || []).map((r) => [r.cliente_id, r.texto]));
-}
-async function salvarFicha(clienteId, texto) {
-  const { error } = await SB.from("fichas").upsert({ cliente_id: clienteId, texto, atualizado_em: new Date().toISOString() });
+async function salvarFicha(tel, texto) {
+  const { error } = await SB.from("fichas").upsert({ tel: telKey(tel), texto, atualizado_em: new Date().toISOString() });
   if (error) throw error;
 }
 /* tempo real: avisa quando algum agendamento muda */
