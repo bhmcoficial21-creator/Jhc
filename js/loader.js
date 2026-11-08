@@ -101,23 +101,87 @@
     if (mostrado > alvo) mostrado = alvo;
     const v = Math.max(0, Math.floor(mostrado));
     pct.textContent = v; bar.style.width = v + "%"; el.setAttribute("aria-valuenow", v);
-    if (v >= 100 && t >= TOTAL && !final) { final = true; mostrarLogo(); return; }
+    if (v >= 100 && t >= TOTAL && !final) { final = true; mostrarCapa(); return; }
     requestAnimationFrame(quadro);
   }
   requestAnimationFrame(quadro);
 
-  function mostrarLogo() {
+  /* ---------- Final: a capa com o nosso símbolo é puxada do cliente ---------- */
+  const capa = new Image(); capa.src = "img/capa-messin.jpg";
+  const cc = $id("ldCape"), g = cc.getContext("2d");
+  let CW = 0, CH = 0, cd = 1;
+  function tamCapa() { cd = Math.min(devicePixelRatio || 1, 2); CW = cc.width = innerWidth * cd; CH = cc.height = innerHeight * cd; }
+  tamCapa(); addEventListener("resize", tamCapa);
+  const cabelos = [];       // fiozinhos de cabelo que caem quando a capa é sacudida
+
+  function desenharCapa(e, agora) {
+    g.clearRect(0, 0, CW, CH);
+    const iw = capa.naturalWidth, ih = capa.naturalHeight; if (!iw) return;
+    // "cover", mantendo o símbolo (330,470) no centro da tela
+    const k = Math.max(CW / iw, CH / ih) * 1.06;
+    const dw = iw * k, dh = ih * k;
+    const ox = Math.min(0, Math.max(CW - dw, CW / 2 - 330 * k));
+    const oy = Math.min(0, Math.max(CH - dh, CH * 0.46 - 470 * k));
+    const LINHAS = 140, sh = ih / LINHAS, rh = dh / LINHAS;
+    // posição de cada "fio" horizontal do pano (função contínua: linhas vizinhas nunca se separam)
+    const pos = (yn) => {
+      const l = Math.max(0, Math.min(1, e * 1.3 - (1 - yn) * 0.06 - yn * 0.3));
+      const onda = Math.sin(yn * 5.5 - agora / 110);
+      const balanco = Math.sin(agora / 650 + yn * 3) * 2.5 * cd;
+      const yBase = oy + yn * dh;
+      return {
+        l, onda,
+        dx: l * l * (CW - ox + 60 * cd) * 1.05 + onda * 26 * cd * l * (1 - l) + balanco,   // para a direita até sair
+        y: yBase - l * l * (yBase + 80 * cd) * 1.02 + Math.cos(yn * 4 - agora / 140) * 10 * cd * l * (1 - l),
+        enc: 1 - 0.16 * l * (0.5 + 0.5 * onda),
+      };
+    };
+    let cima = pos(0);
+    for (let i = 0; i < LINHAS; i++) {
+      const baixo = pos((i + 1) / LINHAS), meio = pos((i + 0.5) / LINHAS);
+      const y0 = Math.min(cima.y, baixo.y), hgt = Math.abs(baixo.y - cima.y) + 1.2;
+      const w = dw * meio.enc, x = ox + meio.dx + (dw - w) / 2;
+      g.drawImage(capa, 0, i * sh, iw, sh + 0.5, x, y0, w, hgt);
+      const sombra = meio.l * (0.12 + 0.3 * Math.max(0, meio.onda));
+      if (sombra > 0.01) { g.fillStyle = `rgba(0,0,0,${sombra.toFixed(3)})`; g.fillRect(x, y0, w, hgt); }
+      cima = baixo;
+    }
+    // cabelos caindo
+    g.strokeStyle = "rgba(20,16,12,.9)"; g.lineCap = "round";
+    for (const c of cabelos) {
+      c.x += c.vx; c.y += c.vy; c.vy += 0.35 * cd; c.a += c.va;
+      g.lineWidth = c.w; g.beginPath();
+      g.moveTo(c.x, c.y); g.lineTo(c.x + Math.cos(c.a) * c.len, c.y + Math.sin(c.a) * c.len); g.stroke();
+    }
+  }
+
+  function mostrarCapa() {
     ferramentas.forEach((t) => t.classList.add("is-out"));
-    kicker.textContent = "Bem-vindo";
-    el.classList.add("is-logo");
-    if (!reduz) setTimeout(faiscas, 250);
-    const espera = reduz ? 400 : visto ? 800 : 1800;
-    setTimeout(() => el.classList.add("is-leaving"), espera - 500);
-    setTimeout(() => {
-      el.classList.add("is-done");
-      document.documentElement.classList.remove("is-loading");
-      dispatchEvent(new Event("barbeskin:pronto"));
-      setTimeout(() => { rodando = false; el.remove(); }, 900);
-    }, espera);
+    kicker.textContent = "Finalizando o corte";
+    const HOLD = reduz ? 200 : visto ? 450 : 1500, PUXAR = reduz ? 1 : 1400;
+    const ir = () => {
+      el.classList.add("is-cape");
+      const t0 = performance.now();
+      let puxando = false;
+      (function frame(agora) {
+        const t = agora - t0;
+        const p = Math.max(0, Math.min(1, (t - HOLD) / PUXAR));
+        if (p > 0 && !puxando) {
+          puxando = true;
+          el.classList.add("is-pulling");                 // o site aparece por trás da capa
+          document.documentElement.classList.remove("is-loading");
+          dispatchEvent(new Event("barbeskin:pronto"));
+          if (!reduz) for (let i = 0; i < 90; i++) cabelos.push({
+            x: CW * (0.15 + Math.random() * 0.7), y: CH * (0.25 + Math.random() * 0.5),
+            vx: (Math.random() - 0.3) * 4 * cd, vy: (Math.random() - 0.6) * 5 * cd, a: Math.random() * 6.28, va: (Math.random() - 0.5) * 0.3,
+            len: (3 + Math.random() * 7) * cd, w: (0.8 + Math.random() * 0.9) * cd });
+        }
+        const e = p < 1 ? p * p * (3 - 2 * p) * 0.35 + p * p * 0.65 : 1;   // arranque rápido, como um puxão
+        desenharCapa(e, agora);
+        if (p < 1 || cabelos.some((c) => c.y < CH)) requestAnimationFrame(frame);
+        else { el.classList.add("is-done"); setTimeout(() => { rodando = false; el.remove(); }, 500); }
+      })(t0);
+    };
+    if (capa.complete && capa.naturalWidth) ir(); else { capa.onload = ir; capa.onerror = () => { el.classList.add("is-done"); document.documentElement.classList.remove("is-loading"); dispatchEvent(new Event("barbeskin:pronto")); }; }
   }
 })();
