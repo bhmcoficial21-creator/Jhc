@@ -64,7 +64,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
   .certificado { position: absolute; left: 0; top: 0; width: 100%; }
 }
 
-#ae-video { max-height: 220px; }
+#ae-video .video-placeholder { max-height: 220px; }
+.ilustracao { display: block; width: 100%; max-width: 320px; max-height: 300px; object-fit: contain; margin: 0 auto; border-radius: var(--raio); background: #f2f2f0; }
 
 .socorro-atalho, .trilha-card { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--cor-texto); }
 .socorro-atalho { border: 2px solid var(--cor-vermelho); color: var(--cor-vermelho); }

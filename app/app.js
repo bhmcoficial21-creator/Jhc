@@ -369,8 +369,29 @@
       } catch (e) { /* sem voz neste aparelho */ }
     },
     vibrar(padrao = 150) { try { if (navigator.vibrate) navigator.vibrate(padrao); } catch (e) {} },
-    parar() { try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {} }
+    parar() {
+      try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {}
+      if (this.audio) { try { this.audio.pause(); } catch (e) {} this.audio = null; }
+    },
+    /* Toca o áudio profissional do exercício (assets/audio/<id>.mp3).
+       Se o arquivo não existir, cai para a voz do celular com o texto. */
+    tocar(id, textoReserva) {
+      if (!this.ligada()) return;
+      this.parar();
+      if (!id) return this.falar(textoReserva);
+      const a = new Audio(`../assets/audio/${id}.mp3`);
+      this.audio = a;
+      a.onerror = () => { if (this.audio === a) { this.audio = null; this.falar(textoReserva); } };
+      a.play().catch(() => { if (this.audio === a) { this.audio = null; this.falar(textoReserva); } });
+    }
   };
+  /* Ilustração do exercício (assets/img/exercicios/<id>.png). Sem arquivo, mostra o espaço reservado. */
+  function midiaExercicio(x) {
+    const reserva = `<div class="video-placeholder vertical">[Ilustração]<br>${x.nome}<br>${x.segundos} s</div>`;
+    if (!x.id) return reserva;
+    return `<img class="ilustracao" src="../assets/img/exercicios/${x.id}.png" alt="${x.nome}"
+      onerror="this.outerHTML=this.dataset.reserva" data-reserva="${reserva.replace(/"/g, "&quot;")}">`;
+  }
   const botaoVoz = () => `<button class="botao-voz" id="btn-voz" aria-pressed="${voz.ligada()}">${voz.ligada() ? "🔊 Guia por voz ligado" : "📳 Só vibração"}</button>`;
   function ligarBotaoVoz() {
     const b = $("#btn-voz");
@@ -708,7 +729,7 @@
       </div>
       ${prot.aviso ? `<div class="aviso ${reg.semaforo === "vermelho" ? "aviso-vermelho" : ""}" style="margin-top:12px">${prot.aviso}</div>` : ""}
       <div class="cartao" style="margin-top:12px">
-        <div class="video-placeholder vertical" id="ae-video"></div>
+        <div class="midia-exercicio" id="ae-video"></div>
         <p class="pequeno suave" style="margin:12px 0 0" id="ae-contagem"></p>
         <h2 id="ae-nome" style="margin:4px 0"></h2>
         <p id="ae-passos"></p>
@@ -726,7 +747,7 @@
 
     function mostrarPasso() {
       const x = passos[k];
-      $("#ae-video").innerHTML = `[Microvídeo]<br>${x.nome}<br>${x.segundos} s`;
+      if ($("#ae-video").dataset.passo !== String(k)) { $("#ae-video").dataset.passo = String(k); $("#ae-video").innerHTML = midiaExercicio(x); }
       $("#ae-contagem").textContent = `Passo ${k + 1} de ${passos.length}`;
       $("#ae-nome").textContent = x.nome;
       $("#ae-passos").textContent = x.passos;
@@ -736,7 +757,7 @@
       $$("#ae-lista li").forEach((li, i) => li.style.fontWeight = i === k ? "700" : "400");
       if (rodando && k !== falado) {
         falado = k; voz.vibrar();
-        voz.falar(`${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`);
+        voz.tocar(x.id, `${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`);
       } else if (rodando && restante === 10 && x.segundos >= 30) {
         voz.falar("Faltam 10 segundos.");
       }
