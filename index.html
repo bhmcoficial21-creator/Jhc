@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Desafio Corpo Descongelado 21 Dias · Religar</title>
+  <title>Desafio Corpo Descongelado 30 Dias · Religar</title>
   <meta name="description" content="Alivie e previna a dor do trabalho com micro-pausas de 2 minutos, sem academia.">
   <link rel="stylesheet" href="assets/css/base.css">
   <style>
@@ -42,7 +42,7 @@
   <!-- 1. HERO + problema comum -->
   <header class="hero">
     <div class="container">
-      <span class="etiqueta">Desafio Corpo Descongelado 21 Dias</span>
+      <span class="etiqueta">Desafio Corpo Descongelado 30 Dias</span>
       <h1 style="margin-top:12px">Como aliviar dores musculares e articulares em 3 minutos e reprogramar seus hábitos posturais no dia a dia, sem academia</h1>
       <p class="suave">Um assistente de bolso com microvídeos de 1 a 3 minutos para pescoço, ombros, braços, punhos, lombar, joelhos e pés. Alívio na hora que a dor bate e novos hábitos para ela parar de voltar, sem suar, sem trocar de roupa e sem academia. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>
       <div class="video-placeholder">[Vídeo de abertura da página · até 60 s]</div>
@@ -184,11 +184,11 @@
     </div>
   </section>
 
-  <!-- 6. Passo a passo dos 21 dias -->
+  <!-- 6. Passo a passo dos 30 dias -->
   <section class="secao">
     <div class="container">
-      <h2>Como funcionam os 21 dias</h2>
-      <p>Cada dia tem: 1 vídeo curto (2 a 5 min), as pausas do dia, 1 tarefa e os checks dos três pilares (movimento, sono e alimentação).</p>
+      <h2>Como funcionam os 30 dias</h2>
+      <p>Cada dia tem: 1 sessão curta guiada, as pausas do dia, 1 tarefa, os checks dos três pilares (movimento, sono e alimentação) e uma avaliação de 30 segundos que mostra a sua evolução num gráfico.</p>
       <div class="pilha" id="semanas"></div>
       <h3 style="margin-top:28px">Os 3 Rs da pausa</h3>
       <div class="grade-2" id="tres-rs"></div>
@@ -204,9 +204,11 @@
         <div class="cartao"><h3>🗺️ Mapa da Dor</h3><p class="pequeno">Você marca onde dói, a intensidade e sua rotina. O desafio monta a região de foco e a trilha certa para você.</p></div>
         <div class="cartao"><h3>🚦 Semáforo dos Sinais</h3><p class="pequeno">Aprenda a reconhecer o corpo antes da lesão e saiba exatamente quando parar e procurar um profissional.</p></div>
         <div class="cartao"><h3>🌙 Plano pela noite</h3><p class="pequeno">Toda manhã o painel pergunta "Como foi sua noite?" e ajusta o plano do dia. Noite ruim não tira você do desafio.</p></div>
+        <div class="cartao"><h3>🔊 Guiado por voz</h3><p class="pequeno">Você não assiste: você faz. Uma voz conduz cada movimento e o celular vibra na troca, então dá para fazer de olhos fechados ou de fone, no meio do trabalho.</p></div>
+        <div class="cartao"><h3>📊 Avaliação de todo dia</h3><p class="pequeno">30 segundos no fim do expediente: dor, travamento e remédio. O gráfico mostra a sua evolução dia a dia, e no dia 30 você recebe o relatório completo.</p></div>
         <div class="cartao"><h3>👀 Pausas invisíveis</h3><p class="pequeno">Exercícios para fazer em reunião de câmera ligada ou no atendimento. Ninguém percebe e o corpo descongela.</p></div>
       </div>
-      <h3 style="margin-top:28px">E o desafio de 21 dias se adapta à sua rotina de trabalho</h3>
+      <h3 style="margin-top:28px">E o desafio de 30 dias se adapta à sua rotina de trabalho</h3>
       <div class="pilha" id="trilhas"></div>
     </div>
   </section>
@@ -302,7 +304,7 @@
 
       $("semanas").innerHTML = D.SEMANAS.map((s) => `
         <div class="cartao">
-          <span class="etiqueta">Semana ${s.n} · dias ${(s.n - 1) * 7 + 1} a ${s.n * 7}</span>
+          <span class="etiqueta">Semana ${s.n} · dias ${(s.n - 1) * 7 + 1} a ${s.n === 4 ? 30 : s.n * 7}</span>
           <h3 style="margin-top:8px">${s.nome}</h3>
           <p class="pequeno" style="margin:0">Resolve: ${s.resolve}. Marco: ${s.marco.toLowerCase()}.</p>
         </div>`).join("");
@@ -316,7 +318,9 @@
 
       const entregaveis = [
         "Mini curso: 5 aulas curtas em vídeo (cerca de 45 min no total)",
-        "Desafio de 21 dias: 1 vídeo de 2 a 5 min por dia + micro-pausas + check no painel",
+        "Desafio de 30 dias em 4 fases (Descongelar, Destravar, Fortalecer, Blindar) com check diário no painel",
+        "Avaliação diária de 30 segundos e gráfico da sua evolução: dor, travamento e dias sem remédio",
+        "Guia por voz em todos os protocolos: você faz o exercício sem precisar olhar a tela",
         "Central de Microvídeos Express: aulas de 1 a 3 minutos para assistir direto no celular",
         "Módulo 1, SOS Alívio Imediato: 4 trilhas por zona de dor, SOS de 1 e 3 min, alívio sob medida e Guia de Crise",
         "Módulo 2, Reprogramação de Hábitos e Postura Viciada: 8 microaulas (sentar, mesa, celular, teclado, ficar de pé, caminhar, dormir, carregar peso)",
@@ -328,8 +332,8 @@
         "Quiz Mapa da Dor: sua região de foco e sua trilha",
         "Semáforo dos Sinais: quando parar e procurar um profissional",
         "Painel do desafio no celular, que ajusta o plano pela sua noite",
-        "PDFs: Guia Descongelar, Planner de 21 dias, Cartão das Pausas Invisíveis",
-        "Celebração do Dia 21: comparação da Escala da Dor e certificado"
+        "PDFs: Guia Descongelar, Planner de 30 dias, Cartão das Pausas Invisíveis",
+        "Dia 30: relatório completo da sua evolução e certificado"
       ];
       $("entregaveis").innerHTML = entregaveis.map((e) => `<li>${e}</li>`).join("");
       $("preco-ancora").textContent = "Valor de " + formatarPreco(C.precos.ancora);

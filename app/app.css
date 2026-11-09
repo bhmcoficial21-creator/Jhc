@@ -76,3 +76,15 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .plano-socorro .etiqueta { flex-shrink: 0; }
 .modulo-titulo { margin-top: 28px; font-size: 1.2rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .habito summary { cursor: pointer; }
+.av-opcoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.av-opcoes .opcao { min-height: 44px; justify-content: center; }
+.avaliacao.ok { border: 2px solid var(--cor-primaria); }
+.av-resumo { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--cor-borda); }
+.grafico svg { width: 100%; height: auto; display: block; }
+.ev-linha { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--cor-borda); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.ev-linha > span:first-child { min-width: 0; }
+.ev-linha > span:last-child { white-space: nowrap; }
+.ev-dif { font-size: .8rem; padding: 1px 6px; border-radius: 999px; background: var(--cor-borda); }
+.ev-dif.bom { background: color-mix(in srgb, var(--cor-verde) 18%, white); color: var(--cor-verde); }
+.ev-dif.ruim { background: color-mix(in srgb, var(--cor-vermelho) 14%, white); color: var(--cor-vermelho); }
+.botao-voz { border: 1px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-texto); border-radius: 999px; padding: 6px 12px; font-size: .85rem; cursor: pointer; }

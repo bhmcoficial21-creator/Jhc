@@ -46,7 +46,7 @@
 
   /* Plano do dia, a partir de: dia, noite, semáforo, dia caótico, perfil */
   function planoDoDia({ dia, noite, semaforo, caotico, perfil }) {
-    const semana = dia <= 7 ? 1 : dia <= 14 ? 2 : 3;
+    const semana = dia <= 7 ? 1 : dia <= 14 ? 2 : dia <= 21 ? 3 : 4;
     const foco = perfil.regiaoFoco;
     const plano = {
       semana,
@@ -86,10 +86,15 @@
       } else if (semana === 2) {
         plano.blocos.push({ tipo: "regiao", regiao: foco, texto: `Rotina da região: ${D.REGIOES[foco]?.nome || foco}`, curta });
         plano.blocos.push({ tipo: "ritual", texto: D.ROTINAS.ritualDesligar.nome });
-      } else {
+      } else if (semana === 3) {
         const diaForca = [15, 17, 19].includes(dia);
         if (diaForca) plano.blocos.push({ tipo: "rotina", rotina: "forca8", texto: curta ? "Força leve (versão curta: 2 exercícios)" : D.ROTINAS.forca8.nome, curta });
         else if (dia !== 21) plano.blocos.push({ tipo: "caminhada", texto: curta ? "Caminhada de 10 minutos" : "Caminhada de 15 minutos" });
+      } else {
+        // Semana 4 · Blindar: força 3x, hábitos e checklists no automático
+        if (C.diasForcaSemana4.includes(dia)) plano.blocos.push({ tipo: "rotina", rotina: "forca8", texto: curta ? "Força leve (versão curta: 2 exercícios)" : D.ROTINAS.forca8.nome, curta });
+        else if (dia !== 30) plano.blocos.push({ tipo: "checklist", texto: "Checklist Matinal ou Noturno (3 min)" });
+        if (dia !== 30) plano.blocos.push({ tipo: "lanches", texto: "3 Lanches de Movimento de 60 s nos seus horários fixos" });
       }
     }
 

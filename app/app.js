@@ -1,7 +1,7 @@
 /* =========================================================
    PAINEL DO DESAFIO (seção 14 do briefing)
    Telas: boas-vindas, hoje, pausa, invisiveis, lembretes,
-   progresso, aulas, bonus, dia21, mais.
+   progresso, aulas, bonus, final, mais.
    ========================================================= */
 (function () {
   const C = window.RELIGAR_CONFIG;
@@ -9,6 +9,7 @@
   const L = window.RELIGAR_LOGICA;
   const S = window.RELIGAR_STORE;
 
+  const TOTAL = C.totalDias;
   let estado = S.carregar();
   const salvar = () => S.salvar(estado);
   const tela = document.getElementById("tela");
@@ -34,7 +35,7 @@
     return estado.dias[n];
   }
   function sequencia() {
-    let n = Math.min(diaAtual(), 21);
+    let n = Math.min(diaAtual(), TOTAL);
     if (!estado.dias[n]?.feito) n -= 1; // hoje ainda pode ser feito
     let s = 0;
     while (n >= 1 && estado.dias[n]?.feito) { s++; n--; }
@@ -43,19 +44,19 @@
   const diasFeitos = () => Object.values(estado.dias).filter((d) => d.feito).length;
 
   /* ---------- Roteamento ---------- */
-  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, habitos, snacks, checklist, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
+  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, habitos, snacks, checklist, invisiveis, lembretes, progresso, aulas, bonus, final, mais };
   function navegar() {
     pararTimer();
     let rota = (location.hash || "#hoje").slice(1);
     if (!estado.perfil && rota !== "boasvindas") return (location.hash = "#boasvindas");
-    if (rota === "hoje" && diaAtual() > 21) rota = "dia21";
+    if (rota === "hoje" && diaAtual() > TOTAL) rota = "final";
     if (rota.startsWith("trilha-") && D.TRILHAS_ZONA[rota.slice(7)]) trilha(rota.slice(7));
     else (ROTAS[rota] || hoje)();
     const aba = rota.startsWith("trilha-") || ["montar", "seguranca", "socorro", "habitos", "snacks", "checklist"].includes(rota) ? "alivio" : rota;
     $$("#nav a").forEach((a) => a.classList.toggle("ativo", a.dataset.r === aba));
     $("#nav").classList.toggle("oculto", rota === "boasvindas");
     $("#botao-estranho").classList.toggle("oculto", rota === "boasvindas");
-    $("#topo-dia").textContent = estado.perfil ? (diaAtual() > 21 ? "Desafio concluído" : `Dia ${diaAtual()} de 21`) : "";
+    $("#topo-dia").textContent = estado.perfil ? (diaAtual() > TOTAL ? "Desafio concluído" : `Dia ${diaAtual()} de ${TOTAL}`) : "";
     window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", navegar);
@@ -172,7 +173,7 @@
     const n = diaAtual();
     const reg = registroDia(n);
     const info = D.DIAS[n - 1];
-    const semana = D.SEMANAS[n <= 7 ? 0 : n <= 14 ? 1 : 2];
+    const semana = D.SEMANAS[n <= 7 ? 0 : n <= 14 ? 1 : n <= 21 ? 2 : 3];
 
     // Passo 1: como foi a noite?
     if (!reg.noite) {
@@ -204,7 +205,12 @@
 
     const plano = L.planoDoDia({ dia: n, noite: reg.noite, semaforo: reg.semaforo, caotico: reg.caotico, perfil: estado.perfil });
     const pctPausas = Math.min(100, Math.round((reg.pausas / plano.metaPausas) * 100));
-    const podeConcluir = reg.pausas >= plano.minimoPausas;
+    reg.avaliacao = reg.avaliacao || { dor: null, trava: null, remedio: null };
+    if (n === 1 && reg.avaliacao.dor === null && estado.escalaDor[1] != null) reg.avaliacao.dor = estado.escalaDor[1];
+    const av = reg.avaliacao;
+    const avaliacaoOk = av.dor !== null && av.trava !== null && av.remedio !== null;
+    const pausasOk = reg.pausas >= plano.minimoPausas;
+    const podeConcluir = pausasOk && avaliacaoOk;
     const nomeNoite = { bem: "Dormi bem", mais_ou_menos: "Mais ou menos", horrivel: "Noite horrível" }[reg.noite];
 
     tela.innerHTML = `
@@ -253,14 +259,18 @@
           <label class="check-linha"><input type="checkbox" class="check" data-pilar="${k}" ${reg.pilares[k] ? "checked" : ""}><span><strong>${t}</strong> <span class="pequeno suave">${d}</span></span></label>`).join("")}
       </div>
 
-      ${C.diasEscalaDor.includes(n) ? `
-      <div class="cartao">
-        <h3>Escala da Dor do dia ${n}</h3>
-        <div class="escala" id="escala">${Array.from({ length: 11 }, (_, i) =>
-          `<button data-v="${i}" aria-pressed="${estado.escalaDor[n] === i}">${i}</button>`).join("")}</div>
+      <div class="cartao avaliacao ${avaliacaoOk ? "ok" : ""}" id="avaliacao">
+        <div class="linha" style="justify-content:space-between"><h3 style="margin:0">📊 Avaliação do dia</h3><span class="etiqueta">${avaliacaoOk ? "✓ feita" : "30 segundos"}</span></div>
+        <p class="pequeno suave" style="margin:4px 0 12px">Responda no fim do expediente. É assim que você enxerga sua evolução.</p>
+        <p class="pequeno" style="margin:0 0 6px"><strong>1. Dor hoje ${D.REGIOES[estado.perfil.regiaoFoco].no} (0 a 10)</strong></p>
+        <div class="escala" id="av-dor">${Array.from({ length: 11 }, (_, i) => `<button data-v="${i}" aria-pressed="${av.dor === i}">${i}</button>`).join("")}</div>
         <div class="escala-legenda"><span>Nenhuma</span><span>Insuportável</span></div>
-        ${n > 1 && estado.escalaDor[1] != null ? `<p class="pequeno suave" style="margin-top:8px">Dia 1: ${estado.escalaDor[1]}/10</p>` : ""}
-      </div>` : ""}
+        <p class="pequeno" style="margin:14px 0 6px"><strong>2. Quanto o corpo travou hoje?</strong></p>
+        <div class="av-opcoes" id="av-trava">${D.AVALIACAO.trava.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.trava === v}">${t}</button>`).join("")}</div>
+        <p class="pequeno" style="margin:14px 0 6px"><strong>3. Precisou de remédio para dor hoje?</strong></p>
+        <div class="av-opcoes" id="av-remedio">${D.AVALIACAO.remedio.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.remedio === v}">${t}</button>`).join("")}</div>
+        ${avaliacaoOk && n > 1 ? resumoComparacao(n) : ""}
+      </div>
 
       ${D.REVISOES[n] ? renderRevisao(n, reg) : ""}
 
@@ -270,7 +280,7 @@
       </div>
 
       <button class="botao botao-grande" id="concluir" ${podeConcluir && !reg.feito ? "" : "disabled"} style="margin-top:12px">
-        ${reg.feito ? "✓ Dia concluído" : podeConcluir ? "Marcar dia como feito" : `Faltam ${plano.minimoPausas - reg.pausas} pausas para o check`}
+        ${reg.feito ? "✓ Dia concluído" : podeConcluir ? "Marcar dia como feito" : !pausasOk ? `Faltam ${plano.minimoPausas - reg.pausas} pausas para o check` : "Falta a avaliação do dia"}
       </button>
 
       <p class="centro suave" style="margin-top:24px"><em>${info.gancho}</em></p>
@@ -281,16 +291,21 @@
     $("#tarefa").onchange = (e) => { reg.tarefa = e.target.checked; salvar(); };
     $("#caotico").onchange = (e) => { reg.caotico = e.target.checked; salvar(); hoje(); };
     $$("[data-pilar]").forEach((c) => c.onchange = () => { reg.pilares[c.dataset.pilar] = c.checked; salvar(); });
-    $$("#escala button").forEach((b) => b.onclick = () => {
-      estado.escalaDor[n] = Number(b.dataset.v); salvar();
-      $$("#escala button").forEach((x) => x.setAttribute("aria-pressed", x === b));
-    });
+    const responder = (campo, valor) => {
+      av[campo] = valor;
+      if (campo === "dor") estado.escalaDor[n] = valor;
+      salvar();
+      const y = window.scrollY; hoje(); window.scrollTo(0, y);
+    };
+    $$("#av-dor button").forEach((b) => b.onclick = () => responder("dor", Number(b.dataset.v)));
+    $$("#av-trava .opcao").forEach((b) => b.onclick = () => responder("trava", Number(b.dataset.v)));
+    $$("#av-remedio .opcao").forEach((b) => b.onclick = () => responder("remedio", b.dataset.v === "true"));
     $$("[data-rev]").forEach((b) => b.onclick = () => { reg.revisao = Number(b.dataset.rev); salvar(); hoje(); });
     $("#concluir").onclick = () => {
       reg.feito = true; salvar();
-      abrirModal(`<h2>🎉 Dia ${n} feito!</h2><p>Sequência: <strong>${sequencia()} dia(s)</strong>. ${n === 21 ? "Hoje é a celebração!" : "Amanhã tem mais 2 minutos de cada vez."}</p>
+      abrirModal(`<h2>🎉 Dia ${n} feito!</h2><p>Sequência: <strong>${sequencia()} dia(s)</strong>. ${n === TOTAL ? "Hoje é a celebração!" : "Amanhã tem mais 2 minutos de cada vez."}</p>
         <button class="botao botao-bloco" onclick="this.closest('dialog').close()">Fechar</button>`);
-      if (n === 21) location.hash = "#dia21"; else hoje();
+      if (n === TOTAL) location.hash = "#final"; else hoje();
     };
   }
 
@@ -307,7 +322,10 @@
     } else if (b.tipo === "ritual") {
       detalhe = `<ol class="lista-ex">${D.ROTINAS.ritualDesligar.passos.map((p) => `<li>${p}</li>`).join("")}</ol>`;
     }
-    const icone = { pausas: "⏱️", rotina: "🧘", regiao: "🎯", ritual: "🌙", caminhada: "🚶" }[b.tipo];
+    if (b.tipo === "checklist") detalhe = "";
+    const icone = { pausas: "⏱️", rotina: "🧘", regiao: "🎯", ritual: "🌙", caminhada: "🚶", checklist: "📋", lanches: "🍎" }[b.tipo];
+    const link = { checklist: "#checklist", lanches: "#snacks" }[b.tipo];
+    if (link) return `<div class="bloco"><span>${icone}</span><div style="flex:1"><strong>${b.texto}</strong> <a class="pequeno" href="${link}">abrir</a></div></div>`;
     return `<div class="bloco"><span>${icone}</span><div style="flex:1"><strong>${b.texto}</strong>${detalhe ? `<details><summary class="pequeno">ver exercícios</summary>${detalhe}</details>` : ""}</div></div>`;
   }
 
@@ -332,10 +350,35 @@
      3. PAUSA AGORA (timer de 2 minutos com os 3 Rs)
      ========================================================= */
   let timerId = null;
-  function pararTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+  function pararTimer() { if (timerId) { clearInterval(timerId); timerId = null; } voz.parar(); }
+
+  /* Guia por voz + vibração: a pessoa faz o exercício sem olhar a tela.
+     Hoje usa a voz do próprio celular (grátis). Depois dá para trocar por
+     áudios gravados ou gerados com uma voz profissional. */
+  const voz = {
+    ligada: () => estado.perfil?.voz !== false,
+    falar(texto) {
+      if (!this.ligada() || !("speechSynthesis" in window)) return;
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(texto.replace(/<[^>]+>/g, " "));
+        u.lang = "pt-BR"; u.rate = 0.95;
+        const v = speechSynthesis.getVoices().find((x) => (x.lang || "").toLowerCase().startsWith("pt"));
+        if (v) u.voice = v;
+        speechSynthesis.speak(u);
+      } catch (e) { /* sem voz neste aparelho */ }
+    },
+    vibrar(padrao = 150) { try { if (navigator.vibrate) navigator.vibrate(padrao); } catch (e) {} },
+    parar() { try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {} }
+  };
+  const botaoVoz = () => `<button class="botao-voz" id="btn-voz" aria-pressed="${voz.ligada()}">${voz.ligada() ? "🔊 Guia por voz ligado" : "📳 Só vibração"}</button>`;
+  function ligarBotaoVoz() {
+    const b = $("#btn-voz");
+    if (b) b.onclick = () => { estado.perfil.voz = !voz.ligada(); salvar(); if (!voz.ligada()) voz.parar(); b.outerHTML = botaoVoz(); ligarBotaoVoz(); };
+  }
 
   function pausa() {
-    const n = Math.min(diaAtual(), 21);
+    const n = Math.min(diaAtual(), TOTAL);
     const reg = registroDia(n);
     const vermelho = reg.semaforo === "vermelho";
     const exercicio = L.exercicioRemexe(estado.perfil.regiaoFoco, reg.pausas);
@@ -345,10 +388,10 @@
       return r;
     });
     const total = etapas.reduce((s, e) => s + e.segundos, 0);
-    let restante = total, rodando = false;
+    let restante = total, rodando = false, faladoP = -1;
 
     tela.innerHTML = `
-      <h1>Pausa de 2 minutos</h1>
+      <div class="linha" style="justify-content:space-between"><h1 style="margin:0">Pausa de 2 minutos</h1>${botaoVoz()}</div>
       <p class="suave">Pausa ${reg.pausas + 1} de hoje · região de foco: ${D.REGIOES[estado.perfil.regiaoFoco].nome}</p>
       <div class="etapas-r">${etapas.map((e) => `<div>${e.nome}</div>`).join("")}</div>
       <div class="cartao">
@@ -368,10 +411,12 @@
       $("#etapa-nome").textContent = etapas[idx].nome;
       $("#etapa-texto").innerHTML = etapas[idx].texto;
       $$(".etapas-r div").forEach((d, i) => { d.className = i < idx ? "feita" : i === idx ? "atual" : ""; });
+      if (rodando && idx !== faladoP) { faladoP = idx; voz.vibrar(); voz.falar(`${etapas[idx].nome}. ${etapas[idx].texto}`); }
     }
     function concluir() {
       pararTimer();
       reg.pausas++; salvar(); ultimaPausa = Date.now();
+      voz.vibrar([120, 60, 120]); voz.falar("Pausa feita. Seu corpo agradece.");
       tela.innerHTML = `<div class="centro"><h1>✓ Pausa feita!</h1>
         <p>${reg.pausas} pausa(s) hoje. Seu corpo agradece.</p>
         <a class="botao botao-grande" href="#hoje">Voltar para Hoje</a></div>`;
@@ -382,6 +427,7 @@
       timerId = setInterval(() => { restante--; if (restante <= 0) return concluir(); atualizar(); }, 1000);
       atualizar();
     };
+    ligarBotaoVoz();
     atualizar();
   }
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -467,7 +513,7 @@
 
   function trilha(id) {
     const t = D.TRILHAS_ZONA[id];
-    const reg = registroDia(Math.min(diaAtual(), 21));
+    const reg = registroDia(Math.min(diaAtual(), TOTAL));
     tela.innerHTML = `
       <p class="pequeno"><a href="#alivio">← Central</a></p>
       <span class="etiqueta">Módulo 1 · SOS Alívio Imediato</span>
@@ -503,7 +549,7 @@
   }
 
   function snacks() {
-    const reg = registroDia(Math.min(diaAtual(), 21));
+    const reg = registroDia(Math.min(diaAtual(), TOTAL));
     const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
     const lista = [...D.SNACKS.filter((s) => s.zona === minha), ...D.SNACKS.filter((s) => s.zona !== minha)];
     tela.innerHTML = `
@@ -528,7 +574,7 @@
   }
 
   function checklist() {
-    const reg = registroDia(Math.min(diaAtual(), 21));
+    const reg = registroDia(Math.min(diaAtual(), TOTAL));
     reg.checklist = reg.checklist || { matinal: false, noturno: false };
     const escolhida = estado.perfil.trilhaChecklist || D.trilhaDaRegiao(estado.perfil.regiaoFoco);
     const hora = new Date().getHours();
@@ -610,7 +656,7 @@
      ========================================================= */
   function alivio() {
     const p = estado.perfil;
-    const n = Math.min(diaAtual(), 21);
+    const n = Math.min(diaAtual(), TOTAL);
     const reg = registroDia(n);
     const esc = { regiao: p.regiaoFoco, minutos: p.tempoLivre || 2, local: p.localPadrao || "sentado" };
 
@@ -652,11 +698,14 @@
 
   function executarProtocolo(prot, reg, aoConcluir) {
     const passos = prot.passos;
-    let k = 0, restante = passos[0].segundos, rodando = false;
+    let k = 0, restante = passos[0].segundos, rodando = false, falado = -1;
     const total = passos.reduce((s, x) => s + x.segundos, 0);
 
     tela.innerHTML = `
-      <span class="etiqueta">${prot.titulo || `Alívio Express · ${prot.minutos} min · ${D.REGIOES[prot.regiao].nome}`}</span>
+      <div class="linha" style="justify-content:space-between">
+        <span class="etiqueta">${prot.titulo || `Alívio Express · ${prot.minutos} min · ${D.REGIOES[prot.regiao].nome}`}</span>
+        ${botaoVoz()}
+      </div>
       ${prot.aviso ? `<div class="aviso ${reg.semaforo === "vermelho" ? "aviso-vermelho" : ""}" style="margin-top:12px">${prot.aviso}</div>` : ""}
       <div class="cartao" style="margin-top:12px">
         <div class="video-placeholder vertical" id="ae-video"></div>
@@ -685,6 +734,12 @@
       const feito = passos.slice(0, k).reduce((s, y) => s + y.segundos, 0) + (x.segundos - restante);
       $("#ae-barra").style.width = Math.round((feito / total) * 100) + "%";
       $$("#ae-lista li").forEach((li, i) => li.style.fontWeight = i === k ? "700" : "400");
+      if (rodando && k !== falado) {
+        falado = k; voz.vibrar();
+        voz.falar(`${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`);
+      } else if (rodando && restante === 10 && x.segundos >= 30) {
+        voz.falar("Faltam 10 segundos.");
+      }
     }
     function proximo() {
       k++;
@@ -695,6 +750,7 @@
       pararTimer();
       reg.pausas++; reg.alivios = (reg.alivios || 0) + 1; salvar(); ultimaPausa = Date.now();
       if (aoConcluir) aoConcluir();
+      voz.vibrar([120, 60, 120]); voz.falar("Pronto. Como está agora?");
       tela.innerHTML = `<div class="centro">
         <h1>✓ Alívio feito</h1>
         <p>Conta como pausa de hoje: ${reg.pausas} pausa(s).</p>
@@ -723,7 +779,9 @@
       if (rodando) { pararTimer(); rodando = false; $("#ae-play").textContent = "Continuar"; return; }
       rodando = true; $("#ae-play").textContent = "Pausar";
       timerId = setInterval(() => { restante--; if (restante <= 0) return proximo(); mostrarPasso(); }, 1000);
+      mostrarPasso();
     };
+    ligarBotaoVoz();
     $("#ae-pular").onclick = proximo;
     mostrarPasso();
   }
@@ -739,7 +797,7 @@
       ${lista.map((e) => `<div class="cartao"><h3>${e.nome}</h3><p class="pequeno" style="margin:0">${e.passos}</p></div>`).join("")}
       <div class="cartao"><h3>3 respirações profundas</h3><p class="pequeno" style="margin:0">Solte os ombros na saída do ar.</p></div>
       <button class="botao botao-bloco" id="inv-ok" style="margin-top:12px">Fiz uma pausa invisível (+1)</button>`;
-    $("#inv-ok").onclick = () => { registroDia(Math.min(diaAtual(), 21)).pausas++; salvar(); ultimaPausa = Date.now(); location.hash = "#hoje"; };
+    $("#inv-ok").onclick = () => { registroDia(Math.min(diaAtual(), TOTAL)).pausas++; salvar(); ultimaPausa = Date.now(); location.hash = "#hoje"; };
   }
 
   /* =========================================================
@@ -783,7 +841,7 @@
 
   function verificarLembrete() {
     const p = estado.perfil;
-    if (!p || diaAtual() > 21) return;
+    if (!p || diaAtual() > TOTAL) return;
     const agora = new Date();
     const min = agora.getHours() * 60 + agora.getMinutes();
     const dentro = min >= L.paraMinutos(p.inicioTrabalho) && min < L.paraMinutos(p.fimTrabalho);
@@ -804,31 +862,102 @@
   window.addEventListener("hashchange", () => { if (location.hash === "#pausa") $("#lembrete-banner").classList.add("oculto"); });
 
   /* =========================================================
+     AVALIAÇÃO DIÁRIA: métricas e gráfico de evolução
+     ========================================================= */
+  function registrosAvaliacao() {
+    const lista = [];
+    for (let d = 1; d <= TOTAL; d++) {
+      const a = estado.dias[d]?.avaliacao;
+      const dor = a?.dor ?? (d === 1 ? estado.escalaDor[1] : null);
+      if (dor !== null && dor !== undefined) lista.push({ d, dor, trava: a?.trava ?? null, remedio: a?.remedio ?? null });
+    }
+    return lista;
+  }
+  function evolucao() {
+    const r = registrosAvaliacao();
+    const media = (arr) => arr.length ? Math.round((arr.reduce((s, x) => s + x, 0) / arr.length) * 10) / 10 : null;
+    const semana = (k) => r.filter((x) => x.d > (k - 1) * 7 && x.d <= (k === 4 ? TOTAL : k * 7));
+    const comRemedio = r.filter((x) => x.remedio !== null);
+    const ultimaSemana = [4, 3, 2, 1].find((k) => semana(k).length) || 1;
+    return {
+      registros: r,
+      primeira: r[0] || null,
+      ultima: r[r.length - 1] || null,
+      mediaSemana1: media(semana(1).map((x) => x.dor)),
+      mediaUltima: media(semana(ultimaSemana).map((x) => x.dor)),
+      ultimaSemana,
+      diasSemRemedio: comRemedio.filter((x) => !x.remedio).length,
+      diasAvaliados: comRemedio.length,
+      travaSemana1: media(semana(1).filter((x) => x.trava !== null).map((x) => x.trava)),
+      travaUltima: media(semana(ultimaSemana).filter((x) => x.trava !== null).map((x) => x.trava))
+    };
+  }
+  function resumoComparacao(n) {
+    const ev = evolucao();
+    if (!ev.primeira || !ev.ultima || ev.primeira.d === ev.ultima.d) return "";
+    const dif = ev.primeira.dor - ev.ultima.dor;
+    return `<p class="pequeno av-resumo">Dia ${ev.primeira.d}: <strong>${ev.primeira.dor}</strong> → hoje: <strong>${ev.ultima.dor}</strong>.
+      ${dif > 0 ? `Sua dor caiu ${dif} ponto(s). 👏` : dif === 0 ? "Estável. O hábito é o que impede de piorar." : "Subiu hoje. Dias ruins fazem parte; confira o Semáforo se continuar."}</p>`;
+  }
+  function graficoEvolucao() {
+    const r = registrosAvaliacao();
+    if (r.length < 2) return `<p class="pequeno suave" style="margin:0">O gráfico aparece a partir da sua segunda avaliação diária.</p>`;
+    const W = 320, H = 150, x0 = 28, x1 = W - 10, y0 = 12, y1 = H - 24;
+    const X = (d) => x0 + ((d - 1) / (TOTAL - 1)) * (x1 - x0);
+    const Y = (v) => y1 - (v / 10) * (y1 - y0);
+    const pts = r.map((p) => `${X(p.d).toFixed(1)},${Y(p.dor).toFixed(1)}`).join(" ");
+    const area = `${X(r[0].d).toFixed(1)},${y1} ${pts} ${X(r[r.length - 1].d).toFixed(1)},${y1}`;
+    const ult = r[r.length - 1];
+    const grade = [0, 5, 10].map((v) => `<line x1="${x0}" x2="${x1}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--cor-borda)" stroke-width="1"/><text x="${x0 - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="10" style="fill:var(--cor-texto-suave)">${v}</text>`).join("");
+    const eixo = [1, 8, 15, 22, TOTAL].map((d) => `<text x="${X(d)}" y="${H - 6}" text-anchor="middle" font-size="10" style="fill:var(--cor-texto-suave)">${d}</text>`).join("");
+    return `<div class="grafico"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dor por dia, de 0 a 10">
+      ${grade}${eixo}
+      <polygon points="${area}" style="fill:var(--cor-primaria-suave)"/>
+      <polyline points="${pts}" fill="none" style="stroke:var(--cor-primaria)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${r.map((p) => `<circle cx="${X(p.d)}" cy="${Y(p.dor)}" r="2.5" style="fill:var(--cor-primaria)"/>`).join("")}
+      <circle cx="${X(ult.d)}" cy="${Y(ult.dor)}" r="5" style="fill:var(--cor-superficie);stroke:var(--cor-primaria)" stroke-width="2.5"/>
+    </svg><p class="pequeno suave" style="margin:4px 0 0">Dor de 0 a 10 por dia do desafio. Linha descendo é evolução.</p></div>`;
+  }
+  function cartoesEvolucao(ev) {
+    const linha = (rot, a, b, melhorMenor = true) => {
+      if (a === null || b === null) return "";
+      const dif = Math.round((b - a) * 10) / 10;
+      const bom = melhorMenor ? dif < 0 : dif > 0;
+      return `<div class="ev-linha"><span>${rot}</span><span><strong>${a}</strong> → <strong>${b}</strong> <span class="ev-dif ${bom ? "bom" : dif === 0 ? "" : "ruim"}">${dif > 0 ? "+" : ""}${dif}</span></span></div>`;
+    };
+    return `
+      ${linha("Dor: primeira avaliação → última", ev.primeira?.dor ?? null, ev.ultima?.dor ?? null)}
+      ${linha(`Dor média: semana 1 → semana ${ev.ultimaSemana}`, ev.mediaSemana1, ev.mediaUltima)}
+      ${linha(`Travamento médio (0 a 3): semana 1 → semana ${ev.ultimaSemana}`, ev.travaSemana1, ev.travaUltima)}
+      ${ev.diasAvaliados ? `<div class="ev-linha"><span>Dias sem remédio para dor</span><span><strong>${ev.diasSemRemedio}</strong> de ${ev.diasAvaliados}</span></div>` : ""}`;
+  }
+
+  /* =========================================================
      6. PROGRESSO
      ========================================================= */
   function progresso() {
-    const n = Math.min(diaAtual(), 21);
-    const e = estado.escalaDor;
+    const n = Math.min(diaAtual(), TOTAL);
     const totalPausas = Object.values(estado.dias).reduce((s, d) => s + (d.pausas || 0), 0);
+    const ev = evolucao();
     tela.innerHTML = `
       <h1>Seu progresso</h1>
       <div class="grade-2" style="grid-template-columns:repeat(3,1fr)">
         <div class="cartao stat"><strong>${sequencia()}</strong><span class="pequeno suave">dias seguidos</span></div>
-        <div class="cartao stat" style="margin-top:0"><strong>${diasFeitos()}/21</strong><span class="pequeno suave">dias feitos</span></div>
+        <div class="cartao stat" style="margin-top:0"><strong>${diasFeitos()}/${TOTAL}</strong><span class="pequeno suave">dias feitos</span></div>
         <div class="cartao stat" style="margin-top:0"><strong>${totalPausas}</strong><span class="pequeno suave">pausas</span></div>
       </div>
       <div class="cartao">
+        <h3>Sua evolução</h3>
+        ${graficoEvolucao()}
+        <div style="margin-top:12px">${cartoesEvolucao(ev)}</div>
+      </div>
+      <div class="cartao">
         <h3>Calendário de checks</h3>
-        <div class="calendario">${Array.from({ length: 21 }, (_, i) => {
+        <div class="calendario">${Array.from({ length: TOTAL }, (_, i) => {
           const d = i + 1, r = estado.dias[d];
           const cls = [r?.feito ? "feito" : "", d === n ? "hoje" : "", d > n ? "futuro" : ""].join(" ");
           return `<div class="${cls}" title="${r ? r.pausas + " pausas" : ""}">${d}</div>`;
         }).join("")}</div>
-      </div>
-      <div class="cartao">
-        <h3>Escala da Dor</h3>
-        <table class="tabela"><thead><tr><th>Dia 1</th><th>Dia 11</th><th>Dia 21</th></tr></thead>
-          <tbody><tr>${[1, 11, 21].map((d) => `<td><strong>${e[d] ?? "–"}</strong>${e[d] != null ? "/10" : ""}</td>`).join("")}</tr></tbody></table>
       </div>
       <div class="cartao">
         <h3>Pausas por dia</h3>
@@ -879,46 +1008,38 @@
   }
 
   /* =========================================================
-     9. DIA 21: comparação, certificado e oferta
+     9. DIA 30: relatório de evolução, certificado e oferta
      ========================================================= */
-  function dia21() {
-    const e = estado.escalaDor;
-    const reg21 = registroDia(21);
-    const precisaEscala = e[21] == null;
-    const diff = e[1] != null && e[21] != null ? e[1] - e[21] : null;
+  function final() {
+    const ev = evolucao();
+    const dif = ev.primeira && ev.ultima ? ev.primeira.dor - ev.ultima.dor : null;
+    const totalPausas = Object.values(estado.dias).reduce((s, d) => s + (d.pausas || 0), 0);
     tela.innerHTML = `
-      <h1>🎉 Dia 21: seu corpo descongelado</h1>
-      ${precisaEscala ? `
-        <div class="cartao"><h3>Marque sua Escala da Dor final</h3>
-          <div class="escala" id="escala21">${Array.from({ length: 11 }, (_, i) => `<button data-v="${i}">${i}</button>`).join("")}</div>
-          <div class="escala-legenda"><span>Nenhuma</span><span>Insuportável</span></div></div>` : `
-        <div class="cartao">
-          <h3>Sua evolução</h3>
-          <table class="tabela"><thead><tr><th>Dia 1</th><th>Dia 11</th><th>Dia 21</th></tr></thead>
-            <tbody><tr>${[1, 11, 21].map((d) => `<td><strong>${e[d] ?? "–"}</strong></td>`).join("")}</tr></tbody></table>
-          <p style="margin-top:12px">${diff > 0 ? `Sua dor caiu <strong>${diff} ponto(s)</strong> na escala.` : diff === 0 ? "Sua dor ficou estável, e você criou o hábito das pausas, que é o que impede a dor de piorar." : "Sua dor não diminuiu. Vale conversar com um médico ou fisioterapeuta e levar este registro."}</p>
-          <p class="pequeno suave">Você fez ${diasFeitos()} de 21 dias e ${Object.values(estado.dias).reduce((s, d) => s + (d.pausas || 0), 0)} pausas.</p>
-        </div>
-        <div class="certificado" id="certificado">
-          <p class="pequeno suave">Religar · Certificado</p>
-          <h2>Desafio Corpo Descongelado 21 Dias</h2>
-          <p>Concluído por</p>
-          <p><input id="cert-nome" placeholder="Seu nome" class="opcao" style="text-align:center;font-size:1.2rem;font-weight:700" value="${estado.perfil.nome || ""}"></p>
-          <p class="pequeno">${new Date().toLocaleDateString("pt-BR")}</p>
-        </div>
-        <button class="botao botao-secundario botao-bloco" id="imprimir" style="margin-top:12px">Salvar certificado (imprimir / PDF)</button>
+      <h1>🎉 Dia ${TOTAL}: o seu corpo livre</h1>
+      <div class="cartao">
+        <h3>Seu relatório de evolução</h3>
+        ${graficoEvolucao()}
+        <div style="margin-top:12px">${cartoesEvolucao(ev)}</div>
+        <p style="margin-top:12px">${dif > 0 ? `Sua dor caiu <strong>${dif} ponto(s)</strong> em ${TOTAL} dias.` : dif === 0 ? "Sua dor ficou estável, e você criou o hábito das pausas, que é o que impede a dor de piorar." : dif === null ? "Faça avaliações diárias para ver sua evolução aqui." : "Sua dor não diminuiu. Vale conversar com um médico ou fisioterapeuta e levar este relatório."}</p>
+        <p class="pequeno suave">Você fez ${diasFeitos()} de ${TOTAL} dias, ${ev.registros.length} avaliações e ${totalPausas} pausas.</p>
+      </div>
+      <div class="certificado" id="certificado">
+        <p class="pequeno suave">Religar · Certificado</p>
+        <h2>${C.produto}</h2>
+        <p>Concluído por</p>
+        <p><input id="cert-nome" placeholder="Seu nome" class="opcao" style="text-align:center;font-size:1.2rem;font-weight:700" value="${estado.perfil.nome || ""}"></p>
+        <p class="pequeno">${new Date().toLocaleDateString("pt-BR")}</p>
+      </div>
+      <button class="botao botao-secundario botao-bloco" id="imprimir" style="margin-top:12px">Salvar certificado (imprimir / PDF)</button>
 
-        <div class="cartao" style="margin-top:24px">
-          <span class="etiqueta">Próximo passo</span>
-          <h2 style="margin-top:8px">${D.BONUS.find((b) => b.id === "upsell").nome}</h2>
-          <p>${D.BONUS.find((b) => b.id === "upsell").descricao}</p>
-          <p class="preco" style="font-size:1.6rem;font-weight:800">${formatarPreco(C.precos.upsell)}</p>
-          <a class="botao botao-grande" href="${C.checkout.upsell}">Quero continuar por 60 dias</a>
-          <p class="centro pequeno" style="margin-top:12px"><a href="${C.checkout.downsell}">Prefiro a versão Essencial por ${formatarPreco(C.precos.downsell)} (sem comunidade e sem encontros ao vivo)</a></p>
-        </div>`}`;
-    $$("#escala21 button").forEach((b) => b.onclick = () => {
-      e[21] = Number(b.dataset.v); reg21.feito = reg21.feito || reg21.pausas >= C.pausasMinimasDiaCaotico; salvar(); dia21();
-    });
+      <div class="cartao" style="margin-top:24px">
+        <span class="etiqueta">Próximo passo</span>
+        <h2 style="margin-top:8px">${D.BONUS.find((b) => b.id === "upsell").nome}</h2>
+        <p>${D.BONUS.find((b) => b.id === "upsell").descricao}</p>
+        <p class="preco" style="font-size:1.6rem;font-weight:800">${formatarPreco(C.precos.upsell)}</p>
+        <a class="botao botao-grande" href="${C.checkout.upsell}">Quero continuar por 60 dias</a>
+        <p class="centro pequeno" style="margin-top:12px"><a href="${C.checkout.downsell}">Prefiro a versão Essencial por ${formatarPreco(C.precos.downsell)} (sem comunidade e sem encontros ao vivo)</a></p>
+      </div>`;
     const nome = $("#cert-nome");
     if (nome) nome.onchange = () => { estado.perfil.nome = nome.value; salvar(); };
     const imp = $("#imprimir");
@@ -957,7 +1078,7 @@
         <div class="linha">
           <button class="botao botao-secundario" id="t-ant">− 1 dia</button>
           <button class="botao botao-secundario" id="t-prox">+ 1 dia</button>
-          <button class="botao botao-secundario" id="t-21">Ir ao dia 21</button>
+          <button class="botao botao-secundario" id="t-21">Ir ao dia ${TOTAL}</button>
         </div>
         <p class="pequeno" style="margin-top:12px">Simular compras:</p>
         ${["bump1", "bump2", "bump3", "upsell"].map((id) => `<label class="check-linha"><input type="checkbox" class="check" data-compra="${id}" ${estado.compras[id] ? "checked" : ""}> ${D.BONUS.find((b) => b.id === id).nome}</label>`).join("")}
@@ -970,7 +1091,7 @@
       const mover = (d) => { estado.deslocamentoDias = (estado.deslocamentoDias || 0) + d; salvar(); navegar(); };
       $("#t-ant").onclick = () => mover(-1);
       $("#t-prox").onclick = () => mover(1);
-      $("#t-21").onclick = () => mover(21 - diaAtual());
+      $("#t-21").onclick = () => mover(TOTAL - diaAtual());
       $$("[data-compra]").forEach((c) => c.onchange = () => { estado.compras[c.dataset.compra] = c.checked; salvar(); });
       $("#t-zerar").onclick = () => { if (confirm("Apagar todo o progresso?")) { S.zerar(); estado = S.carregar(); location.hash = "#boasvindas"; navegar(); } };
     }

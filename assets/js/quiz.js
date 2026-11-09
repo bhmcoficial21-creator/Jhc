@@ -368,10 +368,10 @@
 
       <div class="cartao oferta">
         <span class="etiqueta">Seu próximo passo</span>
-        <h2 style="margin-top:8px">Desafio Corpo Descongelado 21 Dias</h2>
-        <p>Um assistente de bolso para a dor ${reg.no}: microvídeos de 1 a 3 minutos para abrir no celular na hora que a dor bater, mais o desafio de 21 dias montado para a sua rotina.</p>
+        <h2 style="margin-top:8px">Desafio Corpo Descongelado 30 Dias</h2>
+        <p>Um assistente de bolso para a dor ${reg.no}: microvídeos de 1 a 3 minutos para abrir no celular na hora que a dor bater, mais o desafio de 30 dias montado para a sua rotina.</p>
         <ul class="lista-check">
-          <li>5 aulas curtas + 21 dias de desafio</li>
+          <li>5 aulas curtas + 30 dias de desafio com avaliação diária da sua evolução</li>
           <li>Módulo 1, SOS Alívio Imediato: trilha ${zona.nome} e o alívio sob medida de 1 a 3 min</li>
           <li>Módulo 2, Reprogramação de Hábitos: começando por "${plano.habito.titulo}"</li>
           <li>Módulo 3, Lanches de Movimento: pausas invisíveis de 60 s</li>
@@ -379,7 +379,8 @@
           <li>Plano que muda pela sua noite e pelo seu semáforo</li>
           <li>Pausas invisíveis para reunião e atendimento</li>
           <li>Bônus: Trava de Segurança Articular e Checklist de Bolso Matinal e Noturno</li>
-          <li>PDFs de apoio e certificado no dia 21</li>
+          <li>Guia por voz: faça sem olhar a tela</li>
+          <li>PDFs de apoio, relatório de evolução e certificado no dia 30</li>
         </ul>
         <p><s class="suave">${formatarPreco(C.precos.ancora)}</s> <strong style="font-size:1.5rem">${formatarPreco(C.precos.principal)}</strong></p>
         <div class="cta">

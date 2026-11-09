@@ -129,7 +129,7 @@
     vermelho: { nome: "Vermelho", sente: "Dor forte, perda de força, dormência que não passa, dor que irradia para braço ou perna, dor à noite", fazer: "Parar os exercícios da região e procurar um médico ou fisioterapeuta." }
   };
 
-  /* Os 21 dias. video: título do vídeo curto do dia (2 a 5 min). */
+  /* Os 30 dias, em 4 semanas: Descongelar, Destravar, Fortalecer, Blindar. */
   const DIAS = [
     // Semana 1 · Descongelar
     { dia: 1, titulo: "O seu corpo não está pedindo academia", tarefa: "Faça 4 pausas com os 3 Rs e marque sua Escala da Dor.", gancho: "Heráclito: tudo flui. O corpo foi feito para fluir, não para congelar." },
@@ -154,13 +154,24 @@
     { dia: 18, titulo: "Sono: o presente que a dor rouba", tarefa: "Caminhe 15 minutos e faça o ritual de desligar.", gancho: "Salmos 127:2: o sono é um presente." },
     { dia: 19, titulo: "Pernas e quadril: levantar com leveza", tarefa: "Faça a rotina de força leve (8 min).", gancho: "A água parada: circulação precisa de movimento." },
     { dia: 20, titulo: "O hábito que fica depois do desafio", tarefa: "Caminhe 15 minutos e escolha seus 2 horários fixos de pausa.", gancho: "Sêneca: as pausas de 2 minutos já existem no seu dia." },
-    { dia: 21, titulo: "Dia 21: o seu corpo descongelado", tarefa: "Marque a Escala da Dor final e veja sua evolução.", gancho: "Gênesis 2:2-3: o descanso faz parte da obra." }
+    { dia: 21, titulo: "Fechamento da semana 3: o corpo mais forte", tarefa: "Compare sua avaliação de hoje com a do dia 1.", gancho: "Gênesis 2:2-3: o descanso faz parte da obra." },
+    // Semana 4 · Blindar
+    { dia: 22, titulo: "Semana 4: blindar o que você conquistou", tarefa: "Escolha seus 3 horários fixos de Lanche de Movimento.", gancho: "Aristóteles: somos o que fazemos repetidamente." },
+    { dia: 23, titulo: "Força que protege: a dor não volta", tarefa: "Faça a rotina de força leve (8 min).", gancho: "A árvore e o bambu: forte e flexível ao mesmo tempo." },
+    { dia: 24, titulo: "O vício que mais pesa na sua rotina", tarefa: "Faça a aula de hábito marcada \"Para você\" e aplique o teste de 10 segundos.", gancho: "Epicteto: foque no que depende de você." },
+    { dia: 25, titulo: "Quando a dor aparece no seu dia?", tarefa: "Repare em que momento a dor dá o primeiro sinal e faça o SOS na hora.", gancho: "A corda de violão: afrouxar antes de arrebentar." },
+    { dia: 26, titulo: "Força leve: pernas e quadril", tarefa: "Faça a rotina de força leve (8 min).", gancho: "Heráclito: tudo flui." },
+    { dia: 27, titulo: "Dormir solto: o Checklist Noturno", tarefa: "Faça o Checklist Noturno antes de deitar.", gancho: "Salmos 127:2: o sono é um presente." },
+    { dia: 28, titulo: "O plano para os dias caóticos", tarefa: "Mesmo num dia cheio, faça o mínimo: 2 Lanches de Movimento de 60 s.", gancho: "Sêneca: as pausas já existem no seu dia." },
+    { dia: 29, titulo: "Força leve: a última da série", tarefa: "Faça a rotina de força leve (8 min).", gancho: "A dobradiça enferrujada: o óleo de todo dia." },
+    { dia: 30, titulo: "Dia 30: o seu corpo livre", tarefa: "Faça a avaliação final e veja toda a sua evolução.", gancho: "Gênesis 2:2-3: o descanso faz parte da obra." }
   ];
 
   const SEMANAS = [
     { n: 1, nome: "Descongelar", resolve: "Rigidez e circulação", marco: "Menos rigidez ao fim do dia" },
     { n: 2, nome: "Destravar", resolve: "A dor específica", marco: "Escala da Dor do dia 11 menor que a do dia 1" },
-    { n: 3, nome: "Fortalecer", resolve: "A dor voltar", marco: "Escala da Dor do dia 21, sono e disposição melhores" }
+    { n: 3, nome: "Fortalecer", resolve: "A dor voltar", marco: "Dor menor que na semana 1, sono e disposição melhores" },
+    { n: 4, nome: "Blindar", resolve: "Voltar aos velhos vícios", marco: "Pausas e hábitos no automático e a evolução comprovada na avaliação do dia 30" }
   ];
 
   /* Repetição espaçada: dias 1, 3, 7, 14 e 21 */
@@ -169,7 +180,8 @@
     3:  { pergunta: "O que diz a Regra 50/2?", opcoes: ["50 exercícios em 2 dias", "A cada 50 minutos, 2 minutos de pausa", "50 minutos de academia, 2 vezes por semana"], certa: 1, explica: "A cada 50 minutos sentado, 2 minutos de pausa." },
     7:  { pergunta: "Quais são os 3 Rs da pausa?", opcoes: ["Reposiciona, Respira, Remexe", "Relaxa, Repousa, Recomeça", "Roda, Respira, Repete"], certa: 0, explica: "Reposiciona, Respira e Remexe." },
     14: { pergunta: "Formigamento que volta todo dia é qual cor do semáforo?", opcoes: ["Verde", "Amarelo", "Vermelho"], certa: 1, explica: "Amarelo: reforçar as pausas, versão mais leve e observar." },
-    21: { pergunta: "O que vence a dor do trabalho?", opcoes: ["Esforço longo e raro", "Pausas curtas e frequentes", "Remédio quando dói"], certa: 1, explica: "Pausas curtas e frequentes vencem esforço longo e raro." }
+    21: { pergunta: "O que vence a dor do trabalho?", opcoes: ["Esforço longo e raro", "Pausas curtas e frequentes", "Remédio quando dói"], certa: 1, explica: "Pausas curtas e frequentes vencem esforço longo e raro." },
+    30: { pergunta: "Qual é o primeiro sinal de que o corpo está congelando?", opcoes: ["Dor forte", "Formigamento, peso e rigidez", "Cansaço no fim de semana"], certa: 1, explica: "A dor é o último aviso. Formigamento, peso e rigidez vêm antes: é a hora de pausar." }
   };
 
   /* Mini curso (seção 9.2). Regra 1-1-1: uma ideia, uma analogia, uma ação. */
@@ -185,14 +197,14 @@
   const BONUS = [
     { id: "bump1", nome: "Kit Mesa Certa", preco: 9.9, descricao: "Ajuste de monitor, cadeira, teclado, mouse e punho em 5 minutos com o que você já tem em casa. Checklist com foto, versão para notebook e para quem trabalha em pé." },
     { id: "bump2", nome: "Pausas em Áudio + Ritual de Desligar", preco: 12.9, descricao: "Áudios guiados de 2 minutos para fazer de olhos fechados ou de câmera desligada, e o ritual de 10 minutos para desligar do trabalho e dormir melhor." },
-    { id: "bump3", nome: "Marmita de Quem Trabalha Sentado", preco: 14.9, descricao: "Cardápio de 21 dias, marmita de domingo em 1 hora, lanches de mesa e hidratação nas pausas." },
+    { id: "bump3", nome: "Marmita de Quem Trabalha Sentado", preco: 14.9, descricao: "Cardápio de 30 dias, marmita de domingo em 1 hora, lanches de mesa e hidratação nas pausas." },
     { id: "upsell", nome: "Religar Trabalho 60", preco: 67, descricao: "60 dias de fortalecimento progressivo para a dor não voltar, rotinas por profissão, comunidade e encontro ao vivo mensal." },
     { id: "downsell", nome: "Religar Trabalho 60 Essencial", preco: 37, descricao: "A mesma progressão de 60 dias, sem comunidade e sem encontros ao vivo." }
   ];
 
   const PDFS = [
     { nome: "Guia Descongelar", arquivo: "#pdf-guia-descongelar" },
-    { nome: "Planner de 21 dias", arquivo: "#pdf-planner-21-dias" },
+    { nome: "Planner de 30 dias", arquivo: "#pdf-planner-30-dias" },
     { nome: "Cartão das Pausas Invisíveis", arquivo: "#pdf-cartao-pausas-invisiveis" }
   ];
 
@@ -367,9 +379,15 @@
     }
   };
 
+  /* Avaliação diária (30 segundos): mede a evolução do lead */
+  const AVALIACAO = {
+    trava: [[0, "Nada"], [1, "Um pouco"], [2, "Moderado"], [3, "Muito"]],
+    remedio: [[false, "Não"], [true, "Sim"]]
+  };
+
   window.RELIGAR_DADOS = {
     REGIOES, EXERCICIOS, ex, ROTINAS, OS_3_RS, TRILHAS, DIA_CAOTICO,
     SEMAFORO, DIAS, SEMANAS, REVISOES, AULAS, BONUS, PDFS,
-    TRILHAS_ZONA, trilhaDaRegiao, FORMATOS, PROTOCOLOS, BONUS_INCLUSOS, HABITOS, SNACKS
+    TRILHAS_ZONA, trilhaDaRegiao, FORMATOS, PROTOCOLOS, BONUS_INCLUSOS, HABITOS, SNACKS, AVALIACAO
   };
 })();

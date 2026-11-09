@@ -5,7 +5,7 @@
 window.RELIGAR_CONFIG = {
   marca: "Religar",
   slogan: "Autocuidado que cabe na vida real",
-  produto: "Desafio Corpo Descongelado 21 Dias",
+  produto: "Desafio Corpo Descongelado 30 Dias",
 
   // Links de checkout da Cakto (preencher quando os produtos forem criados)
   checkout: {
@@ -31,8 +31,9 @@ window.RELIGAR_CONFIG = {
   duracaoPausaSeg: 120,
   pausasMinimasDia: 4,
   pausasMinimasDiaCaotico: 2,
-  diasEscalaDor: [1, 11, 21],
-  diasRevisao: [1, 3, 7, 14, 21],
+  totalDias: 30,
+  diasRevisao: [1, 3, 7, 14, 21, 30],
+  diasForcaSemana4: [23, 26, 29],
 
   // Modo de teste: permite simular compras de bônus e avançar dias no painel.
   // DESLIGAR (false) antes de publicar.

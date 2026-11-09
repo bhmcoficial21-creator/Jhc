@@ -46,11 +46,17 @@ Depois abra no navegador (de preferência no modo celular):
 - Alívio Express sob medida: onde dói + quanto tempo (1 a 3 min) + onde está (cadeira, em pé, reunião)
 - Bônus incluídos: Trava de Segurança Articular e Guia de Socorro para Crises Agudas (com sinais de alerta e SAMU 192)
 
+**Desafio de 30 dias** em 4 semanas: Descongelar, Destravar, Fortalecer e Blindar (dias 22 a 30).
+
+**Avaliação diária (30 s):** dor de 0 a 10, quanto o corpo travou e se precisou de remédio. É exigida para o check do dia. O Progresso mostra o gráfico da dor dia a dia e a comparação da semana 1 com a última; o dia 30 traz o relatório completo.
+
+**Guia por voz:** todos os protocolos, lanches e a pausa de 2 min são conduzidos por voz (voz do próprio celular, grátis) e vibração na troca de passo. Botão para alternar para "só vibração".
+
 **Painel do desafio:**
 - Boas-vindas e Mapa da Dor (região de foco, trilha, Escala da Dor do dia 1, horário de trabalho)
-- Hoje: "Como foi sua noite?" → semáforo do dia → plano ajustado, vídeo do dia, contador de pausas, tarefa, Tripé Religar, Escala da Dor (dias 1, 11, 21), revisão (dias 1, 3, 7, 14, 21), dia caótico, check do dia
+- Hoje: "Como foi sua noite?" → semáforo do dia → plano ajustado, vídeo do dia, contador de pausas, tarefa, Tripé Religar, avaliação diária, revisão (dias 1, 3, 7, 14, 21, 30), dia caótico, check do dia
 - Pausa agora: timer de 2 min com os 3 Rs; o "Remexe" vai alternando os exercícios da região de foco; no vermelho, sem exercícios da região
-- Pausas invisíveis, lembretes (Regra 50/2 dentro do horário de trabalho), progresso (sequência, calendário, Escala da Dor, pausas por dia), aulas, bônus liberados por compra, Dia 21 (comparação, certificado, upsell e downsell)
+- Pausas invisíveis, lembretes (Regra 50/2 dentro do horário de trabalho), progresso (sequência, calendário, Escala da Dor, pausas por dia), aulas, bônus liberados por compra, Dia 30 (relatório de evolução, certificado, upsell e downsell)
 - Botão fixo "Senti algo estranho" → Semáforo dos Sinais
 - Modo de teste (em **Mais**): avançar dias, simular compras e apagar tudo. **Desligar em `config.js` antes de publicar.**
 
