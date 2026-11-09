@@ -1044,3 +1044,13 @@ html.is-loading body { overflow: hidden; }
 
 .offline-note { margin: 0 0 1rem; padding: .75rem 1rem; border-radius: 10px; border: 1px dashed rgba(232,204,138,.5); background: rgba(201,162,90,.08); color: #e9d3a1; font-size: .85rem; line-height: 1.45; }
 .success .offline-note { text-align: left; }
+
+/* ---------- Entrada rápida: só o símbolo ---------- */
+.page-loader.logo-intro { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: #070605; transition: opacity .5s ease, visibility .5s; }
+.logo-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.li-logo { width: min(46vw, 220px); border-radius: 50%; opacity: 0; transform: scale(.85); filter: blur(6px);
+  box-shadow: 0 0 0 1px rgba(214,178,106,.5), 0 0 60px rgba(226,180,90,.25);
+  transition: opacity .5s ease, transform .7s cubic-bezier(.2,1.2,.3,1), filter .5s ease; }
+.logo-intro.is-on .li-logo { opacity: 1; transform: none; filter: none; }
+.logo-intro.is-done .li-logo { transform: scale(1.08); }
+@media (prefers-reduced-motion: reduce) { .li-logo { transition: none; } }
