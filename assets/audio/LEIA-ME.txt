@@ -1,0 +1,4 @@
+Áudios do guia por voz.
+masculina/ = Adrian Miles · feminina/ = Marianne
+Nome do arquivo = id do exercício (ver assets/js/data.js), ex.: masculina/rotacao-tronco.mp3
+Qual trilha usa qual voz: config.js > vozes

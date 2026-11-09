@@ -161,7 +161,7 @@
 
   function montarProtocolo({ regiao, minutos, local, semaforo }) {
     const alvo = minutos * 60;
-    const protocolo = { regiao, minutos, local, passos: [], aviso: null };
+    const protocolo = { regiao, minutos, local, trilha: D.trilhaDaRegiao(regiao), passos: [], aviso: null };
     protocolo.passos.push({ ...RESPIRA, segundos: 20 });
 
     if (semaforo === "vermelho") {
@@ -195,7 +195,7 @@
   function protocoloDaTrilha(trilha, formato, semaforo) {
     const t = D.TRILHAS_ZONA[trilha], f = D.FORMATOS[formato];
     const prot = {
-      titulo: `${f.curto} · ${f.min} min · ${t.nome}`, minutos: f.min, regiao: t.regioes[0], aviso: null,
+      titulo: `${f.curto} · ${f.min} min · ${t.nome}`, minutos: f.min, regiao: t.regioes[0], trilha, aviso: null,
       passos: D.PROTOCOLOS[trilha][formato].map(([id, seg]) => ({ ...(id === "respira" ? RESPIRA : D.ex(id)), segundos: seg }))
     };
     if (semaforo === "vermelho") {

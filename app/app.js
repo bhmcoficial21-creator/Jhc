@@ -375,11 +375,12 @@
     },
     /* Toca o áudio profissional do exercício (assets/audio/<id>.mp3).
        Se o arquivo não existir, cai para a voz do celular com o texto. */
-    tocar(id, textoReserva) {
+    tocar(id, textoReserva, trilha) {
       if (!this.ligada()) return;
       this.parar();
       if (!id) return this.falar(textoReserva);
-      const a = new Audio(`../assets/audio/${id}.mp3`);
+      const pasta = (C.vozes || {})[trilha] || "masculina";
+      const a = new Audio(`../assets/audio/${pasta}/${id}.mp3`);
       this.audio = a;
       a.onerror = () => { if (this.audio === a) { this.audio = null; this.falar(textoReserva); } };
       a.play().catch(() => { if (this.audio === a) { this.audio = null; this.falar(textoReserva); } });
@@ -589,7 +590,7 @@
         </div>`).join("")}`;
     $$("[data-s]").forEach((b) => b.onclick = () => {
       const s = D.SNACKS.find((x) => x.id === b.dataset.s);
-      executarProtocolo({ titulo: `Lanche de Movimento · 60 s`, minutos: 1, regiao: estado.perfil.regiaoFoco, aviso: null,
+      executarProtocolo({ titulo: `Lanche de Movimento · 60 s`, minutos: 1, regiao: estado.perfil.regiaoFoco, trilha: s.zona || D.trilhaDaRegiao(estado.perfil.regiaoFoco), aviso: null,
         passos: s.passos.map(([id, seg]) => ({ ...D.ex(id), segundos: seg })) }, reg, () => { reg.lanches = (reg.lanches || 0) + 1; salvar(); });
     });
   }
@@ -757,7 +758,7 @@
       $$("#ae-lista li").forEach((li, i) => li.style.fontWeight = i === k ? "700" : "400");
       if (rodando && k !== falado) {
         falado = k; voz.vibrar();
-        voz.tocar(x.id, `${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`);
+        voz.tocar(x.id, `${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`, prot.trilha || D.trilhaDaRegiao(x.regiao));
       } else if (rodando && restante === 10 && x.segundos >= 30) {
         voz.falar("Faltam 10 segundos.");
       }
