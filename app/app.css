@@ -89,3 +89,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .ev-dif.bom { background: color-mix(in srgb, var(--cor-verde) 18%, white); color: var(--cor-verde); }
 .ev-dif.ruim { background: color-mix(in srgb, var(--cor-vermelho) 14%, white); color: var(--cor-vermelho); }
 .botao-voz { border: 1px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-texto); border-radius: 999px; padding: 6px 12px; font-size: .85rem; cursor: pointer; }
+.av-mini { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--cor-borda); }
+.relatorio-semana { border: 2px solid var(--cor-primaria); }
+.tabela-semanas td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabela-semanas th { white-space: normal; }
+.tabela-semanas td, .tabela-semanas th { padding-left: 4px; padding-right: 4px; }
+.tabela-semanas tr.futuro td { color: var(--cor-texto-suave); }

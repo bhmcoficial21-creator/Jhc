@@ -66,88 +66,84 @@
      ========================================================= */
   function boasvindas() {
     const q = S.lerQuiz() || {};
+    const temQuiz = !!q.regiaoFoco;
     const p = {
       regioes: q.regioes || [], regiaoFoco: q.regiaoFoco || null,
-      intensidadeInicial: q.intensidade ?? null, sinais: q.sinais || [],
-      rotina: q.rotina || null, inicioTrabalho: "09:00", fimTrabalho: "18:00",
-      intervaloMin: C.intervaloPadraoMin,
+      sinais: q.sinais || [], rotina: q.rotina || null,
+      inicioTrabalho: "09:00", fimTrabalho: "18:00", intervaloMin: C.intervaloPadraoMin,
       tempoLivre: q.tempoLivre || 2, localPadrao: q.localPadrao || "sentado"
     };
-    tela.innerHTML = `
-      <h1>Boas-vindas ao Desafio Corpo Descongelado</h1>
-      <p class="suave">Vamos montar o seu plano. ${q.regioes ? "Já trouxemos as respostas do seu Mapa da Dor; confira e ajuste se quiser." : "Leva 1 minuto."}</p>
-      <div class="aviso" style="margin-bottom:16px">Se você tem diagnóstico, dor forte ou está em tratamento, converse com seu médico ou fisioterapeuta antes de começar.</div>
+    const a = { dor: q.intensidade ?? null, trava: null, remedio: null };
+    let editando = !temQuiz;
 
-      <div class="cartao">
-        <h3>1. Onde dói?</h3>
-        <p class="pequeno suave">Pode marcar mais de uma.</p>
-        <div class="opcoes" id="bv-regioes">${Object.entries(D.REGIOES).map(([id, r]) =>
-          `<button class="opcao" data-id="${id}" aria-pressed="${p.regioes.includes(id)}"><span class="emoji">${r.emoji}</span>${r.nome}</button>`).join("")}</div>
-        <div id="bv-foco-wrap" style="margin-top:12px"></div>
-      </div>
+    function render() {
+      tela.innerHTML = `
+        <span class="etiqueta">Avaliação inicial · 1 minuto</span>
+        <h1 style="margin-top:8px">Seu ponto de partida</h1>
+        <p class="suave">Estas respostas são o primeiro ponto do seu gráfico. Daqui a 30 dias você compara e vê o quanto mudou.</p>
+        <div class="aviso" style="margin-bottom:16px">Se você tem diagnóstico, dor forte ou está em tratamento, converse com seu médico ou fisioterapeuta antes de começar.</div>
 
-      <div class="cartao">
-        <h3>2. Intensidade da dor hoje (0 a 10)</h3>
-        <p class="pequeno suave">Essa é a sua Escala da Dor do dia 1.</p>
-        <div class="escala" id="bv-escala">${Array.from({ length: 11 }, (_, i) =>
-          `<button data-v="${i}" aria-pressed="${p.intensidadeInicial === i}">${i}</button>`).join("")}</div>
-        <div class="escala-legenda"><span>Nenhuma</span><span>Insuportável</span></div>
-      </div>
-
-      <div class="cartao">
-        <h3>3. Sua rotina de trabalho</h3>
-        <div class="opcoes" id="bv-rotina">${L.ROTINAS_TRABALHO.map((o) =>
-          `<button class="opcao" data-id="${o.id}" aria-pressed="${p.rotina === o.id}"><span class="emoji">${o.emoji}</span>${o.texto}</button>`).join("")}</div>
-      </div>
-
-      <div class="cartao">
-        <h3>4. Horário de trabalho</h3>
-        <div class="grade-2">
-          <label>Começo<br><input type="time" id="bv-ini" value="${p.inicioTrabalho}" class="opcao"></label>
-          <label>Fim<br><input type="time" id="bv-fim" value="${p.fimTrabalho}" class="opcao"></label>
+        ${temQuiz && !editando ? `
+        <div class="cartao">
+          <div class="linha" style="justify-content:space-between"><h3 style="margin:0">✓ Seu Mapa da Dor</h3><a href="#" id="bv-editar" class="pequeno">alterar</a></div>
+          <p class="pequeno" style="margin:8px 0 0">Região de foco: <strong>${D.REGIOES[p.regiaoFoco].emoji} ${D.REGIOES[p.regiaoFoco].nome}</strong><br>
+          Rotina: <strong>${(L.ROTINAS_TRABALHO.find((o) => o.id === p.rotina) || {}).texto || "não informada"}</strong></p>
+        </div>` : `
+        <div class="cartao">
+          <h3>Onde dói mais?</h3>
+          <div class="opcoes" id="bv-regiao">${Object.entries(D.REGIOES).map(([id, r]) =>
+            `<button class="opcao" data-id="${id}" aria-pressed="${p.regiaoFoco === id}"><span class="emoji">${r.emoji}</span>${r.nome}</button>`).join("")}</div>
         </div>
-      </div>
+        <div class="cartao">
+          <h3>Sua rotina de trabalho</h3>
+          <div class="opcoes" id="bv-rotina">${L.ROTINAS_TRABALHO.map((o) =>
+            `<button class="opcao" data-id="${o.id}" aria-pressed="${p.rotina === o.id}"><span class="emoji">${o.emoji}</span>${o.texto}</button>`).join("")}</div>
+        </div>`}
 
-      <button class="botao botao-grande" id="bv-ok" style="margin-top:16px">Ver meu plano</button>
-    `;
+        <div class="cartao avaliacao">
+          <h3>📊 Como você está hoje</h3>
+          <p class="pequeno" style="margin:0 0 6px"><strong>1. Dor${p.regiaoFoco ? " " + D.REGIOES[p.regiaoFoco].no : ""} (0 a 10)</strong></p>
+          <div class="escala" id="bv-dor">${Array.from({ length: 11 }, (_, i) => `<button data-v="${i}" aria-pressed="${a.dor === i}">${i}</button>`).join("")}</div>
+          <div class="escala-legenda"><span>Nenhuma</span><span>Insuportável</span></div>
+          <p class="pequeno" style="margin:14px 0 6px"><strong>2. Quanto o corpo trava num dia normal?</strong></p>
+          <div class="av-opcoes" id="bv-trava">${D.AVALIACAO.trava.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${a.trava === v}">${t}</button>`).join("")}</div>
+          <p class="pequeno" style="margin:14px 0 6px"><strong>3. Nos últimos dias, precisou de remédio para dor?</strong></p>
+          <div class="av-opcoes" id="bv-remedio">${D.AVALIACAO.remedio.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${a.remedio === v}">${t}</button>`).join("")}</div>
+        </div>
 
-    function renderFoco() {
-      const w = $("#bv-foco-wrap");
-      if (p.regioes.length <= 1) { p.regiaoFoco = p.regioes[0] || null; w.innerHTML = ""; return; }
-      if (!p.regioes.includes(p.regiaoFoco)) p.regiaoFoco = null;
-      w.innerHTML = `<p class="pequeno"><strong>Qual incomoda mais?</strong></p>
-        <div class="linha">${p.regioes.map((id) =>
-          `<button class="opcao" style="width:auto;min-height:40px" data-id="${id}" aria-pressed="${p.regiaoFoco === id}">${D.REGIOES[id].nome}</button>`).join("")}</div>`;
-      $$("button", w).forEach((b) => b.onclick = () => { p.regiaoFoco = b.dataset.id; renderFoco(); validar(); });
+        <div class="cartao">
+          <h3>Horário de trabalho</h3>
+          <p class="pequeno suave">Para lembrar você das pausas só no expediente.</p>
+          <div class="grade-2">
+            <label>Começo<br><input type="time" id="bv-ini" value="${p.inicioTrabalho}" class="opcao"></label>
+            <label>Fim<br><input type="time" id="bv-fim" value="${p.fimTrabalho}" class="opcao"></label>
+          </div>
+        </div>
+
+        <button class="botao botao-grande" id="bv-ok" style="margin-top:16px">Ver meu plano</button>`;
+
+      const guardarHorario = () => { p.inicioTrabalho = $("#bv-ini").value || p.inicioTrabalho; p.fimTrabalho = $("#bv-fim").value || p.fimTrabalho; };
+      const redesenhar = () => { guardarHorario(); const y = window.scrollY; render(); window.scrollTo(0, y); };
+      const ed = $("#bv-editar");
+      if (ed) ed.onclick = (e) => { e.preventDefault(); editando = true; redesenhar(); };
+      $$("#bv-regiao .opcao").forEach((b) => b.onclick = () => { p.regiaoFoco = b.dataset.id; if (!p.regioes.includes(p.regiaoFoco)) p.regioes = [p.regiaoFoco, ...p.regioes]; redesenhar(); });
+      $$("#bv-rotina .opcao").forEach((b) => b.onclick = () => { p.rotina = b.dataset.id; redesenhar(); });
+      $$("#bv-dor button").forEach((b) => b.onclick = () => { a.dor = Number(b.dataset.v); redesenhar(); });
+      $$("#bv-trava .opcao").forEach((b) => b.onclick = () => { a.trava = Number(b.dataset.v); redesenhar(); });
+      $$("#bv-remedio .opcao").forEach((b) => b.onclick = () => { a.remedio = b.dataset.v === "true"; redesenhar(); });
+      $("#bv-ok").disabled = !(p.regiaoFoco && p.rotina && a.dor !== null && a.trava !== null && a.remedio !== null);
+      $("#bv-ok").onclick = () => {
+        guardarHorario();
+        p.intensidadeInicial = a.dor;
+        const diag = L.diagnosticar({ ...p, intensidade: a.dor });
+        estado.perfil = { ...p, trilha: diag.trilha, corInicial: diag.cor };
+        estado.dataInicio = hojeISO();
+        estado.inicial = { ...a, data: hojeISO() };
+        salvar();
+        mostrarResultadoMapa(diag);
+      };
     }
-    function validar() {
-      $("#bv-ok").disabled = !(p.regioes.length && p.regiaoFoco && p.intensidadeInicial !== null && p.rotina);
-    }
-    $$("#bv-regioes .opcao").forEach((b) => b.onclick = () => {
-      const id = b.dataset.id;
-      p.regioes = p.regioes.includes(id) ? p.regioes.filter((x) => x !== id) : [...p.regioes, id];
-      b.setAttribute("aria-pressed", p.regioes.includes(id));
-      renderFoco(); validar();
-    });
-    $$("#bv-escala button").forEach((b) => b.onclick = () => {
-      p.intensidadeInicial = Number(b.dataset.v);
-      $$("#bv-escala button").forEach((x) => x.setAttribute("aria-pressed", x === b)); validar();
-    });
-    $$("#bv-rotina .opcao").forEach((b) => b.onclick = () => {
-      p.rotina = b.dataset.id;
-      $$("#bv-rotina .opcao").forEach((x) => x.setAttribute("aria-pressed", x === b)); validar();
-    });
-    $("#bv-ok").onclick = () => {
-      p.inicioTrabalho = $("#bv-ini").value || "09:00";
-      p.fimTrabalho = $("#bv-fim").value || "18:00";
-      const diag = L.diagnosticar({ ...p, intensidade: p.intensidadeInicial });
-      estado.perfil = { ...p, trilha: diag.trilha, corInicial: diag.cor };
-      estado.dataInicio = hojeISO();
-      estado.escalaDor[1] = p.intensidadeInicial;
-      salvar();
-      mostrarResultadoMapa(diag);
-    };
-    renderFoco(); validar();
+    render();
   }
 
   function mostrarResultadoMapa(diag) {
@@ -206,7 +202,7 @@
     const plano = L.planoDoDia({ dia: n, noite: reg.noite, semaforo: reg.semaforo, caotico: reg.caotico, perfil: estado.perfil });
     const pctPausas = Math.min(100, Math.round((reg.pausas / plano.metaPausas) * 100));
     reg.avaliacao = reg.avaliacao || { dor: null, trava: null, remedio: null };
-    if (n === 1 && reg.avaliacao.dor === null && estado.escalaDor[1] != null) reg.avaliacao.dor = estado.escalaDor[1];
+    if (n === 1 && reg.avaliacao.dor === null && estado.inicial) reg.avaliacao = { dor: estado.inicial.dor, trava: estado.inicial.trava, remedio: estado.inicial.remedio };
     const av = reg.avaliacao;
     const avaliacaoOk = av.dor !== null && av.trava !== null && av.remedio !== null;
     const pausasOk = reg.pausas >= plano.minimoPausas;
@@ -269,8 +265,10 @@
         <div class="av-opcoes" id="av-trava">${D.AVALIACAO.trava.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.trava === v}">${t}</button>`).join("")}</div>
         <p class="pequeno" style="margin:14px 0 6px"><strong>3. Precisou de remédio para dor hoje?</strong></p>
         <div class="av-opcoes" id="av-remedio">${D.AVALIACAO.remedio.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.remedio === v}">${t}</button>`).join("")}</div>
-        ${avaliacaoOk && n > 1 ? resumoComparacao(n) : ""}
+        ${avaliacaoOk ? resumoComparacao(n) : ""}
+        ${avaliacaoOk && ![7, 14, 21, 30].includes(n) ? `<div class="av-mini">${graficoSemanal()}<p class="pequeno" style="margin:6px 0 0"><a href="#progresso">ver a evolução completa</a></p></div>` : ""}
       </div>
+      ${avaliacaoOk ? relatorioSemana(n) : ""}
 
       ${D.REVISOES[n] ? renderRevisao(n, reg) : ""}
 
@@ -890,48 +888,120 @@
     const lista = [];
     for (let d = 1; d <= TOTAL; d++) {
       const a = estado.dias[d]?.avaliacao;
-      const dor = a?.dor ?? (d === 1 ? estado.escalaDor[1] : null);
-      if (dor !== null && dor !== undefined) lista.push({ d, dor, trava: a?.trava ?? null, remedio: a?.remedio ?? null });
+      if (a && a.dor !== null && a.dor !== undefined) lista.push({ d, dor: a.dor, trava: a.trava ?? null, remedio: a.remedio ?? null });
     }
     return lista;
   }
+  const mediaDe = (arr) => arr.length ? Math.round((arr.reduce((s, x) => s + x, 0) / arr.length) * 10) / 10 : null;
+  function dadosSemana(k) {
+    const r = registrosAvaliacao().filter((x) => x.d > (k - 1) * 7 && x.d <= (k === 4 ? TOTAL : k * 7));
+    const comRem = r.filter((x) => x.remedio !== null);
+    return {
+      k, avaliacoes: r.length,
+      dor: mediaDe(r.map((x) => x.dor)),
+      trava: mediaDe(r.filter((x) => x.trava !== null).map((x) => x.trava)),
+      semRemedio: comRem.filter((x) => !x.remedio).length, comRemedioAvaliado: comRem.length
+    };
+  }
   function evolucao() {
     const r = registrosAvaliacao();
-    const media = (arr) => arr.length ? Math.round((arr.reduce((s, x) => s + x, 0) / arr.length) * 10) / 10 : null;
-    const semana = (k) => r.filter((x) => x.d > (k - 1) * 7 && x.d <= (k === 4 ? TOTAL : k * 7));
+    const ini = estado.inicial ? { d: 0, dor: estado.inicial.dor, trava: estado.inicial.trava, remedio: estado.inicial.remedio } : null;
+    const semanas = [1, 2, 3, 4].map(dadosSemana);
+    const ultimaSemana = [4, 3, 2, 1].find((k) => semanas[k - 1].avaliacoes) || 1;
     const comRemedio = r.filter((x) => x.remedio !== null);
-    const ultimaSemana = [4, 3, 2, 1].find((k) => semana(k).length) || 1;
     return {
-      registros: r,
-      primeira: r[0] || null,
+      registros: r, inicial: ini, semanas, ultimaSemana,
+      primeira: ini || r[0] || null,
       ultima: r[r.length - 1] || null,
-      mediaSemana1: media(semana(1).map((x) => x.dor)),
-      mediaUltima: media(semana(ultimaSemana).map((x) => x.dor)),
-      ultimaSemana,
+      mediaSemana1: semanas[0].dor,
+      mediaUltima: semanas[ultimaSemana - 1].dor,
       diasSemRemedio: comRemedio.filter((x) => !x.remedio).length,
       diasAvaliados: comRemedio.length,
-      travaSemana1: media(semana(1).filter((x) => x.trava !== null).map((x) => x.trava)),
-      travaUltima: media(semana(ultimaSemana).filter((x) => x.trava !== null).map((x) => x.trava))
+      travaSemana1: semanas[0].trava,
+      travaUltima: semanas[ultimaSemana - 1].trava
     };
   }
   function resumoComparacao(n) {
     const ev = evolucao();
-    if (!ev.primeira || !ev.ultima || ev.primeira.d === ev.ultima.d) return "";
+    if (!ev.primeira || !ev.ultima) return "";
     const dif = ev.primeira.dor - ev.ultima.dor;
-    return `<p class="pequeno av-resumo">Dia ${ev.primeira.d}: <strong>${ev.primeira.dor}</strong> → hoje: <strong>${ev.ultima.dor}</strong>.
+    const rotulo = ev.primeira.d === 0 ? "No início" : `Dia ${ev.primeira.d}`;
+    return `<p class="pequeno av-resumo">${rotulo}: <strong>${ev.primeira.dor}</strong> → hoje: <strong>${ev.ultima.dor}</strong>.
       ${dif > 0 ? `Sua dor caiu ${dif} ponto(s). 👏` : dif === 0 ? "Estável. O hábito é o que impede de piorar." : "Subiu hoje. Dias ruins fazem parte; confira o Semáforo se continuar."}</p>`;
   }
+
+  /* Barras: dor média do ponto de partida e de cada semana */
+  function graficoSemanal() {
+    const ev = evolucao();
+    const barras = [];
+    if (ev.inicial) barras.push({ rot: "Início", v: ev.inicial.dor, base: true });
+    ev.semanas.forEach((s) => barras.push({ rot: `Sem ${s.k}`, v: s.dor, vazio: s.dor === null }));
+    if (!barras.some((b) => b.v !== null && !b.base)) {
+      return `<p class="pequeno suave" style="margin:0">Faça a avaliação do dia: a barra da sua semana aparece aqui${ev.inicial ? `, ao lado do seu ponto de partida (${ev.inicial.dor}/10)` : ""}.</p>`;
+    }
+    const W = 320, H = 170, x0 = 26, x1 = W - 6, y0 = 18, y1 = H - 26;
+    const slot = (x1 - x0) / barras.length, bw = Math.min(40, slot * 0.6);
+    const Y = (v) => y1 - (v / 10) * (y1 - y0);
+    const grade = [0, 5, 10].map((v) => `<line x1="${x0}" x2="${x1}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--cor-borda)" stroke-width="1"/><text x="${x0 - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="10" style="fill:var(--cor-texto-suave)">${v}</text>`).join("");
+    const cols = barras.map((b, i) => {
+      const cx = x0 + slot * i + slot / 2;
+      const rot = `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="11" style="fill:var(--cor-texto-suave)">${b.rot}</text>`;
+      if (b.v === null) return rot + `<rect x="${cx - bw / 2}" y="${y1 - 2}" width="${bw}" height="2" rx="1" style="fill:var(--cor-borda)"/>`;
+      const h = Math.max(2, y1 - Y(b.v));
+      return rot + `<rect x="${cx - bw / 2}" y="${y1 - h}" width="${bw}" height="${h}" rx="4" style="fill:${b.base ? "var(--cor-borda)" : "var(--cor-primaria)"}"/>
+        <text x="${cx}" y="${y1 - h - 5}" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--cor-texto)">${String(b.v).replace(".", ",")}</text>`;
+    }).join("");
+    return `<div class="grafico"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dor média por semana, de 0 a 10">${grade}${cols}</svg>
+      <p class="pequeno suave" style="margin:4px 0 0">Dor média de 0 a 10. Barra menor que a do início é melhora.</p></div>`;
+  }
+
+  /* Tabela da semana: dor, travamento e dias sem remédio */
+  function tabelaSemanas() {
+    const ev = evolucao();
+    const f = (v) => v === null || v === undefined ? "–" : String(v).replace(".", ",");
+    const travaTxt = (v) => v === null ? "–" : ["nada", "pouco", "moderado", "muito"][Math.round(v)];
+    return `<div class="tabela-rolagem"><table class="tabela tabela-semanas">
+      <thead><tr><th></th><th>Dor</th><th>Travou</th><th>Sem remédio</th></tr></thead>
+      <tbody>
+        ${ev.inicial ? `<tr><td><strong>Início</strong></td><td>${ev.inicial.dor}</td><td>${travaTxt(ev.inicial.trava)}</td><td>${ev.inicial.remedio === false ? "sim" : ev.inicial.remedio ? "não" : "–"}</td></tr>` : ""}
+        ${ev.semanas.map((s) => `<tr class="${s.avaliacoes ? "" : "futuro"}"><td><strong>Semana ${s.k}</strong></td><td>${f(s.dor)}</td><td>${travaTxt(s.trava)}</td><td>${s.comRemedioAvaliado ? `${s.semRemedio} de ${s.comRemedioAvaliado} dias` : "–"}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  /* Relatório no fim de cada semana (dias 7, 14, 21 e 30) */
+  function relatorioSemana(n) {
+    const k = { 7: 1, 14: 2, 21: 3, 30: 4 }[n];
+    if (!k) return "";
+    const ev = evolucao();
+    const atual = ev.semanas[k - 1];
+    const ref = k === 1 ? (ev.inicial ? { dor: ev.inicial.dor, rot: "ao seu início" } : null) : { dor: ev.semanas[k - 2].dor, rot: `à semana ${k - 1}` };
+    let frase = "Continue avaliando todo dia para ver a sua curva.";
+    if (atual.dor !== null && ref && ref.dor !== null) {
+      const dif = Math.round((ref.dor - atual.dor) * 10) / 10;
+      frase = dif > 0 ? `Sua dor média caiu ${String(dif).replace(".", ",")} ponto(s) em relação ${ref.rot}. O corpo está respondendo.`
+        : dif === 0 ? `Sua dor ficou igual ${ref.rot}. Manter já é vitória: o hábito impede de piorar.`
+        : `Sua dor subiu em relação ${ref.rot}. Semanas pesadas acontecem; reforce as pausas e, se continuar, confira o Semáforo dos Sinais.`;
+    }
+    return `<div class="cartao relatorio-semana">
+      <span class="etiqueta">📈 Relatório da semana ${k}</span>
+      <p style="margin:10px 0">${frase}</p>
+      ${graficoSemanal()}
+      <div style="margin-top:12px">${tabelaSemanas()}</div>
+    </div>`;
+  }
+
   function graficoEvolucao() {
     const r = registrosAvaliacao();
-    if (r.length < 2) return `<p class="pequeno suave" style="margin:0">O gráfico aparece a partir da sua segunda avaliação diária.</p>`;
+    if (estado.inicial) r.unshift({ d: 0, dor: estado.inicial.dor });
+    if (r.length < 2) return `<p class="pequeno suave" style="margin:0">O gráfico aparece a partir da sua primeira avaliação diária.</p>`;
     const W = 320, H = 150, x0 = 28, x1 = W - 10, y0 = 12, y1 = H - 24;
-    const X = (d) => x0 + ((d - 1) / (TOTAL - 1)) * (x1 - x0);
+    const X = (d) => x0 + (d / TOTAL) * (x1 - x0);
     const Y = (v) => y1 - (v / 10) * (y1 - y0);
     const pts = r.map((p) => `${X(p.d).toFixed(1)},${Y(p.dor).toFixed(1)}`).join(" ");
     const area = `${X(r[0].d).toFixed(1)},${y1} ${pts} ${X(r[r.length - 1].d).toFixed(1)},${y1}`;
     const ult = r[r.length - 1];
     const grade = [0, 5, 10].map((v) => `<line x1="${x0}" x2="${x1}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--cor-borda)" stroke-width="1"/><text x="${x0 - 6}" y="${Y(v) + 4}" text-anchor="end" font-size="10" style="fill:var(--cor-texto-suave)">${v}</text>`).join("");
-    const eixo = [1, 8, 15, 22, TOTAL].map((d) => `<text x="${X(d)}" y="${H - 6}" text-anchor="middle" font-size="10" style="fill:var(--cor-texto-suave)">${d}</text>`).join("");
+    const eixo = [[0, "Início"], [7, "7"], [14, "14"], [21, "21"], [TOTAL, String(TOTAL)]].map(([d, t]) => `<text x="${X(d)}" y="${H - 6}" text-anchor="${d === 0 ? "start" : "middle"}" font-size="10" style="fill:var(--cor-texto-suave)">${t}</text>`).join("");
     return `<div class="grafico"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dor por dia, de 0 a 10">
       ${grade}${eixo}
       <polygon points="${area}" style="fill:var(--cor-primaria-suave)"/>
@@ -948,7 +1018,7 @@
       return `<div class="ev-linha"><span>${rot}</span><span><strong>${a}</strong> → <strong>${b}</strong> <span class="ev-dif ${bom ? "bom" : dif === 0 ? "" : "ruim"}">${dif > 0 ? "+" : ""}${dif}</span></span></div>`;
     };
     return `
-      ${linha("Dor: primeira avaliação → última", ev.primeira?.dor ?? null, ev.ultima?.dor ?? null)}
+      ${linha(ev.inicial ? "Dor: início → última avaliação" : "Dor: primeira avaliação → última", ev.primeira?.dor ?? null, ev.ultima?.dor ?? null)}
       ${linha(`Dor média: semana 1 → semana ${ev.ultimaSemana}`, ev.mediaSemana1, ev.mediaUltima)}
       ${linha(`Travamento médio (0 a 3): semana 1 → semana ${ev.ultimaSemana}`, ev.travaSemana1, ev.travaUltima)}
       ${ev.diasAvaliados ? `<div class="ev-linha"><span>Dias sem remédio para dor</span><span><strong>${ev.diasSemRemedio}</strong> de ${ev.diasAvaliados}</span></div>` : ""}`;
@@ -969,7 +1039,12 @@
         <div class="cartao stat" style="margin-top:0"><strong>${totalPausas}</strong><span class="pequeno suave">pausas</span></div>
       </div>
       <div class="cartao">
-        <h3>Sua evolução</h3>
+        <h3>Sua evolução por semana</h3>
+        ${graficoSemanal()}
+        <div style="margin-top:12px">${tabelaSemanas()}</div>
+      </div>
+      <div class="cartao">
+        <h3>Dia a dia</h3>
         ${graficoEvolucao()}
         <div style="margin-top:12px">${cartoesEvolucao(ev)}</div>
       </div>
@@ -1040,6 +1115,8 @@
       <h1>🎉 Dia ${TOTAL}: o seu corpo livre</h1>
       <div class="cartao">
         <h3>Seu relatório de evolução</h3>
+        ${graficoSemanal()}
+        <div style="margin:12px 0">${tabelaSemanas()}</div>
         ${graficoEvolucao()}
         <div style="margin-top:12px">${cartoesEvolucao(ev)}</div>
         <p style="margin-top:12px">${dif > 0 ? `Sua dor caiu <strong>${dif} ponto(s)</strong> em ${TOTAL} dias.` : dif === 0 ? "Sua dor ficou estável, e você criou o hábito das pausas, que é o que impede a dor de piorar." : dif === null ? "Faça avaliações diárias para ver sua evolução aqui." : "Sua dor não diminuiu. Vale conversar com um médico ou fisioterapeuta e levar este relatório."}</p>
