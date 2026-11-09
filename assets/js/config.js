@@ -41,7 +41,8 @@ window.RELIGAR_CONFIG = {
     lombar: "masculina",   // Coluna e Lombar
     cervical: "masculina", // Cervical, Ombros e Trapézio
     punho: "feminina",     // Braços, Antebraços e Punhos
-    joelhos: "feminina"    // Quadril, Joelhos e Pés
+    joelhos: "feminina",   // Quadril e Joelhos
+    pes: "feminina"        // Pés e Calcanhar
   },
   diasRevisao: [1, 3, 7, 14, 21, 30],
   diasForcaSemana4: [23, 26, 29],

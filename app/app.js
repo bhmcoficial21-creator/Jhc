@@ -485,7 +485,7 @@
           <span style="font-size:1.8rem">${t.emoji}</span>
           <span style="flex:1;min-width:0">
             ${k === minha ? `<span class="etiqueta">Sua trilha</span><br>` : ""}
-            <strong>Trilha ${t.nome}</strong><br><span class="pequeno suave">${t.paraQuem}</span>
+            <strong>Trilha ${t.nome}</strong> <span class="pequeno suave">· ${t.apelido}</span><br><span class="pequeno suave">${t.dor}</span>
           </span>
           <span aria-hidden="true">›</span>
         </a>`; }).join("")}
@@ -543,13 +543,18 @@
       <p class="pequeno"><a href="#alivio">← Central</a></p>
       <span class="etiqueta">Módulo 1 · SOS Alívio Imediato</span>
       <h1 style="margin-top:8px">${t.emoji} Trilha ${t.nome}</h1>
-      <p class="suave">${t.paraQuem}</p>
+      <p class="suave" style="margin:0 0 12px">${t.apelido} · ${t.paraQuem}</p>
+      <div class="cartao trilha-info">
+        <p class="pequeno" style="margin:0 0 8px"><strong>A dor:</strong> ${t.dor}</p>
+        <p class="pequeno" style="margin:0"><strong>A solução:</strong> ${t.solucao}</p>
+      </div>
       ${cartaoProtocolo(id, "sos1", true)}
       ${cartaoProtocolo(id, "sos3", false)}
       <a class="cartao trilha-card" href="#checklist"><span style="font-size:1.4rem">📋</span>
         <span><strong>Matinal e Noturno desta trilha</strong><br><span class="pequeno suave">No bônus Checklist de Bolso, 3 min cada</span></span></a>
       <a class="cartao trilha-card" href="#socorro"><span style="font-size:1.4rem">🚨</span>
-        <span><strong>Travou?</strong><br><span class="pequeno suave">Guia de Crise com a posição de alívio desta região</span></span></a>`;
+        <span><strong>Travou?</strong><br><span class="pequeno suave">Guia de Crise com a posição de alívio desta região</span></span></a>
+      <div class="aviso aviso-vermelho" style="margin-top:12px"><strong>Quando procurar o médico:</strong> ${t.alerta}</div>`;
     ligarProtocolos(reg);
   }
 
@@ -668,7 +673,7 @@
       <div class="cartao">
         <h3>Posição de alívio</h3>
         <div class="linha" id="pos-abas" style="margin-bottom:12px">${Object.keys(b.posicoes).map((k) =>
-          `<button class="opcao" style="width:auto;min-height:40px" data-k="${k}" aria-pressed="${k === minha}">${D.TRILHAS_ZONA[k].emoji} ${{ lombar: "Coluna", cervical: "Pescoço", joelhos: "Joelho e pé", punho: "Braço e punho" }[k]}</button>`).join("")}</div>
+          `<button class="opcao" style="width:auto;min-height:40px" data-k="${k}" aria-pressed="${k === minha}">${D.TRILHAS_ZONA[k].emoji} ${{ lombar: "Coluna", cervical: "Pescoço", joelhos: "Quadril e joelho", punho: "Braço e punho", pes: "Pé" }[k]}</button>`).join("")}</div>
         <p id="pos-texto" style="margin:0">${b.posicoes[minha]}</p>
       </div>
       <a class="botao botao-bloco" href="#trilha-${minha}">Quando aliviar: protocolo leve da sua trilha</a>`;

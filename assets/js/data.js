@@ -10,9 +10,9 @@
     ombros:  { nome: "Ombros", emoji: "🎒", no: "nos ombros", para: "para os ombros" },
     punho:   { nome: "Braço, antebraço e punho", emoji: "💪", no: "no braço e no punho", para: "para o braço, o antebraço e o punho" },
     lombar:  { nome: "Coluna e lombar", emoji: "🪑", no: "na coluna e na lombar", para: "para a coluna e a lombar" },
-    pernas:  { nome: "Quadril", emoji: "🚶", no: "no quadril", para: "para o quadril" },
+    pernas:  { nome: "Quadril e glúteo", emoji: "🚶", no: "no quadril", para: "para o quadril e o glúteo" },
     joelhos: { nome: "Joelhos", emoji: "🦵", no: "nos joelhos", para: "para os joelhos" },
-    pes:     { nome: "Pés e tornozelos", emoji: "🦶", no: "nos pés", para: "para os pés e tornozelos" }
+    pes:     { nome: "Pés e calcanhar", emoji: "🦶", no: "nos pés e no calcanhar", para: "para os pés e o calcanhar" }
   };
 
   /* Biblioteca de exercícios (seção 10 do briefing).
@@ -47,7 +47,11 @@
     { id: "alongamento-braco-parede", regiao: "punho", nome: "Alongamento do braço na parede", resolve: "Braço e peito encurtados", passos: "Mão espalmada na parede na altura do ombro, braço esticado. Gire o corpo para o lado oposto até sentir uma tensão leve no braço. 20 segundos de cada lado." },
     // Pés e tornozelos
     { id: "circulos-tornozelo", regiao: "pes", nome: "Círculos de tornozelo", resolve: "Tornozelo duro e pé inchado", passos: "Com o pé no ar, desenhe círculos lentos com a ponta do pé. 10 para cada lado, nos dois pés.", invisivel: true },
-    { id: "rolar-garrafa", regiao: "pes", nome: "Rolar a sola na garrafa", resolve: "Sola do pé dolorida", passos: "Sentado, role a sola do pé descalço sobre uma garrafa de água, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé." },
+    { id: "rolar-garrafa", regiao: "pes", nome: "Rolar a sola na garrafa ou na bolinha", resolve: "Sola do pé queimando no fim do dia", passos: "Sentado, role a sola do pé descalço sobre uma garrafa de água ou uma bolinha, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé. À noite, a garrafa pode estar gelada." },
+    { id: "alongamento-fascia", regiao: "pes", nome: "Alongamento da sola do pé", resolve: "Dor no calcanhar e na sola", passos: "Sentado, cruze o pé sobre o joelho oposto e puxe os dedos para trás com a mão até sentir a sola esticar. 20 segundos em cada pé." },
+    { id: "toalha-sola", regiao: "pes", nome: "Toalha na sola antes do primeiro passo", resolve: "Fisgada no calcanhar ao acordar", passos: "Ainda na cama, perna esticada, passe uma toalha na sola do pé e puxe as pontas em sua direção. 20 segundos em cada pé, antes de pisar no chão.", chao: true },
+    { id: "contracao-gluteo", regiao: "pernas", nome: "Contração de glúteo sentado", resolve: "Glúteo \"desligado\" de tanto ficar sentado", passos: "Sentado, aperte os glúteos com força por 5 segundos e solte. 10 vezes. Ninguém percebe.", invisivel: true },
+    { id: "abducao-isometrica", regiao: "pernas", nome: "Abertura isométrica dos joelhos", resolve: "Quadril fraco que deixa o joelho entrar para dentro", passos: "Sentado, mãos do lado de fora dos joelhos. Empurre os joelhos para fora contra as mãos por 5 segundos, sem mexer. 8 vezes.", invisivel: true },
     { id: "dedos-toalha", regiao: "pes", nome: "Puxar a toalha com os dedos", resolve: "Pé fraco que cansa ao caminhar", passos: "Sentado, pé descalço sobre uma toalha no chão. Puxe a toalha para perto usando só os dedos. 3 vezes em cada pé." },
     { id: "panturrilha-parede", regiao: "pes", nome: "Alongamento de panturrilha na parede", resolve: "Panturrilha dura que puxa o calcanhar", passos: "Mãos na parede, uma perna atrás esticada com o calcanhar no chão. Incline o corpo para frente até sentir a panturrilha. 20 segundos de cada lado." },
     // Cama e chão (protocolos matinal e noturno)
@@ -216,24 +220,44 @@
      ========================================================= */
   const TRILHAS_ZONA = {
     cervical: {
-      nome: "Cervical, Ombros e Trapézio",
-      paraQuem: "Para a tensão acumulada pelo computador, pelo celular e pelo estresse.",
-      regioes: ["pescoco", "ombros"], emoji: "🦒"
+      nome: "Cervical, Ombros e Trapézio", apelido: "Pescoço de Texto", emoji: "🦒",
+      paraQuem: "Para quem vive no computador e no celular.",
+      dor: "Tensão acumulada de olhar para o celular e para o computador, peso nos ombros e dor de cabeça de tensão.",
+      solucao: "Movimentos de soltura do pescoço e descompressão dos ombros sem sair da cadeira.",
+      alerta: "Procure atendimento na hora se a dor de cabeça for súbita e muito forte, vier com febre e nuca dura, ou com alteração de visão, fala ou força. Dor no pescoço, mandíbula ou braço esquerdo com aperto no peito: ligue 192.",
+      regioes: ["pescoco", "ombros"]
     },
     punho: {
-      nome: "Braços, Antebraços e Punhos",
-      paraQuem: "Para quem sente dor por digitação, mouse ou trabalho manual repetitivo.",
-      regioes: ["punho"], emoji: "💪"
+      nome: "Punhos, Antebraços e Braços", apelido: "Tendinite e LER", emoji: "💪",
+      paraQuem: "Para quem digita, usa mouse ou faz trabalho manual repetitivo.",
+      dor: "Agulhadas e queimação no punho ao digitar, usar o mouse ou repetir o mesmo esforço.",
+      solucao: "Ativações e alongamentos para soltar os músculos que dobram e esticam o punho (flexores e extensores do antebraço).",
+      alerta: "Procure um médico se a mão perder força, se a dormência não passar, se acordar à noite com a mão dormente ou se o punho estiver inchado e quente.",
+      regioes: ["punho"]
     },
     lombar: {
-      nome: "Coluna e Lombar",
-      paraQuem: "Descompressão para quem passa horas sentado ou de pé.",
-      regioes: ["lombar"], emoji: "🪑"
+      nome: "Coluna e Lombar", apelido: "Sobrecarga de Postura", emoji: "🪑",
+      paraQuem: "Para quem passa horas sentado ou de pé.",
+      dor: "Fisgadas na base das costas, rigidez ao levantar da cadeira e peso ao deitar.",
+      solucao: "Protocolo de 3 minutos de alinhamento da pelve e alívio da pressão na lombar.",
+      alerta: "Procure atendimento na hora se houver perda de força nas pernas, dormência na região íntima, perda de controle do xixi ou do cocô, febre com dor nas costas, ou dor depois de uma queda.",
+      regioes: ["lombar"]
     },
     joelhos: {
-      nome: "Quadril, Joelhos e Pés",
-      paraQuem: "Para impacto nas articulações, travamentos e dor ao caminhar ou subir escadas.",
-      regioes: ["pernas", "joelhos", "pes"], emoji: "🦵"
+      nome: "Quadril e Joelhos", apelido: "Impacto Articular e Amnésia Glútea", emoji: "🦵",
+      paraQuem: "Para quem sente os joelhos na escada ou passa muitas horas sentado.",
+      dor: "Dor ao subir e descer escadas, estalos e rigidez depois de horas sentado.",
+      solucao: "Ativação rápida dos glúteos e estabilização dos joelhos, sem impacto.",
+      alerta: "Procure um médico se o joelho inchar muito, ficar quente, travar sem conseguir esticar, falsear ou não aguentar o peso do corpo.",
+      regioes: ["pernas", "joelhos"]
+    },
+    pes: {
+      nome: "Pés e Calcanhar", apelido: "Fascite Plantar e Sola Queimando", emoji: "🦶",
+      paraQuem: "Para quem passa o dia em pé ou caminhando.",
+      dor: "Queimação na sola no fim do dia e dor forte no primeiro passo ao acordar.",
+      solucao: "Soltura da fáscia da sola do pé com objetos do dia a dia, como uma garrafa d'água ou uma bolinha.",
+      alerta: "Procure um médico se o pé estiver inchado, vermelho ou quente, se a dor começou depois de uma pancada, se houver dormência ou se não melhorar em algumas semanas. Quem tem diabetes deve mostrar ao médico qualquer dor ou ferida no pé.",
+      regioes: ["pes"]
     }
   };
   const trilhaDaRegiao = (regiao) =>
@@ -268,10 +292,16 @@
       noturno: [["respiracao-4-6", 30], ["joelhos-peito", 40], ["torcao-deitado", 40], ["postura-crianca", 40], ["respiracao-4-6", 30]]
     },
     joelhos: {
-      sos1: [["respira", 20], ["bombinha-tornozelo", 20], ["isometria-quadriceps", 20]],
-      sos3: [["respira", 20], ["circulos-tornozelo", 30], ["isometria-quadriceps", 30], ["extensao-joelho-sentado", 30], ["rolar-garrafa", 30], ["alongamento-posterior-sentado", 40]],
-      matinal: [["respira", 20], ["bombinha-tornozelo", 30], ["deslizamento-calcanhar", 40], ["ponte-gluteo", 40], ["dedos-toalha", 30], ["sentar-levantar", 20]],
-      noturno: [["respiracao-4-6", 30], ["figura-4", 40], ["pernas-parede", 50], ["rolar-garrafa", 30], ["respiracao-4-6", 30]]
+      sos1: [["respira", 20], ["contracao-gluteo", 20], ["isometria-quadriceps", 20]],
+      sos3: [["respira", 20], ["contracao-gluteo", 30], ["abducao-isometrica", 30], ["isometria-quadriceps", 30], ["extensao-joelho-sentado", 30], ["flexor-quadril", 40]],
+      matinal: [["respira", 20], ["ponte-gluteo", 40], ["abducao-lado", 40], ["deslizamento-calcanhar", 40], ["sentar-levantar", 40]],
+      noturno: [["respiracao-4-6", 30], ["figura-4", 50], ["joelhos-peito", 40], ["pernas-parede", 40], ["respiracao-4-6", 20]]
+    },
+    pes: {
+      sos1: [["respira", 20], ["circulos-tornozelo", 20], ["alongamento-fascia", 20]],
+      sos3: [["respira", 20], ["rolar-garrafa", 40], ["alongamento-fascia", 40], ["dedos-toalha", 30], ["circulos-tornozelo", 20], ["panturrilha-parede", 30]],
+      matinal: [["respira", 20], ["bombinha-tornozelo", 30], ["circulos-tornozelo", 30], ["toalha-sola", 50], ["alongamento-fascia", 50]],
+      noturno: [["respiracao-4-6", 30], ["rolar-garrafa", 50], ["alongamento-fascia", 40], ["pernas-parede", 40], ["respiracao-4-6", 20]]
     }
   };
 
@@ -294,11 +324,11 @@
       vicio: "Punho dobrado para cima, apoiado na quina da mesa, e a mão apertando o mouse ou a ferramenta o dia inteiro.",
       ajuste: "Punho reto, como uma continuação do antebraço, sem apoio duro embaixo enquanto digita. Pegada leve: só a força necessária.",
       teste: "Solte a mão do mouse por 5 segundos: se os dedos ficam doloridos para abrir, você estava apertando demais." },
-    { id: "de-pe", titulo: "Como ficar de pé muitas horas", min: 2, rotinas: ["em_pe"], zonas: ["lombar", "joelhos"],
+    { id: "de-pe", titulo: "Como ficar de pé muitas horas", min: 2, rotinas: ["em_pe"], zonas: ["lombar", "joelhos", "pes"],
       vicio: "Joelhos travados para trás e todo o peso jogado numa perna só.",
       ajuste: "Joelhos levemente soltos, peso dividido nos dois pés e um pé apoiado num degrau ou caixote, trocando de lado a cada poucos minutos.",
       teste: "Balance o corpo para frente e para trás sobre os pés: o ponto de equilíbrio é no meio do pé, não no calcanhar." },
-    { id: "caminhar", titulo: "Como caminhar sem castigar joelhos e pés", min: 2, rotinas: ["em_pe", "escritorio", "repetitivo"], zonas: ["joelhos"],
+    { id: "caminhar", titulo: "Como caminhar sem castigar joelhos e pés", min: 2, rotinas: ["em_pe", "escritorio", "repetitivo"], zonas: ["joelhos", "pes"],
       vicio: "Passadas longas batendo o calcanhar com força e calçado sem apoio.",
       ajuste: "Passos um pouco menores, o pé rolando do calcanhar até os dedos, braços soltos. Calçado com sola que amortece.",
       teste: "Escute seus passos: se fazem barulho de batida, encurte a passada até ficarem silenciosos." },
@@ -306,6 +336,14 @@
       vicio: "Dormir de bruços com o pescoço virado ou com um travesseiro alto demais.",
       ajuste: "De lado, travesseiro na altura do ombro e outro entre os joelhos. De barriga para cima, um travesseiro embaixo dos joelhos.",
       teste: "Deitado de lado, peça para alguém olhar: o nariz deve ficar alinhado com o meio do peito, sem a cabeça cair ou subir." },
+    { id: "gluteo-sentado", titulo: "Sentar sem desligar o glúteo", min: 2, rotinas: ["escritorio", "repetitivo"], zonas: ["joelhos", "lombar"],
+      vicio: "Passar horas sentado sem usar os glúteos: eles \"esquecem\" de trabalhar, e os joelhos e a lombar pagam a conta.",
+      ajuste: "A cada pausa, aperte os glúteos por 5 segundos algumas vezes. Ao levantar, empurre o chão com os pés usando o bumbum, não as costas.",
+      teste: "Em pé, aperte só um lado do bumbum: se você não sente ele firmar, o glúteo está \"desligado\" e precisa dos lanches de ativação." },
+    { id: "primeiro-passo", titulo: "O primeiro passo da manhã e o calçado certo", min: 2, rotinas: ["escritorio", "em_pe", "repetitivo"], zonas: ["pes"],
+      vicio: "Levantar da cama e pisar descalço direto no chão duro, e passar o dia num calçado sem apoio nenhum.",
+      ajuste: "Antes de levantar, faça a toalha na sola e os círculos de tornozelo. Deixe um chinelo com apoio ao lado da cama e use no dia a dia um calçado que amorteça e apoie o arco do pé.",
+      teste: "Molhe o pé e pise numa folha ou no piso seco: se a marca do arco some quase toda, o pé está desabando e pede um calçado com mais apoio." },
     { id: "peso", titulo: "Pegar peso e carregar bolsa", min: 2, rotinas: ["em_pe", "repetitivo"], zonas: ["lombar", "cervical"],
       vicio: "Dobrar a coluna para pegar algo do chão e carregar a bolsa sempre no mesmo ombro.",
       ajuste: "Dobre os joelhos e traga o peso colado ao corpo. Mochila nas duas alças ou troque a bolsa de ombro a cada trajeto.",
@@ -318,8 +356,9 @@
     { id: "s-ombros", nome: "Lanche dos ombros", zona: "cervical", passos: [["juncao-escapulas", 30], ["retracao-queixo", 30]] },
     { id: "s-maos", nome: "Lanche das mãos e antebraços", zona: "punho", passos: [["abrir-fechar-mao", 30], ["rotacao-antebraco", 30]] },
     { id: "s-lombar", nome: "Lanche da lombar", zona: "lombar", passos: [["inclinacao-pelve", 30], ["respiracao-4-6", 30]] },
+    { id: "s-gluteo", nome: "Lanche do glúteo", zona: "joelhos", passos: [["contracao-gluteo", 30], ["abducao-isometrica", 30]] },
     { id: "s-joelhos", nome: "Lanche dos joelhos", zona: "joelhos", passos: [["isometria-quadriceps", 30], ["bombinha-tornozelo", 30]] },
-    { id: "s-pes", nome: "Lanche dos pés e da circulação", zona: "joelhos", passos: [["circulos-tornozelo", 30], ["panturrilha", 30]] },
+    { id: "s-pes", nome: "Lanche dos pés e da circulação", zona: "pes", passos: [["circulos-tornozelo", 30], ["panturrilha", 30]] },
     { id: "s-olhos", nome: "Lanche dos olhos e da mente", zona: null, passos: [["regra-20-20-20", 20], ["respiracao-4-6", 40]] }
   ];
 
@@ -365,7 +404,8 @@
         cervical: "Sentado com as costas e a cabeça apoiadas, braços apoiados nas coxas ou numa almofada. Deitado, use um travesseiro baixo.",
         punho: "Antebraço apoiado na mesa, punho reto e solto, mão relaxada. Evite mouse, celular e ferramenta por alguns minutos.",
         lombar: "Deitado de barriga para cima com as pernas apoiadas numa cadeira (joelhos dobrados), ou de lado com um travesseiro entre os joelhos.",
-        joelhos: "Sentado com a perna esticada e apoiada, sem nada embaixo do joelho que o deixe dobrado por muito tempo. Para o pé: descalço, com o pé um pouco elevado."
+        joelhos: "Sentado com a perna esticada e apoiada, sem nada embaixo do joelho que o deixe dobrado por muito tempo.",
+        pes: "Sente-se, tire o peso do pé e apoie a perna um pouco elevada. Faça círculos de tornozelo bem leves e evite andar descalço em piso duro nesse dia."
       },
       alertas: [
         "A dor começou depois de uma queda, batida ou acidente",

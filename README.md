@@ -54,7 +54,9 @@ Depois abra no navegador (de preferência no modo celular):
 
 **Orientações do médico** (Mais → 🩺): a pessoa registra se foi liberada para exercícios, as regiões a evitar, o diagnóstico, as orientações, os remédios com horários, a próxima consulta e até 3 fotos do relatório ou da receita. O painel troca os exercícios das regiões bloqueadas por respiração (ou todos, se ainda não liberou), lembra os remédios no horário (só lembra, nunca muda dose), avisa a consulta e gera o **Relatório para levar ao médico** com a evolução.
 
-**Ilustrações:** prompts dos 36 exercícios em `docs/prompts-ilustracoes.md` (boneco cinza, região em vermelho). Feitas: retração do queixo, encolher os ombros. A rotação de tronco precisa ser refeita em vermelho.
+**As 5 dores (trilhas do Módulo 1):** Cervical, Ombros e Trapézio (Pescoço de Texto) · Punhos, Antebraços e Braços (Tendinite e LER) · Coluna e Lombar (Sobrecarga de Postura) · Quadril e Joelhos (Impacto Articular e Amnésia Glútea) · Pés e Calcanhar (Fascite Plantar e Sola Queimando). Cada uma tem a dor, a solução, SOS de 1 e 3 min, Checklist Matinal e Noturno e o aviso de quando procurar o médico (`TRILHAS_ZONA` e `PROTOCOLOS` em `data.js`).
+
+**Ilustrações:** 41 prompts organizados pelas 5 dores em `docs/prompts-ilustracoes.md` (boneco cinza, região em vermelho). Salvar cada imagem em `assets/img/exercicios/<id>.png`.
 
 **Painel do desafio:**
 - Boas-vindas e Mapa da Dor (região de foco, trilha, Escala da Dor do dia 1, horário de trabalho)
