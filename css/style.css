@@ -1054,3 +1054,8 @@ html.is-loading body { overflow: hidden; }
 .logo-intro.is-on .li-logo { opacity: 1; transform: none; filter: none; }
 .logo-intro.is-done .li-logo { transform: scale(1.08); }
 @media (prefers-reduced-motion: reduce) { .li-logo { transition: none; } }
+
+.arte-vid { position: relative; }
+.arte-play { position: absolute; inset: 0; margin: auto; width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255,255,255,.6);
+  background: rgba(0,0,0,.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: #fff; font-size: 1.3rem; }
+.arte-play[hidden] { display: none; }

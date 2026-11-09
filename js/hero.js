@@ -98,12 +98,23 @@
   v.addEventListener("play", marcar); v.addEventListener("pause", marcar); marcar();
 })();
 
-/* vídeos da seção "Arte": só tocam quando aparecem na tela */
+/* vídeos da seção "Arte": tocam quando aparecem; se o celular bloquear (modo economia), mostra ▶ */
 (function () {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const vids = document.querySelectorAll(".arte-vid video");
-  const io = new IntersectionObserver((ents) => ents.forEach((en) => {
-    if (en.isIntersecting) { en.target.preload = "auto"; en.target.play().catch(() => {}); } else en.target.pause();
-  }), { threshold: 0.2 });
+  const vids = [...document.querySelectorAll(".arte-vid video")];
+  const tocar = (v) => {
+    v.muted = true; v.defaultMuted = true; v.setAttribute("muted", "");
+    const btn = v.parentElement.querySelector(".arte-play");
+    const p = v.play();
+    if (p && p.catch) p.then(() => btn && (btn.hidden = true)).catch(() => btn && (btn.hidden = false));
+  };
+  vids.forEach((v) => {
+    const btn = v.parentElement.querySelector(".arte-play");
+    btn?.addEventListener("click", () => tocar(v));
+    v.addEventListener("playing", () => btn && (btn.hidden = true));
+  });
+  if (!("IntersectionObserver" in window)) { vids.forEach(tocar); return; }
+  const io = new IntersectionObserver((ents) => ents.forEach((en) => (en.isIntersecting ? tocar(en.target) : en.target.pause())), { threshold: 0.15 });
   vids.forEach((v) => io.observe(v));
+  // no iPhone, o primeiro toque na página libera os vídeos
+  addEventListener("touchstart", () => vids.forEach((v) => { const r = v.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) tocar(v); }), { once: true, passive: true });
 })();
