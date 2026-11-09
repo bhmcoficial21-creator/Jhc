@@ -121,35 +121,35 @@ Arquivo: `gato-vaca-sentado.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits on the front of an office chair, hands on the knees, spine rounded with chin toward the chest, plus a faint transparent ghost of the same figure with the chest open and spine gently arched. The worked muscles (full length of the back muscles along the spine) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow along the back. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 16. Extensão de pé com as mãos na cintura
+## ✅ 16. Extensão de pé com as mãos na cintura
 Arquivo: `extensao-pe.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure stands upright with hands on the hips, hips gently pushed forward and chest lifted in a slight backward extension, head neutral. The worked muscles (lower back and front of the abdomen) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow shows the gentle backward bend. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 17. Joelhos ao peito
+## ✅ 17. Joelhos ao peito
 Arquivo: `joelhos-peito.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, both knees pulled gently toward the chest, arms hugging the shins, head resting on the mat. The worked muscles (lower back and glutes) are highlighted in vivid semi-transparent RED glow. Small curved bright-red arrows show gentle rocking. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 18. Torção deitado
+## ✅ 18. Torção deitado
 Arquivo: `torcao-deitado.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Top-down view: the figure lies on its back on an exercise mat, arms out to the sides in a T, knees bent together and dropped to one side, both shoulders on the floor. The worked muscles (obliques, lower back and side of the hip) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow shows the knees falling to the side. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 19. Gato e vaca em 4 apoios
+## ✅ 19. Gato e vaca em 4 apoios
 Arquivo: `gato-vaca-4-apoios.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure is on hands and knees on an exercise mat (wrists under shoulders, knees under hips), back rounded up with the head down, plus a faint transparent ghost of the same figure with the back gently arched and head lifted. The worked muscles (full back muscles along the spine and abdominals) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow along the back. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 20. Postura de descanso
+## ✅ 20. Postura de descanso
 Arquivo: `postura-crianca.png`
 
 ```
@@ -158,74 +158,74 @@ Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte li
 
 # 4. Quadril e Joelhos (Impacto Articular e Amnésia Glútea)
 
-## ⬜ 21. Contração de glúteo sentado
+## ✅ 21. Contração de glúteo sentado
 Arquivo: `contracao-gluteo.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Back three-quarter view from behind and slightly to the side: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, squeezing the buttocks firmly while seated, posture tall. The worked muscles (gluteus maximus on both sides) are highlighted in vivid semi-transparent RED glow. Small inward-pointing bright-red arrows on both glutes show the squeeze. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 22. Abertura isométrica dos joelhos
+## ✅ 22. Abertura isométrica dos joelhos
 Arquivo: `abducao-isometrica.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, knees about hip-width apart, each hand placed on the outside of the same-side knee, knees pressing outward against the hands without moving. The worked muscles (outer hip and side glute muscles (gluteus medius)) are highlighted in vivid semi-transparent RED glow. Short bright-red arrows on the outside of each knee point outward, meeting the hands. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 23. Isometria de coxa sentado
+## ✅ 23. Isometria de coxa sentado
 Arquivo: `isometria-quadriceps.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, one leg extended straight forward and held in the air parallel to the floor, the other foot on the floor. The worked muscles (front of the thigh (quadriceps) of the raised leg) are highlighted in vivid semi-transparent RED glow. Small bright-red arrows show the thigh muscle contracting. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 24. Extensão de joelho sentado
+## ✅ 24. Extensão de joelho sentado
 Arquivo: `extensao-joelho-sentado.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, one knee slowly straightening so the lower leg rises toward horizontal, plus a faint transparent ghost of the starting position with the foot on the floor. The worked muscles (quadriceps) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow follows the path of the foot. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 25. Alongamento do flexor do quadril de pé
+## ✅ 25. Alongamento do flexor do quadril de pé
 Arquivo: `flexor-quadril.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure stands in a short split stance beside a desk with one hand on it for balance, back leg straight behind, front knee slightly bent, pelvis gently pushed forward, torso upright. The worked muscles (front of the hip and upper thigh of the back leg) are highlighted in vivid semi-transparent RED glow. A bright-red arrow points forward at the hip. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 26. Ponte de glúteo
+## ✅ 26. Ponte de glúteo
 Arquivo: `ponte-gluteo.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, knees bent and feet flat, hips lifted to form a straight line from knees to shoulders, arms flat by the sides. The worked muscles (glutes and hamstrings) are highlighted in vivid semi-transparent RED glow. A bright-red arrow points up at the hips. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 27. Abertura de perna deitado de lado
+## ✅ 27. Abertura de perna deitado de lado
 Arquivo: `abducao-lado.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure lies on its side on an exercise mat, head resting on the lower arm, bottom knee bent, top leg straight and lifted to hip height in line with the body. The worked muscles (side glute and outer hip of the top leg (gluteus medius)) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow shows the top leg lifting up. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 28. Deslizamento do calcanhar
+## ✅ 28. Deslizamento do calcanhar
 Arquivo: `deslizamento-calcanhar.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, one leg straight, the other heel sliding along the floor toward the buttocks bending the knee, plus a faint ghost of the starting position. The worked muscles (knee area and back of the thigh) are highlighted in vivid semi-transparent RED glow. A bright-red arrow along the floor shows the heel sliding. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 29. Sentar e levantar da cadeira
+## ✅ 29. Sentar e levantar da cadeira
 Arquivo: `sentar-levantar.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure is halfway rising from an office chair without using the hands, arms crossed over the chest, torso leaning forward, knees aligned over the feet, plus a faint ghost of the seated position. The worked muscles (quadriceps and glutes) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow points upward. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 30. Alongamento do glúteo deitado
+## ✅ 30. Alongamento do glúteo deitado
 Arquivo: `figura-4.png`
 
 ```
-Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, right ankle crossed over the left knee forming a figure four, both hands holding behind the left thigh pulling it gently toward the chest. The worked muscles (right glute and outer hip) are highlighted in vivid semi-transparent RED glow. A bright-red arrow shows the leg pulled toward the chest. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
+Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, one leg straight on the floor, both hands hugging the other bent knee and pulling it gently toward the opposite shoulder. The worked muscles (glute and outer hip of the bent leg) are highlighted in vivid semi-transparent RED glow. A bright-red arrow shows the leg pulled toward the chest. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
 ## ⬜ 31. Pernas na parede
