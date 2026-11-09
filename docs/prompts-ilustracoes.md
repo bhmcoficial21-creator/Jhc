@@ -228,7 +228,7 @@ Arquivo: `figura-4.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, one leg straight on the floor, both hands hugging the other bent knee and pulling it gently toward the opposite shoulder. The worked muscles (glute and outer hip of the bent leg) are highlighted in vivid semi-transparent RED glow. A bright-red arrow shows the leg pulled toward the chest. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 31. Pernas na parede
+## ✅ 31. Pernas na parede
 Arquivo: `pernas-parede.png`
 
 ```
@@ -237,56 +237,56 @@ Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte li
 
 # 5. Pés e Calcanhar (Fascite Plantar e Sola Queimando)
 
-## ⬜ 32. Círculos de tornozelo
+## ✅ 32. Círculos de tornozelo
 Arquivo: `circulos-tornozelo.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side close-up of the lower legs of the mannequin seated on a chair: one foot lifted slightly off the floor drawing a circle with the toes. The worked muscles (ankle and lower leg muscles) are highlighted in vivid semi-transparent RED glow. A circular bright-red arrow around the foot. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 33. Alongamento da sola do pé
+## ✅ 33. Alongamento da sola do pé
 Arquivo: `alongamento-fascia.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side close-up: the figure sits on a chair with one bare foot crossed over the opposite knee, one hand gently pulling the toes backward toward the shin so the sole stretches. The worked muscles (sole of the foot (plantar fascia) from heel to toes) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow at the toes points back toward the shin. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 34. Rolar a sola na garrafa
+## ✅ 34. Rolar a sola na garrafa
 Arquivo: `rolar-garrafa.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits on an office chair with one bare foot resting on a plastic water bottle lying on the floor, rolling it from heel to toes. The worked muscles (sole of the foot and calf) are highlighted in vivid semi-transparent RED glow. A bright-red double arrow along the length of the foot. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 35. Puxar a toalha com os dedos
+## ✅ 35. Puxar a toalha com os dedos
 Arquivo: `dedos-toalha.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side close-up of the lower leg and bare foot of the mannequin seated on a chair: the foot rests on a small towel on the floor, toes curling to scrunch and pull the towel back toward the heel. The worked muscles (muscles of the sole and toes) are highlighted in vivid semi-transparent RED glow. A bright-red arrow shows the towel being pulled back. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 36. Alongamento de panturrilha na parede
+## ✅ 36. Alongamento de panturrilha na parede
 Arquivo: `panturrilha-parede.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure stands facing a wall with both hands on it, one leg forward with the knee bent, the back leg straight with the heel pressed flat on the floor, body leaning toward the wall. The worked muscles (calf of the back leg and Achilles tendon) are highlighted in vivid semi-transparent RED glow. A bright-red arrow shows the body leaning toward the wall. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 37. Bombinha de tornozelo
+## ✅ 37. Bombinha de tornozelo
 Arquivo: `bombinha-tornozelo.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, one leg straight out in front with the heel on the floor and the toes pulled up toward the shin, plus a faint transparent ghost of the foot pointing down. The worked muscles (calf and front of the shin) are highlighted in vivid semi-transparent RED glow. A curved bright-red double arrow at the ankle. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 38. Toalha na sola antes do primeiro passo
+## ✅ 38. Toalha na sola antes do primeiro passo
 Arquivo: `toalha-sola.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits on a bed with one leg straight, a towel looped around the ball of the bare foot, both hands gently pulling the towel ends toward the body. The worked muscles (sole of the foot and calf) are highlighted in vivid semi-transparent RED glow. A bright-red arrow along the towel points toward the body. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 39. Elevação dos calcanhares
+## ✅ 39. Elevação dos calcanhares
 Arquivo: `panturrilha.png`
 
 ```
@@ -295,7 +295,7 @@ Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte li
 
 # Gerais (respiração e olhos)
 
-## ⬜ 40. Respiração 4-6
+## ✅ 40. Respiração 4-6
 Arquivo: `respiracao-4-6.png`
 
 ```

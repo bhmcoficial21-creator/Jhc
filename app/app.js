@@ -393,7 +393,7 @@
   function midiaExercicio(x) {
     const reserva = `<div class="video-placeholder vertical">[Ilustração]<br>${x.nome}<br>${x.segundos} s</div>`;
     if (!x.id) return reserva;
-    return `<img class="ilustracao" src="../assets/img/exercicios/${x.id}.webp" alt="${x.nome}"
+    return `<img class="ilustracao" src="../assets/img/exercicios/${x.id === "respira" ? "respiracao-4-6" : x.id}.webp" alt="${x.nome}"
       onerror="this.outerHTML=this.dataset.reserva" data-reserva="${reserva.replace(/"/g, "&quot;")}">`;
   }
   const botaoVoz = () => `<button class="botao-voz" id="btn-voz" aria-pressed="${voz.ligada()}">${voz.ligada() ? "🔊 Guia por voz ligado" : "📳 Só vibração"}</button>`;
