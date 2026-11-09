@@ -50,8 +50,9 @@
       opcoes: [["mesa", "Almoço na frente da tela ou correndo"], ["pulo", "Pulo refeições"], ["belisco", "Belisco besteira ou peço comida rápida"], ["agua", "Bebo pouca água"], ["bem", "Como bem e bebo água"]]
     },
     tempo: {
-      titulo: "Quando a dor aperta no meio do expediente, quanto tempo você consegue parar?",
-      opcoes: [["1", "1 minuto, no máximo"], ["2", "Uns 2 minutos"], ["3", "Até 3 minutos"], ["reuniao", "Não posso sair do lugar (reunião, atendimento, volante)"]]
+      titulo: "Quanto tempo por dia você consegue dedicar ao seu corpo?",
+      sub: "Somando tudo, ao longo do dia. Seja sincero: o plano é montado em cima disso.",
+      opcoes: [["3", "⏱️ 3 minutos: o dia é corrido demais"], ["5", "⏱️ 5 minutos"], ["10", "⏱️ 10 minutos"]]
     },
     tentativas: {
       titulo: "O que você já tentou para a dor?",
@@ -90,8 +91,8 @@
         <li>Onde você está no ciclo do Corpo Congelado</li>
         <li>A cor do seu Semáforo dos Sinais</li>
         <li>Por que o que você já tentou não resolveu</li>
-        <li>O seu Alívio Express: o protocolo de 1 a 3 minutos para a hora que a dor aperta</li>
-        <li>O seu plano para os 3 primeiros dias</li>
+        <li>O seu SOS: o ajuste de 2 minutos para a hora que a dor aperta</li>
+        <li>O seu plano sob medida para o tempo que você tem por dia</li>
       </ul>
       <p class="pequeno suave">Sem cadastro. Para homens e mulheres que trabalham sentados ou repetindo movimento.</p>`;
   }
@@ -246,23 +247,32 @@
     nada: "Você está no melhor momento: antes de o sinal virar lesão."
   };
 
-  function plano3Dias(foco) {
-    const exs = D.EXERCICIOS.filter((e) => e.regiao === foco);
-    const meta = Math.max(C.pausasMinimasDia, Math.floor((HORAS_NUM[r.horas] * 60) / 52));
-    const dia3 = r.sono !== "bem"
-      ? { titulo: "Ritual de desligar", texto: "Ao terminar o trabalho: feche as abas, troque de ambiente, 5 minutos de rotina e 3 respirações longas. Ajuda a dormir melhor." }
-      : { titulo: "Pausas invisíveis", texto: `${(exs[2] || exs[0]).nome} durante uma reunião ou atendimento. Ninguém percebe.` };
-    return [
-      { titulo: `${meta} pausas de 2 minutos`, texto: `Regra 50/2 com os 3 Rs. No "Remexe": ${exs[0].nome.toLowerCase()}.` },
-      { titulo: "Lembrete no seu horário", texto: `A cada 50 minutos, uma pausa. Hoje o exercício é ${(exs[1] || exs[0]).nome.toLowerCase()}.` },
-      dia3
-    ];
+  function alivioExpress(res) {
+    const local = r.rotina === "escritorio" ? "sentado" : "em_pe";
+    return L.montarProtocolo({ regiao: res.regiaoFoco, minutos: 2, local, semaforo: res.cor });
   }
 
-  function alivioExpress(res) {
-    const minutos = r.tempo === "reuniao" ? 2 : Number(r.tempo);
-    const local = r.tempo === "reuniao" ? "reuniao" : r.rotina === "escritorio" ? "sentado" : "em_pe";
-    return L.montarProtocolo({ regiao: res.regiaoFoco, minutos, local, semaforo: res.cor });
+  /* Plano diário pelo tempo disponível (3, 5 ou 10 min) */
+  function planoDiario(zonaId) {
+    const z = D.TRILHAS_ZONA[zonaId];
+    const lanche = D.SNACKS.find((x) => x.zona === zonaId) || D.SNACKS[0];
+    const habito = D.HABITOS.find((h) => h.rotinas.includes(r.rotina) && h.zonas.includes(zonaId)) || D.HABITOS.find((h) => h.rotinas.includes(r.rotina));
+    const itens = {
+      "3": [
+        ["Expediente", "3 Lanches de Movimento de 60 s", `Manhã, depois do almoço e fim da tarde. Comece pelo ${lanche.nome.toLowerCase()}.`, 3]
+      ],
+      "5": [
+        ["Ao acordar", "Checklist Matinal", `3 min montados para a trilha ${z.nome}.`, 3],
+        ["Expediente", "2 Lanches de Movimento de 60 s", `Comece pelo ${lanche.nome.toLowerCase()}.`, 2]
+      ],
+      "10": [
+        ["Ao acordar", "Checklist Matinal", `3 min montados para a trilha ${z.nome}.`, 3],
+        ["Expediente", "2 Lanches de Movimento de 60 s", `Comece pelo ${lanche.nome.toLowerCase()}.`, 2],
+        ["Uma vez", `Aula: ${habito.titulo}`, `${habito.min} min para corrigir o vício que mais pesa na sua rotina.`, habito.min],
+        ["Antes de dormir", "Checklist Noturno", "3 min para soltar o corpo e dormir melhor.", 3]
+      ]
+    }[r.tempo];
+    return { itens, habito };
   }
 
   function ofertasRecomendadas() {
@@ -287,6 +297,7 @@
     const ofertas = ofertasRecomendadas();
     const express = alivioExpress(res);
     const zona = D.TRILHAS_ZONA[D.trilhaDaRegiao(res.regiaoFoco)];
+    const plano = planoDiario(D.trilhaDaRegiao(res.regiaoFoco));
     window.RELIGAR_STORE.salvarQuiz({ ...r, ...res, indice: ind, recomendados: ofertas.map((o) => o.id), tempoLivre: express.minutos, localPadrao: express.local, data: new Date().toISOString() });
 
     const ICONE_TRIPE = { ok: "verde", atencao: "amarelo", ruim: "vermelho" };
@@ -335,36 +346,39 @@
 
       <div class="cartao express">
         <span class="etiqueta">⚡ Seu Alívio Express</span>
-        <h3 style="margin-top:8px">Doeu ${reg.no} no meio do expediente? ${express.minutos} ${express.minutos === 1 ? "minuto" : "minutos"}, ${{ sentado: "aí na cadeira", em_pe: "perto da sua mesa", reuniao: "sem ninguém perceber" }[express.local]}.</h3>
+        <h3 style="margin-top:8px">Doeu ${reg.no} no meio do trabalho? Um ajuste de 2 minutos, ${{ sentado: "aí na própria cadeira", em_pe: "aí onde você está" }[express.local]}.</h3>
         ${express.aviso ? `<p class="aviso" style="margin:8px 0">${express.aviso}</p>` : ""}
         <ol class="express-lista">${express.passos.map((x) => `<li><span>${x.nome}</span><span class="suave">${x.segundos} s</span></li>`).join("")}</ol>
         <p class="pequeno suave" style="margin:12px 0 0">No painel, cada passo é um microvídeo com cronômetro. Você abre o celular, toca em "Alívio" e segue.</p>
         <div class="trilha-quiz">
           <p class="pequeno" style="margin:0"><strong>Sua trilha na Central de Alívio:</strong> ${zona.emoji} ${zona.nome}</p>
-          <p class="pequeno suave" style="margin:4px 0 0">💼 Expediente 3 min · ☀️ Matinal 5 min · 🌙 Noturno 5 min</p>
+          <p class="pequeno suave" style="margin:4px 0 0">⚡ SOS Rápido 1 min · 🧯 SOS Completo 3 min · ☀️🌙 Checklist Matinal e Noturno</p>
         </div>
       </div>
 
       <div class="cartao">
-        <h3>Seu plano para os 3 primeiros dias</h3>
-        <p class="pequeno suave">Região de foco: ${reg.emoji} ${reg.nome} · Rotina: ${trilha.nome}</p>
-        ${plano3Dias(res.regiaoFoco).map((d, k) => `
-          <div class="plano-dia"><span class="etiqueta">Dia ${k + 1}</span><div><strong>${d.titulo}</strong><br><span class="pequeno">${d.texto}</span></div></div>`).join("")}
-        <p class="pequeno suave" style="margin:12px 0 0">Do dia 4 ao 21, o painel do desafio ajusta o plano todo dia pela sua noite e pelo seu semáforo.</p>
+        <span class="etiqueta">Plano sob medida</span>
+        <h3 style="margin-top:8px">Seu plano de ${r.tempo} minutos por dia</h3>
+        <p class="pequeno suave">Zona: ${reg.emoji} ${reg.nome} · Rotina: ${trilha.nome}</p>
+        ${plano.itens.map(([quando, t, d]) => `
+          <div class="plano-dia"><span class="etiqueta">${quando}</span><div><strong>${t}</strong><br><span class="pequeno">${d}</span></div></div>`).join("")}
+        <div class="plano-dia"><span class="etiqueta">Quando doer</span><div><strong>SOS de 2 minutos</strong><br><span class="pequeno">O seu Alívio Express acima, aí mesmo onde você estiver. Não conta no seu tempo do dia.</span></div></div>
+        <p class="pequeno" style="margin:12px 0 0"><strong>O primeiro hábito para reprogramar:</strong> ${plano.habito.titulo.toLowerCase()}. ${plano.habito.vicio}</p>
       </div>
 
       <div class="cartao oferta">
         <span class="etiqueta">Seu próximo passo</span>
         <h2 style="margin-top:8px">Desafio Corpo Descongelado 21 Dias</h2>
-        <p>Um assistente de bolso para a dor ${reg.no}: microvídeos de 1 a 5 minutos para abrir no celular na hora que a dor bater, mais o desafio de 21 dias montado para a sua rotina.</p>
+        <p>Um assistente de bolso para a dor ${reg.no}: microvídeos de 1 a 3 minutos para abrir no celular na hora que a dor bater, mais o desafio de 21 dias montado para a sua rotina.</p>
         <ul class="lista-check">
           <li>5 aulas curtas + 21 dias de desafio</li>
-          <li>Central de Alívio Express: trilha ${zona.nome} com protocolos de Expediente, Matinal e Noturno</li>
-          <li>Alívio Express sob medida: 1 a 3 minutos na hora da dor</li>
+          <li>Módulo 1, SOS Alívio Imediato: trilha ${zona.nome} e o alívio sob medida de 1 a 3 min</li>
+          <li>Módulo 2, Reprogramação de Hábitos: começando por "${plano.habito.titulo}"</li>
+          <li>Módulo 3, Lanches de Movimento: pausas invisíveis de 60 s</li>
           <li>Painel no celular que já começa com o seu Mapa da Dor</li>
           <li>Plano que muda pela sua noite e pelo seu semáforo</li>
           <li>Pausas invisíveis para reunião e atendimento</li>
-          <li>Bônus: Trava de Segurança Articular e Guia de Socorro para Crises Agudas</li>
+          <li>Bônus: Trava de Segurança Articular e Checklist de Bolso Matinal e Noturno</li>
           <li>PDFs de apoio e certificado no dia 21</li>
         </ul>
         <p><s class="suave">${formatarPreco(C.precos.ancora)}</s> <strong style="font-size:1.5rem">${formatarPreco(C.precos.principal)}</strong></p>

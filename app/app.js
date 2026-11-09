@@ -43,7 +43,7 @@
   const diasFeitos = () => Object.values(estado.dias).filter((d) => d.feito).length;
 
   /* ---------- Roteamento ---------- */
-  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
+  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, habitos, snacks, checklist, invisiveis, lembretes, progresso, aulas, bonus, dia21, mais };
   function navegar() {
     pararTimer();
     let rota = (location.hash || "#hoje").slice(1);
@@ -51,7 +51,7 @@
     if (rota === "hoje" && diaAtual() > 21) rota = "dia21";
     if (rota.startsWith("trilha-") && D.TRILHAS_ZONA[rota.slice(7)]) trilha(rota.slice(7));
     else (ROTAS[rota] || hoje)();
-    const aba = rota.startsWith("trilha-") || ["montar", "seguranca", "socorro"].includes(rota) ? "alivio" : rota;
+    const aba = rota.startsWith("trilha-") || ["montar", "seguranca", "socorro", "habitos", "snacks", "checklist"].includes(rota) ? "alivio" : rota;
     $$("#nav a").forEach((a) => a.classList.toggle("ativo", a.dataset.r === aba));
     $("#nav").classList.toggle("oculto", rota === "boasvindas");
     $("#botao-estranho").classList.toggle("oculto", rota === "boasvindas");
@@ -154,7 +154,7 @@
     tela.innerHTML = `
       <span class="etiqueta">Seu plano</span>
       <h1 style="margin-top:8px">Região de foco: ${reg.emoji} ${reg.nome}</h1>
-      <div class="cartao"><h3>Sua trilha de alívio: ${D.TRILHAS_ZONA[D.trilhaDaRegiao(diag.regiaoFoco)].nome}</h3><p class="pequeno">Na aba Alívio: protocolos de Expediente (3 min), Matinal (5 min) e Noturno (5 min).</p></div>
+      <div class="cartao"><h3>Sua trilha de alívio: ${D.TRILHAS_ZONA[D.trilhaDaRegiao(diag.regiaoFoco)].nome}</h3><p class="pequeno">Na aba Alívio: SOS Rápido (1 min), SOS Completo (3 min) e o seu Checklist Matinal e Noturno.</p></div>
       <div class="cartao"><h3>Sua rotina: ${trilha.nome}</h3><p class="pequeno">${trilha.dica}</p></div>
       <div class="cartao"><h3><span class="bolinha ${diag.cor}"></span> Semáforo inicial: ${sem.nome}</h3><p class="pequeno">${sem.fazer}</p></div>
       <div class="cartao">
@@ -393,73 +393,171 @@
   function central() {
     const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
     const ordem = [minha, ...Object.keys(D.TRILHAS_ZONA).filter((k) => k !== minha)];
+    const B = D.BONUS_INCLUSOS;
     tela.innerHTML = `
-      <span class="etiqueta">Central de Alívio Express</span>
+      <span class="etiqueta">Central de Microvídeos Express</span>
       <h1 style="margin-top:8px">Qual alívio você precisa agora?</h1>
 
       <a class="cartao socorro-atalho" href="#socorro">
         <span style="font-size:1.6rem">🚨</span>
-        <span><strong>Travou agora?</strong><br><span class="pequeno">Guia de Socorro para Crises Agudas</span></span>
+        <span><strong>Travou agora?</strong><br><span class="pequeno">Guia de Crise: o que fazer nos primeiros minutos</span></span>
       </a>
 
+      <h2 class="modulo-titulo"><span class="etiqueta">Módulo 1</span> SOS Alívio Imediato</h2>
+      <p class="pequeno suave">Vídeos por zona de dor para apagar o incêndio na hora da crise.</p>
       <a class="cartao express-atalho" href="#montar">
         <span style="font-size:1.6rem">⚡</span>
-        <span><strong>Montar meu alívio agora</strong><br><span class="pequeno suave">Diga onde dói, quanto tempo tem e onde está: de 1 a 3 minutos</span></span>
+        <span><strong>Montar meu alívio agora</strong><br><span class="pequeno suave">Onde dói, quanto tempo você tem e onde está: de 1 a 3 minutos</span></span>
       </a>
-
-      <h2 style="margin-top:28px">Trilhas por zona de dor</h2>
-      <p class="pequeno suave">Cada trilha tem 3 protocolos: Expediente (3 min), Matinal (5 min) e Noturno (5 min).</p>
       ${ordem.map((k) => { const t = D.TRILHAS_ZONA[k]; return `
         <a class="cartao trilha-card" href="#trilha-${k}">
           <span style="font-size:1.8rem">${t.emoji}</span>
           <span style="flex:1;min-width:0">
             ${k === minha ? `<span class="etiqueta">Sua trilha</span><br>` : ""}
-            <strong>${t.nome}</strong><br><span class="pequeno suave">${t.paraQuem}</span>
+            <strong>Trilha ${t.nome}</strong><br><span class="pequeno suave">${t.paraQuem}</span>
           </span>
           <span aria-hidden="true">›</span>
         </a>`; }).join("")}
 
-      <a class="cartao trilha-card" href="#seguranca" style="margin-top:24px">
+      <h2 class="modulo-titulo"><span class="etiqueta">Módulo 2</span> Reprogramação de Hábitos</h2>
+      <a class="cartao trilha-card" href="#habitos">
+        <span style="font-size:1.6rem">🧠</span>
+        <span style="flex:1"><strong>Postura viciada: ${D.HABITOS.length} aulas de 1 a 3 min</strong><br><span class="pequeno suave">Como sentar, ajustar a mesa, usar o celular, caminhar e dormir sem agredir as articulações.</span></span>
+        <span aria-hidden="true">›</span>
+      </a>
+
+      <h2 class="modulo-titulo"><span class="etiqueta">Módulo 3</span> Lanches de Movimento</h2>
+      <a class="cartao trilha-card" href="#snacks">
+        <span style="font-size:1.6rem">🍎</span>
+        <span style="flex:1"><strong>${D.SNACKS.length} micro-pausas invisíveis de 60 segundos</strong><br><span class="pequeno suave">Para fazer durante o expediente, até em reunião de câmera ligada.</span></span>
+        <span aria-hidden="true">›</span>
+      </a>
+
+      <h2 class="modulo-titulo"><span class="etiqueta">Bônus</span> Para não ter medo de errar</h2>
+      <a class="cartao trilha-card" href="#seguranca">
         <span style="font-size:1.6rem">🛡️</span>
-        <span style="flex:1"><span class="etiqueta">Bônus</span><br><strong>${D.BONUS_INCLUSOS.seguranca.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.seguranca.promessa}</span></span>
+        <span style="flex:1"><strong>${B.seguranca.nome}</strong><br><span class="pequeno suave">${B.seguranca.promessa}</span></span>
+        <span aria-hidden="true">›</span>
+      </a>
+      <a class="cartao trilha-card" href="#checklist">
+        <span style="font-size:1.6rem">📋</span>
+        <span style="flex:1"><strong>${B.checklist.nome}</strong><br><span class="pequeno suave">${B.checklist.promessa}</span></span>
         <span aria-hidden="true">›</span>
       </a>`;
+  }
+
+  function cartaoProtocolo(trilhaId, f, destaque) {
+    const fm = D.FORMATOS[f], passos = D.PROTOCOLOS[trilhaId][f];
+    return `
+      <div class="cartao formato ${destaque ? "sugerido" : ""}">
+        <div class="linha" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start">
+          <div><span style="font-size:1.4rem">${fm.emoji}</span> <strong>${fm.nome}</strong></div>
+          <span class="etiqueta" style="white-space:nowrap">${fm.min} min</span>
+        </div>
+        <p class="pequeno suave" style="margin:6px 0 8px">${fm.texto}</p>
+        <details><summary class="pequeno">ver os ${passos.length} microvídeos</summary>
+          <ol class="lista-ex">${passos.map(([ex, seg]) => `<li>${ex === "respira" ? "3 respirações profundas" : D.ex(ex).nome} <span class="suave">· ${seg} s</span></li>`).join("")}</ol>
+        </details>
+        <button class="botao botao-bloco" data-t="${trilhaId}" data-f="${f}" style="margin-top:10px">Começar ${fm.curto.toLowerCase()}</button>
+      </div>`;
+  }
+  function ligarProtocolos(reg, aoConcluir) {
+    $$("[data-f]").forEach((b) => b.onclick = () => executarProtocolo(L.protocoloDaTrilha(b.dataset.t, b.dataset.f, reg.semaforo), reg, aoConcluir && (() => aoConcluir(b.dataset.f))));
   }
 
   function trilha(id) {
     const t = D.TRILHAS_ZONA[id];
     const reg = registroDia(Math.min(diaAtual(), 21));
-    const hora = new Date().getHours();
-    const sugerido = hora < 10 ? "matinal" : hora >= 19 ? "noturno" : "expediente";
     tela.innerHTML = `
-      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
-      <span class="etiqueta">Trilha</span>
-      <h1 style="margin-top:8px">${t.emoji} ${t.nome}</h1>
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">Módulo 1 · SOS Alívio Imediato</span>
+      <h1 style="margin-top:8px">${t.emoji} Trilha ${t.nome}</h1>
       <p class="suave">${t.paraQuem}</p>
-      ${["expediente", "matinal", "noturno"].map((f) => {
-        const fm = D.FORMATOS[f];
-        const passos = D.PROTOCOLOS[id][f];
-        return `
-        <div class="cartao formato ${f === sugerido ? "sugerido" : ""}">
-          <div class="linha" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start">
-            <div><span style="font-size:1.4rem">${fm.emoji}</span> <strong>${fm.nome}</strong></div>
-            <span class="etiqueta" style="white-space:nowrap">${fm.min} min</span>
+      ${cartaoProtocolo(id, "sos1", true)}
+      ${cartaoProtocolo(id, "sos3", false)}
+      <a class="cartao trilha-card" href="#checklist"><span style="font-size:1.4rem">📋</span>
+        <span><strong>Matinal e Noturno desta trilha</strong><br><span class="pequeno suave">No bônus Checklist de Bolso, 3 min cada</span></span></a>
+      <a class="cartao trilha-card" href="#socorro"><span style="font-size:1.4rem">🚨</span>
+        <span><strong>Travou?</strong><br><span class="pequeno suave">Guia de Crise com a posição de alívio desta região</span></span></a>`;
+    ligarProtocolos(reg);
+  }
+
+  function habitos() {
+    const p = estado.perfil;
+    const minha = D.trilhaDaRegiao(p.regiaoFoco);
+    const paraMim = (h) => h.rotinas.includes(p.rotina) && h.zonas.includes(minha);
+    const lista = [...D.HABITOS.filter(paraMim), ...D.HABITOS.filter((h) => !paraMim(h))];
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">Módulo 2</span>
+      <h1 style="margin-top:8px">Reprogramação de Hábitos e Postura Viciada</h1>
+      <p class="suave">Cada aula mostra o vício, o ajuste e um teste de 10 segundos para você conferir na hora.</p>
+      ${lista.map((h) => `
+        <details class="cartao habito">
+          <summary><strong>${h.titulo}</strong> <span class="pequeno suave">· ${h.min} min</span>${paraMim(h) ? ` <span class="etiqueta">Para você</span>` : ""}</summary>
+          <div class="video-placeholder" style="margin-top:12px">[Microaula · ${h.min} min]<br>${h.titulo}</div>
+          <p class="pequeno" style="margin:12px 0 6px"><strong>O vício:</strong> ${h.vicio}</p>
+          <p class="pequeno" style="margin:0 0 6px"><strong>O ajuste:</strong> ${h.ajuste}</p>
+          <p class="pequeno" style="margin:0"><strong>Teste de 10 segundos:</strong> ${h.teste}</p>
+        </details>`).join("")}`;
+  }
+
+  function snacks() {
+    const reg = registroDia(Math.min(diaAtual(), 21));
+    const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
+    const lista = [...D.SNACKS.filter((s) => s.zona === minha), ...D.SNACKS.filter((s) => s.zona !== minha)];
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">Módulo 3</span>
+      <h1 style="margin-top:8px">Lanches de Movimento</h1>
+      <p class="suave">Micro-pausas invisíveis de 60 segundos para o expediente. Ninguém percebe e o corpo destrava. Hoje você fez ${reg.lanches || 0}.</p>
+      ${lista.map((s) => `
+        <div class="cartao">
+          <div class="linha" style="justify-content:space-between;flex-wrap:nowrap">
+            <strong>${s.nome}${s.zona === minha ? ` <span class="etiqueta">Sua zona</span>` : ""}</strong>
+            <span class="etiqueta" style="white-space:nowrap">60 s</span>
           </div>
-          ${f === sugerido ? `<p class="pequeno" style="margin:6px 0 0"><strong>Indicado para agora</strong></p>` : ""}
-          <p class="pequeno suave" style="margin:6px 0 8px">${fm.texto}</p>
-          <details><summary class="pequeno">ver os ${passos.length} microvídeos</summary>
-            <ol class="lista-ex">${passos.map(([ex, seg]) => `<li>${ex === "respira" ? "3 respirações profundas" : D.ex(ex).nome} <span class="suave">· ${seg} s</span></li>`).join("")}</ol>
-          </details>
-          <button class="botao botao-bloco" data-f="${f}" style="margin-top:10px">Começar ${fm.curto.toLowerCase()}</button>
-        </div>`; }).join("")}`;
-    $$("[data-f]").forEach((b) => b.onclick = () => executarProtocolo(L.protocoloDaTrilha(id, b.dataset.f, reg.semaforo), reg));
+          <p class="pequeno suave" style="margin:6px 0 10px">${s.passos.map(([id]) => D.ex(id).nome).join(" + ")}</p>
+          <button class="botao botao-secundario botao-bloco" data-s="${s.id}">Fazer agora</button>
+        </div>`).join("")}`;
+    $$("[data-s]").forEach((b) => b.onclick = () => {
+      const s = D.SNACKS.find((x) => x.id === b.dataset.s);
+      executarProtocolo({ titulo: `Lanche de Movimento · 60 s`, minutos: 1, regiao: estado.perfil.regiaoFoco, aviso: null,
+        passos: s.passos.map(([id, seg]) => ({ ...D.ex(id), segundos: seg })) }, reg, () => { reg.lanches = (reg.lanches || 0) + 1; salvar(); });
+    });
+  }
+
+  function checklist() {
+    const reg = registroDia(Math.min(diaAtual(), 21));
+    reg.checklist = reg.checklist || { matinal: false, noturno: false };
+    const escolhida = estado.perfil.trilhaChecklist || D.trilhaDaRegiao(estado.perfil.regiaoFoco);
+    const hora = new Date().getHours();
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">Bônus 2 · ${D.BONUS_INCLUSOS.checklist.formato}</span>
+      <h1 style="margin-top:8px">📋 ${D.BONUS_INCLUSOS.checklist.nome}</h1>
+      <p class="suave">${D.BONUS_INCLUSOS.checklist.promessa}</p>
+      <div class="cartao">
+        <h3>Hoje</h3>
+        <label class="check-linha"><input type="checkbox" class="check" data-ck="matinal" ${reg.checklist.matinal ? "checked" : ""}> ☀️ Checklist Matinal</label>
+        <label class="check-linha"><input type="checkbox" class="check" data-ck="noturno" ${reg.checklist.noturno ? "checked" : ""}> 🌙 Checklist Noturno</label>
+      </div>
+      <div class="cartao">
+        <p class="pequeno" style="margin:0 0 8px"><strong>Montado para a zona:</strong></p>
+        <select id="ck-trilha" class="opcao">${Object.entries(D.TRILHAS_ZONA).map(([k, t]) => `<option value="${k}" ${k === escolhida ? "selected" : ""}>${t.nome}</option>`).join("")}</select>
+      </div>
+      ${cartaoProtocolo(escolhida, hora < 14 ? "matinal" : "noturno", true)}
+      ${cartaoProtocolo(escolhida, hora < 14 ? "noturno" : "matinal", false)}`;
+    $$("[data-ck]").forEach((c) => c.onchange = () => { reg.checklist[c.dataset.ck] = c.checked; salvar(); });
+    $("#ck-trilha").onchange = (e) => { estado.perfil.trilhaChecklist = e.target.value; salvar(); checklist(); };
+    ligarProtocolos(reg, (f) => { reg.checklist[f] = true; salvar(); });
   }
 
   function seguranca() {
     const b = D.BONUS_INCLUSOS.seguranca;
     tela.innerHTML = `
-      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
-      <span class="etiqueta">Bônus · ${b.formato}</span>
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">Bônus 1 · ${b.formato}</span>
       <h1 style="margin-top:8px">🛡️ ${b.nome}</h1>
       <p class="suave">${b.promessa}</p>
       <div class="cartao"><div class="video-placeholder">[Vídeo · 4 min]<br>${b.nome}</div></div>
@@ -480,8 +578,8 @@
     const b = D.BONUS_INCLUSOS.socorro;
     const minha = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
     tela.innerHTML = `
-      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
-      <span class="etiqueta">Bônus · ${b.formato}</span>
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
+      <span class="etiqueta">${b.formato}</span>
       <h1 style="margin-top:8px">🚨 ${b.nome}</h1>
       <p class="suave">${b.promessa}</p>
 
@@ -497,7 +595,7 @@
       <div class="cartao">
         <h3>Posição de alívio</h3>
         <div class="linha" id="pos-abas" style="margin-bottom:12px">${Object.keys(b.posicoes).map((k) =>
-          `<button class="opcao" style="width:auto;min-height:40px" data-k="${k}" aria-pressed="${k === minha}">${D.TRILHAS_ZONA[k].emoji} ${{ lombar: "Lombar", cervical: "Pescoço", joelhos: "Joelho", punho: "Punho" }[k]}</button>`).join("")}</div>
+          `<button class="opcao" style="width:auto;min-height:40px" data-k="${k}" aria-pressed="${k === minha}">${D.TRILHAS_ZONA[k].emoji} ${{ lombar: "Coluna", cervical: "Pescoço", joelhos: "Joelho e pé", punho: "Braço e punho" }[k]}</button>`).join("")}</div>
         <p id="pos-texto" style="margin:0">${b.posicoes[minha]}</p>
       </div>
       <a class="botao botao-bloco" href="#trilha-${minha}">Quando aliviar: protocolo leve da sua trilha</a>`;
@@ -519,7 +617,7 @@
     tela.innerHTML = `
       <span class="etiqueta">Alívio Express</span>
       <h1 style="margin-top:8px">Doeu agora? Monte seu alívio</h1>
-      <p class="pequeno"><a href="#alivio">← Central de Alívio</a></p>
+      <p class="pequeno"><a href="#alivio">← Central</a></p>
       <p class="suave">Três toques e o protocolo cabe no tempo que você tem, aí mesmo onde você está.</p>
 
       <div class="cartao">
@@ -552,7 +650,7 @@
     };
   }
 
-  function executarProtocolo(prot, reg) {
+  function executarProtocolo(prot, reg, aoConcluir) {
     const passos = prot.passos;
     let k = 0, restante = passos[0].segundos, rodando = false;
     const total = passos.reduce((s, x) => s + x.segundos, 0);
@@ -596,6 +694,7 @@
     function concluir() {
       pararTimer();
       reg.pausas++; reg.alivios = (reg.alivios || 0) + 1; salvar(); ultimaPausa = Date.now();
+      if (aoConcluir) aoConcluir();
       tela.innerHTML = `<div class="centro">
         <h1>✓ Alívio feito</h1>
         <p>Conta como pausa de hoje: ${reg.pausas} pausa(s).</p>
@@ -770,7 +869,7 @@
       </div>
       <h3 style="margin-top:20px">Incluídos no seu acesso</h3>
       <a class="cartao trilha-card" href="#seguranca"><span style="font-size:1.5rem">🛡️</span><span><strong>${D.BONUS_INCLUSOS.seguranca.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.seguranca.promessa}</span></span></a>
-      <a class="cartao trilha-card" href="#socorro"><span style="font-size:1.5rem">🚨</span><span><strong>${D.BONUS_INCLUSOS.socorro.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.socorro.promessa}</span></span></a>
+      <a class="cartao trilha-card" href="#checklist"><span style="font-size:1.5rem">📋</span><span><strong>${D.BONUS_INCLUSOS.checklist.nome}</strong><br><span class="pequeno suave">${D.BONUS_INCLUSOS.checklist.promessa}</span></span></a>
       <h3 style="margin-top:20px">Adicionais</h3>
       ${bumps.map((b) => estado.compras[b.id] ? `
         <div class="cartao"><span class="etiqueta">Liberado</span><h3 style="margin-top:8px">${b.nome}</h3><p class="pequeno">${b.descricao}</p>

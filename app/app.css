@@ -74,3 +74,5 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .alerta-emergencia { border: 2px solid var(--cor-vermelho); }
 .plano-socorro { display: flex; gap: 12px; align-items: flex-start; }
 .plano-socorro .etiqueta { flex-shrink: 0; }
+.modulo-titulo { margin-top: 28px; font-size: 1.2rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.habito summary { cursor: pointer; }

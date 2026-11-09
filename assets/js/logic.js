@@ -19,9 +19,9 @@
   ];
 
   const ROTINAS_TRABALHO = [
-    { id: "escritorio", texto: "Computador, reuniões, cadeira o dia inteiro", emoji: "💻" },
-    { id: "repetitivo", texto: "Movimento repetitivo: caixa, produção, costura, digitação, salão, consultório", emoji: "🔁" },
-    { id: "motorista", texto: "Motorista ou longas horas em pé ou sentado sem pausa", emoji: "🚗" }
+    { id: "escritorio", texto: "Trabalho sentado: computador, reuniões, volante", emoji: "💻" },
+    { id: "em_pe", texto: "Trabalho de pé: balcão, loja, salão, atendimento", emoji: "🧍" },
+    { id: "repetitivo", texto: "Faço esforço repetitivo: digitação intensa, produção, costura, trabalho manual", emoji: "🔁" }
   ];
 
   function corDoSemaforo(sinais, intensidade) {
@@ -41,7 +41,7 @@
     };
   }
   function padraoPorRotina(rotina) {
-    return { escritorio: "pescoco", repetitivo: "punho", motorista: "lombar" }[rotina] || "pescoco";
+    return { escritorio: "pescoco", repetitivo: "punho", em_pe: "lombar" }[rotina] || "pescoco";
   }
 
   /* Plano do dia, a partir de: dia, noite, semáforo, dia caótico, perfil */
@@ -147,9 +147,9 @@
     { id: "reuniao", nome: "Em reunião ou atendimento", texto: "Só movimentos que ninguém percebe", emoji: "👀" }
   ];
   // Exercícios que pedem ficar em pé ou usar porta/parede
-  const SO_EM_PE = ["abertura-peito", "extensao-pe", "flexor-quadril", "sentar-levantar"];
+  const SO_EM_PE = ["abertura-peito", "extensao-pe", "flexor-quadril", "sentar-levantar", "alongamento-braco-parede", "panturrilha-parede"];
   // Regiões vizinhas, usadas para completar o tempo
-  const VIZINHAS = { pescoco: ["ombros"], ombros: ["pescoco", "punho"], punho: ["ombros"], lombar: ["pernas"], pernas: ["lombar", "joelhos"], joelhos: ["pernas"] };
+  const VIZINHAS = { pescoco: ["ombros"], ombros: ["pescoco", "punho"], punho: ["ombros"], lombar: ["pernas"], pernas: ["lombar", "joelhos"], joelhos: ["pernas", "pes"], pes: ["joelhos"] };
   const RESPIRA = { id: "respira", nome: "3 respirações profundas", passos: "Inspire pelo nariz, solte o ar devagar pela boca e deixe os ombros caírem a cada saída do ar.", resolve: "Tira o corpo do modo alerta" };
 
   const duracaoExercicio = (e) => (e.invisivel ? 30 : 40);

@@ -8,10 +8,11 @@
   const REGIOES = {
     pescoco: { nome: "Pescoço", emoji: "🦒", no: "no pescoço", para: "para o pescoço" },
     ombros:  { nome: "Ombros", emoji: "🎒", no: "nos ombros", para: "para os ombros" },
-    punho:   { nome: "Punho e mão", emoji: "✋", no: "no punho e na mão", para: "para o punho e a mão" },
-    lombar:  { nome: "Lombar", emoji: "🪑", no: "na lombar", para: "para a lombar" },
-    pernas:  { nome: "Quadril e pernas", emoji: "🚶", no: "no quadril e nas pernas", para: "para o quadril e as pernas" },
-    joelhos: { nome: "Joelhos", emoji: "🦵", no: "nos joelhos", para: "para os joelhos" }
+    punho:   { nome: "Braço, antebraço e punho", emoji: "💪", no: "no braço e no punho", para: "para o braço, o antebraço e o punho" },
+    lombar:  { nome: "Coluna e lombar", emoji: "🪑", no: "na coluna e na lombar", para: "para a coluna e a lombar" },
+    pernas:  { nome: "Quadril", emoji: "🚶", no: "no quadril", para: "para o quadril" },
+    joelhos: { nome: "Joelhos", emoji: "🦵", no: "nos joelhos", para: "para os joelhos" },
+    pes:     { nome: "Pés e tornozelos", emoji: "🦶", no: "nos pés", para: "para os pés e tornozelos" }
   };
 
   /* Biblioteca de exercícios (seção 10 do briefing).
@@ -41,6 +42,14 @@
     { id: "deslizamento-calcanhar", regiao: "joelhos", nome: "Deslizamento do calcanhar", resolve: "Joelho travado ao acordar", passos: "Deitado de barriga para cima, deslize o calcanhar em direção ao bumbum até onde não doer e volte. 10 vezes de cada lado.", chao: true },
     { id: "toalha-joelho", regiao: "joelhos", nome: "Toalha sob o joelho", resolve: "Força da coxa sem impacto", passos: "Sentado no chão ou na cama, toalha enrolada embaixo do joelho. Empurre o joelho contra a toalha por 5 segundos. 8 vezes de cada lado.", chao: true },
     { id: "abducao-lado", regiao: "joelhos", nome: "Abertura de perna deitado de lado", resolve: "Quadril fraco que sobrecarrega o joelho", passos: "Deitado de lado, perna de baixo dobrada. Suba a perna de cima esticada até a altura do quadril e desça devagar. 10 vezes de cada lado.", chao: true },
+    // Braço e antebraço
+    { id: "rotacao-antebraco", regiao: "punho", nome: "Giro de antebraço", resolve: "Antebraço duro de mouse e ferramenta", passos: "Cotovelos colados ao corpo e dobrados, gire as palmas para cima e para baixo, devagar. 15 vezes.", invisivel: true },
+    { id: "alongamento-braco-parede", regiao: "punho", nome: "Alongamento do braço na parede", resolve: "Braço e peito encurtados", passos: "Mão espalmada na parede na altura do ombro, braço esticado. Gire o corpo para o lado oposto até sentir uma tensão leve no braço. 20 segundos de cada lado." },
+    // Pés e tornozelos
+    { id: "circulos-tornozelo", regiao: "pes", nome: "Círculos de tornozelo", resolve: "Tornozelo duro e pé inchado", passos: "Com o pé no ar, desenhe círculos lentos com a ponta do pé. 10 para cada lado, nos dois pés.", invisivel: true },
+    { id: "rolar-garrafa", regiao: "pes", nome: "Rolar a sola na garrafa", resolve: "Sola do pé dolorida", passos: "Sentado, role a sola do pé descalço sobre uma garrafa de água, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé." },
+    { id: "dedos-toalha", regiao: "pes", nome: "Puxar a toalha com os dedos", resolve: "Pé fraco que cansa ao caminhar", passos: "Sentado, pé descalço sobre uma toalha no chão. Puxe a toalha para perto usando só os dedos. 3 vezes em cada pé." },
+    { id: "panturrilha-parede", regiao: "pes", nome: "Alongamento de panturrilha na parede", resolve: "Panturrilha dura que puxa o calcanhar", passos: "Mãos na parede, uma perna atrás esticada com o calcanhar no chão. Incline o corpo para frente até sentir a panturrilha. 20 segundos de cada lado." },
     // Cama e chão (protocolos matinal e noturno)
     { id: "joelhos-peito", regiao: "lombar", nome: "Joelhos ao peito", resolve: "Lombar travada ao acordar", passos: "Deitado, abrace os joelhos e balance o corpo de leve, de um lado para o outro.", chao: true },
     { id: "torcao-deitado", regiao: "lombar", nome: "Torção deitado", resolve: "Rigidez da coluna", passos: "Deitado, joelhos dobrados e juntos. Deixe os joelhos caírem para um lado e depois para o outro, devagar.", chao: true },
@@ -101,11 +110,11 @@
       como: "Pausas a cada troca de tarefa, foco em punho, mão e ombro, alongamento dos músculos opostos ao movimento.",
       dica: "Use cada troca de tarefa ou de cliente como gatilho da pausa."
     },
-    motorista: {
-      nome: "Motorista e Longas Jornadas",
-      paraQuem: "Aplicativo, entregas, atendimento em pé",
-      como: "Pausas em cada parada, foco em lombar, quadril e pernas, circulação.",
-      dica: "Cada parada (corrida, entrega, cliente) é uma chance de 2 minutos fora da posição."
+    em_pe: {
+      nome: "De Pé e Longas Jornadas",
+      paraQuem: "Balcão, loja, salão, atendimento, produção em pé",
+      como: "Pausas a cada troca de cliente ou tarefa, foco em lombar, quadril, joelhos e pés, circulação.",
+      dica: "Cada troca de cliente ou de tarefa é uma chance de tirar o peso das pernas por 1 minuto."
     }
   };
   const DIA_CAOTICO = {
@@ -194,58 +203,113 @@
      "respira" é a abertura padrão de 20 s.
      ========================================================= */
   const TRILHAS_ZONA = {
-    lombar: {
-      nome: "Descompressão da Lombar e Quadril",
-      paraQuem: "Para quem passa horas sentado ou de pé.",
-      regioes: ["lombar", "pernas"], emoji: "🪑"
-    },
     cervical: {
-      nome: "Destrava de Ombros, Cervical e Pescoço",
-      paraQuem: "Para quem acumula tensão do trabalho e da postura.",
+      nome: "Cervical, Ombros e Trapézio",
+      paraQuem: "Para a tensão acumulada pelo computador, pelo celular e pelo estresse.",
       regioes: ["pescoco", "ombros"], emoji: "🦒"
     },
-    joelhos: {
-      nome: "Estabilização e Alívio de Joelhos",
-      paraQuem: "Para quem sente impacto ao andar ou subir escadas.",
-      regioes: ["joelhos"], emoji: "🦵"
-    },
     punho: {
-      nome: "Alívio de Punho e Mão",
-      paraQuem: "Para quem vive no mouse, no teclado ou repetindo movimento com as mãos.",
-      regioes: ["punho"], emoji: "✋"
+      nome: "Braços, Antebraços e Punhos",
+      paraQuem: "Para quem sente dor por digitação, mouse ou trabalho manual repetitivo.",
+      regioes: ["punho"], emoji: "💪"
+    },
+    lombar: {
+      nome: "Coluna e Lombar",
+      paraQuem: "Descompressão para quem passa horas sentado ou de pé.",
+      regioes: ["lombar"], emoji: "🪑"
+    },
+    joelhos: {
+      nome: "Quadril, Joelhos e Pés",
+      paraQuem: "Para impacto nas articulações, travamentos e dor ao caminhar ou subir escadas.",
+      regioes: ["pernas", "joelhos", "pes"], emoji: "🦵"
     }
   };
   const trilhaDaRegiao = (regiao) =>
     Object.keys(TRILHAS_ZONA).find((k) => TRILHAS_ZONA[k].regioes.includes(regiao)) || "cervical";
 
+  /* Formatos. sos1 e sos3: Módulo 1 (SOS Alívio Imediato).
+     matinal e noturno: Bônus 2 (Checklist de Bolso, 3 min cada). */
   const FORMATOS = {
-    expediente: { nome: "Protocolo Express de Expediente", curto: "Expediente", min: 3, emoji: "💼", texto: "Movimentos discretos para fazer na cadeira do trabalho ou em pé no intervalo, sem trocar de roupa." },
-    matinal: { nome: "Protocolo Matinal de Destrava", curto: "Matinal", min: 5, emoji: "☀️", texto: "Para acordar sem a sensação de corpo pesado ou travado. Dá para fazer na cama." },
-    noturno: { nome: "Protocolo Noturno de Descompressão", curto: "Noturno", min: 5, emoji: "🌙", texto: "Para soltar a musculatura antes de dormir e ajudar o corpo a relaxar." }
+    sos1: { nome: "SOS Rápido", curto: "SOS rápido", min: 1, emoji: "⚡", texto: "Um ajuste discreto de 1 minuto, aí na cadeira, para apagar o incêndio." },
+    sos3: { nome: "SOS Completo", curto: "SOS completo", min: 3, emoji: "🧯", texto: "3 minutos de descompressão da região, na cadeira ou em pé no intervalo, sem trocar de roupa." },
+    matinal: { nome: "Checklist Matinal", curto: "Matinal", min: 3, emoji: "☀️", texto: "Para acordar sem a sensação de corpo pesado ou travado. Dá para fazer na cama." },
+    noturno: { nome: "Checklist Noturno", curto: "Noturno", min: 3, emoji: "🌙", texto: "Para soltar a musculatura antes de dormir e ajudar o corpo a relaxar." }
   };
 
   const PROTOCOLOS = {
-    lombar: {
-      expediente: [["respira", 20], ["inclinacao-pelve", 30], ["gato-vaca-sentado", 40], ["rotacao-tronco", 40], ["flexor-quadril", 30], ["panturrilha", 20]],
-      matinal: [["respira", 20], ["joelhos-peito", 50], ["torcao-deitado", 50], ["ponte-gluteo", 50], ["gato-vaca-4-apoios", 60], ["postura-crianca", 40], ["extensao-pe", 30]],
-      noturno: [["respiracao-4-6", 40], ["joelhos-peito", 50], ["figura-4", 60], ["torcao-deitado", 50], ["pernas-parede", 70], ["respiracao-4-6", 30]]
-    },
     cervical: {
-      expediente: [["respira", 20], ["retracao-queixo", 30], ["inclinacao-lateral", 30], ["encolher-ombros", 30], ["juncao-escapulas", 30], ["rotacao-pescoco", 40]],
-      matinal: [["respira", 20], ["espreguicar", 30], ["anjo-no-chao", 60], ["retracao-queixo", 40], ["rotacao-pescoco", 40], ["gato-vaca-4-apoios", 50], ["abertura-peito", 60]],
-      noturno: [["respiracao-4-6", 40], ["encolher-ombros", 30], ["inclinacao-lateral", 50], ["anjo-no-chao", 60], ["postura-crianca", 60], ["respiracao-4-6", 60]]
-    },
-    joelhos: {
-      expediente: [["respira", 20], ["bombinha-tornozelo", 30], ["isometria-quadriceps", 40], ["extensao-joelho-sentado", 40], ["alongamento-posterior-sentado", 30], ["panturrilha", 20]],
-      matinal: [["respira", 20], ["bombinha-tornozelo", 40], ["deslizamento-calcanhar", 60], ["toalha-joelho", 50], ["ponte-gluteo", 50], ["abducao-lado", 50], ["sentar-levantar", 30]],
-      noturno: [["respiracao-4-6", 40], ["alongamento-posterior-sentado", 50], ["figura-4", 60], ["pernas-parede", 70], ["bombinha-tornozelo", 40], ["respiracao-4-6", 40]]
+      sos1: [["respira", 20], ["retracao-queixo", 20], ["encolher-ombros", 20]],
+      sos3: [["respira", 20], ["retracao-queixo", 30], ["inclinacao-lateral", 30], ["encolher-ombros", 30], ["juncao-escapulas", 30], ["rotacao-pescoco", 40]],
+      matinal: [["respira", 20], ["espreguicar", 30], ["anjo-no-chao", 50], ["retracao-queixo", 30], ["rotacao-pescoco", 50]],
+      noturno: [["respiracao-4-6", 40], ["encolher-ombros", 30], ["inclinacao-lateral", 40], ["postura-crianca", 40], ["respiracao-4-6", 30]]
     },
     punho: {
-      expediente: [["respira", 20], ["abrir-fechar-mao", 30], ["deslizamento-tendoes", 40], ["flexores-extensores", 40], ["encolher-ombros", 20], ["juncao-escapulas", 30]],
-      matinal: [["respira", 20], ["espreguicar", 30], ["abrir-fechar-mao", 40], ["deslizamento-tendoes", 50], ["flexores-extensores", 60], ["abertura-peito", 50], ["encolher-ombros", 50]],
-      noturno: [["respiracao-4-6", 40], ["flexores-extensores", 60], ["deslizamento-tendoes", 50], ["encolher-ombros", 40], ["postura-crianca", 60], ["respiracao-4-6", 50]]
+      sos1: [["respira", 20], ["abrir-fechar-mao", 20], ["flexores-extensores", 20]],
+      sos3: [["respira", 20], ["abrir-fechar-mao", 30], ["deslizamento-tendoes", 30], ["flexores-extensores", 40], ["rotacao-antebraco", 30], ["alongamento-braco-parede", 30]],
+      matinal: [["respira", 20], ["espreguicar", 30], ["abrir-fechar-mao", 30], ["rotacao-antebraco", 30], ["deslizamento-tendoes", 40], ["encolher-ombros", 30]],
+      noturno: [["respiracao-4-6", 40], ["flexores-extensores", 50], ["deslizamento-tendoes", 40], ["postura-crianca", 30], ["respiracao-4-6", 20]]
+    },
+    lombar: {
+      sos1: [["respira", 20], ["inclinacao-pelve", 20], ["rotacao-tronco", 20]],
+      sos3: [["respira", 20], ["inclinacao-pelve", 30], ["gato-vaca-sentado", 40], ["rotacao-tronco", 40], ["flexor-quadril", 30], ["extensao-pe", 20]],
+      matinal: [["respira", 20], ["joelhos-peito", 40], ["torcao-deitado", 40], ["gato-vaca-4-apoios", 50], ["extensao-pe", 30]],
+      noturno: [["respiracao-4-6", 30], ["joelhos-peito", 40], ["torcao-deitado", 40], ["postura-crianca", 40], ["respiracao-4-6", 30]]
+    },
+    joelhos: {
+      sos1: [["respira", 20], ["bombinha-tornozelo", 20], ["isometria-quadriceps", 20]],
+      sos3: [["respira", 20], ["circulos-tornozelo", 30], ["isometria-quadriceps", 30], ["extensao-joelho-sentado", 30], ["rolar-garrafa", 30], ["alongamento-posterior-sentado", 40]],
+      matinal: [["respira", 20], ["bombinha-tornozelo", 30], ["deslizamento-calcanhar", 40], ["ponte-gluteo", 40], ["dedos-toalha", 30], ["sentar-levantar", 20]],
+      noturno: [["respiracao-4-6", 30], ["figura-4", 40], ["pernas-parede", 50], ["rolar-garrafa", 30], ["respiracao-4-6", 30]]
     }
   };
+
+  /* Módulo 2: Reprogramação de Hábitos e Postura Viciada.
+     Cada aula (1 a 3 min): o vício, o ajuste e um teste de 10 segundos. */
+  const HABITOS = [
+    { id: "sentar", titulo: "Como sentar sem esmagar a lombar", min: 2, rotinas: ["escritorio"], zonas: ["lombar"],
+      vicio: "Escorregar para a ponta da cadeira, cruzar as pernas e deixar a lombar sem apoio.",
+      ajuste: "Bumbum no fundo da cadeira, pés inteiros no chão (ou num apoio), joelhos na altura do quadril e uma toalha enrolada na curva da lombar.",
+      teste: "Respire fundo: se o ombro sobe para o ar entrar, você está afundado. Ajuste até a barriga encher sem esforço." },
+    { id: "mesa", titulo: "A mesa certa com o que você já tem", min: 3, rotinas: ["escritorio"], zonas: ["cervical", "punho"],
+      vicio: "Tela baixa, notebook na mesa e braço esticado até o mouse.",
+      ajuste: "Topo da tela na altura dos olhos (livros embaixo resolvem), tela a um braço de distância, cotovelos dobrados perto do corpo e mouse colado ao teclado.",
+      teste: "Olhando para frente, você enxerga o topo da tela sem levantar o queixo? Se não, suba a tela." },
+    { id: "celular", titulo: "Celular sem pescoço de texto", min: 1, rotinas: ["escritorio", "em_pe", "repetitivo"], zonas: ["cervical"],
+      vicio: "Cabeça dobrada para baixo olhando o celular na altura da cintura.",
+      ajuste: "Leve o celular até a altura do peito ou dos olhos e apoie o cotovelo no corpo ou na mesa. Quem desce são os olhos, não a cabeça.",
+      teste: "Encoste a parte de trás da cabeça numa parede: se ela sai da parede para ver a tela, o celular está baixo demais." },
+    { id: "teclado", titulo: "Mãos no teclado, no mouse e na ferramenta", min: 2, rotinas: ["escritorio", "repetitivo"], zonas: ["punho"],
+      vicio: "Punho dobrado para cima, apoiado na quina da mesa, e a mão apertando o mouse ou a ferramenta o dia inteiro.",
+      ajuste: "Punho reto, como uma continuação do antebraço, sem apoio duro embaixo enquanto digita. Pegada leve: só a força necessária.",
+      teste: "Solte a mão do mouse por 5 segundos: se os dedos ficam doloridos para abrir, você estava apertando demais." },
+    { id: "de-pe", titulo: "Como ficar de pé muitas horas", min: 2, rotinas: ["em_pe"], zonas: ["lombar", "joelhos"],
+      vicio: "Joelhos travados para trás e todo o peso jogado numa perna só.",
+      ajuste: "Joelhos levemente soltos, peso dividido nos dois pés e um pé apoiado num degrau ou caixote, trocando de lado a cada poucos minutos.",
+      teste: "Balance o corpo para frente e para trás sobre os pés: o ponto de equilíbrio é no meio do pé, não no calcanhar." },
+    { id: "caminhar", titulo: "Como caminhar sem castigar joelhos e pés", min: 2, rotinas: ["em_pe", "escritorio", "repetitivo"], zonas: ["joelhos"],
+      vicio: "Passadas longas batendo o calcanhar com força e calçado sem apoio.",
+      ajuste: "Passos um pouco menores, o pé rolando do calcanhar até os dedos, braços soltos. Calçado com sola que amortece.",
+      teste: "Escute seus passos: se fazem barulho de batida, encurte a passada até ficarem silenciosos." },
+    { id: "dormir", titulo: "Como dormir sem acordar travado", min: 3, rotinas: ["escritorio", "em_pe", "repetitivo"], zonas: ["cervical", "lombar", "joelhos"],
+      vicio: "Dormir de bruços com o pescoço virado ou com um travesseiro alto demais.",
+      ajuste: "De lado, travesseiro na altura do ombro e outro entre os joelhos. De barriga para cima, um travesseiro embaixo dos joelhos.",
+      teste: "Deitado de lado, peça para alguém olhar: o nariz deve ficar alinhado com o meio do peito, sem a cabeça cair ou subir." },
+    { id: "peso", titulo: "Pegar peso e carregar bolsa", min: 2, rotinas: ["em_pe", "repetitivo"], zonas: ["lombar", "cervical"],
+      vicio: "Dobrar a coluna para pegar algo do chão e carregar a bolsa sempre no mesmo ombro.",
+      ajuste: "Dobre os joelhos e traga o peso colado ao corpo. Mochila nas duas alças ou troque a bolsa de ombro a cada trajeto.",
+      teste: "Antes de levantar algo, pergunte: meu nariz está acima dos joelhos? Se está na frente deles, quem vai fazer força é a lombar." }
+  ];
+
+  /* Módulo 3: Lanches de Movimento (60 s, invisíveis no expediente) */
+  const SNACKS = [
+    { id: "s-pescoco", nome: "Lanche do pescoço", zona: "cervical", passos: [["retracao-queixo", 30], ["respiracao-4-6", 30]] },
+    { id: "s-ombros", nome: "Lanche dos ombros", zona: "cervical", passos: [["juncao-escapulas", 30], ["retracao-queixo", 30]] },
+    { id: "s-maos", nome: "Lanche das mãos e antebraços", zona: "punho", passos: [["abrir-fechar-mao", 30], ["rotacao-antebraco", 30]] },
+    { id: "s-lombar", nome: "Lanche da lombar", zona: "lombar", passos: [["inclinacao-pelve", 30], ["respiracao-4-6", 30]] },
+    { id: "s-joelhos", nome: "Lanche dos joelhos", zona: "joelhos", passos: [["isometria-quadriceps", 30], ["bombinha-tornozelo", 30]] },
+    { id: "s-pes", nome: "Lanche dos pés e da circulação", zona: "joelhos", passos: [["circulos-tornozelo", 30], ["panturrilha", 30]] },
+    { id: "s-olhos", nome: "Lanche dos olhos e da mente", zona: null, passos: [["regra-20-20-20", 20], ["respiracao-4-6", 40]] }
+  ];
 
   /* Bônus incluídos no produto principal (matam o medo de errar) */
   const BONUS_INCLUSOS = {
@@ -269,9 +333,14 @@
         ["Ficar dias parado esperando passar", "Na maioria das dores comuns, o repouso total aumenta a rigidez. Mexa-se de leve, dentro do que não dói."]
       ]
     },
+    checklist: {
+      nome: "Checklist de Bolso Matinal e Noturno",
+      formato: "3 min cada",
+      promessa: "Rotina rápida ao acordar e antes de dormir, montada para a sua zona de dor. Acaba com a desculpa da falta de tempo."
+    },
     socorro: {
-      nome: "Guia de Socorro para Crises Agudas",
-      formato: "Guia passo a passo",
+      nome: "Guia de Crise: travou agora",
+      formato: "Módulo 1 · SOS",
       promessa: "O que fazer quando a coluna, o pescoço ou o joelho travar no meio do dia.",
       passos: [
         ["Pare e respire", "Faça 1 minuto de Respiração 4-6. O susto contrai ainda mais o músculo."],
@@ -281,10 +350,10 @@
         ["Volte a se mexer aos poucos", "Ainda no mesmo dia, caminhe alguns passos a cada hora. Para levantar da cama com a lombar travada, role de lado e empurre com os braços."]
       ],
       posicoes: {
-        lombar: "Deitado de barriga para cima com as pernas apoiadas numa cadeira (joelhos dobrados), ou de lado com um travesseiro entre os joelhos.",
         cervical: "Sentado com as costas e a cabeça apoiadas, braços apoiados nas coxas ou numa almofada. Deitado, use um travesseiro baixo.",
-        joelhos: "Sentado com a perna esticada e apoiada, sem nada embaixo do joelho que o deixe dobrado por muito tempo.",
-        punho: "Antebraço apoiado na mesa, punho reto e solto, mão relaxada. Evite mouse e celular por alguns minutos."
+        punho: "Antebraço apoiado na mesa, punho reto e solto, mão relaxada. Evite mouse, celular e ferramenta por alguns minutos.",
+        lombar: "Deitado de barriga para cima com as pernas apoiadas numa cadeira (joelhos dobrados), ou de lado com um travesseiro entre os joelhos.",
+        joelhos: "Sentado com a perna esticada e apoiada, sem nada embaixo do joelho que o deixe dobrado por muito tempo. Para o pé: descalço, com o pé um pouco elevado."
       },
       alertas: [
         "A dor começou depois de uma queda, batida ou acidente",
@@ -301,6 +370,6 @@
   window.RELIGAR_DADOS = {
     REGIOES, EXERCICIOS, ex, ROTINAS, OS_3_RS, TRILHAS, DIA_CAOTICO,
     SEMAFORO, DIAS, SEMANAS, REVISOES, AULAS, BONUS, PDFS,
-    TRILHAS_ZONA, trilhaDaRegiao, FORMATOS, PROTOCOLOS, BONUS_INCLUSOS
+    TRILHAS_ZONA, trilhaDaRegiao, FORMATOS, PROTOCOLOS, BONUS_INCLUSOS, HABITOS, SNACKS
   };
 })();
