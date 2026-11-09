@@ -227,6 +227,7 @@ function stepDataHora() {
           <span>${DIAS_CURTO[dt.getDay()]}</span><strong>${dt.getDate()}</strong><span>${MESES[dt.getMonth()]}</span>
         </button>`; }).join("")}
     </div>
+    ${AGENDA_OFFLINE && lista ? `<p class="offline-note">Sem conexão com a agenda online agora. Pode escolher o horário normalmente: a gente guarda e envia pro barbeiro assim que a conexão voltar.</p>` : ""}
     <h3 class="wiz-title">Horário <span class="muted">· ${DIAS[dia.getDay()]} das ${h[0]} às ${h[1]} · seu atendimento dura ${dur(d)}</span></h3>
     ${!lista ? `<p class="empty" id="times-load">Carregando horários livres…</p>` : livres.length ? `<div class="times">
       ${lista.map((s) => `<button class="time-btn${state.hora === s.min ? " is-active" : ""}" data-hora="${s.min}" ${s.livres.length ? "" : "disabled"}>${fromMin(s.min)}</button>`).join("")}
@@ -266,7 +267,8 @@ function stepSucesso() {
   return `
     <div class="success">
       <div class="success-ico">✓</div>
-      <h3>Horário confirmado!</h3>
+      <h3>${b.pendente ? "Pedido guardado!" : "Horário confirmado!"}</h3>
+      ${b.pendente ? `<p class="offline-note">Estamos sem conexão com a agenda agora. Seu pedido fica salvo neste celular e é enviado sozinho ao barbeiro quando a internet voltar. Abra o site de novo mais tarde para garantir.</p>` : ""}
       <p><strong>${DIAS[dia.getDay()]}, ${dia.getDate()} de ${MESES[dia.getMonth()]} às ${fromMin(b.inicio)}</strong></p>
       <p>${esc(b.servicos.map((id) => servById[id].nome).join(" + "))} com <strong>${esc(barberById[b.barbeiro].nome)}</strong></p>
       <p class="muted">${dur(b.fim - b.inicio)} · ${brl(b.preco)} · ${esc(SHOP.endereco)}</p>

@@ -1041,3 +1041,6 @@ html.is-loading body { overflow: hidden; }
 .tab-n { display: inline-grid; place-items: center; min-width: 1.3em; height: 1.3em; margin-left: .3em; border-radius: 999px; background: var(--accent-2); color: var(--accent-ink); font-size: .72em; }
 .tab.is-active .tab-n { background: var(--bg); color: var(--text); }
 #times-load .btn { margin-top: .8rem; }
+
+.offline-note { margin: 0 0 1rem; padding: .75rem 1rem; border-radius: 10px; border: 1px dashed rgba(232,204,138,.5); background: rgba(201,162,90,.08); color: #e9d3a1; font-size: .85rem; line-height: 1.45; }
+.success .offline-note { text-align: left; }

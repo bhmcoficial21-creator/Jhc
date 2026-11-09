@@ -10,7 +10,7 @@ function cartaoAg(b, futuro) {
       <div class="pf-date"><span>${DIAS_CURTO[d.getDay()]}</span><strong>${d.getDate()}</strong><span>${MESES[d.getMonth()]}</span></div>
       <div class="pf-info">
         <strong>${fromMin(b.inicio)} · ${esc(servNomes(b))}</strong>
-        <span class="muted">com ${esc(barberById[b.barbeiro]?.nome || "")} · ${brl(b.preco)} · ${ROTULO[b.status]}</span>
+        <span class="muted">com ${esc(barberById[b.barbeiro]?.nome || "")} · ${brl(b.preco)} · ${b.pendente ? (b.falhou === "ocupado" ? "Horário já ocupado, escolha outro" : "Aguardando conexão para enviar") : ROTULO[b.status]}</span>
         ${futuro && b.status === "confirmado" ? `<div class="pf-actions"><button data-ics="${b.id}">Adicionar ao calendário</button><button data-cancelar="${b.id}" class="danger">Cancelar</button></div>` : ""}
         ${!futuro ? `<div class="pf-actions"><button data-repetir="${b.id}">Agendar de novo</button></div>` : ""}
       </div>
@@ -66,6 +66,7 @@ document.addEventListener("click", async (e) => {
 
 (async function iniciar() {
   render();
+  await sincronizarFila().catch(() => {});
   try { meus = await meusAgendamentos(); } catch { $("#proximos").innerHTML = `<p class="empty">Não foi possível carregar agora. Verifique a internet.</p>`; return; }
   render();
   ouvirAgendamentos(async () => { try { meus = await meusAgendamentos(); render(); } catch {} });

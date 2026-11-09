@@ -63,12 +63,22 @@ async function atualizarPerfil(patch) {
   AUTH.perfil = data; return usuarioAtual();
 }
 
-/* horários ocupados de um dia (sem dados pessoais) */
+/* horários ocupados de um dia (sem dados pessoais).
+   Se a agenda online não responder em 6s, os horários aparecem mesmo assim (modo sem conexão). */
 const OCUPADOS = {};
+let AGENDA_OFFLINE = false;
+const comPrazo = (promessa, ms) => Promise.race([promessa, new Promise((_, n) => setTimeout(() => n(new Error("tempo_esgotado")), ms))]);
 async function buscarOcupados(dia) {
-  const { data, error } = await SB.rpc("horarios_ocupados", { dia });
-  if (error) throw error;
-  OCUPADOS[dia] = data.map((r) => ({ barbeiro: r.barbeiro_id, inicio: r.inicio, fim: r.fim }));
+  try {
+    const { data, error } = await comPrazo(SB.rpc("horarios_ocupados", { dia }), 6000);
+    if (error) throw error;
+    AGENDA_OFFLINE = false;
+    OCUPADOS[dia] = data.map((r) => ({ barbeiro: r.barbeiro_id, inicio: r.inicio, fim: r.fim }));
+  } catch {
+    AGENDA_OFFLINE = true;
+    const fila = store.get(FILA_KEY, []);   // ao menos não deixa marcar em cima de um pedido já guardado aqui
+    OCUPADOS[dia] = fila.filter((f) => f.data === dia).map((f) => ({ barbeiro: f.barbeiro, inicio: f.inicio, fim: f.fim }));
+  }
   return OCUPADOS[dia];
 }
 const barberFree = (barberId, dia, ini, fim) => !(OCUPADOS[dia] || []).some((b) => b.barbeiro === barberId && ini < b.fim && fim > b.inicio);
@@ -79,14 +89,16 @@ const minhasChaves = () => store.get(MEUS_KEY, []);
 const meusDados = () => store.get(EU_KEY, { nome: "", tel: "" });
 const salvarMeusDados = (d) => store.set(EU_KEY, { ...meusDados(), ...d });
 
-async function criarAgendamento(b) {
-  const { data, error } = await SB.rpc("agendar", {
+const FILA_KEY = "barbeskin:fila";      // pedidos guardados quando a agenda online não respondeu
+const ehErroDeRede = (e) => !e || !e.code || /fetch|network|tempo_esgotado|Load failed/i.test(e.message || "");
+
+async function enviarAgendamento(b) {
+  const { data, error } = await comPrazo(SB.rpc("agendar", {
     p_barbeiro: b.barbeiro, p_data: b.data, p_inicio: b.inicio, p_fim: b.fim, p_servicos: b.servicos, p_preco: b.preco,
     p_nome: b.nome, p_tel: b.tel, p_cabelo: b.cabelo || "", p_obs: b.obs || "",
-  });
+  }), 10000);
   if (error) {
-    const m = error.message || "";
-    const e = new Error(m);
+    const m = error.message || "", e = new Error(m); e.code = error.code;
     if (error.code === "23P01") e.ocupado = true;
     if (m.includes("limite_atingido")) e.limite = true;
     throw e;
@@ -95,14 +107,40 @@ async function criarAgendamento(b) {
   store.set(MEUS_KEY, [...minhasChaves().filter((x) => x.id !== r.id), { id: r.id, chave: r.chave }].slice(-30));
   return { ...b, id: r.id, status: "confirmado", criadoEm: new Date().toISOString() };
 }
+async function criarAgendamento(b) {
+  try { return await enviarAgendamento(b); }
+  catch (e) {
+    if (e.ocupado || e.limite || !ehErroDeRede(e)) throw e;
+    // sem conexão com a agenda: guarda no celular e envia sozinho depois
+    const item = { ...b, id: "fila-" + Date.now().toString(36), status: "confirmado", pendente: true, criadoEm: new Date().toISOString() };
+    store.set(FILA_KEY, [...store.get(FILA_KEY, []), item]);
+    return item;
+  }
+}
+let sincronizando = false;
+async function sincronizarFila() {
+  if (sincronizando) return; sincronizando = true;
+  try {
+    for (const item of store.get(FILA_KEY, [])) {
+      try { await enviarAgendamento(item); }
+      catch (e) { if (ehErroDeRede(e)) break; item.falhou = e.ocupado ? "ocupado" : "erro"; store.set(FILA_KEY, store.get(FILA_KEY, []).map((x) => x.id === item.id ? item : x)); continue; }
+      store.set(FILA_KEY, store.get(FILA_KEY, []).filter((x) => x.id !== item.id));
+    }
+  } finally { sincronizando = false; }
+}
+addEventListener("online", sincronizarFila);
+setTimeout(sincronizarFila, 1500);
 async function meusAgendamentos() {
-  const itens = minhasChaves(); if (!itens.length) return [];
+  const fila = store.get(FILA_KEY, []).map((f) => ({ ...f, status: f.falhou === "ocupado" ? "cancelado" : f.status }));
+  const itens = minhasChaves(); if (!itens.length) return fila;
   const { data, error } = await SB.rpc("meus_horarios", { p_itens: itens });
   if (error) throw error;
-  return data.map((r) => ({ id: r.id, barbeiro: r.barbeiro_id, data: r.data, inicio: r.inicio, fim: r.fim, servicos: r.servicos,
-    preco: Number(r.preco), nome: r.nome, status: r.status, criadoEm: r.criado_em }));
+  return [...data.map((r) => ({ id: r.id, barbeiro: r.barbeiro_id, data: r.data, inicio: r.inicio, fim: r.fim, servicos: r.servicos,
+    preco: Number(r.preco), nome: r.nome, status: r.status, criadoEm: r.criado_em })), ...fila]
+    .sort((x, y) => (x.data + fromMin(x.inicio)).localeCompare(y.data + fromMin(y.inicio)));
 }
 async function cancelarMeuHorario(id) {
+  if (String(id).startsWith("fila-")) { store.set(FILA_KEY, store.get(FILA_KEY, []).filter((x) => x.id !== id)); return true; }
   const it = minhasChaves().find((x) => x.id === id); if (!it) return false;
   const { data, error } = await SB.rpc("cancelar_horario", { p_id: id, p_chave: it.chave });
   if (error) throw error;
