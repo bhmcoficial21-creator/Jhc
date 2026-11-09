@@ -60,8 +60,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 
 @media print {
   body * { visibility: hidden; }
-  .certificado, .certificado * { visibility: visible; }
-  .certificado { position: absolute; left: 0; top: 0; width: 100%; }
+  .certificado, .certificado *, .imprimivel, .imprimivel * { visibility: visible; }
+  .certificado, .imprimivel { position: absolute; left: 0; top: 0; width: 100%; }
 }
 
 #ae-video .video-placeholder { max-height: 220px; }
@@ -95,3 +95,10 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .tabela-semanas th { white-space: normal; }
 .tabela-semanas td, .tabela-semanas th { padding-left: 4px; padding-right: 4px; }
 .tabela-semanas tr.futuro td { color: var(--cor-texto-suave); }
+.campo { display: block; width: 100%; margin: 4px 0 12px; padding: 10px 12px; border: 1px solid var(--cor-borda); border-radius: 8px; font: inherit; background: var(--cor-superficie); color: var(--cor-texto); }
+textarea.campo { resize: vertical; }
+.remedio-linha { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--cor-borda); }
+.fotos-medico { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.foto-medico img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; cursor: zoom-in; display: block; }
+.foto-medico .botao-voz { width: 100%; margin-top: 4px; }
+.medico-cartao { border: 2px solid var(--cor-primaria); }

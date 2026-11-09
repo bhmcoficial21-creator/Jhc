@@ -52,6 +52,10 @@ Depois abra no navegador (de preferência no modo celular):
 
 **Guia por voz:** todos os protocolos, lanches e a pausa de 2 min são conduzidos por voz (voz do próprio celular, grátis) e vibração na troca de passo. Botão para alternar para "só vibração".
 
+**Orientações do médico** (Mais → 🩺): a pessoa registra se foi liberada para exercícios, as regiões a evitar, o diagnóstico, as orientações, os remédios com horários, a próxima consulta e até 3 fotos do relatório ou da receita. O painel troca os exercícios das regiões bloqueadas por respiração (ou todos, se ainda não liberou), lembra os remédios no horário (só lembra, nunca muda dose), avisa a consulta e gera o **Relatório para levar ao médico** com a evolução.
+
+**Ilustrações:** prompts dos 36 exercícios em `docs/prompts-ilustracoes.md` (boneco cinza, região em vermelho). Feitas: retração do queixo, encolher os ombros. A rotação de tronco precisa ser refeita em vermelho.
+
 **Painel do desafio:**
 - Boas-vindas e Mapa da Dor (região de foco, trilha, Escala da Dor do dia 1, horário de trabalho)
 - Hoje: "Como foi sua noite?" → semáforo do dia → plano ajustado, vídeo do dia, contador de pausas, tarefa, Tripé Religar, avaliação diária, revisão (dias 1, 3, 7, 14, 21, 30), dia caótico, check do dia

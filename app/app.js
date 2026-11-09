@@ -44,7 +44,7 @@
   const diasFeitos = () => Object.values(estado.dias).filter((d) => d.feito).length;
 
   /* ---------- Roteamento ---------- */
-  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, habitos, snacks, checklist, invisiveis, lembretes, progresso, aulas, bonus, final, mais };
+  const ROTAS = { boasvindas, hoje, pausa, alivio: central, montar: alivio, seguranca, socorro, habitos, snacks, checklist, invisiveis, lembretes, progresso, aulas, bonus, final, mais, medico: telaMedico, "relatorio-medico": relatorioMedico };
   function navegar() {
     pararTimer();
     let rota = (location.hash || "#hoje").slice(1);
@@ -52,7 +52,7 @@
     if (rota === "hoje" && diaAtual() > TOTAL) rota = "final";
     if (rota.startsWith("trilha-") && D.TRILHAS_ZONA[rota.slice(7)]) trilha(rota.slice(7));
     else (ROTAS[rota] || hoje)();
-    const aba = rota.startsWith("trilha-") || ["montar", "seguranca", "socorro", "habitos", "snacks", "checklist"].includes(rota) ? "alivio" : rota;
+    const aba = ["medico", "relatorio-medico"].includes(rota) ? "mais" : rota.startsWith("trilha-") || ["montar", "seguranca", "socorro", "habitos", "snacks", "checklist"].includes(rota) ? "alivio" : rota;
     $$("#nav a").forEach((a) => a.classList.toggle("ativo", a.dataset.r === aba));
     $("#nav").classList.toggle("oculto", rota === "boasvindas");
     $("#botao-estranho").classList.toggle("oculto", rota === "boasvindas");
@@ -199,7 +199,9 @@
       return;
     }
 
-    const plano = L.planoDoDia({ dia: n, noite: reg.noite, semaforo: reg.semaforo, caotico: reg.caotico, perfil: estado.perfil });
+    const plano = L.planoDoDia({ dia: n, noite: reg.noite, semaforo: semaforoMedico(reg, estado.perfil.regiaoFoco), caotico: reg.caotico, perfil: estado.perfil });
+    const motivoMedico = bloqueadoPeloMedico(estado.perfil.regiaoFoco);
+    if (motivoMedico) plano.avisos[0] = motivoMedico;
     const pctPausas = Math.min(100, Math.round((reg.pausas / plano.metaPausas) * 100));
     reg.avaliacao = reg.avaliacao || { dor: null, trava: null, remedio: null };
     if (n === 1 && reg.avaliacao.dor === null && estado.inicial) reg.avaliacao = { dor: estado.inicial.dor, trava: estado.inicial.trava, remedio: estado.inicial.remedio };
@@ -263,7 +265,7 @@
         <div class="escala-legenda"><span>Nenhuma</span><span>Insuportável</span></div>
         <p class="pequeno" style="margin:14px 0 6px"><strong>2. Quanto o corpo travou hoje?</strong></p>
         <div class="av-opcoes" id="av-trava">${D.AVALIACAO.trava.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.trava === v}">${t}</button>`).join("")}</div>
-        <p class="pequeno" style="margin:14px 0 6px"><strong>3. Precisou de remédio para dor hoje?</strong></p>
+        <p class="pequeno" style="margin:14px 0 6px"><strong>3. ${remediosHoje().length ? "Precisou de remédio para dor além do que o médico receitou?" : "Precisou de remédio para dor hoje?"}</strong></p>
         <div class="av-opcoes" id="av-remedio">${D.AVALIACAO.remedio.map(([v, t]) => `<button class="opcao" data-v="${v}" aria-pressed="${av.remedio === v}">${t}</button>`).join("")}</div>
         ${avaliacaoOk ? resumoComparacao(n) : ""}
         ${avaliacaoOk && ![7, 14, 21, 30].includes(n) ? `<div class="av-mini">${graficoSemanal()}<p class="pequeno" style="margin:6px 0 0"><a href="#progresso">ver a evolução completa</a></p></div>` : ""}
@@ -271,6 +273,8 @@
       ${avaliacaoOk ? relatorioSemana(n) : ""}
 
       ${D.REVISOES[n] ? renderRevisao(n, reg) : ""}
+
+      ${cartoesMedicoHoje(reg)}
 
       <div class="cartao">
         <label class="check-linha"><input type="checkbox" class="check" id="caotico" ${reg.caotico ? "checked" : ""}>
@@ -288,6 +292,7 @@
     $("#pausa-manual").onclick = (e) => { e.preventDefault(); reg.pausas++; salvar(); hoje(); };
     $("#tarefa").onchange = (e) => { reg.tarefa = e.target.checked; salvar(); };
     $("#caotico").onchange = (e) => { reg.caotico = e.target.checked; salvar(); hoje(); };
+    $$("[data-rem]").forEach((c) => c.onchange = () => { reg.remediosTomados = reg.remediosTomados || {}; reg.remediosTomados[c.dataset.rem] = c.checked; salvar(); });
     $$("[data-pilar]").forEach((c) => c.onchange = () => { reg.pilares[c.dataset.pilar] = c.checked; salvar(); });
     const responder = (campo, valor) => {
       av[campo] = valor;
@@ -400,7 +405,7 @@
   function pausa() {
     const n = Math.min(diaAtual(), TOTAL);
     const reg = registroDia(n);
-    const vermelho = reg.semaforo === "vermelho";
+    const vermelho = semaforoMedico(reg, estado.perfil.regiaoFoco) === "vermelho";
     const exercicio = L.exercicioRemexe(estado.perfil.regiaoFoco, reg.pausas);
     const etapas = D.OS_3_RS.map((r, i) => {
       if (i === 2 && vermelho) return { ...r, nome: "Respira mais", texto: "Semáforo vermelho: sem exercícios da região. Continue respirando devagar e mexa suavemente o resto do corpo." };
@@ -528,7 +533,7 @@
       </div>`;
   }
   function ligarProtocolos(reg, aoConcluir) {
-    $$("[data-f]").forEach((b) => b.onclick = () => executarProtocolo(L.protocoloDaTrilha(b.dataset.t, b.dataset.f, reg.semaforo), reg, aoConcluir && (() => aoConcluir(b.dataset.f))));
+    $$("[data-f]").forEach((b) => b.onclick = () => executarProtocolo(aplicarMedico(L.protocoloDaTrilha(b.dataset.t, b.dataset.f, semaforoMedico(reg, D.TRILHAS_ZONA[b.dataset.t].regioes[0]))), reg, aoConcluir && (() => aoConcluir(b.dataset.f))));
   }
 
   function trilha(id) {
@@ -588,8 +593,10 @@
         </div>`).join("")}`;
     $$("[data-s]").forEach((b) => b.onclick = () => {
       const s = D.SNACKS.find((x) => x.id === b.dataset.s);
-      executarProtocolo({ titulo: `Lanche de Movimento · 60 s`, minutos: 1, regiao: estado.perfil.regiaoFoco, trilha: s.zona || D.trilhaDaRegiao(estado.perfil.regiaoFoco), aviso: null,
-        passos: s.passos.map(([id, seg]) => ({ ...D.ex(id), segundos: seg })) }, reg, () => { reg.lanches = (reg.lanches || 0) + 1; salvar(); });
+      const regiao = s.zona ? D.TRILHAS_ZONA[s.zona].regioes[0] : estado.perfil.regiaoFoco;
+      const motivo = bloqueadoPeloMedico(regiao);
+      executarProtocolo({ titulo: `Lanche de Movimento · 60 s`, minutos: 1, regiao, trilha: s.zona || D.trilhaDaRegiao(estado.perfil.regiaoFoco), aviso: motivo,
+        passos: motivo ? [{ ...D.ex("respiracao-4-6"), segundos: 60 }] : s.passos.map(([id, seg]) => ({ ...D.ex(id), segundos: seg })) }, reg, () => { reg.lanches = (reg.lanches || 0) + 1; salvar(); });
     });
   }
 
@@ -712,7 +719,7 @@
     grupo("#ae-local", "local");
     $("#ae-ok").onclick = () => {
       p.tempoLivre = esc.minutos; p.localPadrao = esc.local; salvar();
-      executarProtocolo(L.montarProtocolo({ ...esc, semaforo: reg.semaforo }), reg);
+      executarProtocolo(aplicarMedico(L.montarProtocolo({ ...esc, semaforo: semaforoMedico(reg, esc.regiao) })), reg);
     };
   }
 
@@ -879,7 +886,259 @@
     }
   }
   setInterval(verificarLembrete, 30000);
+
+  const remediosAvisados = new Set();
+  function verificarRemedios() {
+    if (!estado.perfil) return;
+    const agora = new Date();
+    const hhmm = String(agora.getHours()).padStart(2, "0") + ":" + String(agora.getMinutes()).padStart(2, "0");
+    remediosHoje().filter((r) => r.hora === hhmm && !remediosAvisados.has(hojeISO() + r.chave)).forEach((r) => {
+      remediosAvisados.add(hojeISO() + r.chave);
+      const banner = $("#lembrete-banner");
+      banner.innerHTML = `💊 Hora do remédio: <strong>${r.nome}</strong>${r.dose ? ` (${r.dose})` : ""}. <a href="#hoje">Marcar como tomado</a>`;
+      banner.classList.remove("oculto");
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Hora do remédio", { body: `${r.nome}${r.dose ? ` · ${r.dose}` : ""}`, icon: "../assets/img/icone.svg" });
+      }
+      voz.vibrar([200, 100, 200]);
+    });
+  }
+  setInterval(verificarRemedios, 20000);
   window.addEventListener("hashchange", () => { if (location.hash === "#pausa") $("#lembrete-banner").classList.add("oculto"); });
+
+  /* =========================================================
+     ORIENTAÇÕES DO MÉDICO
+     A pessoa registra o que o médico orientou. O painel:
+     - bloqueia exercícios das regiões que o médico pediu para evitar
+       (ou todos, se ainda não liberou);
+     - lembra os horários dos remédios receitados (só lembra, nunca muda dose);
+     - avisa a próxima consulta e gera o relatório para levar ao médico.
+     ========================================================= */
+  const medico = () => estado.medico || null;
+  function bloqueadoPeloMedico(regiao) {
+    const m = medico();
+    if (!m) return null;
+    if (m.liberado === "nao") return "Seu médico ainda não liberou exercícios. Por enquanto, aqui fica só a respiração.";
+    const zona = D.trilhaDaRegiao(regiao);
+    if (m.liberado === "restricoes" && (m.evitar || []).some((r) => r === regiao || D.trilhaDaRegiao(r) === zona)) {
+      return `Seu médico pediu para evitar exercícios ${(D.REGIOES[regiao] || {}).no || "nesta região"}. Aqui fica só a respiração.`;
+    }
+    return null;
+  }
+  const semaforoMedico = (reg, regiao) => (bloqueadoPeloMedico(regiao) ? "vermelho" : reg.semaforo);
+  function aplicarMedico(prot) {
+    const motivo = bloqueadoPeloMedico(prot.regiao);
+    if (motivo) prot.aviso = motivo;
+    return prot;
+  }
+  function remediosHoje() {
+    const m = medico();
+    if (!m || !m.remedios) return [];
+    const hoje = hojeISO();
+    const lista = [];
+    m.remedios.filter((r) => !r.ate || r.ate >= hoje).forEach((r, i) => {
+      (r.horarios.length ? r.horarios : [""]).forEach((h) => lista.push({ chave: `${i}@${h}`, nome: r.nome, dose: r.dose, hora: h }));
+    });
+    return lista.sort((a, b) => (a.hora || "99").localeCompare(b.hora || "99"));
+  }
+  function diasAteConsulta() {
+    const m = medico();
+    if (!m || !m.proximaConsulta) return null;
+    return Math.round((new Date(m.proximaConsulta + "T00:00:00") - new Date(hojeISO() + "T00:00:00")) / 86400000);
+  }
+
+  function cartoesMedicoHoje(reg) {
+    const m = medico();
+    const partes = [];
+    const dias = diasAteConsulta();
+    if (dias !== null && dias >= 0 && dias <= 3) {
+      partes.push(`<div class="cartao medico-cartao">
+        <h3 style="margin:0 0 6px">🩺 Consulta ${dias === 0 ? "hoje" : dias === 1 ? "amanhã" : `em ${dias} dias`}</h3>
+        <p class="pequeno" style="margin:0 0 10px">Leve o seu relatório de evolução: dor por semana, dias sem remédio e o que você fez no desafio.</p>
+        <a class="botao botao-secundario botao-bloco" href="#relatorio-medico">Abrir relatório para o médico</a></div>`);
+    }
+    const rem = remediosHoje();
+    if (rem.length) {
+      const tomados = reg.remediosTomados || {};
+      partes.push(`<div class="cartao">
+        <h3 style="margin:0 0 4px">💊 Remédios de hoje</h3>
+        <p class="pequeno suave" style="margin:0 0 6px">Do jeito que o seu médico receitou. O painel só lembra, não muda nada.</p>
+        ${rem.map((r) => `<label class="check-linha"><input type="checkbox" class="check" data-rem="${r.chave}" ${tomados[r.chave] ? "checked" : ""}>
+          <span>${r.hora ? `<strong>${r.hora}</strong> · ` : ""}${r.nome}${r.dose ? ` <span class="pequeno suave">${r.dose}</span>` : ""}</span></label>`).join("")}
+      </div>`);
+    }
+    if (!m) {
+      partes.push(`<a class="cartao trilha-card" href="#medico"><span style="font-size:1.5rem">🩺</span>
+        <span><strong>Passou com o médico?</strong><br><span class="pequeno suave">Registre o que ele orientou: o painel se adapta e lembra os seus remédios.</span></span></a>`);
+    }
+    return partes.join("");
+  }
+
+  function telaMedico() {
+    const m = estado.medico = estado.medico || { liberado: null, evitar: [], diagnostico: "", orientacoes: "", remedios: [], proximaConsulta: "", profissional: "", fotos: [] };
+    const salvarM = () => { m.atualizadoEm = hojeISO(); salvar(); };
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#mais">← Mais</a></p>
+      <span class="etiqueta">Orientações do médico</span>
+      <h1 style="margin-top:8px">🩺 O que o seu médico orientou</h1>
+      <div class="aviso" style="margin-bottom:16px">O Religar não substitui o seu médico. Aqui você anota o que ele orientou para não esquecer e para o painel se adaptar ao seu caso. Nunca mude remédio ou dose por conta própria.</div>
+
+      <div class="cartao">
+        <h3>O médico liberou exercícios leves?</h3>
+        <div class="opcoes" id="md-liberado">
+          ${[["sim", "✅ Sim, estou liberado"], ["restricoes", "⚠️ Liberado, mas com restrições"], ["nao", "⛔ Ainda não liberou"]].map(([v, t]) =>
+            `<button class="opcao" data-v="${v}" aria-pressed="${m.liberado === v}">${t}</button>`).join("")}
+        </div>
+        ${m.liberado === "restricoes" ? `
+          <p class="pequeno" style="margin:14px 0 6px"><strong>Evitar exercícios em:</strong></p>
+          <div class="opcoes" id="md-evitar">${Object.entries(D.REGIOES).map(([id, r]) =>
+            `<button class="opcao" data-id="${id}" aria-pressed="${(m.evitar || []).includes(id)}"><span class="emoji">${r.emoji}</span>${r.nome}</button>`).join("")}</div>
+          <p class="pequeno suave" style="margin:8px 0 0">Nessas regiões o painel troca os exercícios por respiração.</p>` : ""}
+        ${m.liberado === "nao" ? `<p class="pequeno" style="margin:12px 0 0">Até a liberação, o painel deixa só respiração e pausas leves. As avaliações continuam, para você levar a evolução na próxima consulta.</p>` : ""}
+      </div>
+
+      <div class="cartao">
+        <h3>O que o médico disse</h3>
+        <label class="pequeno" for="md-diag"><strong>Diagnóstico ou o que foi encontrado</strong></label>
+        <textarea id="md-diag" class="campo" rows="2" placeholder="Ex.: tendinite no punho direito">${m.diagnostico || ""}</textarea>
+        <label class="pequeno" for="md-ori"><strong>Orientações</strong></label>
+        <textarea id="md-ori" class="campo" rows="3" placeholder="Ex.: gelo 15 minutos à noite, fisioterapia 2 vezes por semana, não carregar peso">${m.orientacoes || ""}</textarea>
+      </div>
+
+      <div class="cartao">
+        <h3>💊 Remédios receitados</h3>
+        ${(m.remedios || []).length ? m.remedios.map((r, i) => `
+          <div class="remedio-linha"><div><strong>${r.nome}</strong>${r.dose ? ` · ${r.dose}` : ""}<br>
+            <span class="pequeno suave">${r.horarios.length ? r.horarios.join(", ") : "sem horário fixo"}${r.ate ? ` · até ${r.ate.split("-").reverse().join("/")}` : ""}</span></div>
+            <button class="botao-voz" data-del="${i}" aria-label="Remover ${r.nome}">Remover</button></div>`).join("") : `<p class="pequeno suave">Nenhum remédio registrado.</p>`}
+        <details style="margin-top:10px" ${(m.remedios || []).length ? "" : "open"}><summary class="pequeno"><strong>+ Adicionar remédio</strong></summary>
+          <label class="pequeno" for="rm-nome">Nome</label><input id="rm-nome" class="campo" placeholder="Ex.: anti-inflamatório que o médico receitou">
+          <label class="pequeno" for="rm-dose">Dose</label><input id="rm-dose" class="campo" placeholder="Ex.: 1 comprimido">
+          <label class="pequeno" for="rm-hora">Horários (separados por vírgula)</label><input id="rm-hora" class="campo" placeholder="Ex.: 08:00, 20:00">
+          <label class="pequeno" for="rm-ate">Tomar até (opcional)</label><input id="rm-ate" type="date" class="campo">
+          <button class="botao botao-bloco" id="rm-add" style="margin-top:8px">Adicionar</button>
+          <p class="pequeno" id="rm-erro" style="color:var(--cor-vermelho);margin:6px 0 0"></p>
+        </details>
+      </div>
+
+      <div class="cartao">
+        <h3>📅 Próxima consulta</h3>
+        <label class="pequeno" for="md-data">Data</label><input id="md-data" type="date" class="campo" value="${m.proximaConsulta || ""}">
+        <label class="pequeno" for="md-nome">Seu nome (aparece no relatório)</label><input id="md-nome" class="campo" value="${estado.perfil.nome || ""}">
+        <label class="pequeno" for="md-prof">Com quem (opcional)</label><input id="md-prof" class="campo" placeholder="Ex.: Dr. Fulano, ortopedista" value="${m.profissional || ""}">
+        <a class="botao botao-secundario botao-bloco" href="#relatorio-medico" style="margin-top:12px">📄 Relatório para levar na consulta</a>
+      </div>
+
+      <div class="cartao">
+        <h3>📷 Foto do relatório ou da receita</h3>
+        <p class="pequeno suave">Fica guardada só neste celular. Até 3 fotos.</p>
+        <div class="fotos-medico">${(m.fotos || []).map((f, i) => `<div class="foto-medico"><img src="${f}" alt="Foto ${i + 1} do relatório médico" data-ver="${i}"><button class="botao-voz" data-delfoto="${i}">Remover</button></div>`).join("")}</div>
+        ${(m.fotos || []).length < 3 ? `<label class="botao botao-secundario botao-bloco" for="md-foto" style="margin-top:8px">Adicionar foto</label>
+        <input id="md-foto" type="file" accept="image/*" style="display:none">` : ""}
+        <p class="pequeno" id="md-foto-erro" style="color:var(--cor-vermelho);margin:6px 0 0"></p>
+      </div>`;
+
+    $$("#md-liberado .opcao").forEach((b) => b.onclick = () => { m.liberado = b.dataset.v; salvarM(); telaMedico(); });
+    $$("#md-evitar .opcao").forEach((b) => b.onclick = () => {
+      const id = b.dataset.id;
+      m.evitar = (m.evitar || []).includes(id) ? m.evitar.filter((x) => x !== id) : [...(m.evitar || []), id];
+      b.setAttribute("aria-pressed", m.evitar.includes(id)); salvarM();
+    });
+    $("#md-diag").onchange = (e) => { m.diagnostico = e.target.value; salvarM(); };
+    $("#md-ori").onchange = (e) => { m.orientacoes = e.target.value; salvarM(); };
+    $("#md-data").onchange = (e) => { m.proximaConsulta = e.target.value; salvarM(); };
+    $("#md-prof").onchange = (e) => { m.profissional = e.target.value; salvarM(); };
+    $("#md-nome").onchange = (e) => { estado.perfil.nome = e.target.value.trim(); salvarM(); };
+    $$("[data-del]").forEach((b) => b.onclick = () => { m.remedios.splice(Number(b.dataset.del), 1); salvarM(); telaMedico(); });
+    $("#rm-add").onclick = () => {
+      const nome = $("#rm-nome").value.trim();
+      if (!nome) { $("#rm-erro").textContent = "Escreva o nome do remédio."; return; }
+      const horarios = $("#rm-hora").value.split(",").map((h) => h.trim()).filter(Boolean)
+        .map((h) => { const [hh, mm = "00"] = h.replace("h", ":").split(":"); return `${String(Number(hh)).padStart(2, "0")}:${String(Number(mm) || 0).padStart(2, "0")}`; })
+        .filter((h) => /^([01]\d|2[0-3]):[0-5]\d$/.test(h));
+      m.remedios = m.remedios || [];
+      m.remedios.push({ nome, dose: $("#rm-dose").value.trim(), horarios, ate: $("#rm-ate").value || "" });
+      salvarM(); telaMedico();
+    };
+    $$("[data-delfoto]").forEach((b) => b.onclick = () => { m.fotos.splice(Number(b.dataset.delfoto), 1); salvarM(); telaMedico(); });
+    $$("[data-ver]").forEach((img) => img.onclick = () => abrirModal(`<img src="${img.src}" alt="Relatório médico" style="width:100%;border-radius:8px">
+      <button class="botao botao-bloco" onclick="this.closest('dialog').close()" style="margin-top:12px">Fechar</button>`));
+    const inp = $("#md-foto");
+    if (inp) inp.onchange = () => {
+      const file = inp.files && inp.files[0];
+      if (!file) return;
+      comprimirImagem(file, (dataUrl) => {
+        m.fotos = m.fotos || [];
+        m.fotos.push(dataUrl);
+        if (!S.salvar(estado)) { m.fotos.pop(); $("#md-foto-erro").textContent = "Sem espaço no celular para guardar a foto. Remova uma foto antiga e tente de novo."; return; }
+        telaMedico();
+      });
+    };
+  }
+  function comprimirImagem(file, pronto) {
+    const leitor = new FileReader();
+    leitor.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 1280 / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        pronto(c.toDataURL("image/jpeg", 0.7));
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(file);
+  }
+
+  function relatorioMedico() {
+    const m = medico() || {};
+    const ev = evolucao();
+    const n = Math.min(diaAtual(), TOTAL);
+    const dias = Object.entries(estado.dias).filter(([d]) => Number(d) <= n);
+    const contar = (cor) => dias.filter(([, r]) => r.semaforo === cor).length;
+    const totalPausas = dias.reduce((s, [, r]) => s + (r.pausas || 0), 0);
+    const data = (iso) => iso ? iso.split("-").reverse().join("/") : "–";
+    tela.innerHTML = `
+      <p class="pequeno"><a href="#medico">← Orientações do médico</a></p>
+      <div class="imprimivel relatorio-medico">
+        <p class="pequeno suave" style="margin:0">Religar · Relatório de acompanhamento</p>
+        <h1 style="margin:4px 0 4px">${estado.perfil.nome || "Paciente"}</h1>
+        <p class="pequeno suave">Início do programa: ${data(estado.dataInicio)} · Hoje: dia ${n} de ${TOTAL} · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
+
+        <div class="cartao">
+          <h3>Queixa principal</h3>
+          <p class="pequeno" style="margin:0">Região: <strong>${D.REGIOES[estado.perfil.regiaoFoco].nome}</strong> · Rotina: ${(L.ROTINAS_TRABALHO.find((o) => o.id === estado.perfil.rotina) || {}).texto || "–"}</p>
+          ${ev.inicial ? `<p class="pequeno" style="margin:6px 0 0">No início: dor ${ev.inicial.dor}/10, travamento ${["nenhum", "pouco", "moderado", "muito"][ev.inicial.trava] || "–"}, ${ev.inicial.remedio ? "usando remédio para dor" : "sem remédio para dor"}.</p>` : ""}
+        </div>
+
+        <div class="cartao">
+          <h3>Evolução da dor (autoavaliação diária, 0 a 10)</h3>
+          ${graficoSemanal()}
+          <div style="margin-top:12px">${tabelaSemanas()}</div>
+          <div style="margin-top:12px">${graficoEvolucao()}</div>
+        </div>
+
+        <div class="cartao">
+          <h3>Adesão ao programa</h3>
+          <p class="pequeno" style="margin:0">Dias concluídos: <strong>${diasFeitos()}</strong> de ${n} · Avaliações registradas: <strong>${ev.registros.length}</strong> · Pausas ativas: <strong>${totalPausas}</strong><br>
+          Dias com sinais de alerta: amarelo <strong>${contar("amarelo")}</strong> · vermelho <strong>${contar("vermelho")}</strong></p>
+        </div>
+
+        ${m.diagnostico || m.orientacoes || (m.remedios || []).length ? `
+        <div class="cartao">
+          <h3>Orientações registradas pelo paciente</h3>
+          ${m.diagnostico ? `<p class="pequeno" style="margin:0 0 6px"><strong>Diagnóstico:</strong> ${m.diagnostico}</p>` : ""}
+          ${m.orientacoes ? `<p class="pequeno" style="margin:0 0 6px"><strong>Orientações:</strong> ${m.orientacoes}</p>` : ""}
+          ${(m.remedios || []).length ? `<p class="pequeno" style="margin:0"><strong>Remédios:</strong> ${m.remedios.map((r) => `${r.nome}${r.dose ? ` (${r.dose})` : ""}${r.horarios.length ? ` às ${r.horarios.join(", ")}` : ""}`).join("; ")}</p>` : ""}
+        </div>` : ""}
+
+        <p class="pequeno suave">Dados informados pelo próprio paciente no programa de educação e prevenção Religar. Não é um documento médico nem substitui avaliação profissional.</p>
+      </div>
+      <button class="botao botao-bloco" id="rel-imprimir" style="margin-top:12px">Imprimir ou salvar em PDF</button>
+      <p class="pequeno suave centro">Se preferir, tire um print desta tela e mostre na consulta.</p>`;
+    $("#rel-imprimir").onclick = () => window.print();
+  }
 
   /* =========================================================
      AVALIAÇÃO DIÁRIA: métricas e gráfico de evolução
@@ -1154,6 +1413,8 @@
       <h1>Mais</h1>
       <div class="cartao">
         <p style="margin:6px 0"><a href="#invisiveis">👀 Pausas invisíveis</a></p>
+        <p style="margin:6px 0"><a href="#medico">🩺 Orientações do médico</a></p>
+        <p style="margin:6px 0"><a href="#relatorio-medico">📄 Relatório para levar ao médico</a></p>
         <p style="margin:6px 0"><a href="#lembretes">🔔 Lembretes</a></p>
         <p style="margin:6px 0"><a href="#bonus">🎁 Materiais e bônus</a></p>
         <p style="margin:6px 0"><a href="#" id="ver-semaforo">🚦 Semáforo dos Sinais</a></p>

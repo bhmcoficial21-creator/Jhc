@@ -19,7 +19,7 @@
     }
   }
   function gravar(chave, valor) {
-    try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ }
+    try { localStorage.setItem(chave, JSON.stringify(valor)); return true; } catch (e) { return false; /* sem espaço ou sem armazenamento */ }
   }
 
   /* Estrutura dos dados por pessoa (seção 14.3 do briefing) */
@@ -34,7 +34,7 @@
 
   window.RELIGAR_STORE = {
     carregar() { return Object.assign(estadoInicial(), ler(CHAVE, {})); },
-    salvar(estado) { gravar(CHAVE, estado); },
+    salvar(estado) { return gravar(CHAVE, estado); },
     zerar() { try { localStorage.removeItem(CHAVE); } catch (e) {} },
     lerQuiz() { return ler(CHAVE_QUIZ, null); },
     salvarQuiz(r) { gravar(CHAVE_QUIZ, r); }
