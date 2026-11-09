@@ -33,28 +33,28 @@ Arquivo: `inclinacao-lateral.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, shoulders relaxed and level, hands on the thighs. The head is gently tilted sideways bringing the right ear toward the right shoulder, without any hand pulling. The worked muscles (left side of the neck and left upper trapezius) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow beside the head shows the tilt. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 4. Junção das escápulas
+## ✅ 4. Junção das escápulas
 Arquivo: `juncao-escapulas.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Back view, slightly angled from behind: the figure sits upright on a backless round office stool, elbows bent at the sides, shoulder blades squeezed together toward the spine, chest open, shoulders down. The worked muscles (rhomboids and middle trapezius between the shoulder blades) are highlighted in vivid semi-transparent RED glow. Two small bright-red arrows point toward the spine. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 5. Rotação lenta olhando por cima do ombro
+## ✅ 5. Rotação lenta olhando por cima do ombro
 Arquivo: `rotacao-pescoco.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Three-quarter front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, torso facing forward, head slowly turned to look over the left shoulder. The worked muscles (sternocleidomastoid and side of the neck) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow around the head shows the rotation. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 6. Espreguiçar completo
+## ✅ 6. Espreguiçar completo
 Arquivo: `espreguicar.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure lies on its back on an exercise mat, arms stretched long above the head, legs long with toes pointed, whole body elongated in a full-body morning stretch. The worked muscles (long muscles along the sides of the trunk, shoulders and back) are highlighted in vivid semi-transparent RED glow. Bright-red arrows point outward from the hands and from the feet. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 7. Anjo no chão
+## ✅ 7. Anjo no chão
 Arquivo: `anjo-no-chao.png`
 
 ```
@@ -63,28 +63,28 @@ Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte li
 
 # 2. Punhos, Antebraços e Braços (Tendinite e LER)
 
-## ⬜ 8. Abrir e fechar a mão + círculos de punho
+## ✅ 8. Abrir e fechar a mão + círculos de punho
 Arquivo: `abrir-fechar-mao.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Close-up of the forearms and hands of the mannequin seated at a desk: one hand open with fingers spread, the other making a gentle fist, wrists neutral. The worked muscles (forearm and hand muscles) are highlighted in vivid semi-transparent RED glow. Small bright-red arrows show opening and closing, plus a circular red arrow at the wrist. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 9. Alongamento suave de flexores e extensores
+## ✅ 9. Alongamento suave de flexores e extensores
 Arquivo: `flexores-extensores.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Three-quarter front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, right arm straight in front at shoulder height with the palm facing up, the left hand gently pulling the right fingers downward. The worked muscles (inner forearm wrist flexor muscles) are highlighted in vivid semi-transparent RED glow. A curved bright-red arrow at the fingers points down. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 10. Deslizamento dos tendões
+## ✅ 10. Deslizamento dos tendões
 Arquivo: `deslizamento-tendoes.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Close-up of one mannequin hand shown in a row of 5 small poses side by side: open hand, hook fist, full fist, flat tabletop hand, straight fist. The worked muscles (tendons and muscles of the palm and forearm) are highlighted in vivid semi-transparent RED glow. Small bright-red arrows between the poses show the sequence. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 11. Giro de antebraço
+## ✅ 11. Giro de antebraço
 Arquivo: `rotacao-antebraco.png`
 
 ```

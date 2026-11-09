@@ -393,7 +393,7 @@
   function midiaExercicio(x) {
     const reserva = `<div class="video-placeholder vertical">[Ilustração]<br>${x.nome}<br>${x.segundos} s</div>`;
     if (!x.id) return reserva;
-    return `<img class="ilustracao" src="../assets/img/exercicios/${x.id}.png" alt="${x.nome}"
+    return `<img class="ilustracao" src="../assets/img/exercicios/${x.id}.webp" alt="${x.nome}"
       onerror="this.outerHTML=this.dataset.reserva" data-reserva="${reserva.replace(/"/g, "&quot;")}">`;
   }
   const botaoVoz = () => `<button class="botao-voz" id="btn-voz" aria-pressed="${voz.ligada()}">${voz.ligada() ? "🔊 Guia por voz ligado" : "📳 Só vibração"}</button>`;
@@ -731,6 +731,7 @@
   function executarProtocolo(prot, reg, aoConcluir) {
     const passos = prot.passos;
     let k = 0, restante = passos[0].segundos, rodando = false, falado = -1;
+    $("#botao-estranho").classList.add("oculto"); // não cobrir os botões do cronômetro
     const total = passos.reduce((s, x) => s + x.segundos, 0);
 
     tela.innerHTML = `
@@ -758,7 +759,13 @@
 
     function mostrarPasso() {
       const x = passos[k];
-      if ($("#ae-video").dataset.passo !== String(k)) { $("#ae-video").dataset.passo = String(k); $("#ae-video").innerHTML = midiaExercicio(x); }
+      if ($("#ae-video").dataset.passo !== String(k)) {
+        const primeiro = $("#ae-video").dataset.passo === undefined;
+        $("#ae-video").dataset.passo = String(k);
+        $("#ae-video").innerHTML = midiaExercicio(x);
+        // mostra a imagem do exercício novo, mesmo se a tela estiver rolada
+        if (!primeiro) $("#ae-video").scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      }
       $("#ae-contagem").textContent = `Passo ${k + 1} de ${passos.length}`;
       $("#ae-nome").textContent = x.nome;
       $("#ae-passos").textContent = x.passos;

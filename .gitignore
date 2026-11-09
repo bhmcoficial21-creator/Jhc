@@ -1,2 +1,5 @@
 .DS_Store
 node_modules/
+
+# Originais das ilustrações (pesados). O site usa só os .webp gerados por tools/otimizar-imagens.py
+assets/img/exercicios/*.png

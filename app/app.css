@@ -65,7 +65,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 }
 
 #ae-video .video-placeholder { max-height: 220px; }
-.ilustracao { display: block; width: 100%; max-width: 320px; max-height: 300px; object-fit: contain; margin: 0 auto; border-radius: var(--raio); background: #f2f2f0; }
+.ilustracao { display: block; width: 100%; max-width: 340px; max-height: 240px; object-fit: contain; margin: 0 auto; border-radius: var(--raio); background: #f2f2f0; }
 
 .socorro-atalho, .trilha-card { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--cor-texto); }
 .socorro-atalho { border: 2px solid var(--cor-vermelho); color: var(--cor-vermelho); }
@@ -102,3 +102,4 @@ textarea.campo { resize: vertical; }
 .foto-medico img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; cursor: zoom-in; display: block; }
 .foto-medico .botao-voz { width: 100%; margin-top: 4px; }
 .medico-cartao { border: 2px solid var(--cor-primaria); }
+#ae-video { scroll-margin-top: 72px; }
