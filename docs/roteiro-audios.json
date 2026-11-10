@@ -1,302 +1,331 @@
 [
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "01",
     "id": "respira",
+    "grupo": "Abertura (toca no começo de todo exercício)",
     "texto": "Vamos começar. Três respirações profundas. Inspire pelo nariz... e solte o ar devagar pela boca, deixando os ombros caírem a cada saída do ar."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "02",
     "id": "retracao-queixo",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: retração do queixo. Olhe para frente e leve o queixo para trás, como se fizesse um queixo duplo. Segure 3 segundos e solte. Repita 8 vezes."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "03",
     "id": "encolher-ombros",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: encolher e soltar os ombros. Suba os ombros até as orelhas, segure 2 segundos e solte de uma vez, expirando. Repita 8 vezes."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "04",
     "id": "inclinacao-lateral",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: inclinação lateral suave. Leve a orelha em direção ao ombro, sem forçar. Respire 3 vezes de cada lado."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "05",
     "id": "juncao-escapulas",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: junção das escápulas. Aperte as costas como se fosse segurar um lápis entre as escápulas. Segure 3 segundos. Repita 10 vezes."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "06",
     "id": "rotacao-pescoco",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: rotação lenta olhando por cima do ombro. Gire a cabeça devagar para olhar por cima do ombro. Volte ao centro. 5 vezes para cada lado."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "07",
     "id": "espreguicar",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: espreguiçar completo. Deitado, estique os braços acima da cabeça e as pontas dos pés para longe, como se crescesse. Solte. 3 vezes."
   },
   {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "08",
     "id": "anjo-no-chao",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: anjo no chão. Deitado de barriga para cima, braços em W no chão. Deslize os braços para cima e para baixo sem tirar do chão. 10 vezes."
   },
   {
-    "voz": "masculina",
-    "id": "respiracao-4-6",
-    "texto": "Agora: respiração quatro, seis. Inspire contando até quatro... e solte o ar contando até seis. A saída mais longa avisa o corpo que ele pode relaxar."
-  },
-  {
-    "voz": "masculina",
+    "voz": "principal",
+    "numero": "09",
     "id": "postura-crianca",
+    "grupo": "Cervical, Ombros e Trapézio",
     "texto": "Agora: postura de descanso. Sente sobre os calcanhares e leve o tronco e os braços para frente, testa apoiada. Respire devagar."
   },
   {
-    "voz": "masculina",
-    "id": "inclinacao-pelve",
-    "texto": "Agora: inclinação da pelve sentado. Sentado, role a pelve para frente e para trás, devagar, sem mexer os ombros. 10 vezes."
-  },
-  {
-    "voz": "masculina",
-    "id": "rotacao-tronco",
-    "texto": "Agora: rotação de tronco sentado. Mão no encosto da cadeira, gire o tronco para o lado e respire. 3 respirações de cada lado."
-  },
-  {
-    "voz": "masculina",
-    "id": "gato-vaca-sentado",
-    "texto": "Agora: gato e vaca sentado. Sentado, mãos nos joelhos: arredonde as costas olhando para o umbigo, depois abra o peito olhando para frente. 8 vezes."
-  },
-  {
-    "voz": "masculina",
-    "id": "flexor-quadril",
-    "texto": "Agora: alongamento do flexor do quadril de pé. Dê um passo à frente, contraia o glúteo da perna de trás e leve o quadril para frente. 20 segundos de cada lado."
-  },
-  {
-    "voz": "masculina",
-    "id": "extensao-pe",
-    "texto": "Agora: extensão de pé com as mãos na cintura. Em pé, mãos na cintura, leve o quadril levemente para frente e o peito para cima. 5 vezes, sem forçar."
-  },
-  {
-    "voz": "masculina",
-    "id": "joelhos-peito",
-    "texto": "Agora: joelhos ao peito. Deitado, abrace os joelhos e balance o corpo de leve, de um lado para o outro."
-  },
-  {
-    "voz": "masculina",
-    "id": "torcao-deitado",
-    "texto": "Agora: torção deitado. Deitado, joelhos dobrados e juntos. Deixe os joelhos caírem para um lado e depois para o outro, devagar."
-  },
-  {
-    "voz": "masculina",
-    "id": "gato-vaca-4-apoios",
-    "texto": "Agora: gato e vaca em 4 apoios. Mãos e joelhos no chão ou na cama. Arredonde as costas olhando para o umbigo e depois afunde suavemente olhando para frente. 8 vezes."
-  },
-  {
-    "voz": "masculina",
-    "id": "regra-20-20-20",
-    "texto": "Agora: descanso dos olhos. Tire os olhos da tela e olhe para algo bem longe, a uns seis metros, por vinte segundos. Deixe o rosto e a testa relaxarem."
-  },
-  {
-    "voz": "masculina",
-    "id": "_faltam10",
-    "texto": "Faltam dez segundos."
-  },
-  {
-    "voz": "masculina",
-    "id": "_pronto",
-    "texto": "Pronto. Como você está agora?"
-  },
-  {
-    "voz": "masculina",
-    "id": "_pausafeita",
-    "texto": "Pausa feita. Seu corpo agradece."
-  },
-  {
-    "voz": "masculina",
-    "id": "_reposiciona",
-    "texto": "Reposiciona. Ajuste a postura e, se puder, levante."
-  },
-  {
-    "voz": "masculina",
-    "id": "_respira3",
-    "texto": "Respira. Três respirações profundas, soltando os ombros na saída do ar."
-  },
-  {
-    "voz": "feminina",
-    "id": "respira",
-    "texto": "Vamos começar. Três respirações profundas. Inspire pelo nariz... e solte o ar devagar pela boca, deixando os ombros caírem a cada saída do ar."
-  },
-  {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "10",
     "id": "abrir-fechar-mao",
+    "grupo": "Punhos, Antebraços e Braços",
     "texto": "Agora: abrir e fechar a mão e círculos de punho. Abra e feche as mãos 10 vezes. Depois faça 10 círculos de punho para cada lado."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "11",
     "id": "flexores-extensores",
+    "grupo": "Punhos, Antebraços e Braços",
     "texto": "Agora: alongamento suave de flexores e extensores. Braço esticado, palma para cima, puxe os dedos levemente para baixo. Depois palma para baixo. 15 segundos cada."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "12",
     "id": "deslizamento-tendoes",
+    "grupo": "Punhos, Antebraços e Braços",
     "texto": "Agora: deslizamento dos tendões. Mão aberta... gancho... punho fechado... mão reta... e punho reto. Passe por cada posição devagar. Cinco sequências."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "13",
     "id": "rotacao-antebraco",
+    "grupo": "Punhos, Antebraços e Braços",
     "texto": "Agora: giro de antebraço. Cotovelos colados ao corpo e dobrados, gire as palmas para cima e para baixo, devagar. 15 vezes."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "14",
     "id": "alongamento-braco-parede",
+    "grupo": "Punhos, Antebraços e Braços",
     "texto": "Agora: alongamento do braço na parede. Mão espalmada na parede na altura do ombro, braço esticado. Gire o corpo para o lado oposto até sentir uma tensão leve no braço. 20 segundos de cada lado."
   },
   {
-    "voz": "feminina",
-    "id": "espreguicar",
-    "texto": "Agora: espreguiçar completo. Deitado, estique os braços acima da cabeça e as pontas dos pés para longe, como se crescesse. Solte. 3 vezes."
+    "voz": "principal",
+    "numero": "15",
+    "id": "inclinacao-pelve",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: inclinação da pelve sentado. Sentado, role a pelve para frente e para trás, devagar, sem mexer os ombros. 10 vezes."
   },
   {
-    "voz": "feminina",
-    "id": "encolher-ombros",
-    "texto": "Agora: encolher e soltar os ombros. Suba os ombros até as orelhas, segure 2 segundos e solte de uma vez, expirando. Repita 8 vezes."
+    "voz": "principal",
+    "numero": "16",
+    "id": "rotacao-tronco",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: rotação de tronco sentado. Mão no encosto da cadeira, gire o tronco para o lado e respire. 3 respirações de cada lado."
   },
   {
-    "voz": "feminina",
-    "id": "respiracao-4-6",
-    "texto": "Agora: respiração quatro, seis. Inspire contando até quatro... e solte o ar contando até seis. A saída mais longa avisa o corpo que ele pode relaxar."
+    "voz": "principal",
+    "numero": "17",
+    "id": "gato-vaca-sentado",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: gato e vaca sentado. Sentado, mãos nos joelhos: arredonde as costas olhando para o umbigo, depois abra o peito olhando para frente. 8 vezes."
   },
   {
-    "voz": "feminina",
-    "id": "postura-crianca",
-    "texto": "Agora: postura de descanso. Sente sobre os calcanhares e leve o tronco e os braços para frente, testa apoiada. Respire devagar."
-  },
-  {
-    "voz": "feminina",
-    "id": "contracao-gluteo",
-    "texto": "Agora: contração de glúteo sentado. Sentado, aperte os glúteos com força por 5 segundos e solte. 10 vezes. Ninguém percebe."
-  },
-  {
-    "voz": "feminina",
-    "id": "isometria-quadriceps",
-    "texto": "Agora: isometria de coxa sentado. Sentado, estique uma perna e contraia a coxa por 5 segundos, sem travar o joelho. Solte. 5 vezes de cada lado."
-  },
-  {
-    "voz": "feminina",
-    "id": "abducao-isometrica",
-    "texto": "Agora: abertura isométrica dos joelhos. Sentado, mãos do lado de fora dos joelhos. Empurre os joelhos para fora contra as mãos por 5 segundos, sem mexer. 8 vezes."
-  },
-  {
-    "voz": "feminina",
-    "id": "extensao-joelho-sentado",
-    "texto": "Agora: extensão de joelho sentado. Sentado, estique o joelho devagar até onde não doer e desça devagar. 8 vezes de cada lado."
-  },
-  {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "18",
     "id": "flexor-quadril",
+    "grupo": "Coluna e Lombar",
     "texto": "Agora: alongamento do flexor do quadril de pé. Dê um passo à frente, contraia o glúteo da perna de trás e leve o quadril para frente. 20 segundos de cada lado."
   },
   {
-    "voz": "feminina",
-    "id": "ponte-gluteo",
-    "texto": "Agora: ponte de glúteo. Deitado, joelhos dobrados, suba o quadril e desça devagar. 3 séries de 10."
+    "voz": "principal",
+    "numero": "19",
+    "id": "extensao-pe",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: extensão de pé com as mãos na cintura. Em pé, mãos na cintura, leve o quadril levemente para frente e o peito para cima. 5 vezes, sem forçar."
   },
   {
-    "voz": "feminina",
-    "id": "abducao-lado",
-    "texto": "Agora: abertura de perna deitado de lado. Deitado de lado, perna de baixo dobrada. Suba a perna de cima esticada até a altura do quadril e desça devagar. 10 vezes de cada lado."
-  },
-  {
-    "voz": "feminina",
-    "id": "deslizamento-calcanhar",
-    "texto": "Agora: deslizamento do calcanhar. Deitado de barriga para cima, deslize o calcanhar em direção ao bumbum até onde não doer e volte. 10 vezes de cada lado."
-  },
-  {
-    "voz": "feminina",
-    "id": "sentar-levantar",
-    "texto": "Agora: sentar e levantar da cadeira. Levante da cadeira sem usar as mãos e sente devagar. 10 vezes."
-  },
-  {
-    "voz": "feminina",
-    "id": "figura-4",
-    "texto": "Agora: alongamento do glúteo deitado. Deitado, uma perna esticada no chão. Abrace o outro joelho e puxe devagar em direção ao ombro oposto, até sentir o glúteo esticar. 30 segundos de cada lado."
-  },
-  {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "20",
     "id": "joelhos-peito",
+    "grupo": "Coluna e Lombar",
     "texto": "Agora: joelhos ao peito. Deitado, abrace os joelhos e balance o corpo de leve, de um lado para o outro."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "21",
+    "id": "torcao-deitado",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: torção deitado. Deitado, joelhos dobrados e juntos. Deixe os joelhos caírem para um lado e depois para o outro, devagar."
+  },
+  {
+    "voz": "principal",
+    "numero": "22",
+    "id": "gato-vaca-4-apoios",
+    "grupo": "Coluna e Lombar",
+    "texto": "Agora: gato e vaca em 4 apoios. Mãos e joelhos no chão ou na cama. Arredonde as costas olhando para o umbigo e depois afunde suavemente olhando para frente. 8 vezes."
+  },
+  {
+    "voz": "principal",
+    "numero": "23",
+    "id": "contracao-gluteo",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: contração de glúteo sentado. Sentado, aperte os glúteos com força por 5 segundos e solte. 10 vezes. Ninguém percebe."
+  },
+  {
+    "voz": "principal",
+    "numero": "24",
+    "id": "isometria-quadriceps",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: isometria de coxa sentado. Sentado, estique uma perna e contraia a coxa por 5 segundos, sem travar o joelho. Solte. 5 vezes de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "25",
+    "id": "abducao-isometrica",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: abertura isométrica dos joelhos. Sentado, mãos do lado de fora dos joelhos. Empurre os joelhos para fora contra as mãos por 5 segundos, sem mexer. 8 vezes."
+  },
+  {
+    "voz": "principal",
+    "numero": "26",
+    "id": "extensao-joelho-sentado",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: extensão de joelho sentado. Sentado, estique o joelho devagar até onde não doer e desça devagar. 8 vezes de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "27",
+    "id": "ponte-gluteo",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: ponte de glúteo. Deitado, joelhos dobrados, suba o quadril e desça devagar. 3 séries de 10."
+  },
+  {
+    "voz": "principal",
+    "numero": "28",
+    "id": "abducao-lado",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: abertura de perna deitado de lado. Deitado de lado, perna de baixo dobrada. Suba a perna de cima esticada até a altura do quadril e desça devagar. 10 vezes de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "29",
+    "id": "deslizamento-calcanhar",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: deslizamento do calcanhar. Deitado de barriga para cima, deslize o calcanhar em direção ao bumbum até onde não doer e volte. 10 vezes de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "30",
+    "id": "sentar-levantar",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: sentar e levantar da cadeira. Levante da cadeira sem usar as mãos e sente devagar. 10 vezes."
+  },
+  {
+    "voz": "principal",
+    "numero": "31",
+    "id": "figura-4",
+    "grupo": "Quadril e Joelhos",
+    "texto": "Agora: alongamento do glúteo deitado. Deitado, uma perna esticada no chão. Abrace o outro joelho e puxe devagar em direção ao ombro oposto, até sentir o glúteo esticar. 30 segundos de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "32",
     "id": "pernas-parede",
+    "grupo": "Quadril e Joelhos",
     "texto": "Agora: pernas na parede. Deitado com o bumbum perto da parede, apoie as pernas esticadas na parede. Respire devagar."
   },
   {
-    "voz": "feminina",
-    "id": "circulos-tornozelo",
-    "texto": "Agora: círculos de tornozelo. Com o pé no ar, desenhe círculos lentos com a ponta do pé. 10 para cada lado, nos dois pés."
-  },
-  {
-    "voz": "feminina",
-    "id": "alongamento-fascia",
-    "texto": "Agora: alongamento da sola do pé. Sentado, cruze o pé sobre o joelho oposto e puxe os dedos para trás com a mão até sentir a sola esticar. 20 segundos em cada pé."
-  },
-  {
-    "voz": "feminina",
-    "id": "rolar-garrafa",
-    "texto": "Agora: rolar a sola na garrafa ou na bolinha. Sentado, role a sola do pé descalço sobre uma garrafa de água ou uma bolinha, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé. À noite, a garrafa pode estar gelada."
-  },
-  {
-    "voz": "feminina",
-    "id": "dedos-toalha",
-    "texto": "Agora: puxar a toalha com os dedos. Sentado, pé descalço sobre uma toalha no chão. Puxe a toalha para perto usando só os dedos. 3 vezes em cada pé."
-  },
-  {
-    "voz": "feminina",
-    "id": "panturrilha-parede",
-    "texto": "Agora: alongamento de panturrilha na parede. Mãos na parede, uma perna atrás esticada com o calcanhar no chão. Incline o corpo para frente até sentir a panturrilha. 20 segundos de cada lado."
-  },
-  {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "33",
     "id": "bombinha-tornozelo",
+    "grupo": "Quadril e Joelhos",
     "texto": "Agora: bombinha de tornozelo. Leve as pontas dos pés para cima e para baixo, sem pressa. 20 vezes."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "34",
+    "id": "circulos-tornozelo",
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: círculos de tornozelo. Com o pé no ar, desenhe círculos lentos com a ponta do pé. 10 para cada lado, nos dois pés."
+  },
+  {
+    "voz": "principal",
+    "numero": "35",
+    "id": "alongamento-fascia",
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: alongamento da sola do pé. Sentado, cruze o pé sobre o joelho oposto e puxe os dedos para trás com a mão até sentir a sola esticar. 20 segundos em cada pé."
+  },
+  {
+    "voz": "principal",
+    "numero": "36",
+    "id": "rolar-garrafa",
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: rolar a sola na garrafa ou na bolinha. Sentado, role a sola do pé descalço sobre uma garrafa de água ou uma bolinha, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé. À noite, a garrafa pode estar gelada."
+  },
+  {
+    "voz": "principal",
+    "numero": "37",
+    "id": "dedos-toalha",
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: puxar a toalha com os dedos. Sentado, pé descalço sobre uma toalha no chão. Puxe a toalha para perto usando só os dedos. 3 vezes em cada pé."
+  },
+  {
+    "voz": "principal",
+    "numero": "38",
+    "id": "panturrilha-parede",
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: alongamento de panturrilha na parede. Mãos na parede, uma perna atrás esticada com o calcanhar no chão. Incline o corpo para frente até sentir a panturrilha. 20 segundos de cada lado."
+  },
+  {
+    "voz": "principal",
+    "numero": "39",
     "id": "toalha-sola",
+    "grupo": "Pés e Calcanhar",
     "texto": "Agora: toalha na sola antes do primeiro passo. Ainda na cama, perna esticada, passe uma toalha na sola do pé e puxe as pontas em sua direção. 20 segundos em cada pé, antes de pisar no chão."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "40",
     "id": "panturrilha",
-    "texto": "Agora: elevação dos calcanhares. Suba na ponta dos pés e desça devagar. 15 vezes (sentado também vale)."
+    "grupo": "Pés e Calcanhar",
+    "texto": "Agora: elevação dos calcanhares. Suba na ponta dos pés e desça devagar. Quinze vezes. Sentado também vale."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "41",
+    "id": "respiracao-4-6",
+    "grupo": "Respiração e olhos",
+    "texto": "Agora: respiração quatro, seis. Inspire contando até quatro... e solte o ar contando até seis. A saída mais longa avisa o corpo que ele pode relaxar."
+  },
+  {
+    "voz": "principal",
+    "numero": "42",
     "id": "regra-20-20-20",
+    "grupo": "Respiração e olhos",
     "texto": "Agora: descanso dos olhos. Tire os olhos da tela e olhe para algo bem longe, a uns seis metros, por vinte segundos. Deixe o rosto e a testa relaxarem."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "43",
     "id": "_faltam10",
+    "grupo": "Falas curtas",
     "texto": "Faltam dez segundos."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "44",
     "id": "_pronto",
+    "grupo": "Falas curtas",
     "texto": "Pronto. Como você está agora?"
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "45",
     "id": "_pausafeita",
+    "grupo": "Falas curtas",
     "texto": "Pausa feita. Seu corpo agradece."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "46",
     "id": "_reposiciona",
+    "grupo": "Falas curtas",
     "texto": "Reposiciona. Ajuste a postura e, se puder, levante."
   },
   {
-    "voz": "feminina",
+    "voz": "principal",
+    "numero": "47",
     "id": "_respira3",
+    "grupo": "Falas curtas",
     "texto": "Respira. Três respirações profundas, soltando os ombros na saída do ar."
   }
 ]

@@ -1,7 +1,9 @@
-/* Gera docs/roteiro-audios.json: o texto falado de cada áudio do guia por voz.
+/* Gera docs/roteiro-audios.json: o roteiro falado do guia por voz, numerado
+   na ordem de gravação (abertura, as 5 dores, falas comuns).
    Uso: node tools/roteiro-audios.js
-   Cada voz grava só os exercícios das trilhas dela (config.js > vozes),
-   mais as falas comuns. Arquivo final: assets/audio/<voz>/<id>.mp3 */
+   A locutora ou o locutor grava um arquivo por texto, com o nome = número
+   (01, 02, ...). tools/importar-audios.py converte e coloca cada um em
+   assets/audio/<voz>/<id>.mp3. */
 global.window = {};
 require("../assets/js/config.js");
 require("../assets/js/data.js");
@@ -14,41 +16,49 @@ const ESPECIAL = {
   "respira": "Vamos começar. Três respirações profundas. Inspire pelo nariz... e solte o ar devagar pela boca, deixando os ombros caírem a cada saída do ar.",
   "respiracao-4-6": "Agora: respiração quatro, seis. Inspire contando até quatro... e solte o ar contando até seis. A saída mais longa avisa o corpo que ele pode relaxar.",
   "regra-20-20-20": "Agora: descanso dos olhos. Tire os olhos da tela e olhe para algo bem longe, a uns seis metros, por vinte segundos. Deixe o rosto e a testa relaxarem.",
-  "deslizamento-tendoes": "Agora: deslizamento dos tendões. Mão aberta... gancho... punho fechado... mão reta... e punho reto. Passe por cada posição devagar. Cinco sequências."
+  "deslizamento-tendoes": "Agora: deslizamento dos tendões. Mão aberta... gancho... punho fechado... mão reta... e punho reto. Passe por cada posição devagar. Cinco sequências.",
+  "panturrilha": "Agora: elevação dos calcanhares. Suba na ponta dos pés e desça devagar. Quinze vezes. Sentado também vale."
 };
-const COMUNS = {
-  "_faltam10": "Faltam dez segundos.",
-  "_pronto": "Pronto. Como você está agora?",
-  "_pausafeita": "Pausa feita. Seu corpo agradece.",
-  "_reposiciona": "Reposiciona. Ajuste a postura e, se puder, levante.",
-  "_respira3": "Respira. Três respirações profundas, soltando os ombros na saída do ar."
+const COMUNS = [
+  ["_faltam10", "Faltam dez segundos."],
+  ["_pronto", "Pronto. Como você está agora?"],
+  ["_pausafeita", "Pausa feita. Seu corpo agradece."],
+  ["_reposiciona", "Reposiciona. Ajuste a postura e, se puder, levante."],
+  ["_respira3", "Respira. Três respirações profundas, soltando os ombros na saída do ar."]
+];
+const GRUPOS = {
+  cervical: "Cervical, Ombros e Trapézio", punho: "Punhos, Antebraços e Braços",
+  lombar: "Coluna e Lombar", joelhos: "Quadril e Joelhos", pes: "Pés e Calcanhar"
 };
 
 function falado(id) {
   if (ESPECIAL[id]) return ESPECIAL[id];
   const e = D.ex(id);
-  const passos = e.passos
-    .replace(/→/g, ", depois")
-    .replace(/ \+ /g, " e ")
-    .replace(/["“”]/g, "")
-    .replace(/\b(\d+) segundos\b/g, "$1 segundos");
+  const passos = e.passos.replace(/→/g, ", depois").replace(/ \+ /g, " e ").replace(/["“”]/g, "");
   return `Agora: ${e.nome.toLowerCase().replace(/ \+ /g, " e ")}. ${passos}`;
 }
 
-const porVoz = { masculina: new Set(), feminina: new Set() };
-for (const [t, formatos] of Object.entries(D.PROTOCOLOS))
-  for (const lista of Object.values(formatos)) lista.forEach(([id]) => porVoz[C.vozes[t]].add(id));
-for (const s of D.SNACKS) {
-  const vozes = s.zona ? [C.vozes[s.zona]] : ["masculina", "feminina"];
-  vozes.forEach((v) => s.passos.forEach(([id]) => porVoz[v].add(id)));
-}
-
 const roteiro = [];
-for (const voz of ["masculina", "feminina"]) {
-  for (const id of porVoz[voz]) roteiro.push({ voz, id, texto: falado(id) });
-  for (const [id, texto] of Object.entries(COMUNS)) roteiro.push({ voz, id, texto });
+for (const voz of [...new Set(Object.values(C.vozes))]) {
+  const trilhas = Object.keys(D.TRILHAS_ZONA).filter((t) => C.vozes[t] === voz);
+  const vistos = new Set();
+  const add = (id, grupo, texto) => {
+    if (vistos.has(id)) return;
+    vistos.add(id);
+    const n = roteiro.filter((r) => r.voz === voz).length + 1;
+    roteiro.push({ voz, numero: String(n).padStart(2, "0"), id, grupo, texto: texto || falado(id) });
+  };
+  add("respira", "Abertura (toca no começo de todo exercício)");
+  const gerais = ["respiracao-4-6", "regra-20-20-20"];
+  for (const t of trilhas) {
+    const ids = [];
+    for (const f of ["sos1", "sos3", "matinal", "noturno"]) D.PROTOCOLOS[t][f].forEach(([id]) => ids.push(id));
+    D.SNACKS.filter((s) => s.zona === t).forEach((s) => s.passos.forEach(([id]) => ids.push(id)));
+    ids.filter((id) => id !== "respira" && !gerais.includes(id)).forEach((id) => add(id, GRUPOS[t]));
+  }
+  gerais.forEach((id) => add(id, "Respiração e olhos"));
+  COMUNS.forEach(([id, texto]) => add(id, "Falas curtas", texto));
 }
-const destino = path.join(__dirname, "..", "docs", "roteiro-audios.json");
-fs.writeFileSync(destino, JSON.stringify(roteiro, null, 2));
-const chars = roteiro.reduce((s, r) => s + r.texto.length, 0);
-console.log(`${roteiro.length} áudios · ${chars} caracteres · masculina ${roteiro.filter((r) => r.voz === "masculina").length} · feminina ${roteiro.filter((r) => r.voz === "feminina").length}`);
+fs.writeFileSync(path.join(__dirname, "..", "docs", "roteiro-audios.json"), JSON.stringify(roteiro, null, 2));
+const vozes = [...new Set(roteiro.map((r) => r.voz))];
+console.log(vozes.map((v) => `${v}: ${roteiro.filter((r) => r.voz === v).length} gravações`).join(" · "));

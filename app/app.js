@@ -382,7 +382,7 @@
       if (!this.ligada()) return;
       this.parar();
       if (!id) return this.falar(textoReserva);
-      const pasta = (C.vozes || {})[trilha] || "masculina";
+      const pasta = (C.vozes || {})[trilha] || "principal";
       const a = new Audio(`../assets/audio/${pasta}/${id}.mp3`);
       this.audio = a;
       a.onerror = () => { if (this.audio === a) { this.audio = null; this.falar(textoReserva); } };

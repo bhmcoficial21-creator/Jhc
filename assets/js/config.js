@@ -33,16 +33,16 @@ window.RELIGAR_CONFIG = {
   pausasMinimasDiaCaotico: 2,
   totalDias: 30,
 
-  // Voz de cada trilha (guia por voz). Cada trilha fica com UMA voz só,
-  // para não misturar dentro do mesmo protocolo. Os áudios ficam em
-  // assets/audio/<voz>/<id-do-exercicio>.mp3
-  // masculina = Adrian Miles · feminina = Marianne (ElevenLabs)
+  // Voz de cada trilha (guia por voz). Hoje: uma locução só para tudo,
+  // gravada por uma pessoa (roteiro em docs/roteiro-audios.json).
+  // Os áudios ficam em assets/audio/<voz>/<id-do-exercicio>.mp3
+  // Para usar duas vozes no futuro, troque o nome da pasta de uma trilha.
   vozes: {
-    lombar: "masculina",   // Coluna e Lombar
-    cervical: "masculina", // Cervical, Ombros e Trapézio
-    punho: "feminina",     // Braços, Antebraços e Punhos
-    joelhos: "feminina",   // Quadril e Joelhos
-    pes: "feminina"        // Pés e Calcanhar
+    lombar: "principal",   // Coluna e Lombar
+    cervical: "principal", // Cervical, Ombros e Trapézio
+    punho: "principal",    // Punhos, Antebraços e Braços
+    joelhos: "principal",  // Quadril e Joelhos
+    pes: "principal"       // Pés e Calcanhar
   },
   diasRevisao: [1, 3, 7, 14, 21, 30],
   diasForcaSemana4: [23, 26, 29],

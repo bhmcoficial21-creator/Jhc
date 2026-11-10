@@ -1,0 +1,507 @@
+<title>Roteiro de Gravação Religar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: folha de estúdio para ler no celular — instruções no topo, depois um cartão por gravação, com o número do arquivo em destaque */
+:root {
+  --bg: #f3f5f2; --papel: #ffffff; --tinta: #1b241f; --suave: #5b6760;
+  --linha: #dde3dd; --verde: #2f6f5e; --verde-claro: #e3efe9; --alerta: #9a5b00;
+  --display: "Fraunces", Georgia, serif;
+  --texto: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fala: 1.18rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121815; --papel: #1b231f; --tinta: #e8eee9; --suave: #9fb0a6;
+  --linha: #2c3832; --verde: #7cc2ab; --verde-claro: #1f3a31; --alerta: #f0b35a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121815; --papel: #1b231f; --tinta: #e8eee9; --suave: #9fb0a6;
+  --linha: #2c3832; --verde: #7cc2ab; --verde-claro: #1f3a31; --alerta: #f0b35a; color-scheme: dark }
+body { background: var(--bg); color: var(--tinta); font-family: var(--texto); font-size: 16px; line-height: 1.55; }
+body.grande { --fala: 1.55rem; }
+.pagina { max-width: 720px; margin: 0 auto; padding-block: 24px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-family: var(--display); font-size: 2rem; line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-family: var(--display); font-size: 1.25rem; margin: 0 0 12px; text-wrap: balance; }
+h3 { font-size: 1rem; margin: 0 0 8px; }
+p { margin: 0 0 10px; }
+.sub { color: var(--suave); margin: 0 0 20px; }
+.resumo { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--suave); font-size: .9rem; margin-bottom: 20px; }
+.resumo strong { color: var(--tinta); font-variant-numeric: tabular-nums; }
+.guia { background: var(--papel); border: 1px solid var(--linha); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+.guia ol, .guia ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.nome-arquivo { font-family: ui-monospace, "SF Mono", Menlo, monospace; background: var(--verde-claro); color: var(--verde); padding: 1px 6px; border-radius: 6px; font-size: .92em; }
+.aviso { border-left: 4px solid var(--alerta); padding-left: 12px; color: var(--tinta); }
+.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--linha); margin-bottom: 20px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.progresso { flex: 1; min-width: 160px; }
+.progresso .trilho { height: 8px; border-radius: 99px; background: var(--linha); overflow: hidden; margin-top: 4px; }
+.progresso .trilho span { display: block; height: 100%; width: 0; background: var(--verde); transition: width .2s; }
+.progresso small { color: var(--suave); font-variant-numeric: tabular-nums; }
+button.alternar { font: inherit; font-size: .9rem; border: 1px solid var(--linha); background: var(--papel); color: var(--tinta); border-radius: 99px; padding: 8px 14px; cursor: pointer; }
+button.alternar:focus-visible, input:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.bloco { margin-bottom: 28px; }
+.itens { display: grid; gap: 10px; }
+.item { background: var(--papel); border: 1px solid var(--linha); border-radius: 14px; padding: 14px 16px; scroll-margin-top: 80px; }
+.item.ok { border-color: var(--verde); }
+.item.ok .fala { color: var(--suave); }
+.cab { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.num { font-family: var(--display); font-size: 1.6rem; line-height: 1; color: var(--verde); font-variant-numeric: tabular-nums; min-width: 2ch; }
+.dur { color: var(--suave); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.feito { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: .9rem; cursor: pointer; }
+.feito input { width: 20px; height: 20px; accent-color: var(--verde); }
+.fala { font-size: var(--fala); line-height: 1.5; margin: 0; }
+footer { color: var(--suave); font-size: .85rem; margin-top: 32px; }
+@media (prefers-reduced-motion: reduce) { .progresso .trilho span { transition: none; } }
+</style>
+
+<div class="pagina">
+  <h1>Roteiro de gravação · Guia por voz Religar</h1>
+  <p class="sub">Você vai gravar a voz que conduz as pessoas nos exercícios de alívio de dor, no celular delas, no meio do trabalho. Cada texto vira um áudio curto.</p>
+  <div class="resumo"><span><strong>47</strong> gravações</span><span>cerca de <strong>8 min</strong> de fala</span><span>tempo total com pausas e repetições: <strong>40 a 60 min</strong></span></div>
+
+  <section class="guia">
+    <h3>🎙️ Como gravar</h3>
+    <ol>
+      <li><strong>Um arquivo para cada texto.</strong> Aperte gravar, espere 1 segundo, leia o texto, espere 1 segundo e pare.</li>
+      <li><strong>Nome do arquivo = número do cartão.</strong> O texto 07 vira o arquivo <span class="nome-arquivo">07</span>. Pode ser .m4a, .mp3 ou .wav. Não fale o número na gravação.</li>
+      <li><strong>Errou? Grave aquele número de novo</strong> e apague a versão errada. Só fica um arquivo por número.</li>
+      <li>Leia os números por extenso, do jeito que estão escritos. Nas reticências (...), faça uma pausa curta, como quem respira junto.</li>
+    </ol>
+  </section>
+
+  <section class="guia">
+    <h3>🔇 Lugar e celular</h3>
+    <ul>
+      <li>Lugar silencioso e com pouco eco: quarto com cortina, cama e roupas ajudam. Evite banheiro e cozinha.</li>
+      <li>Celular em modo avião, apoiado, a um palmo da boca. Mesma posição e mesma distância em todas as gravações.</li>
+      <li>Use o gravador do próprio celular: "Gravador" no iPhone ou "Gravador de voz" no Android.</li>
+      <li>Grave tudo no mesmo dia, para a voz soar igual do começo ao fim.</li>
+    </ul>
+  </section>
+
+  <section class="guia">
+    <h3>🗣️ Tom de voz</h3>
+    <p>Calmo, acolhedor e seguro, como alguém que está ao lado da pessoa guiando a pausa. Fale devagar, com um leve sorriso na voz. Nada de tom de propaganda nem de professor de academia.</p>
+    <p class="aviso">Os textos que começam com "Agora:" anunciam um exercício. Dê uma pequena pausa depois do nome do exercício, antes das instruções.</p>
+  </section>
+
+  <section class="guia">
+    <h3>📤 Como entregar</h3>
+    <p>Junte os 47 arquivos, de <span class="nome-arquivo">01</span> a <span class="nome-arquivo">47</span>, e envie para quem te contratou pelo WhatsApp (como documento, para não perder qualidade) ou numa pasta do Google Drive.</p>
+  </section>
+
+  <div class="barra">
+    <div class="progresso"><small id="contagem">0 de 47 gravados</small><div class="trilho"><span id="barra"></span></div></div>
+    <button class="alternar" id="letra" type="button" aria-pressed="false">Letra maior</button>
+  </div>
+
+  <section class="bloco"><h2>Abertura (toca no começo de todo exercício)</h2><div class="itens">
+    <article class="item" id="i01">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 01">01</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-01" data-n="01"> Gravado</label>
+      </div>
+      <p class="fala">Vamos começar. Três respirações profundas. Inspire pelo nariz... e solte o ar devagar pela boca, deixando os ombros caírem a cada saída do ar.</p>
+    </article></div></section><section class="bloco"><h2>Cervical, Ombros e Trapézio</h2><div class="itens">
+    <article class="item" id="i02">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 02">02</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-02" data-n="02"> Gravado</label>
+      </div>
+      <p class="fala">Agora: retração do queixo. Olhe para frente e leve o queixo para trás, como se fizesse um queixo duplo. Segure 3 segundos e solte. Repita 8 vezes.</p>
+    </article>
+    <article class="item" id="i03">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 03">03</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-03" data-n="03"> Gravado</label>
+      </div>
+      <p class="fala">Agora: encolher e soltar os ombros. Suba os ombros até as orelhas, segure 2 segundos e solte de uma vez, expirando. Repita 8 vezes.</p>
+    </article>
+    <article class="item" id="i04">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 04">04</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-04" data-n="04"> Gravado</label>
+      </div>
+      <p class="fala">Agora: inclinação lateral suave. Leve a orelha em direção ao ombro, sem forçar. Respire 3 vezes de cada lado.</p>
+    </article>
+    <article class="item" id="i05">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 05">05</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-05" data-n="05"> Gravado</label>
+      </div>
+      <p class="fala">Agora: junção das escápulas. Aperte as costas como se fosse segurar um lápis entre as escápulas. Segure 3 segundos. Repita 10 vezes.</p>
+    </article>
+    <article class="item" id="i06">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 06">06</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-06" data-n="06"> Gravado</label>
+      </div>
+      <p class="fala">Agora: rotação lenta olhando por cima do ombro. Gire a cabeça devagar para olhar por cima do ombro. Volte ao centro. 5 vezes para cada lado.</p>
+    </article>
+    <article class="item" id="i07">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 07">07</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-07" data-n="07"> Gravado</label>
+      </div>
+      <p class="fala">Agora: espreguiçar completo. Deitado, estique os braços acima da cabeça e as pontas dos pés para longe, como se crescesse. Solte. 3 vezes.</p>
+    </article>
+    <article class="item" id="i08">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 08">08</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-08" data-n="08"> Gravado</label>
+      </div>
+      <p class="fala">Agora: anjo no chão. Deitado de barriga para cima, braços em W no chão. Deslize os braços para cima e para baixo sem tirar do chão. 10 vezes.</p>
+    </article>
+    <article class="item" id="i09">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 09">09</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-09" data-n="09"> Gravado</label>
+      </div>
+      <p class="fala">Agora: postura de descanso. Sente sobre os calcanhares e leve o tronco e os braços para frente, testa apoiada. Respire devagar.</p>
+    </article></div></section><section class="bloco"><h2>Punhos, Antebraços e Braços</h2><div class="itens">
+    <article class="item" id="i10">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 10">10</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-10" data-n="10"> Gravado</label>
+      </div>
+      <p class="fala">Agora: abrir e fechar a mão e círculos de punho. Abra e feche as mãos 10 vezes. Depois faça 10 círculos de punho para cada lado.</p>
+    </article>
+    <article class="item" id="i11">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 11">11</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-11" data-n="11"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento suave de flexores e extensores. Braço esticado, palma para cima, puxe os dedos levemente para baixo. Depois palma para baixo. 15 segundos cada.</p>
+    </article>
+    <article class="item" id="i12">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 12">12</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-12" data-n="12"> Gravado</label>
+      </div>
+      <p class="fala">Agora: deslizamento dos tendões. Mão aberta... gancho... punho fechado... mão reta... e punho reto. Passe por cada posição devagar. Cinco sequências.</p>
+    </article>
+    <article class="item" id="i13">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 13">13</span>
+        <span class="dur">≈ 9 s</span>
+        <label class="feito"><input type="checkbox" id="ok-13" data-n="13"> Gravado</label>
+      </div>
+      <p class="fala">Agora: giro de antebraço. Cotovelos colados ao corpo e dobrados, gire as palmas para cima e para baixo, devagar. 15 vezes.</p>
+    </article>
+    <article class="item" id="i14">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 14">14</span>
+        <span class="dur">≈ 15 s</span>
+        <label class="feito"><input type="checkbox" id="ok-14" data-n="14"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento do braço na parede. Mão espalmada na parede na altura do ombro, braço esticado. Gire o corpo para o lado oposto até sentir uma tensão leve no braço. 20 segundos de cada lado.</p>
+    </article></div></section><section class="bloco"><h2>Coluna e Lombar</h2><div class="itens">
+    <article class="item" id="i15">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 15">15</span>
+        <span class="dur">≈ 9 s</span>
+        <label class="feito"><input type="checkbox" id="ok-15" data-n="15"> Gravado</label>
+      </div>
+      <p class="fala">Agora: inclinação da pelve sentado. Sentado, role a pelve para frente e para trás, devagar, sem mexer os ombros. 10 vezes.</p>
+    </article>
+    <article class="item" id="i16">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 16">16</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-16" data-n="16"> Gravado</label>
+      </div>
+      <p class="fala">Agora: rotação de tronco sentado. Mão no encosto da cadeira, gire o tronco para o lado e respire. 3 respirações de cada lado.</p>
+    </article>
+    <article class="item" id="i17">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 17">17</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-17" data-n="17"> Gravado</label>
+      </div>
+      <p class="fala">Agora: gato e vaca sentado. Sentado, mãos nos joelhos: arredonde as costas olhando para o umbigo, depois abra o peito olhando para frente. 8 vezes.</p>
+    </article>
+    <article class="item" id="i18">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 18">18</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-18" data-n="18"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento do flexor do quadril de pé. Dê um passo à frente, contraia o glúteo da perna de trás e leve o quadril para frente. 20 segundos de cada lado.</p>
+    </article>
+    <article class="item" id="i19">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 19">19</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-19" data-n="19"> Gravado</label>
+      </div>
+      <p class="fala">Agora: extensão de pé com as mãos na cintura. Em pé, mãos na cintura, leve o quadril levemente para frente e o peito para cima. 5 vezes, sem forçar.</p>
+    </article>
+    <article class="item" id="i20">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 20">20</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-20" data-n="20"> Gravado</label>
+      </div>
+      <p class="fala">Agora: joelhos ao peito. Deitado, abrace os joelhos e balance o corpo de leve, de um lado para o outro.</p>
+    </article>
+    <article class="item" id="i21">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 21">21</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-21" data-n="21"> Gravado</label>
+      </div>
+      <p class="fala">Agora: torção deitado. Deitado, joelhos dobrados e juntos. Deixe os joelhos caírem para um lado e depois para o outro, devagar.</p>
+    </article>
+    <article class="item" id="i22">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 22">22</span>
+        <span class="dur">≈ 13 s</span>
+        <label class="feito"><input type="checkbox" id="ok-22" data-n="22"> Gravado</label>
+      </div>
+      <p class="fala">Agora: gato e vaca em 4 apoios. Mãos e joelhos no chão ou na cama. Arredonde as costas olhando para o umbigo e depois afunde suavemente olhando para frente. 8 vezes.</p>
+    </article></div></section><section class="bloco"><h2>Quadril e Joelhos</h2><div class="itens">
+    <article class="item" id="i23">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 23">23</span>
+        <span class="dur">≈ 9 s</span>
+        <label class="feito"><input type="checkbox" id="ok-23" data-n="23"> Gravado</label>
+      </div>
+      <p class="fala">Agora: contração de glúteo sentado. Sentado, aperte os glúteos com força por 5 segundos e solte. 10 vezes. Ninguém percebe.</p>
+    </article>
+    <article class="item" id="i24">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 24">24</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-24" data-n="24"> Gravado</label>
+      </div>
+      <p class="fala">Agora: isometria de coxa sentado. Sentado, estique uma perna e contraia a coxa por 5 segundos, sem travar o joelho. Solte. 5 vezes de cada lado.</p>
+    </article>
+    <article class="item" id="i25">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 25">25</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-25" data-n="25"> Gravado</label>
+      </div>
+      <p class="fala">Agora: abertura isométrica dos joelhos. Sentado, mãos do lado de fora dos joelhos. Empurre os joelhos para fora contra as mãos por 5 segundos, sem mexer. 8 vezes.</p>
+    </article>
+    <article class="item" id="i26">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 26">26</span>
+        <span class="dur">≈ 10 s</span>
+        <label class="feito"><input type="checkbox" id="ok-26" data-n="26"> Gravado</label>
+      </div>
+      <p class="fala">Agora: extensão de joelho sentado. Sentado, estique o joelho devagar até onde não doer e desça devagar. 8 vezes de cada lado.</p>
+    </article>
+    <article class="item" id="i27">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 27">27</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-27" data-n="27"> Gravado</label>
+      </div>
+      <p class="fala">Agora: ponte de glúteo. Deitado, joelhos dobrados, suba o quadril e desça devagar. 3 séries de 10.</p>
+    </article>
+    <article class="item" id="i28">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 28">28</span>
+        <span class="dur">≈ 14 s</span>
+        <label class="feito"><input type="checkbox" id="ok-28" data-n="28"> Gravado</label>
+      </div>
+      <p class="fala">Agora: abertura de perna deitado de lado. Deitado de lado, perna de baixo dobrada. Suba a perna de cima esticada até a altura do quadril e desça devagar. 10 vezes de cada lado.</p>
+    </article>
+    <article class="item" id="i29">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 29">29</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-29" data-n="29"> Gravado</label>
+      </div>
+      <p class="fala">Agora: deslizamento do calcanhar. Deitado de barriga para cima, deslize o calcanhar em direção ao bumbum até onde não doer e volte. 10 vezes de cada lado.</p>
+    </article>
+    <article class="item" id="i30">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 30">30</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-30" data-n="30"> Gravado</label>
+      </div>
+      <p class="fala">Agora: sentar e levantar da cadeira. Levante da cadeira sem usar as mãos e sente devagar. 10 vezes.</p>
+    </article>
+    <article class="item" id="i31">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 31">31</span>
+        <span class="dur">≈ 15 s</span>
+        <label class="feito"><input type="checkbox" id="ok-31" data-n="31"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento do glúteo deitado. Deitado, uma perna esticada no chão. Abrace o outro joelho e puxe devagar em direção ao ombro oposto, até sentir o glúteo esticar. 30 segundos de cada lado.</p>
+    </article>
+    <article class="item" id="i32">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 32">32</span>
+        <span class="dur">≈ 9 s</span>
+        <label class="feito"><input type="checkbox" id="ok-32" data-n="32"> Gravado</label>
+      </div>
+      <p class="fala">Agora: pernas na parede. Deitado com o bumbum perto da parede, apoie as pernas esticadas na parede. Respire devagar.</p>
+    </article>
+    <article class="item" id="i33">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 33">33</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-33" data-n="33"> Gravado</label>
+      </div>
+      <p class="fala">Agora: bombinha de tornozelo. Leve as pontas dos pés para cima e para baixo, sem pressa. 20 vezes.</p>
+    </article></div></section><section class="bloco"><h2>Pés e Calcanhar</h2><div class="itens">
+    <article class="item" id="i34">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 34">34</span>
+        <span class="dur">≈ 9 s</span>
+        <label class="feito"><input type="checkbox" id="ok-34" data-n="34"> Gravado</label>
+      </div>
+      <p class="fala">Agora: círculos de tornozelo. Com o pé no ar, desenhe círculos lentos com a ponta do pé. 10 para cada lado, nos dois pés.</p>
+    </article>
+    <article class="item" id="i35">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 35">35</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-35" data-n="35"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento da sola do pé. Sentado, cruze o pé sobre o joelho oposto e puxe os dedos para trás com a mão até sentir a sola esticar. 20 segundos em cada pé.</p>
+    </article>
+    <article class="item" id="i36">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 36">36</span>
+        <span class="dur">≈ 18 s</span>
+        <label class="feito"><input type="checkbox" id="ok-36" data-n="36"> Gravado</label>
+      </div>
+      <p class="fala">Agora: rolar a sola na garrafa ou na bolinha. Sentado, role a sola do pé descalço sobre uma garrafa de água ou uma bolinha, do calcanhar aos dedos, com pressão confortável. 30 segundos em cada pé. À noite, a garrafa pode estar gelada.</p>
+    </article>
+    <article class="item" id="i37">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 37">37</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-37" data-n="37"> Gravado</label>
+      </div>
+      <p class="fala">Agora: puxar a toalha com os dedos. Sentado, pé descalço sobre uma toalha no chão. Puxe a toalha para perto usando só os dedos. 3 vezes em cada pé.</p>
+    </article>
+    <article class="item" id="i38">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 38">38</span>
+        <span class="dur">≈ 15 s</span>
+        <label class="feito"><input type="checkbox" id="ok-38" data-n="38"> Gravado</label>
+      </div>
+      <p class="fala">Agora: alongamento de panturrilha na parede. Mãos na parede, uma perna atrás esticada com o calcanhar no chão. Incline o corpo para frente até sentir a panturrilha. 20 segundos de cada lado.</p>
+    </article>
+    <article class="item" id="i39">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 39">39</span>
+        <span class="dur">≈ 15 s</span>
+        <label class="feito"><input type="checkbox" id="ok-39" data-n="39"> Gravado</label>
+      </div>
+      <p class="fala">Agora: toalha na sola antes do primeiro passo. Ainda na cama, perna esticada, passe uma toalha na sola do pé e puxe as pontas em sua direção. 20 segundos em cada pé, antes de pisar no chão.</p>
+    </article>
+    <article class="item" id="i40">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 40">40</span>
+        <span class="dur">≈ 8 s</span>
+        <label class="feito"><input type="checkbox" id="ok-40" data-n="40"> Gravado</label>
+      </div>
+      <p class="fala">Agora: elevação dos calcanhares. Suba na ponta dos pés e desça devagar. Quinze vezes. Sentado também vale.</p>
+    </article></div></section><section class="bloco"><h2>Respiração e olhos</h2><div class="itens">
+    <article class="item" id="i41">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 41">41</span>
+        <span class="dur">≈ 11 s</span>
+        <label class="feito"><input type="checkbox" id="ok-41" data-n="41"> Gravado</label>
+      </div>
+      <p class="fala">Agora: respiração quatro, seis. Inspire contando até quatro... e solte o ar contando até seis. A saída mais longa avisa o corpo que ele pode relaxar.</p>
+    </article>
+    <article class="item" id="i42">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 42">42</span>
+        <span class="dur">≈ 12 s</span>
+        <label class="feito"><input type="checkbox" id="ok-42" data-n="42"> Gravado</label>
+      </div>
+      <p class="fala">Agora: descanso dos olhos. Tire os olhos da tela e olhe para algo bem longe, a uns seis metros, por vinte segundos. Deixe o rosto e a testa relaxarem.</p>
+    </article></div></section><section class="bloco"><h2>Falas curtas</h2><div class="itens">
+    <article class="item" id="i43">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 43">43</span>
+        <span class="dur">≈ 2 s</span>
+        <label class="feito"><input type="checkbox" id="ok-43" data-n="43"> Gravado</label>
+      </div>
+      <p class="fala">Faltam dez segundos.</p>
+    </article>
+    <article class="item" id="i44">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 44">44</span>
+        <span class="dur">≈ 2 s</span>
+        <label class="feito"><input type="checkbox" id="ok-44" data-n="44"> Gravado</label>
+      </div>
+      <p class="fala">Pronto. Como você está agora?</p>
+    </article>
+    <article class="item" id="i45">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 45">45</span>
+        <span class="dur">≈ 2 s</span>
+        <label class="feito"><input type="checkbox" id="ok-45" data-n="45"> Gravado</label>
+      </div>
+      <p class="fala">Pausa feita. Seu corpo agradece.</p>
+    </article>
+    <article class="item" id="i46">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 46">46</span>
+        <span class="dur">≈ 4 s</span>
+        <label class="feito"><input type="checkbox" id="ok-46" data-n="46"> Gravado</label>
+      </div>
+      <p class="fala">Reposiciona. Ajuste a postura e, se puder, levante.</p>
+    </article>
+    <article class="item" id="i47">
+      <div class="cab">
+        <span class="num" aria-label="Arquivo 47">47</span>
+        <span class="dur">≈ 5 s</span>
+        <label class="feito"><input type="checkbox" id="ok-47" data-n="47"> Gravado</label>
+      </div>
+      <p class="fala">Respira. Três respirações profundas, soltando os ombros na saída do ar.</p>
+    </article></div></section>
+
+  <footer>Religar · roteiro do guia por voz. Os textos foram escritos para serem ouvidos durante o exercício; não altere as palavras sem combinar antes.</footer>
+</div>
+
+<script>
+(function () {
+  var CHAVE = "religar-roteiro-gravados";
+  var marcados = {};
+  try { marcados = JSON.parse(localStorage.getItem(CHAVE) || "{}") || {}; } catch (e) { marcados = {}; }
+  var caixas = Array.prototype.slice.call(document.querySelectorAll(".feito input"));
+  function atualizar() {
+    var n = 0;
+    caixas.forEach(function (c) { var ok = !!marcados[c.dataset.n]; c.checked = ok; c.closest(".item").classList.toggle("ok", ok); if (ok) n++; });
+    document.getElementById("contagem").textContent = n + " de " + caixas.length + " gravados";
+    document.getElementById("barra").style.width = Math.round(n / caixas.length * 100) + "%";
+  }
+  caixas.forEach(function (c) {
+    c.addEventListener("change", function () {
+      if (c.checked) marcados[c.dataset.n] = true; else delete marcados[c.dataset.n];
+      try { localStorage.setItem(CHAVE, JSON.stringify(marcados)); } catch (e) {}
+      atualizar();
+    });
+  });
+  var botao = document.getElementById("letra");
+  botao.addEventListener("click", function () {
+    var grande = document.body.classList.toggle("grande");
+    botao.setAttribute("aria-pressed", grande ? "true" : "false");
+    botao.textContent = grande ? "Letra normal" : "Letra maior";
+  });
+  atualizar();
+})();
+</script>
