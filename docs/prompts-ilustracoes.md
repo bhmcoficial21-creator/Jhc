@@ -26,7 +26,7 @@ Arquivo: `encolher-ombros.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, arms relaxed hanging at the sides, both shoulders lifted up toward the ears. The worked muscles (upper trapezius on both sides) are highlighted in vivid semi-transparent RED glow. Bright-red arrows beside both shoulders point up. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 3. Inclinação lateral suave
+## ✅ 3. Inclinação lateral suave
 Arquivo: `inclinacao-lateral.png`
 
 ```
@@ -91,7 +91,7 @@ Arquivo: `rotacao-antebraco.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, elbows bent at 90 degrees and tucked against the sides, forearms forward, one palm facing up and the other palm facing down. The worked muscles (forearm muscles) are highlighted in vivid semi-transparent RED glow. Curved bright-red rotation arrows around both forearms. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 12. Alongamento do braço na parede
+## ✅ 12. Alongamento do braço na parede
 Arquivo: `alongamento-braco-parede.png`
 
 ```
@@ -100,21 +100,21 @@ Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte li
 
 # 3. Coluna e Lombar (Sobrecarga de Postura)
 
-## ⬜ 13. Inclinação da pelve sentado
+## ✅ 13. Inclinação da pelve sentado
 Arquivo: `inclinacao-pelve.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Side view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, hands on the thighs, pelvis tilted backward with a gently rounded lower back, plus a faint transparent ghost of the same figure with the pelvis tilted forward and lower back arched. The worked muscles (lower back and abdominal muscles) are highlighted in vivid semi-transparent RED glow. A curved bright-red double arrow at the pelvis. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## 🔁 14. Rotação de tronco sentado
-Arquivo: `rotacao-tronco.png` (existe em verde: refazer em vermelho)
+## ✅ 14. Rotação de tronco sentado
+Arquivo: `rotacao-tronco.png`
 
 ```
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Three-quarter front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor. Torso clearly rotated to the left, left hand holding the chair backrest behind, right hand on the outside of the left knee, head following the rotation. The worked muscles (obliques and lower back) are highlighted in vivid semi-transparent RED glow. Two curved bright-red arrows around the torso show the rotation. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 15. Gato e vaca sentado
+## ✅ 15. Gato e vaca sentado
 Arquivo: `gato-vaca-sentado.png`
 
 ```
@@ -302,7 +302,7 @@ Arquivo: `respiracao-4-6.png`
 Clean 3D medical fitness illustration, square 1:1 composition. A smooth matte light-grey anatomical mannequin figure (featureless head with no face, no hair, no clothes, realistic adult proportions, athletic but not exaggerated). Front view: the figure sits upright on a modern office chair with backrest, back supported, feet flat on the floor, relaxed, one hand on the chest and the other on the belly, shoulders dropped. The worked muscles (diaphragm area and belly) are highlighted in vivid semi-transparent RED glow. Soft curved bright-red arrows around the belly show it expanding with the breath. Plain very light grey studio background, soft even lighting, subtle floor shadow, whole figure fully in frame with margin. Anatomically correct posture, natural joint angles, correct hands and feet. No text, no labels, no numbers, no watermark, no logo.
 ```
 
-## ⬜ 41. Regra 20-20-20
+## ✅ 41. Regra 20-20-20
 Arquivo: `regra-20-20-20.png`
 
 ```

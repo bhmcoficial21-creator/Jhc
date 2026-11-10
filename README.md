@@ -56,7 +56,7 @@ Depois abra no navegador (de preferência no modo celular):
 
 **As 5 dores (trilhas do Módulo 1):** Cervical, Ombros e Trapézio (Pescoço de Texto) · Punhos, Antebraços e Braços (Tendinite e LER) · Coluna e Lombar (Sobrecarga de Postura) · Quadril e Joelhos (Impacto Articular e Amnésia Glútea) · Pés e Calcanhar (Fascite Plantar e Sola Queimando). Cada uma tem a dor, a solução, SOS de 1 e 3 min, Checklist Matinal e Noturno e o aviso de quando procurar o médico (`TRILHAS_ZONA` e `PROTOCOLOS` em `data.js`).
 
-**Ilustrações:** 41 prompts organizados pelas 5 dores em `docs/prompts-ilustracoes.md` (boneco cinza, região em vermelho). Salvar cada imagem em `assets/img/exercicios/<id>.png`.
+**Ilustrações:** as 41 ilustrações estão prontas em `assets/img/exercicios/<id>.webp` (convertidas com `tools/otimizar-imagens.py`). Prompts e checklist em `docs/prompts-ilustracoes.md`.
 
 **Painel do desafio:**
 - Boas-vindas e Mapa da Dor (região de foco, trilha, Escala da Dor do dia 1, horário de trabalho)
