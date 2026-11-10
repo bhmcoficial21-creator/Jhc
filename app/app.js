@@ -436,12 +436,18 @@
       $("#etapa-nome").textContent = etapas[idx].nome;
       $("#etapa-texto").innerHTML = etapas[idx].texto;
       $$(".etapas-r div").forEach((d, i) => { d.className = i < idx ? "feita" : i === idx ? "atual" : ""; });
-      if (rodando && idx !== faladoP) { faladoP = idx; voz.vibrar(); voz.falar(`${etapas[idx].nome}. ${etapas[idx].texto}`); }
+      if (rodando && idx !== faladoP) {
+        faladoP = idx; voz.vibrar();
+        const trilhaVoz = D.trilhaDaRegiao(estado.perfil.regiaoFoco);
+        const audio = idx === 0 ? "_reposiciona" : idx === 1 ? "_respira3" : vermelho ? null : exercicio.id;
+        if (audio) voz.tocar(audio, `${etapas[idx].nome}. ${etapas[idx].texto}`, trilhaVoz);
+        else voz.falar(`${etapas[idx].nome}. ${etapas[idx].texto}`);
+      }
     }
     function concluir() {
       pararTimer();
       reg.pausas++; salvar(); ultimaPausa = Date.now();
-      voz.vibrar([120, 60, 120]); voz.falar("Pausa feita. Seu corpo agradece.");
+      voz.vibrar([120, 60, 120]); voz.tocar("_pausafeita", "Pausa feita. Seu corpo agradece.", D.trilhaDaRegiao(estado.perfil.regiaoFoco));
       tela.innerHTML = `<div class="centro"><h1>✓ Pausa feita!</h1>
         <p>${reg.pausas} pausa(s) hoje. Seu corpo agradece.</p>
         <a class="botao botao-grande" href="#hoje">Voltar para Hoje</a></div>`;
@@ -777,7 +783,7 @@
         falado = k; voz.vibrar();
         voz.tocar(x.id, `${k === 0 ? "Vamos lá. " : "Agora. "}${x.nome}. ${x.passos}`, prot.trilha || D.trilhaDaRegiao(x.regiao));
       } else if (rodando && restante === 10 && x.segundos >= 30) {
-        voz.falar("Faltam 10 segundos.");
+        voz.tocar("_faltam10", "Faltam 10 segundos.", prot.trilha || D.trilhaDaRegiao(x.regiao));
       }
     }
     function proximo() {
@@ -789,7 +795,7 @@
       pararTimer();
       reg.pausas++; reg.alivios = (reg.alivios || 0) + 1; salvar(); ultimaPausa = Date.now();
       if (aoConcluir) aoConcluir();
-      voz.vibrar([120, 60, 120]); voz.falar("Pronto. Como está agora?");
+      voz.vibrar([120, 60, 120]); voz.tocar("_pronto", "Pronto. Como está agora?", prot.trilha || D.trilhaDaRegiao(prot.regiao));
       tela.innerHTML = `<div class="centro">
         <h1>✓ Alívio feito</h1>
         <p>Conta como pausa de hoje: ${reg.pausas} pausa(s).</p>
