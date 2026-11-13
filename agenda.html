@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda do barbeiro · Messin do Corte</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/icon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app-page">
+  <header class="app-top">
+    <a href="index.html" class="app-brand"><img src="img/logo-messin.png" alt=""><span>Agenda</span></a>
+    <div class="app-who"><span id="quem"></span><button class="app-link" id="sair">Sair</button></div>
+  </header>
+  <main class="app-main">
+    <section class="app-head">
+      <div>
+        <p class="eyebrow">Perfil do barbeiro</p>
+        <h1 class="app-title" id="titulo">Minha agenda</h1>
+      </div>
+      <div class="chips" id="escopo">
+        <button class="chip is-active" data-escopo="eu" aria-pressed="true">Só eu</button>
+        <button class="chip" data-escopo="equipe" aria-pressed="false">Equipe toda</button>
+      </div>
+    </section>
+    <div class="day-strip" id="dias" role="listbox" aria-label="Escolha o dia"></div>
+    <div class="stats" id="stats"></div>
+    <div class="next-card" id="proximo" hidden></div>
+    <div class="col-grid" id="cols"></div>
+    <p class="note-demo">Versão de demonstração: os horários ficam salvos neste aparelho. Na versão online, o que o cliente marcar aparece aqui na hora, em qualquer celular.</p>
+  </main>
+  <script src="js/vendor/supabase.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/agenda.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messin do Corte — Barbearia</title>
+  <meta name="description" content="Messin do Corte: degradê, navalhado, afro, barba e nevou. Agende seu horário em 1 minuto, sem cadastro.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Messin do Corte — Barbearia">
+  <meta property="og:description" content="Degradê, navalhado, afro, barba e nevou. Agende seu horário em 1 minuto, sem cadastro.">
+  <meta property="og:image" content="img/og-messin.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/icon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="img/logo-messin.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home">
+  <div class="page-loader logo-intro" id="pageLoader" aria-hidden="true">
+    <img class="li-logo" src="img/logo-messin.png" alt="">
+  </div>
+  <header class="topbar" id="topbar">
+    <a href="#inicio" class="brand" aria-label="Messin do Corte, início">Messin do Corte</a>
+    <span class="topbar-role">Barbearia · São Paulo</span>
+    <div class="topbar-actions">
+      <button class="search-btn" id="searchBtn" aria-label="Buscar (Ctrl+K)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span>Buscar</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="menu-pill" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+  </header>
+
+  <!-- MENU EM TELA CHEIA -->
+  <div class="menu" id="menu" hidden>
+    <nav class="menu-links" aria-label="Principal">
+      <a href="#cortes"><small>01</small>Cortes</a>
+      <a href="#servicos"><small>02</small>Preços</a>
+      <a href="#planos"><small>03</small>Planos</a>
+      <a href="#barbeiros"><small>04</small>Barbeiros</a>
+      <a href="#horarios"><small>05</small>Horários</a>
+      <a href="#agendar"><small>06</small>Agendar</a>
+    </nav>
+    <div class="menu-foot">
+      <div class="auth-slot" id="authSlot"><a href="perfil.html" class="nav-login">Meus horários</a></div>
+      <a href="agenda.html" class="nav-login">Área do barbeiro</a>
+      <span class="muted">Ter a Sáb · Rua Gilberto Duarte de Azevedo, 44</span>
+    </div>
+  </div>
+
+  <main>
+    <!-- CAPA -->
+    <section id="inicio" class="hero" aria-label="Messin do Corte">
+      <div class="hero-media" id="heroMedia" aria-hidden="true"></div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-cursor" id="heroCursor" aria-hidden="true">Agendar</div>
+      <a href="#agendar" class="seal" aria-label="Messin do Corte: agendar horário">
+        <svg class="seal-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="sealPath" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
+          <text><textPath href="#sealPath" textLength="512">MESSIN DO CORTE • BARBEARIA • AGENDE JÁ • </textPath></text>
+        </svg>
+        <span class="seal-logo"><div class="logo3d" aria-hidden="true"><div class="l3-stage">
+        <span class="l3-edge"></span>
+        <img class="l3-base" src="img/logo3d/base.png" alt="">
+        <img class="l3-ring" src="img/logo3d/ring.png" alt="">
+        <img class="l3-poles" src="img/logo3d/poles.png" alt="">
+        <img class="l3-msn" src="img/logo3d/msn.png" alt="">
+        <img class="l3-chair" src="img/logo3d/chair.png" alt="">
+        <span class="l3-crown"><span class="l3-crown-spin"><img src="img/logo3d/crown.svg" alt="" style="--k:0"><img src="img/logo3d/crown.svg" alt="" style="--k:1"><img src="img/logo3d/crown.svg" alt="" style="--k:2"><img src="img/logo3d/crown.svg" alt="" style="--k:3"><img src="img/logo3d/crown.svg" alt="" style="--k:4"><img src="img/logo3d/crown.svg" alt="" style="--k:5"><img src="img/logo3d/crown.svg" alt="" style="--k:6"><img src="img/logo3d/crown.svg" alt="" style="--k:7"></span></span>
+        <span class="l3-shine"></span>
+      </div></div></span>
+      </a>
+      <div class="hero-inner">
+        <div class="hero-row">
+          <p class="hero-tag">Degradê · Afro · Barba · Nevou</p>
+          <a href="#agendar" class="hero-count"><span class="dot"></span><span id="heroCount">Agendar</span></a>
+        </div>
+        <h1 class="hero-title" data-text="Messin do Corte">Messin do Corte</h1>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="about section" id="sobre">
+      <div class="about-grid">
+        <div class="about-copy">
+          <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">Sobre a casa</span></div>
+          <p class="about-text">A Messin do Corte é onde o degradê encontra a quebrada: corte na régua, barba na navalha e respeito com todo tipo de cabelo, do liso ao crespo.</p>
+          <a href="#agendar" class="pill-btn">Agendar</a>
+        </div>
+        <figure class="about-media" id="donoMedia"></figure>
+      </div>
+      <ul class="about-perks">
+        <li><strong>Seu corte salvo</strong><span>Guardamos pente, altura e detalhes para repetir igual.</span></li>
+        <li><strong>Horário real</strong><span>A agenda soma o tempo de cada serviço. Sem atraso.</span></li>
+        <li><strong>Especialista em crespo</strong><span>Afro, twist, tranças e barba sem encravar.</span></li>
+      </ul>
+    </section>
+
+    <!-- VÍDEO NA CADEIRA (estilo "hero background video") -->
+    <section class="reel" id="reel" aria-label="Vídeo: Messin cortando na barbearia">
+      <video class="reel-video" id="reelVideo" src="video/na-cadeira.mp4" poster="img/na-cadeira-poster.jpg" muted autoplay loop playsinline webkit-playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="reel-shade" aria-hidden="true"></div>
+      <div class="reel-top"><span class="label-pill">Na cadeira</span><span class="reel-tag">@messin_do_corte</span></div>
+      <div class="reel-copy">
+        <h2 class="reel-title">Do degradê à régua, <em>na cadeira do Messin</em></h2>
+        <div class="reel-actions">
+          <a href="#agendar" class="pill-btn">Agendar</a>
+          <button class="reel-toggle" id="reelToggle" aria-label="Pausar vídeo">❚❚</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARTE (dois vídeos) -->
+    <section class="arte" id="arte" aria-label="A arte da barbearia">
+      <div class="arte-grid">
+        <figure class="arte-vid"><video src="video/arte-1.mp4" poster="img/arte-1-poster.jpg" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video><button class="arte-play" type="button" aria-label="Tocar vídeo" hidden>▶</button></figure>
+        <div class="arte-copy">
+          <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">A arte</span></div>
+          <h2 class="arte-title">Cabelo é mais que estilo.<br><em>É paixão e a arte de transformar.</em></h2>
+          <a href="#agendar" class="pill-btn">Agendar</a>
+        </div>
+        <figure class="arte-vid"><video src="video/arte-2.mp4" poster="img/arte-2-poster.jpg" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video><button class="arte-play" type="button" aria-label="Tocar vídeo" hidden>▶</button></figure>
+      </div>
+    </section>
+
+    <!-- CORTES (galeria) -->
+    <section id="cortes" class="cuts">
+      <div class="cuts-head">
+        <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">Cortes da casa</span></div>
+        <a href="#servicos" class="all-link">Ver preços <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="marquee" aria-hidden="true"><div class="marquee-track">
+        <span class="solid">Cortes</span><span>Cortes</span><span>Cortes</span><span>Cortes</span>
+        <span class="solid">Cortes</span><span>Cortes</span><span>Cortes</span><span>Cortes</span>
+      </div></div>
+      <h2 class="sr-only">Cortes da casa</h2>
+      <div class="chips cuts-filter" id="styleFilter"></div>
+      <div class="cuts-row" id="styleGrid"></div>
+      <p class="cuts-hint muted">Arraste para o lado e toque no corte para agendar.</p>
+    </section>
+
+    <!-- SERVIÇOS E PREÇOS -->
+    <section id="servicos" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Tabela</p>
+        <h2>Serviços & preços</h2>
+      </div>
+      <div class="tabs" role="tablist" id="servTabs"></div>
+      <ul class="price-list" id="servList"></ul>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="planos" class="section plans-section">
+      <div class="section-head center">
+        <p class="eyebrow">Clube Messin do Corte</p>
+        <h2>Seu visual em dia, todo mês.</h2>
+        <p class="muted">Sem letra miúda. Escolha como prefere vir: avulso ou no clube, e cancele quando quiser.</p>
+      </div>
+      <div class="plans" id="plansGrid"></div>
+    </section>
+
+    <!-- BARBEIROS -->
+    <section id="barbeiros" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Equipe</p>
+        <h2>Nossos barbeiros</h2>
+      </div>
+      <figure class="crew-banner" id="crewBanner"></figure>
+      <div class="barber-grid" id="barberGrid"></div>
+    </section>
+
+    <!-- AGENDAMENTO -->
+    <section id="agendar" class="section section-alt">
+      <div class="section-head">
+        <p class="eyebrow">Agendamento</p>
+        <h2>Marque seu horário</h2>
+      </div>
+      <ol class="steps" id="steps" aria-label="Etapas">
+        <li>Serviços</li><li>Barbeiro</li><li>Dia & hora</li><li>Seus dados</li>
+      </ol>
+      <div class="wizard" id="wizard" aria-live="polite"></div>
+      <div class="summary" id="summary" hidden></div>
+    </section>
+
+    <!-- HORÁRIOS E LOCAL -->
+    <section id="horarios" class="section">
+      <div class="info-grid">
+        <div>
+          <div class="section-head"><p class="eyebrow">Funcionamento</p><h2>Horários</h2></div>
+          <table class="hours" id="hoursTable"></table>
+        </div>
+        <div>
+          <div class="section-head"><p class="eyebrow">Onde estamos</p><h2>Endereço</h2></div>
+          <p class="address" id="address"></p>
+          <a class="btn btn-ghost" id="mapLink" target="_blank" rel="noopener">Abrir no mapa</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="brand3d" id="marca" aria-label="Símbolo da barbearia">
+    <div class="label-row"><span class="label-ico">MS</span><span class="label-pill">A marca</span></div>
+    <div class="brand3d-logo"><div class="logo3d" data-interactive aria-hidden="true"><div class="l3-stage">
+        <span class="l3-edge"></span>
+        <img class="l3-base" src="img/logo3d/base.png" alt="">
+        <img class="l3-ring" src="img/logo3d/ring.png" alt="">
+        <img class="l3-poles" src="img/logo3d/poles.png" alt="">
+        <img class="l3-msn" src="img/logo3d/msn.png" alt="">
+        <img class="l3-chair" src="img/logo3d/chair.png" alt="">
+        <span class="l3-crown"><span class="l3-crown-spin"><img src="img/logo3d/crown.svg" alt="" style="--k:0"><img src="img/logo3d/crown.svg" alt="" style="--k:1"><img src="img/logo3d/crown.svg" alt="" style="--k:2"><img src="img/logo3d/crown.svg" alt="" style="--k:3"><img src="img/logo3d/crown.svg" alt="" style="--k:4"><img src="img/logo3d/crown.svg" alt="" style="--k:5"><img src="img/logo3d/crown.svg" alt="" style="--k:6"><img src="img/logo3d/crown.svg" alt="" style="--k:7"></span></span>
+        <span class="l3-shine"></span>
+      </div></div></div>
+    <p class="brand3d-motto">Estilo · Confiança · Atitude</p>
+    <p class="brand3d-hint muted">Passe o dedo ou o mouse sobre o selo</p>
+  </section>
+
+  <footer class="footer">
+    <span class="brand-mark">MS</span>
+    <p>© <span id="year"></span> Messin do Corte · <a href="agenda.html">Área do barbeiro</a></p>
+  </footer>
+
+  <dialog class="search-dialog" id="searchDialog" aria-label="Buscar no site">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="searchInput" type="search" placeholder="Buscar corte, barba, barbeiro, plano…" autocomplete="off"
+        role="combobox" aria-expanded="true" aria-controls="searchList" aria-autocomplete="list">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-list" id="searchList" role="listbox"></div>
+    <p class="search-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></p>
+  </dialog>
+
+  <a href="#agendar" class="fab btn btn-primary is-hidden" id="fab">Agendar</a>
+
+  <script src="js/logo3d.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/vendor/supabase.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/hero.js"></script>
+  <script src="js/vapor.js"></script>
+</body>
+</html>
+
+</body></html>
