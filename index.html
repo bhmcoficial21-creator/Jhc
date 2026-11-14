@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monalisa Albuquerque | Mnails Studio, unhas decoradas na Zona Oeste</title>
+<meta name="description" content="Especialista em unhas decoradas, alongamentos e press on nails. Zona Oeste, Butantã (São Paulo). Agende sua experiência pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#150724;      /* violeta quase preto, a luz do estúdio */
+    --plum:#2a0d45;
+    --ultra:#9b3dff;      /* roxo neon das fotos */
+    --pink:#ff7ab8;       /* rosa da jaqueta */
+    --blush:#ffe3f0;
+    --ink:#f7ecff;
+    --muted:#c9b3e0;
+    --radius:28px;
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--night);color:var(--ink);font-family:'Figtree',system-ui,sans-serif;font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--pink);outline-offset:3px;border-radius:8px}
+  h1,h2,h3{font-family:'Unbounded',sans-serif;font-weight:700;line-height:1.1;letter-spacing:-.01em}
+  .wrap{width:min(1120px,100% - 40px);margin-inline:auto}
+
+  /* botão */
+  .btn{display:inline-flex;align-items:center;gap:.6em;padding:.95em 1.6em;border-radius:999px;background:var(--pink);color:#2a0d45;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:transform .15s,background .15s}
+  .btn:hover{background:var(--blush);transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35)}
+  .btn.ghost:hover{background:rgba(255,255,255,.1)}
+
+  /* topo */
+  header{position:sticky;top:0;z-index:10;background:rgba(21,7,36,.82);backdrop-filter:blur(12px)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .logo{font-family:'Unbounded',sans-serif;font-weight:700;font-size:1.05rem;text-decoration:none;display:flex;align-items:center;gap:.5em}
+  .logo svg{width:20px;height:20px;fill:var(--pink)}
+  header .btn{padding:.6em 1.2em;font-size:.95rem}
+
+  /* hero */
+  .hero{position:relative;overflow:hidden;padding:56px 0 88px;background:
+    radial-gradient(60% 50% at 85% 20%,rgba(155,61,255,.55),transparent 70%),
+    radial-gradient(50% 45% at 0% 100%,rgba(255,122,184,.25),transparent 70%),var(--night)}
+  .hero .wrap{display:grid;gap:40px;align-items:center}
+  .hero h1{font-size:clamp(2rem,7vw,3.9rem);max-width:15ch}
+  .hero p.lead{margin-top:20px;max-width:44ch;color:var(--muted);font-size:1.15rem}
+  .hero .actions{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px}
+  .portrait{position:relative;width:min(360px,80%);justify-self:center}
+  .portrait img{width:100%;aspect-ratio:776/924;object-fit:cover;object-position:center top;border-radius:var(--radius);box-shadow:0 0 0 6px rgba(255,122,184,.9),0 30px 80px rgba(155,61,255,.55)}
+  .spark{position:absolute;fill:#fff;filter:drop-shadow(0 0 12px rgba(255,255,255,.8))}
+  .spark.a{width:64px;top:-18px;right:-26px}
+  .spark.b{width:34px;bottom:70px;left:-24px;fill:var(--pink)}
+  @keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.7) rotate(20deg)}}
+  .spark.a{animation:twinkle 3.2s ease-in-out infinite}
+  @media(min-width:860px){
+    .hero{padding:88px 0 120px}
+    .hero .wrap{grid-template-columns:1.2fr .8fr}
+  }
+
+  /* seções */
+  section{padding:84px 0}
+  h2{font-size:clamp(1.6rem,4.5vw,2.5rem);max-width:20ch}
+  .intro{color:var(--muted);margin-top:14px;max-width:48ch}
+
+  /* serviços */
+  .services{background:var(--plum)}
+  .svc-grid{margin-top:44px;display:grid;gap:20px}
+  .svc{padding:30px;border-radius:var(--radius);background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  .svc svg{width:30px;height:30px;fill:var(--pink);margin-bottom:18px}
+  .svc h3{font-size:1.2rem;margin-bottom:10px}
+  .svc p{color:var(--muted)}
+  @media(min-width:760px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+
+  /* galeria */
+  .gallery-grid{margin-top:44px;columns:2;column-gap:14px}
+  .gallery-grid img{width:100%;margin-bottom:14px;border-radius:22px;break-inside:avoid;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  @media(min-width:900px){.gallery-grid{columns:4}}
+  .more{margin-top:20px;display:flex;justify-content:center}
+
+  /* sobre */
+  .about{background:linear-gradient(180deg,var(--night),var(--plum))}
+  .about .wrap{display:grid;gap:36px;align-items:center}
+  .about img{width:200px;height:200px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 5px var(--pink),0 20px 60px rgba(155,61,255,.5)}
+  .about p{color:var(--muted);margin-top:16px;max-width:52ch}
+  .facts{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}
+  .facts li{padding:.5em 1em;border-radius:999px;background:rgba(255,255,255,.08);font-size:.95rem}
+  @media(min-width:760px){.about .wrap{grid-template-columns:auto 1fr;gap:64px}.about img{width:280px;height:280px}}
+
+  /* agendamento */
+  .book{background:radial-gradient(55% 40% at 50% 100%,rgba(155,61,255,.5),transparent 70%),var(--plum)}
+  .book .wrap{max-width:720px}
+  .form{margin-top:32px;display:grid;gap:22px}
+  fieldset{border:0;padding:24px;border-radius:var(--radius);background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);min-width:0}
+  legend{font-family:'Unbounded',sans-serif;font-size:1rem;padding:0 8px;margin-left:-8px}
+  .opts{display:grid;gap:10px;margin-top:10px}
+  .opt{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.07);cursor:pointer;box-shadow:inset 0 0 0 1.5px transparent;transition:box-shadow .15s,background .15s}
+  .opt:hover{background:rgba(255,255,255,.12)}
+  .opt:has(input:checked){box-shadow:inset 0 0 0 2px var(--pink);background:rgba(255,122,184,.14)}
+  .opt input{accent-color:var(--pink);margin-top:.35em;width:18px;height:18px;flex:none}
+  .opt b{display:block;font-weight:600}
+  .opt small{display:block;color:var(--muted);font-size:.9rem;line-height:1.4}
+  .opt .price{margin-left:auto;font-weight:600;white-space:nowrap}
+  .field{display:grid;gap:6px;margin-top:12px;font-weight:500}
+  .field input{font:inherit;color:var(--ink);background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:14px;padding:.8em 1em;width:100%}
+  .field input::placeholder{color:#9d86b8}
+  .field input[type=date]{color-scheme:dark}
+  .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .slot{font:inherit;font-weight:600;color:var(--ink);background:rgba(255,255,255,.1);border:0;padding:.6em 1.1em;border-radius:999px;cursor:pointer}
+  .slot:hover{background:rgba(255,255,255,.2)}
+  .slot[aria-pressed=true]{background:var(--pink);color:#2a0d45}
+  .muted{color:var(--muted);font-size:.95rem}
+  .error{padding:12px 16px;border-radius:14px;background:rgba(255,90,90,.18);color:#ffd6d6}
+  .notice{margin-top:20px;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.95rem}
+  .result{margin-top:32px;padding:28px;border-radius:var(--radius);background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  .result h3{font-size:1.3rem;margin-bottom:10px}
+  .result p{color:var(--muted);margin-bottom:14px}
+  .result .btn{margin-top:6px}
+  .btn[disabled]{opacity:.6;cursor:wait}
+
+  footer{padding:36px 0;color:var(--muted);font-size:.95rem}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .spark.a{animation:none}
+    .btn{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 100 100"><path d="M50 0C54 30 70 46 100 50C70 54 54 70 50 100C46 70 30 54 0 50C30 46 46 30 50 0Z"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#topo"><svg><use href="#star"/></svg>Mnails Studio</a>
+    <a class="btn" href="#agendar">Agendar</a>
+  </div>
+</header>
+
+<main id="topo">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Unhas decoradas com estilo e qualidade em cada detalhe</h1>
+        <p class="lead">Alongamentos e press on nails feitos por Monalisa Albuquerque, na Zona Oeste de São Paulo, bairro do Butantã.</p>
+        <div class="actions">
+          <a class="btn" href="#agendar">Agende sua experiência</a>
+          <a class="btn ghost" href="#trabalhos">Ver trabalhos</a>
+        </div>
+      </div>
+      <div class="portrait">
+        <svg class="spark a" viewBox="0 0 100 100"><use href="#star"/></svg>
+        <svg class="spark b" viewBox="0 0 100 100"><use href="#star"/></svg>
+        <img src="img/monalisa.jpg" alt="Monalisa Albuquerque, de jaqueta rosa e branca, ao lado do logo Mnails Studio" width="776" height="924">
+      </div>
+    </div>
+  </div>
+
+  <section class="services" id="servicos">
+    <div class="wrap">
+      <h2>O que você encontra no estúdio</h2>
+      <div class="svc-grid">
+        <article class="svc">
+          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
+          <h3>Alongamentos</h3>
+          <p>Formato, comprimento e acabamento pensados para a sua mão.</p>
+        </article>
+        <article class="svc">
+          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
+          <h3>Press on nails</h3>
+          <p>Unhas prontas, feitas à mão, para colocar e sair arrasando.</p>
+        </article>
+        <article class="svc">
+          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
+          <h3>Unhas decoradas</h3>
+          <p>Flores 3D, degradês, cromados, brilho e muito detalhe.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="trabalhos">
+    <div class="wrap">
+      <h2>Alguns dos trabalhos</h2>
+      <p class="intro">Cada par é feito sob medida. Veja mais no Instagram.</p>
+      <div class="gallery-grid">
+        <img src="img/nail-11.jpg" alt="Unhas longas quadradas em degradê rosa e preto com lettering" loading="lazy">
+        <img src="img/nail-22.jpg" alt="Unhas com glitter champanhe e flores 3D brancas" loading="lazy">
+        <img src="img/nail-12.jpg" alt="Unhas amendoadas com cruz dourada e detalhes em relevo" loading="lazy">
+        <img src="img/nail-31.jpg" alt="Unhas vinho com contornos metálicos e francesinha em relevo" loading="lazy">
+        <img src="img/nail-13.jpg" alt="Unhas roxas e pretas com flores rosas 3D" loading="lazy">
+        <img src="img/nail-42.jpg" alt="Unhas com efeito de relevo branco ondulado" loading="lazy">
+        <img src="img/nail-23.jpg" alt="Unhas estilete com francesinha amarela e flores 3D" loading="lazy">
+        <img src="img/nail-32.jpg" alt="Unhas vermelhas cromadas com brilho na ponta" loading="lazy">
+        <img src="img/nail-33.jpg" alt="Francesinha com estampa de oncinha e flores 3D" loading="lazy">
+        <img src="img/nail-43.jpg" alt="Unhas curtas rosa leitoso com pérolas" loading="lazy">
+      </div>
+      <div class="more">
+        <a class="btn ghost" href="https://www.instagram.com/mnailsbymonalisa" target="_blank" rel="noopener">@mnailsbymonalisa no Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <div class="wrap">
+      <img src="img/avatar.jpg" alt="Monalisa Albuquerque trabalhando com a lixa elétrica" width="456" height="456">
+      <div>
+        <h2>Oi, eu sou a Monalisa</h2>
+        <p>Sou especialista em unhas decoradas e atendo na Zona Oeste, no Butantã. Meu foco é entregar estilo e qualidade em cada detalhe, do alongamento ao press on nails.</p>
+        <ul class="facts">
+          <li>Zona Oeste, Butantã</li>
+          <li>Mais de 2,8 mil seguidoras no Instagram</li>
+          <li>Alongamentos e press on nails</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="book" id="agendar">
+    <div class="wrap">
+      <h2>Agende seu horário</h2>
+      <p class="intro">Escolha o serviço, o dia e o horário. Para garantir a reserva, pague tudo agora ou só metade.</p>
+
+      <div id="testbanner" class="notice" hidden>Modo de teste: nenhum valor real será cobrado.</div>
+
+      <form id="bookform" class="form" novalidate>
+        <fieldset>
+          <legend>1. Serviço</legend>
+          <div id="services" class="opts"><p class="muted">Carregando serviços...</p></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Dia e horário</legend>
+          <label class="field">Dia
+            <input type="date" id="date" required>
+          </label>
+          <div id="slots" class="slots" aria-live="polite"><p class="muted">Escolha um serviço e um dia para ver os horários.</p></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. Seus dados</legend>
+          <label class="field">Nome
+            <input type="text" id="name" autocomplete="name" maxlength="80" required>
+          </label>
+          <label class="field">WhatsApp com DDD
+            <input type="tel" id="phone" autocomplete="tel" inputmode="tel" placeholder="(11) 90000-0000" required>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>4. Pagamento</legend>
+          <div id="paymodes" class="opts"><p class="muted">Escolha um serviço para ver os valores.</p></div>
+        </fieldset>
+
+        <p id="formerror" class="error" role="alert" hidden></p>
+        <button class="btn" type="submit" id="submitbtn">Reservar e pagar</button>
+      </form>
+
+      <div id="result" class="result" hidden></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Mnails Studio, por Monalisa Albuquerque</span>
+    <a href="https://www.instagram.com/mnailsbymonalisa" target="_blank" rel="noopener">Instagram @mnailsbymonalisa</a>
+  </div>
+</footer>
+
+<script>
+  // Cole aqui o link completo do WhatsApp dela (o da bio do Instagram, wa.me/message/...)
+  var WHATSAPP_URL = "";
+  document.querySelectorAll('[data-whatsapp]').forEach(function(a){
+    if (WHATSAPP_URL) { a.href = WHATSAPP_URL; a.target = "_blank"; a.rel = "noopener"; }
+    else { a.href = "https://www.instagram.com/mnailsbymonalisa"; a.target = "_blank"; a.rel = "noopener"; }
+  });
+</script>
+</body>
+</html>
