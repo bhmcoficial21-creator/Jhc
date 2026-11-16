@@ -40,4 +40,5 @@ header.top{background:var(--brand2);color:#fff;padding:28px 0}header.top h1{font
 .card.capa .n,.card.fim .n{color:#cfe3e0}
 .card .foto{padding:0;overflow:hidden}.card .foto img:not(:only-child){object-fit:cover;background:none}.card .foto{flex-direction:column}.card .foto img{width:100%;flex:1;min-height:0;object-fit:contain;background:#eee}
 .card.capa .foto{flex:1;margin:6cqw 0}
+.card .foto.lado{flex-direction:row}.card .foto.lado img:not(:only-child){object-fit:contain;width:50%;height:100%;flex:none;background:#eee}
 .card ol{font-size:5.4cqw;padding-left:7cqw;margin:4cqw 0}.card ol li{margin:3cqw 0}

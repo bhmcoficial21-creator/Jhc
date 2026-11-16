@@ -49,7 +49,35 @@ window.MODULOS = [
   { id: "pausa-teclado", titulo: "Pausa do Teclado", tempo: "60 s", cards: lista("Pausa do Teclado", "60 segundos", "para quem faz movimento repetitivo.", [["Alongar flexores e extensores","10 s cada","Braço esticado, puxe os dedos."],["Abrir e fechar a mão","10x","Devagar."],["Rolar ombros","5x","Círculos para trás."]]) },
   { id: "pausa-carga", titulo: "Pausa da Carga", tempo: "60 s", cards: lista("Pausa da Carga", "60 segundos", "para quem faz esforço físico.", [["Extensão de lombar","5x","Mãos na cintura."],["Joelhos ao peito em pé","5x cada","Alterne as pernas."],["Abrir o peito com mãos atrás","15 s","Entrelace as mãos atrás das costas."]]) },
   { id: "pausa-olhos-mandibula", titulo: "Pausa dos Olhos e Mandíbula", tempo: "60 s", cards: lista("Pausa dos Olhos e Mandíbula", "60 segundos", "para todos.", [["Olhar longe","20 s","Foque em algo distante."],["Soltar a mandíbula","","Dentes afastados, língua relaxada."],["3 respirações lentas","3x","Inspire pelo nariz, solte pela boca."]]) } ] },
- { id: 4, nome: "Bônus", guias: [
+ { id: 4, nome: "Módulo 4 — Mais Alívio (extra)", guias: [
+  { id: "extra-lombar", titulo: "Lombar Extra", tempo: "3 min", cards: [
+    capa("Lombar Extra", "3 minutos", "para quem precisa de mais alívio nas costas."),
+    ex("Gato-camelo em quatro apoios", "8x", "De joelhos e mãos no chão, arredonde as costas soltando o ar e depois abra o peito puxando o ar.", "Solte o ar ao arredondar.", "foto: quatro apoios"),
+    ex("Posição da criança", "30 s", "Sentado sobre os calcanhares, estique os braços à frente e descanse o tronco.", "Respire fundo e devagar.", "foto: posição da criança"),
+    ex("Rotação lombar deitado", "30 s cada lado", "Deitado, braços abertos, leve os joelhos dobrados para um lado, sem forçar.", "Solte o ar ao descer os joelhos.", "foto: deitado de cima"),
+    ex("Um joelho ao peito", "30 s cada", "Deitado, abrace um joelho ao peito e mantenha a outra perna esticada.", "Respire devagar.", "foto: deitado"),
+    ex("Alongamento deitado", "30 s", "Deitado, estique os braços acima da cabeça e as pernas, alongando o corpo todo.", "Inspire ao esticar, solte ao relaxar.", "foto: deitado")] },
+  { id: "extra-tronco-peito", titulo: "Tronco e Peito", tempo: "3 min", cards: [
+    capa("Tronco e Peito", "3 minutos", "para quem passa o dia curvado."),
+    ex("Abrir o peito na parede", "30 s cada lado", "Mão apoiada na parede, braço esticado, gire o tronco devagar para o lado oposto.", "Respire sem prender o ar.", "foto: na parede"),
+    ex("Abrir o peito deitado", "30 s", "Deitado, joelhos dobrados e braços abertos com as palmas para cima.", "Solte o ar e deixe o peito abrir.", "foto: deitado"),
+    ex("Rotação de tronco sentado", "8x cada lado", "Sentado, segure o encosto da cadeira e gire o tronco devagar.", "Solte o ar ao girar.", "foto: sentado"),
+    ex("Flexão e extensão sentado", "8x", "Sentado, curve o tronco para frente e depois volte abrindo o peito.", "Solte o ar ao curvar.", "foto: sentado, perfil"),
+    ex("Alongar o trapézio", "30 s cada lado", "Sentado, incline a cabeça para o lado e deixe o ombro oposto descer.", "Respire fundo e devagar.", "foto: sentado, de frente")] },
+  { id: "extra-quadril-pernas", titulo: "Quadril e Pernas", tempo: "3 min", cards: [
+    capa("Quadril e Pernas", "3 minutos", "para quem passa o dia sentado ou em pé."),
+    ex("Sentar e levantar", "8x", "Cruze os braços no peito, levante sem apoio das mãos e sente devagar.", "Solte o ar ao levantar.", "foto: perfil"),
+    ex("Elevar a perna sentado", "10x cada", "Sentado, estique um joelho até a perna ficar reta e volte devagar.", "Solte o ar ao subir a perna.", "foto: sentado, perfil"),
+    ex("Contração do quadríceps", "10x, segura 5 s", "Sentado com a perna esticada, aperte a coxa e segure.", "Respire sem prender o ar.", "foto: sentado, perfil"),
+    ex("Abertura do quadril sentado", "10x, segura 5 s", "Sentado, mãos na lateral dos joelhos, empurre os joelhos para fora contra as mãos.", "Solte o ar ao empurrar.", "foto: sentado, de frente"),
+    ex("Elevação lateral de perna", "10x cada lado", "Deitado de lado, apoie-se no antebraço e suba a perna de cima, sem girar o quadril.", "Solte o ar ao subir.", "foto: deitado de lado"),
+    ex("Deslizar o pé deitado", "10x cada", "Deitado, joelhos dobrados, deslize um pé para frente até esticar a perna e volte.", "Respire devagar.", "foto: deitado")] },
+  { id: "extra-pes-circulacao", titulo: "Pés e Circulação", tempo: "3 min", cards: [
+    capa("Pés e Circulação", "3 minutos", "para quem passa o dia em pé ou sente as pernas cansadas."),
+    ex("Pernas na parede", "60 s", "Deitado, apoie as pernas esticadas na parede, braços ao lado do corpo, e relaxe.", "Respire devagar.", "foto: pernas na parede"),
+    ex("Bombeamento de tornozelo", "15x cada", "Sentado, com a perna esticada, suba e desça a ponta do pé.", "Respire no ritmo do movimento.", "foto: sentado, perfil"),
+    ex("Puxar a toalha com os dedos", "10x cada pé", "Sentado, pé sobre uma toalha no chão; use os dedos para puxar a toalha para você.", "Respire devagar.", "foto: sentado, perfil")] } ] },
+ { id: 5, nome: "Bônus", guias: [
   { id: "bonus-trava-seguranca", titulo: "Trava de Segurança Articular", tempo: "4 min", cards: [
     capa("Trava de Segurança Articular", "4 minutos", "5 erros que pioram a dor."),
     ...["Alongar com dor aguda","Dar “tranco” no pescoço","Ficar parado de vez","Forçar a amplitude com balanço","Ignorar formigamento"].map((e,i)=>({t:"erro",n:i+1,titulo:e})),
