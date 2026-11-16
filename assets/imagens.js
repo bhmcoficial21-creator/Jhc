@@ -8,6 +8,9 @@ window.IMG_EX = {
   "Inclinar a pelve": "inclinar-pelve.png",
   "Gato e camelo sentado": "gato-camelo.png",
   "Extensão em pé": "extensao-em-pe.png",
-  "Joelhos ao peito (se puder deitar)": "joelhos-ao-peito.png"
+  "Joelhos ao peito (se puder deitar)": "joelhos-ao-peito.png",
+  "Alongar a frente do quadril": "quadril-afundo-mesa.png",
+  "Ponte de glúteo": ["ponte-gluteo.png", "gluteo-sentado.png"],
+  "Rolar a sola": "rolar-sola.png"
 };
 window.IMG_CAPA = { "Reset de Pescoço e Ombros": "pescoco-rotacao.png", "Reset de Punhos e Antebraços": "antebracos.png" };

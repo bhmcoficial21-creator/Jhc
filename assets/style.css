@@ -38,6 +38,6 @@ header.top{background:var(--brand2);color:#fff;padding:28px 0}header.top h1{font
 .card.fim{background:var(--brand2);color:#fff;justify-content:center;text-align:center}.card.fim .peq{color:#cfe3e0}
 .card .n{position:absolute;right:6cqw;top:5cqw;font-size:3.4cqw;color:var(--mut)}
 .card.capa .n,.card.fim .n{color:#cfe3e0}
-.card .foto{padding:0;overflow:hidden}.card .foto img{width:100%;height:100%;object-fit:contain;background:#eee}
+.card .foto{padding:0;overflow:hidden}.card .foto img:not(:only-child){object-fit:cover;background:none}.card .foto{flex-direction:column}.card .foto img{width:100%;flex:1;min-height:0;object-fit:contain;background:#eee}
 .card.capa .foto{flex:1;margin:6cqw 0}
 .card ol{font-size:5.4cqw;padding-left:7cqw;margin:4cqw 0}.card ol li{margin:3cqw 0}
