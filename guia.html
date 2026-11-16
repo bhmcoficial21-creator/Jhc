@@ -1,0 +1,7 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Guia — Reset 3 Minutos</title><link rel="stylesheet" href="assets/style.css"><style>body.export{background:#fff}body.export .stack{max-width:1080px;padding:0;gap:0}body.export .card{box-shadow:none;border-radius:0}</style></head><body>
+<p class="wrap"><a href="membros.html">‹ Voltar</a> <b id="t"></b></p><div class="stack" id="cards"></div>
+<script src="assets/guias.js"></script><script src="assets/cards.js"></script><script>
+const q=new URLSearchParams(location.search);if(q.get("export"))document.body.classList.add("export");
+const g=MODULOS.flatMap(m=>m.guias).find(x=>x.id===q.get("g"));
+if(g){document.getElementById("t").textContent=g.titulo;renderCards(g,document.getElementById("cards"))}else document.getElementById("cards").textContent="Guia não encontrado.";
+</script></body></html>

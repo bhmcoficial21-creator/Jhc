@@ -1,0 +1,41 @@
+:root{--bg:#f6f3ee;--ink:#1d2b2a;--mut:#5d6b69;--brand:#1f6f68;--brand2:#14504b;--acc:#e8833a;--card:#fff;--line:#e3ddd2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.15;margin:0 0 .5em}h1{font-size:clamp(2rem,6vw,3rem)}h2{font-size:clamp(1.5rem,4.5vw,2rem)}
+section{padding:44px 0}
+.hero{background:linear-gradient(160deg,var(--brand2),var(--brand));color:#fff;padding:56px 0 48px}
+.hero p{font-size:1.15rem;opacity:.95}
+.tag{display:inline-block;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:99px;font-size:.85rem;margin-bottom:16px}
+.btn{display:block;text-align:center;background:var(--acc);color:#fff;font-weight:700;font-size:1.15rem;padding:18px 24px;border-radius:14px;text-decoration:none;box-shadow:0 6px 18px rgba(232,131,58,.35);margin:24px 0}
+.btn:hover{filter:brightness(1.05)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}
+.grid{display:grid;gap:12px}.grid.c2{grid-template-columns:1fr 1fr}@media(max-width:560px){.grid.c2{grid-template-columns:1fr}}
+ul.ok{list-style:none;padding:0}ul.ok li{padding:8px 0 8px 32px;position:relative;border-bottom:1px solid var(--line)}
+ul.ok li:before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800}
+.price{text-align:center}.price s{color:var(--mut)}.price strong{display:block;font-size:3rem;color:var(--brand2)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}summary{cursor:pointer;font-weight:700}
+.aviso{font-size:.82rem;color:var(--mut);border-top:1px solid var(--line);padding:24px 0 40px}
+.vsl{aspect-ratio:9/16;max-width:360px;margin:20px auto;border-radius:16px;background:#0e2a28;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.quiz-slot{border:2px dashed var(--line);border-radius:16px;padding:24px;text-align:center;color:var(--mut)}
+/* área de membros */
+header.top{background:var(--brand2);color:#fff;padding:28px 0}header.top h1{font-size:1.7rem;margin:0}
+.mod h2{margin-top:28px}.guia{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:10px 0;text-decoration:none;color:inherit}
+.guia small{color:var(--mut)}.guia b{color:var(--brand)}
+.stack{max-width:480px;margin:0 auto;padding:16px;display:grid;gap:16px}
+/* cards 1080x1920: tudo em cqw (1cqw = 10.8px a 1080) */
+.card{container-type:inline-size;width:100%;aspect-ratio:9/16;border-radius:2cqw;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:8cqw;background:#fff;color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.card .kick{font-size:3.6cqw;font-weight:700;letter-spacing:.2cqw;text-transform:uppercase;color:var(--brand)}
+.card h3{font-size:9cqw;margin:2cqw 0 3cqw}
+.card .meta{font-size:5cqw;color:var(--mut)}
+.card .foto{flex:1;margin:4cqw 0;border-radius:4cqw;background:repeating-linear-gradient(45deg,#e9f1ef,#e9f1ef 3cqw,#dde9e6 3cqw,#dde9e6 6cqw);display:flex;align-items:center;justify-content:center;text-align:center;padding:6cqw;color:var(--brand2);font-size:4.4cqw}
+.card .big{font-size:12cqw;font-weight:800;color:var(--acc);line-height:1}
+.card .desc{font-size:5.2cqw}.card .resp{font-size:4.2cqw;color:var(--brand);margin-top:3cqw;font-weight:600}
+.card .peq{font-size:3.2cqw;color:var(--mut);margin-top:auto;padding-top:4cqw}
+.card.capa{background:linear-gradient(160deg,var(--brand2),var(--brand));color:#fff;justify-content:center}
+.card.capa .kick,.card.capa .meta{color:#ffd9bd}.card.capa h3{font-size:13cqw}.card.capa .desc{font-size:6cqw}
+.card.seg{background:#fff4e8;justify-content:center;text-align:center}.card.seg h3{font-size:10cqw;color:#a4510f}
+.card.fim{background:var(--brand2);color:#fff;justify-content:center;text-align:center}.card.fim .peq{color:#cfe3e0}
+.card .n{position:absolute;right:6cqw;top:5cqw;font-size:3.4cqw;color:var(--mut)}
+.card.capa .n,.card.fim .n{color:#cfe3e0}
+.card ol{font-size:5.4cqw;padding-left:7cqw;margin:4cqw 0}.card ol li{margin:3cqw 0}
