@@ -11,6 +11,12 @@ window.IMG_EX = {
   "Joelhos ao peito (se puder deitar)": "joelhos-ao-peito.png",
   "Alongar a frente do quadril": "quadril-afundo-mesa.png",
   "Ponte de glúteo": ["ponte-gluteo.png", "gluteo-sentado.png"],
-  "Rolar a sola": "rolar-sola.png"
+  "Rolar a sola": "rolar-sola.png",
+  "Alongar a panturrilha": "panturrilha-parede.png",
+  "Dedos para cima": "dedos-toalha.png",
+  "Subir na ponta dos pés": "ponta-dos-pes-balcao.png",
+  "3 respirações lentas": "respiracao-sentado.png",
+  "Olhar longe": "olhar-longe.png",
+  "pausa-cadeira|Inclinar a pelve": "pelve-sentado-pausa.png"
 };
 window.IMG_CAPA = { "Reset de Pescoço e Ombros": "pescoco-rotacao.png", "Reset de Punhos e Antebraços": "antebracos.png" };
