@@ -15,11 +15,11 @@ Teste: 1 campanha de vendas, 4 conjuntos, público aberto 25–60 anos, Brasil, 
 1. (0–5 s) "Se você trabalha sentado, em pé ou repetindo o mesmo movimento, presta atenção."
 2. (5–20 s) "Aquela fisgada na lombar, o ombro duro, o punho queimando no fim do dia: é o seu corpo acumulando sobrecarga da rotina."
 3. (20–40 s) "Você não precisa largar o trabalho nem ir para a academia. Precisa de pausas certas, de 3 minutos, no meio do dia."
-4. (40–60 s) "No Reset 3 Minutos você escolhe a sua rotina e recebe guias ilustrados passo a passo para a sua zona de dor e a sua rotina. Faz na cadeira, no balcão, onde estiver."
+4. (40–60 s) "No Destrava você escolhe a sua rotina e recebe guias ilustrados passo a passo para a sua zona de dor e a sua rotina. Faz na cadeira, no balcão, onde estiver."
 5. (60–75 s) "Hoje sai por R$ 27,90, com 7 dias de garantia. Toca no botão e começa agora."
 
 ## Oferta
-Reset 3 Minutos R$ 27,90 · Order bump Pacote Sono Sem Dor R$ 14,90 · Upsell Plano 21 Dias Guiado R$ 47.
+Destrava R$ 27,90 · Order bump Pacote Sono Sem Dor R$ 14,90 · Upsell Plano 21 Dias Guiado R$ 47.
 
 ## Checklist
 - [ ] Nome final + produto na Hotmart/Kiwify (R$ 27,90, garantia 7 dias)
