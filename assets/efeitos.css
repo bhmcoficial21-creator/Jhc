@@ -1,0 +1,50 @@
+/* Efeitos: AnimatedGradient, BlurReveal e GradientWaveText (versão HTML/CSS/JS puro, nas cores do produto) */
+:root{
+  --ag-c1:#0b2e2b; --ag-c2:#14504b; --ag-c3:#1f6f68; /* verde do produto */
+  --ag-rot:45deg; --ag-speed:25s; --ag-swirl:60deg;
+}
+
+/* ---------- AnimatedGradient ---------- */
+.ag-host{position:relative;overflow:hidden;isolation:isolate}
+.ag{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--ag-c1)}
+.ag::before,.ag::after{content:"";position:absolute;left:50%;top:50%;width:170%;aspect-ratio:1;border-radius:50%}
+.ag::before{
+  background:conic-gradient(from var(--ag-rot),var(--ag-c1),var(--ag-c2),var(--ag-c3),var(--ag-c2),var(--ag-c1));
+  filter:blur(70px);
+  transform:translate(-50%,-50%) rotate(var(--ag-rot));
+  animation:ag-spin var(--ag-speed) linear infinite;
+}
+.ag::after{
+  background:
+    radial-gradient(circle at 28% 32%,rgba(31,111,104,.85),transparent 42%),
+    radial-gradient(circle at 72% 66%,rgba(20,80,75,.95),transparent 48%);
+  filter:blur(45px);
+  transform:translate(-50%,-50%);
+  animation:ag-swirl var(--ag-speed) ease-in-out infinite alternate;
+}
+@keyframes ag-spin{to{transform:translate(-50%,-50%) rotate(calc(var(--ag-rot) + 360deg))}}
+@keyframes ag-swirl{
+  from{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
+  to{transform:translate(-50%,-50%) rotate(calc(var(--ag-swirl) * -1)) scale(1.15)}
+}
+
+/* ---------- BlurReveal ---------- */
+.js [data-blur] .bw{display:inline-block;opacity:0;filter:blur(12px);transform:translateY(14px);
+  transition:opacity .7s ease,filter .7s ease,transform .7s ease;will-change:opacity,filter,transform}
+.js [data-blur].in .bw{opacity:1;filter:blur(0);transform:none}
+
+/* ---------- GradientWaveText ---------- */
+.gw{
+  background:linear-gradient(90deg,#8fe3d6,#ffffff,#ffb37a,#8fe3d6,#ffffff,#8fe3d6);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:gw-flow 7s linear infinite;
+}
+@keyframes gw-flow{to{background-position:-300% 0}}
+.marca{font-size:clamp(2.2rem,9vw,3.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0 0 14px}
+
+@media (prefers-reduced-motion:reduce){
+  .ag::before,.ag::after,.gw{animation:none}
+  .js [data-blur] .bw{opacity:1;filter:none;transform:none;transition:none}
+}

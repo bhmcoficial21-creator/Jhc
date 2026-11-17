@@ -1,8 +1,8 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reset 3 Minutos — Área de Membros</title><link rel="stylesheet" href="assets/style.css"></head><body>
-<header class="top"><div class="wrap"><h1>Reset 3 Minutos</h1><p style="margin:.3em 0 0;opacity:.9">Escolha o guia e faça na própria cadeira.</p></div></header>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reset 3 Minutos — Área de Membros</title><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/efeitos.css"></head><body>
+<header class="top ag-host"><div class="ag" aria-hidden="true"></div><div class="wrap"><h1 class="gw">Reset 3 Minutos</h1><p data-blur style="margin:.3em 0 0;color:#e6f3f1">Escolha o guia e faça na própria cadeira.</p></div></header>
 <main class="wrap" id="app"></main>
 <p class="wrap aviso" id="aviso"></p>
-<script src="assets/guias.js"></script><script>
+<script src="assets/efeitos.js"></script><script src="assets/guias.js"></script><script>
 document.getElementById("aviso").textContent=AVISO;
 document.getElementById("app").innerHTML=MODULOS.map(m=>`<div class="mod"><h2>${m.nome}</h2>${m.guias.map(g=>`<a class="guia" href="guia.html?g=${g.id}"><span>${g.titulo}<br><small>${g.cards.length} cards</small></span><b>${g.tempo} ›</b></a>`).join("")}</div>`).join("");
 </script></body></html>
