@@ -1,7 +1,9 @@
-/* Efeitos: AnimatedGradient, BlurReveal e GradientWaveText (versão HTML/CSS/JS puro, nas cores do produto) */
+/* Efeitos da área de membros: AnimatedGradient, BlurReveal, GradientWaveText,
+   revelação de card (barra → painel) e transição de página, inspirados no vídeo de referência. */
 :root{
   --ag-c1:#0b2e2b; --ag-c2:#14504b; --ag-c3:#1f6f68; /* verde do produto */
   --ag-rot:45deg; --ag-speed:25s; --ag-swirl:60deg;
+  --pt-bg:linear-gradient(160deg,#0b2e2b,#14504b 55%,#1f6f68);
 }
 
 /* ---------- AnimatedGradient ---------- */
@@ -44,7 +46,42 @@
 @keyframes gw-flow{to{background-position:-300% 0}}
 .marca{font-size:clamp(2.2rem,9vw,3.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0 0 14px}
 
+/* ---------- Revelação de card: barra fina → painel → conteúdo ---------- */
+.rv::before{
+  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:var(--pt-bg);border-radius:inherit;
+  clip-path:inset(100% 48% 0 48% round 2cqw);
+}
+.rv.in::before{animation:curtain 1.6s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes curtain{
+  0%{clip-path:inset(100% 48% 0 48% round 2cqw);opacity:1}
+  28%{clip-path:inset(0 48% 0 48% round 2cqw);opacity:1}
+  60%{clip-path:inset(0 0 0 0 round 2cqw);opacity:1}
+  100%{clip-path:inset(0 0 0 0 round 2cqw);opacity:0}
+}
+.rv>*{opacity:0;filter:blur(12px);transform:translateY(16px);
+  transition:opacity .8s ease,filter .8s ease,transform .8s ease}
+.rv.in>*{opacity:1;filter:blur(0);transform:none;transition-delay:calc(.95s + var(--d,0s))}
+
+/* ---------- Transição de página (barra → tela cheia → barra) ---------- */
+.pt{position:fixed;inset:0;z-index:9999;background:var(--pt-bg);pointer-events:none;clip-path:inset(100% 48% 0 48%)}
+.pt.cover{pointer-events:all;animation:pt-in .75s cubic-bezier(.7,0,.2,1) forwards}
+.pt.reveal{animation:pt-out .8s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes pt-in{
+  0%{clip-path:inset(100% 48% 0 48% round 4vw)}
+  40%{clip-path:inset(0 48% 0 48% round 4vw)}
+  100%{clip-path:inset(0 0 0 0 round 0)}
+}
+@keyframes pt-out{
+  0%{clip-path:inset(0 0 0 0 round 0)}
+  60%{clip-path:inset(0 48% 0 48% round 4vw)}
+  100%{clip-path:inset(0 48% 100% 48% round 4vw)}
+}
+html.pt-arrive::after{content:"";position:fixed;inset:0;z-index:9998;background:var(--pt-bg)}
+
 @media (prefers-reduced-motion:reduce){
   .ag::before,.ag::after,.gw{animation:none}
   .js [data-blur] .bw{opacity:1;filter:none;transform:none;transition:none}
+  .rv::before,.pt,html.pt-arrive::after{display:none}
+  .rv>*{opacity:1;filter:none;transform:none;transition:none}
 }
