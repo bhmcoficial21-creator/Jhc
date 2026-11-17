@@ -1,8 +1,49 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reset 3 Minutos — Área de Membros</title><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/efeitos.css"><script>try{if(sessionStorage.getItem("pt"))document.documentElement.classList.add("pt-arrive")}catch(e){}</script></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reset 3 Minutos — Área de Membros</title><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/efeitos.css"><link rel="stylesheet" href="assets/busca.css"><script>try{if(sessionStorage.getItem("pt"))document.documentElement.classList.add("pt-arrive")}catch(e){}</script></head><body>
 <header class="top ag-host"><div class="ag" aria-hidden="true"></div><div class="wrap"><h1 class="gw marca">Reset 3 Minutos</h1><p data-blur style="margin:.3em 0 0;color:#e6f3f1;font-size:1.1rem">Escolha o guia e faça na própria cadeira.</p></div></header>
+
+<div class="busca" role="search">
+  <div id="poda">
+    <div class="glow"></div><div class="darkBorderBg"></div><div class="darkBorderBg"></div><div class="darkBorderBg"></div>
+    <div class="white"></div><div class="border"></div>
+    <div id="main">
+      <input id="q" class="input" type="search" placeholder="Buscar exercício..." autocomplete="off" aria-label="Buscar exercício">
+      <div id="input-mask"></div><div id="pink-mask"></div>
+      <div class="filterBorder"></div>
+      <button id="filter-icon" type="button" aria-label="Limpar busca">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#cfe9e5" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div id="search-icon">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="#8fe3d6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="22" y1="22" x2="16.65" y2="16.65"></line></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
 <main class="wrap" id="app"></main>
+<section class="wrap" id="res" aria-live="polite"></section>
 <p class="wrap aviso" id="aviso"></p>
 <script src="assets/guias.js"></script><script>
 document.getElementById("aviso").textContent=AVISO;
 document.getElementById("app").innerHTML=MODULOS.map(m=>`<div class="mod"><h2 data-blur>${m.nome}</h2>${m.guias.map(g=>`<a class="guia" href="guia.html?g=${g.id}"><span>${g.titulo}<br><small>${g.cards.length} cards</small></span><b>${g.tempo} ›</b></a>`).join("")}</div>`).join("");
+
+/* Busca: guias e exercícios, sem diferenciar acentos nem maiúsculas */
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const indice=[];
+MODULOS.forEach(m=>m.guias.forEach(g=>{
+  indice.push({tipo:"guia",nome:g.titulo,guia:g.titulo,mod:m.nome,href:`guia.html?g=${g.id}`,det:g.tempo,chave:norm(g.titulo)});
+  g.cards.forEach((c,i)=>{ if(c.t==="ex") indice.push({tipo:"ex",nome:c.nome,guia:g.titulo,mod:m.nome,href:`guia.html?g=${g.id}&c=${i+1}`,det:c.medida||"",chave:norm(c.nome+" "+c.desc)}); });
+}));
+const q=document.getElementById("q"),res=document.getElementById("res"),app=document.getElementById("app");
+function buscar(){
+  const t=norm(q.value.trim());
+  if(!t){res.classList.remove("on");res.innerHTML="";app.style.display="";return}
+  const achou=indice.filter(x=>t.split(/\s+/).every(p=>x.chave.includes(p)));
+  app.style.display="none";res.classList.add("on");
+  res.innerHTML=achou.length
+    ?`<p class="cont">${achou.length} resultado${achou.length>1?"s":""}</p>`+achou.map(x=>`<a class="guia" href="${x.href}"><span>${esc(x.nome)}<br><small>${x.tipo==="guia"?"Guia completo":esc(x.guia)}${x.det&&x.tipo==="ex"?" · "+esc(x.det):""}</small></span><b>ver ›</b></a>`).join("")
+    :`<p class="vazio">Nenhum exercício encontrado para “${esc(q.value.trim())}”.<br>Tente outra palavra, como “lombar” ou “pescoço”.</p>`;
+}
+q.addEventListener("input",buscar);
+document.getElementById("filter-icon").addEventListener("click",()=>{q.value="";buscar();q.focus()});
 </script><script src="assets/efeitos.js"></script></body></html>
