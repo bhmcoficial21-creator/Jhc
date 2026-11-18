@@ -69,6 +69,18 @@
   .portrait img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:50% 78%;border-radius:var(--radius);box-shadow:0 0 0 6px var(--white),0 0 0 8px var(--gold),0 30px 60px rgba(194,24,91,.22)}
   @media(min-width:860px){.hero{padding:80px 0 100px}.hero .wrap{grid-template-columns:1.1fr .9fr}}
 
+  /* estrelinhas (referência: brilho que pisca) */
+  .spark{position:absolute;fill:var(--gold);filter:drop-shadow(0 0 10px rgba(201,162,77,.9));z-index:3;pointer-events:none}
+  .spark.a{width:56px;top:-20px;right:-22px;animation:twinkle 3.2s ease-in-out infinite}
+  .spark.b{width:30px;bottom:56px;left:-20px;fill:var(--pink);filter:drop-shadow(0 0 10px rgba(194,24,91,.55));animation:twinkle 2.6s .8s ease-in-out infinite}
+  .spark.c{width:22px;top:40%;right:-16px;animation:twinkle 3.8s 1.4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(.65) rotate(20deg);opacity:.75}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .hero{background:radial-gradient(60% 50% at 88% 18%,rgba(194,24,91,.18),transparent 70%),radial-gradient(50% 45% at 0% 100%,rgba(201,162,77,.25),transparent 70%),linear-gradient(180deg,var(--blush),#fff 90%)}
+  .svc svg{animation:twinkle 4s ease-in-out infinite}
+  .svc:nth-child(2) svg{animation-delay:.6s}.svc:nth-child(3) svg{animation-delay:1.2s}
+  .svc{transition:transform .2s}.svc:hover{transform:translateY(-4px)}
+  .gallery-grid img{transition:transform .25s}.gallery-grid img:hover{transform:scale(1.03)}
   /* seções */
   section{padding:80px 0}
   h2{font-size:clamp(1.6rem,4.5vw,2.4rem);max-width:20ch}
@@ -90,7 +102,10 @@
   .showcase .wrap{display:grid;gap:36px;align-items:center}
   .video-card{position:relative;width:min(340px,86%);justify-self:center;border-radius:var(--radius);overflow:hidden;box-shadow:0 0 0 6px var(--white),0 0 0 8px var(--gold),0 30px 60px rgba(58,46,50,.25);background:#000;line-height:0}
   .video-card video{width:100%;aspect-ratio:640/918;object-fit:cover}
-  .video-card button{position:absolute;right:12px;bottom:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:var(--pink);font-size:1.1rem;cursor:pointer;line-height:1}
+  .video-card{overflow:visible}
+  .video-card video{border-radius:var(--radius)}
+  .vidbtn{position:absolute;right:12px;bottom:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--pink);font-size:1.1rem;cursor:pointer;line-height:1;z-index:2}
+  .vidbtn.big{inset:0;margin:auto;width:76px;height:76px;font-size:1.8rem;box-shadow:0 0 0 8px rgba(255,255,255,.35),0 10px 30px rgba(0,0,0,.3);animation:pulse 1.8s ease-in-out infinite}
   @media(min-width:860px){.showcase .wrap{grid-template-columns:.8fr 1.2fr}}
   .gallery-grid{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .gallery-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:22px;box-shadow:0 12px 30px rgba(58,46,50,.18)}
@@ -168,6 +183,8 @@
     html{scroll-behavior:auto}
     #intro,#intro *{animation-duration:.01s!important;animation-delay:0s!important;transition:none}
     .btn{transition:none}
+    .spark,.svc svg,.vidbtn.big{animation:none}
+    .svc,.gallery-grid img{transition:none}
   }
 </style>
 </head>
@@ -226,6 +243,9 @@
         </div>
       </div>
       <div class="portrait">
+        <svg class="spark a" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <svg class="spark b" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <svg class="spark c" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
         <img src="img/trabalho-1.jpg" alt="Sobrancelha desenhada e cílios definidos, resultado de design de sobrancelhas" width="1100" height="1176">
       </div>
     </div>
@@ -258,8 +278,13 @@
   <section class="showcase" id="galeria">
     <div class="wrap">
       <div class="video-card">
-        <video id="vid" src="video/destaque.mp4" poster="img/destaque-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo de um trabalho de sobrancelha e cílios sendo finalizado"></video>
-        <button type="button" id="vidbtn" aria-label="Pausar vídeo">❚❚</button>
+        <svg class="spark a" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <svg class="spark b" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <video id="vid" poster="img/destaque-poster.jpg" muted loop playsinline webkit-playsinline preload="auto" aria-label="Vídeo de um trabalho de sobrancelha e cílios sendo finalizado">
+          <source src="video/destaque.mp4" type="video/mp4">
+          <source src="video/destaque.webm" type="video/webm">
+        </video>
+        <button type="button" id="vidbtn" class="vidbtn" aria-label="Tocar vídeo">▶</button>
       </div>
       <div>
         <h2><span class="script">em destaque</span>Veja o resultado de perto</h2>
@@ -417,14 +442,27 @@
     if (WHATSAPP_NUMBER) a.href = "https://wa.me/" + WHATSAPP_NUMBER;
   });
 
-  // vídeo: pausar/tocar
+  // vídeo: toca sozinho; se o navegador bloquear, aparece um botão grande de play
   (function(){
     var v = document.getElementById('vid'), b = document.getElementById('vidbtn');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { v.pause(); b.textContent = '▶'; b.setAttribute('aria-label','Tocar vídeo'); }
-    b.addEventListener('click', function(){
-      if (v.paused) { v.play(); b.textContent='❚❚'; b.setAttribute('aria-label','Pausar vídeo'); }
-      else { v.pause(); b.textContent='▶'; b.setAttribute('aria-label','Tocar vídeo'); }
-    });
+    function ui(){ var playing = !v.paused; b.classList.toggle('big', !playing);
+      b.textContent = playing ? '❚❚' : '▶'; b.setAttribute('aria-label', playing ? 'Pausar vídeo' : 'Tocar vídeo'); }
+    function tryPlay(){ var p = v.play(); if (p && p.catch) p.catch(ui); }
+    v.addEventListener('play', ui); v.addEventListener('pause', ui); v.addEventListener('loadeddata', function(){ if (!reduce) tryPlay(); });
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    b.addEventListener('click', function(){ if (v.paused) { v.dataset.user=''; tryPlay(); } else { v.dataset.user='1'; v.pause(); } });
+    v.addEventListener('click', function(){ b.click(); });
+    // navegadores que não tocam vídeo embutido (data:) precisam de um blob
+    var srcs = Array.prototype.slice.call(v.querySelectorAll('source'));
+    var pick = srcs.filter(function(s){ return v.canPlayType(s.type); })[0];
+    if (pick && pick.getAttribute('src').indexOf('data:') === 0 && window.fetch) {
+      fetch(pick.getAttribute('src')).then(function(r){return r.blob();}).then(function(bl){
+        v.src = URL.createObjectURL(bl); v.load();
+      }).catch(function(){});
+    }
+    ui();
+    if (!reduce) { v.muted = true; tryPlay(); v.addEventListener('canplay', function(){ if (v.paused && !v.dataset.user) tryPlay(); }); }
+    if (!reduce) { document.addEventListener('visibilitychange', function(){ if (!document.hidden && v.paused && !v.dataset.user) tryPlay(); }); }
   })();
 
   // agendamento com agenda
