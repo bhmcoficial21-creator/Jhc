@@ -7,7 +7,7 @@
 <meta name="description" content="Design de sobrancelhas, extensão de cílios e micropigmentação no Butantã, São Paulo. Pratique a arte de se cuidar. Agende seu horário online.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Pinyon+Script&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --blush:#F7D6DC;
@@ -179,6 +179,76 @@
   .wa-float{position:fixed;right:16px;bottom:16px;z-index:20;width:56px;height:56px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
   .wa-float svg{width:30px;height:30px;fill:#fff}
 
+
+  /* ===== efeitos inspirados nas referências ===== */
+  .display{font-family:'Anton','Impact',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.92}
+
+  /* faixa de texto correndo */
+  .ticker{background:var(--graphite);color:var(--blush);overflow:hidden;white-space:nowrap;padding:14px 0;border-block:2px solid var(--gold)}
+  .ticker-track{display:inline-flex;animation:marquee 28s linear infinite}
+  .ticker span{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.25rem;letter-spacing:.06em;padding-right:1.6rem;display:inline-flex;align-items:center;gap:1.6rem}
+  .ticker span::after{content:"";width:14px;height:14px;background:var(--gold);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  /* manifesto: títulos gigantes que entram ao rolar e trocam a cor do fundo */
+  .m-band{padding:72px 0;overflow:hidden}
+  .m-band.dark{background:var(--graphite);color:var(--blush)}
+  .m-band.light{background:var(--white);color:var(--graphite)}
+  .m-band.pink{background:var(--pink);color:#fff}
+  .m-line{display:block;overflow:hidden;transform:translateX(var(--shift,0px));will-change:transform}
+  .m-line.right{text-align:right}
+  .m-line .display{display:block;font-size:clamp(2.6rem,13.5vw,9.5rem)}
+  .m-line .w{display:inline-block}
+  .m-line em{font-style:normal;color:var(--gold)}
+  .m-band.pink .m-line em{color:var(--blush)}
+  .m-row{display:grid;gap:22px;margin-top:26px;align-items:end}
+  .m-row p{max-width:34ch;font-size:.95rem;opacity:.85}
+  .m-img{overflow:hidden;border-radius:6px;aspect-ratio:4/3}
+  .m-img img{width:100%;height:100%;object-fit:cover}
+  @media(min-width:760px){.m-row{grid-template-columns:1fr 1.1fr}.m-row.flip{grid-template-columns:1.1fr 1fr}.m-row.flip .m-img{order:-1}}
+  .js .m-line .w{transform:translateY(105%);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+  .js .m-line.in .w{transform:none}
+  .js .m-img{clip-path:inset(0 100% 0 0);transition:clip-path 1s .2s cubic-bezier(.2,.8,.2,1)}
+  .js .m-img.in{clip-path:inset(0 0 0 0)}
+
+  /* cortina: abre e revela os trabalhos */
+  .curtain-wrap{margin-top:48px}
+  .curtain{position:relative;width:min(560px,100%);margin-inline:auto;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;background:var(--graphite);box-shadow:0 0 0 6px var(--white),0 0 0 8px var(--gold),0 30px 60px rgba(58,46,50,.25)}
+  .curtain img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .strips{position:absolute;inset:0;display:flex;z-index:2;pointer-events:none}
+  .strips i{flex:1;background:linear-gradient(90deg,#7a0e3a,var(--pink) 45%,#ff6fa5 52%,var(--pink) 60%,#5c0a2c);transform-origin:top;transform:scaleY(0);transition:transform .55s cubic-bezier(.65,0,.35,1)}
+  .curtain.closed .strips i{transform:scaleY(1)}
+  .curtain-cap{position:absolute;left:16px;bottom:14px;z-index:3;color:#fff;font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:1.1rem;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  .curtain-dots{position:absolute;right:14px;bottom:18px;z-index:3;display:flex;gap:6px}
+  .curtain-dots b{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5)}
+  .curtain-dots b.on{background:var(--gold)}
+
+  /* mosaico */
+  .gallery-grid{gap:6px}
+  .gallery-grid img{border-radius:6px;box-shadow:none;filter:saturate(.85)}
+  .gallery-grid img:hover{filter:none}
+
+  /* blocos de contato que invertem */
+  .tiles{display:grid;gap:6px;grid-template-columns:1fr}
+  @media(min-width:700px){.tiles{grid-template-columns:repeat(3,1fr)}}
+  .tile{display:flex;flex-direction:column;justify-content:space-between;min-height:150px;padding:18px;background:var(--white);color:var(--graphite);text-decoration:none;border:1.5px solid var(--graphite);transition:background .2s,color .2s}
+  .tile .display{font-size:clamp(1.8rem,6vw,2.6rem)}
+  .tile small{font-size:.85rem;opacity:.75}
+  .tile .arr{align-self:flex-end;font-size:1.4rem;line-height:1}
+  .tile:hover,.tile:focus-visible{background:var(--graphite);color:var(--blush)}
+  .tile.hot{background:var(--pink);color:#fff;border-color:var(--pink)}
+  .tile.hot:hover{background:var(--graphite);border-color:var(--graphite)}
+  .links{background:var(--white);padding:0 0 60px}
+
+  @media(prefers-reduced-motion:reduce){
+    .ticker-track{animation:none}
+    .js .m-line .w{transform:none;transition:none}
+    .js .m-img{clip-path:none;transition:none}
+    .m-line{transform:none!important}
+    .strips i{transition:none}
+    .tile{transition:none}
+  }
+
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     #intro,#intro *{animation-duration:.01s!important;animation-delay:0s!important;transition:none}
@@ -251,6 +321,42 @@
     </div>
   </div>
 
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Design de sobrancelhas</span><span>Extensão de cílios</span><span>Micropigmentação</span><span>Butantã</span> <span>Design de sobrancelhas</span><span>Extensão de cílios</span><span>Micropigmentação</span><span>Butantã</span></div></div>
+
+  <section class="m-band dark" aria-label="Manifesto" style="padding:72px 0">
+    <div class="wrap">
+      <span class="m-line" data-dir="-1"><span class="display"><span class="w">Pratique</span> <span class="w"><em>a arte</em></span></span></span>
+      <span class="m-line right" data-dir="1"><span class="display"><span class="w">de se cuidar.</span></span></span>
+      <div class="m-row">
+        <p>Cada sobrancelha e cada olhar são feitos sob medida, com calma e atenção a cada fio.</p>
+        <div class="m-img"><img src="img/trabalho-4.jpg" alt="Design de sobrancelha com cílios em volume" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-band light" aria-label="Sobrancelhas">
+    <div class="wrap">
+      <span class="m-line" data-dir="1"><span class="display"><span class="w">Sobrancelha</span></span></span>
+      <span class="m-line right" data-dir="-1"><span class="display"><span class="w">com <em style="color:var(--pink)">desenho.</em></span></span></span>
+      <div class="m-row flip">
+        <p>Fios alinhados, formato pensado para o seu rosto e acabamento natural.</p>
+        <div class="m-img"><img src="img/trabalho-1.jpg" alt="Sobrancelha com fios definidos" loading="lazy" style="object-position:50% 70%"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-band pink" aria-label="Cílios">
+    <div class="wrap">
+      <span class="m-line" data-dir="-1"><span class="display"><span class="w">Cílios</span></span></span>
+      <span class="m-line right" data-dir="1"><span class="display"><span class="w">com <em>olhar.</em></span></span></span>
+      <div class="m-row">
+        <p>Extensão leve, volume na medida e manutenção para durar mais.</p>
+        <div class="m-img"><img src="img/trabalho-3.jpg" alt="Cílios volumosos e sobrancelha natural" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="services" id="servicos">
     <div class="wrap">
       <h2><span class="script">com carinho</span>O que você encontra no estúdio</h2>
@@ -293,6 +399,14 @@
       </div>
     </div>
     <div class="wrap">
+      <div class="curtain-wrap">
+        <div class="curtain" id="curtain" aria-label="Trabalhos da Jaqueline, passando um a um">
+          <img id="cimg" src="img/trabalho-1.jpg" alt="Sobrancelha com fios definidos">
+          <div class="strips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="curtain-cap" id="ccap">Sobrancelhas</span>
+          <div class="curtain-dots" id="cdots" aria-hidden="true"><b class="on"></b><b></b><b></b><b></b></div>
+        </div>
+      </div>
       <div class="gallery-grid">
         <img src="img/trabalho-1.jpg" alt="Sobrancelha com fios definidos em tom escuro" loading="lazy">
         <img src="img/trabalho-2.jpg" alt="Sobrancelha volumosa e cílios alongados em pele negra" loading="lazy">
@@ -382,6 +496,15 @@
       </div>
     </div>
   </section>
+  <section class="links" aria-label="Contato">
+    <div class="wrap">
+      <div class="tiles">
+        <a class="tile hot" href="#agendar"><span class="display">Agendar</span><span class="arr">↓</span><small>Escolha dia e horário</small></a>
+        <a class="tile" data-whatsapp href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener"><span class="display">WhatsApp</span><span class="arr">↗</span><small>Tire dúvidas</small></a>
+        <a class="tile" href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener"><span class="display">Instagram</span><span class="arr">↗</span><small>@jjaquelinesantanadesigner</small></a>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -463,6 +586,52 @@
     ui();
     if (!reduce) { v.muted = true; tryPlay(); v.addEventListener('canplay', function(){ if (v.paused && !v.dataset.user) tryPlay(); }); }
     if (!reduce) { document.addEventListener('visibilitychange', function(){ if (!document.hidden && v.paused && !v.dataset.user) tryPlay(); }); }
+  })();
+
+  // efeitos: entrada dos títulos, deslocamento ao rolar, cortina
+  (function(){
+    document.documentElement.classList.add('js');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.m-line, .m-row');
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); var im=e.target.querySelector('.m-img'); if (im) im.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.25});
+      els.forEach(function(e){ io.observe(e); });
+    } else { document.querySelectorAll('.m-line, .m-img').forEach(function(e){ e.classList.add('in'); }); }
+
+    var lines = Array.prototype.slice.call(document.querySelectorAll('.m-line[data-dir]'));
+    function shift(){
+      var vh = window.innerHeight, amp = Math.min(60, window.innerWidth*0.05);
+      lines.forEach(function(l){
+        var r = l.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) return;
+        var p = (vh - r.top)/(vh + r.height);
+        l.style.setProperty('--shift', ((p-0.5)*2*amp*(+l.dataset.dir))+'px');
+      });
+    }
+    if (!reduce) { var tick=false; window.addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ shift(); tick=false; }); } },{passive:true}); shift(); }
+
+    // cortina
+    var c = document.getElementById('curtain'); if (!c) return;
+    var slides = [
+      {src:'img/trabalho-1.jpg', cap:'Sobrancelhas', alt:'Sobrancelha com fios definidos'},
+      {src:'img/trabalho-2.jpg', cap:'Cílios e design', alt:'Sobrancelha volumosa e cílios alongados'},
+      {src:'img/trabalho-3.jpg', cap:'Natural', alt:'Sobrancelha castanha natural e cílios volumosos'},
+      {src:'img/trabalho-4.jpg', cap:'Volume', alt:'Design de sobrancelha com extensão de cílios em volume'}
+    ];
+    var img = document.getElementById('cimg'), cap = document.getElementById('ccap'), dots = document.querySelectorAll('#cdots b');
+    var strips = c.querySelectorAll('.strips i');
+    strips.forEach(function(s,i){ s.style.transitionDelay = (i*35)+'ms'; });
+    var idx = 0;
+    if (reduce) return;
+    setInterval(function(){
+      if (document.hidden) return;
+      c.classList.add('closed');
+      setTimeout(function(){
+        idx = (idx+1) % slides.length;
+        img.src = slides[idx].src; img.alt = slides[idx].alt; cap.textContent = slides[idx].cap;
+        dots.forEach(function(d,i){ d.classList.toggle('on', i===idx); });
+        c.classList.remove('closed');
+      }, 1100);
+    }, 4600);
   })();
 
   // agendamento com agenda
