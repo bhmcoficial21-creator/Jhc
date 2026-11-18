@@ -125,6 +125,26 @@
   .slot{font:inherit;font-weight:600;color:var(--graphite);background:#fff6f8;border:1.5px solid var(--nude);padding:.55em 1.1em;border-radius:999px;cursor:pointer}
   .slot:hover{border-color:var(--pink)}
   .slot[aria-pressed=true]{background:var(--pink);border-color:var(--pink);color:#fff}
+  .cal{margin-top:6px}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;text-transform:capitalize}
+  .cal-head button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--nude);background:#fff6f8;color:var(--pink);font-size:1.3rem;cursor:pointer;line-height:1}
+  .cal-head button:disabled{opacity:.35;cursor:not-allowed}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cal-grid .dow{font-size:.75rem;text-align:center;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:.06em}
+  .cal-grid .day{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--nude);background:#fff6f8;font:inherit;font-weight:600;color:var(--graphite);cursor:pointer;padding:0}
+  .cal-grid .day:hover:not(:disabled){border-color:var(--pink)}
+  .cal-grid .day:disabled{background:transparent;border-color:transparent;color:#c4b6bb;cursor:not-allowed;font-weight:400}
+  .cal-grid .day.today{box-shadow:inset 0 0 0 2px var(--gold)}
+  .cal-grid .day[aria-pressed=true]{background:var(--pink);border-color:var(--pink);color:#fff}
+  .panel{margin-top:40px;padding:24px;border-radius:var(--radius);background:var(--white);box-shadow:0 0 0 2px var(--gold)}
+  .panel h3{color:var(--pink);margin-bottom:12px}
+  .panel{overflow-x:auto}
+  .panel table{width:100%;border-collapse:collapse;font-size:.95rem}
+  .panel .btn{white-space:nowrap}
+  .panel td,.panel th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--nude);vertical-align:top}
+  .panel .row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .panel input[type=date]{font:inherit;padding:.5em .8em;border-radius:12px;border:1.5px solid var(--nude)}
+  .panel .btn{padding:.5em 1.1em;font-size:.9rem}
   .muted{color:var(--muted);font-size:.95rem}
   .error{padding:12px 16px;border-radius:14px;background:#fde4e4;color:#8a1c1c}
   .result{margin-top:28px;padding:28px;border-radius:var(--radius);background:var(--white);box-shadow:0 0 0 2px var(--gold)}
@@ -277,7 +297,7 @@
     <div class="wrap">
       <h2><span class="script">sua vez</span>Agende seu horário</h2>
       <hr class="rule">
-      <p class="intro">Escolha o serviço, o dia e o horário. Você confirma o pedido pelo WhatsApp e a Jaqueline responde para fechar com você.</p>
+      <p class="intro">Escolha o serviço, o dia e o horário livre. Os horários já reservados somem da agenda, e você ainda confirma o pedido pelo WhatsApp.</p>
 
       <form id="bookform" class="form" novalidate>
         <fieldset>
@@ -287,9 +307,15 @@
 
         <fieldset>
           <legend>2. Dia e horário</legend>
-          <label class="field">Dia
-            <input type="date" id="date" required>
-          </label>
+          <div class="cal" id="cal">
+            <div class="cal-head">
+              <button type="button" id="prevm" aria-label="Mês anterior">‹</button>
+              <strong id="monthlabel"></strong>
+              <button type="button" id="nextm" aria-label="Próximo mês">›</button>
+            </div>
+            <div class="cal-grid" id="calgrid" role="grid" aria-label="Escolha o dia"></div>
+          </div>
+          <p id="daylabel" class="muted" style="margin-top:14px"></p>
           <div id="slots" class="slots" aria-live="polite"><p class="muted">Escolha um serviço e um dia para ver os horários.</p></div>
         </fieldset>
 
@@ -311,6 +337,7 @@
       </form>
 
       <div id="result" class="result" hidden></div>
+      <div id="panel" class="panel" hidden></div>
     </div>
   </section>
 
@@ -358,10 +385,22 @@
     { id:"micro",       name:"Micropigmentação",       minutes:150, price:"", desc:"Consulte disponibilidade" }
   ];
 
-  // Atendimento: 0=domingo ... 6=sábado. Horários de início possíveis.
-  var OPEN_DAYS = [1,2,3,4,5,6];
-  var START_TIMES = ["09:00","10:30","13:00","14:30","16:00"];
-  /* ================================================================ */
+  // Atendimento por dia da semana (0=domingo ... 6=sábado). Horas em formato "HH:MM".
+  // Fora desta lista = fechado. "pause" = intervalo sem atendimento.
+  var HOURS = {
+    1:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
+    2:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
+    3:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
+    4:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
+    5:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
+    6:{open:"09:00",close:"14:00",pause:null}
+  };
+  var STEP = 30;          // minutos entre horários oferecidos
+  var BUFFER = 10;        // intervalo de arrumação entre clientes
+  var DAYS_AHEAD = 90;    // quantos dias à frente a agenda fica aberta
+  var MIN_NOTICE_H = 2;   // antecedência mínima, em horas
+  var PANEL_KEY = "painel"; // acesso ao painel: adicione #painel ao endereço do site
+/* ================================================================ */
 
   // abertura
   (function(){
@@ -388,82 +427,168 @@
     });
   })();
 
-  // agendamento
+  // agendamento com agenda
   (function(){
+    var STORE = "jaqueline_agenda_v1";
     var svcBox = document.getElementById('services');
-    var dateEl = document.getElementById('date');
     var slotsEl = document.getElementById('slots');
     var errEl = document.getElementById('formerror');
     var resEl = document.getElementById('result');
-    var chosenSlot = "";
+    var calGrid = document.getElementById('calgrid');
+    var monthLabel = document.getElementById('monthlabel');
+    var dayLabel = document.getElementById('daylabel');
+    var prevBtn = document.getElementById('prevm'), nextBtn = document.getElementById('nextm');
+    var chosenSlot = "", chosenDate = "";
 
+    function load(){ try{ var d = JSON.parse(localStorage.getItem(STORE)); if (d && d.bookings && d.blocked) return d; }catch(e){} return {bookings:[], blocked:[]}; }
+    function save(d){ try{ localStorage.setItem(STORE, JSON.stringify(d)); }catch(e){} }
+    var db = load();
+
+    function pad(n){ return (n<10?'0':'')+n; }
+    function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+    function mins(hhmm){ var p=hhmm.split(':'); return +p[0]*60 + +p[1]; }
+    function hhmm(m){ return pad(Math.floor(m/60))+':'+pad(m%60); }
     function dur(m){ var h=Math.floor(m/60), r=m%60; return (h?h+"h":"") + (r?(h?" ":"")+r+"min":""); }
     function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}); }
+    function brDate(s){ var p=s.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+    function svcById(id){ return SERVICES.filter(function(s){return s.id===id;})[0]; }
 
-    svcBox.innerHTML = SERVICES.map(function(s,i){
-      return '<label class="opt"><input type="radio" name="svc" value="'+s.id+'"'+(i===0?'':'')+'>' +
+    var today = new Date(); today.setHours(0,0,0,0);
+    var lastDay = new Date(today); lastDay.setDate(lastDay.getDate()+DAYS_AHEAD);
+    var view = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    svcBox.innerHTML = SERVICES.map(function(s){
+      return '<label class="opt"><input type="radio" name="svc" value="'+s.id+'">' +
         '<span><b>'+esc(s.name)+'</b><small>'+esc(s.desc)+' · '+dur(s.minutes)+(s.price?' · '+esc(s.price):'')+'</small></span></label>';
     }).join('');
 
-    // data mínima: hoje
-    var t = new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset());
-    var todayStr = t.toISOString().slice(0,10);
-    dateEl.min = todayStr;
-
     function selectedService(){
       var r = document.querySelector('input[name=svc]:checked');
-      return r ? SERVICES.filter(function(s){return s.id===r.value;})[0] : null;
+      return r ? svcById(r.value) : null;
+    }
+
+    function isOpenDay(d){ return !!HOURS[d.getDay()] && db.blocked.indexOf(iso(d)) === -1; }
+
+    // horários livres de um dia para uma duração
+    function freeSlots(dateStr, minutes){
+      var d = new Date(dateStr+'T12:00:00'), h = HOURS[d.getDay()];
+      if (!h || db.blocked.indexOf(dateStr) !== -1) return [];
+      var open = mins(h.open), close = mins(h.close);
+      var pause = h.pause ? [mins(h.pause[0]), mins(h.pause[1])] : null;
+      var taken = db.bookings.filter(function(b){return b.date===dateStr;}).map(function(b){ return [mins(b.time), mins(b.time)+b.minutes+BUFFER]; });
+      var now = new Date(), minStart = null;
+      if (dateStr === iso(now)) minStart = now.getHours()*60 + now.getMinutes() + MIN_NOTICE_H*60;
+      var out = [];
+      for (var t=open; t+minutes<=close; t+=STEP){
+        if (minStart!==null && t < minStart) continue;
+        var end = t+minutes;
+        if (pause && t < pause[1] && end > pause[0]) continue;
+        var clash = taken.some(function(r){ return t < r[1] && end+BUFFER > r[0]; });
+        if (!clash) out.push(hhmm(t));
+      }
+      return out;
+    }
+
+    function renderCal(){
+      var m = view.getMonth(), y = view.getFullYear();
+      monthLabel.textContent = view.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+      prevBtn.disabled = (y===today.getFullYear() && m===today.getMonth());
+      nextBtn.disabled = new Date(y,m+1,1) > lastDay;
+      var html = ['D','S','T','Q','Q','S','S'].map(function(l){return '<div class="dow" aria-hidden="true">'+l+'</div>';}).join('');
+      var first = new Date(y,m,1).getDay(), total = new Date(y,m+1,0).getDate();
+      for (var i=0;i<first;i++) html += '<div></div>';
+      for (var n=1;n<=total;n++){
+        var d = new Date(y,m,n), s = iso(d);
+        var ok = d>=today && d<=lastDay && isOpenDay(d);
+        html += '<button type="button" class="day'+(s===iso(today)?' today':'')+'" data-d="'+s+'"'+(ok?'':' disabled')+
+                ' aria-pressed="'+(s===chosenDate)+'" aria-label="'+d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+'">'+n+'</button>';
+      }
+      calGrid.innerHTML = html;
     }
 
     function renderSlots(){
       chosenSlot = "";
-      var svc = selectedService(), d = dateEl.value;
-      if (!svc || !d) { slotsEl.innerHTML = '<p class="muted">Escolha um serviço e um dia para ver os horários.</p>'; return; }
-      var day = new Date(d + 'T12:00:00').getDay();
-      if (OPEN_DAYS.indexOf(day) === -1) { slotsEl.innerHTML = '<p class="muted">Não atendemos nesse dia. Escolha outro.</p>'; return; }
-      var now = new Date(), isToday = d === todayStr;
-      var list = START_TIMES.filter(function(h){
-        if (!isToday) return true;
-        var p = h.split(':'); return new Date(now.getFullYear(),now.getMonth(),now.getDate(),+p[0],+p[1]) > now;
-      });
-      if (!list.length) { slotsEl.innerHTML = '<p class="muted">Sem horários livres hoje. Escolha outro dia.</p>'; return; }
-      slotsEl.innerHTML = list.map(function(h){ return '<button type="button" class="slot" aria-pressed="false" data-h="'+h+'">'+h+'</button>'; }).join('');
+      var svc = selectedService();
+      if (chosenDate) dayLabel.textContent = new Date(chosenDate+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); else dayLabel.textContent = '';
+      if (!svc || !chosenDate) { slotsEl.innerHTML = '<p class="muted">Escolha um serviço e um dia para ver os horários.</p>'; return; }
+      var list = freeSlots(chosenDate, svc.minutes);
+      slotsEl.innerHTML = list.length
+        ? list.map(function(h){ return '<button type="button" class="slot" aria-pressed="false" data-h="'+h+'">'+h+'</button>'; }).join('')
+        : '<p class="muted">Sem horários livres nesse dia para este serviço. Escolha outro dia.</p>';
     }
 
+    prevBtn.addEventListener('click', function(){ view = new Date(view.getFullYear(), view.getMonth()-1, 1); renderCal(); });
+    nextBtn.addEventListener('click', function(){ view = new Date(view.getFullYear(), view.getMonth()+1, 1); renderCal(); });
+    calGrid.addEventListener('click', function(e){
+      var b = e.target.closest('.day'); if (!b || b.disabled) return;
+      chosenDate = b.dataset.d; renderCal(); renderSlots();
+    });
     slotsEl.addEventListener('click', function(e){
       var b = e.target.closest('.slot'); if (!b) return;
       slotsEl.querySelectorAll('.slot').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
       b.setAttribute('aria-pressed','true'); chosenSlot = b.dataset.h;
     });
     svcBox.addEventListener('change', renderSlots);
-    dateEl.addEventListener('change', renderSlots);
 
     document.getElementById('bookform').addEventListener('submit', function(e){
       e.preventDefault();
       errEl.hidden = true;
       var svc = selectedService(), name = document.getElementById('name').value.trim(),
-          phone = document.getElementById('phone').value.replace(/\D/g,''), notes = document.getElementById('notes').value.trim();
-      var msg = !svc ? "Escolha um serviço." : !dateEl.value ? "Escolha um dia." : !chosenSlot ? "Escolha um horário." :
+          phoneRaw = document.getElementById('phone').value.trim(),
+          phone = phoneRaw.replace(/\D/g,''), notes = document.getElementById('notes').value.trim();
+      var msg = !svc ? "Escolha um serviço." : !chosenDate ? "Escolha um dia." : !chosenSlot ? "Escolha um horário." :
                 name.length < 2 ? "Informe seu nome." : phone.length < 10 ? "Informe o WhatsApp com DDD." : "";
       if (msg) { errEl.textContent = msg; errEl.hidden = false; return; }
+      db = load();
+      if (freeSlots(chosenDate, svc.minutes).indexOf(chosenSlot) === -1) {
+        errEl.textContent = "Esse horário acabou de ser ocupado. Escolha outro."; errEl.hidden = false; renderSlots(); return;
+      }
+      db.bookings.push({id:Date.now(), date:chosenDate, time:chosenSlot, minutes:svc.minutes, service:svc.name, name:name, phone:phoneRaw, notes:notes});
+      save(db);
 
-      var p = dateEl.value.split('-'), dataBr = p[2]+'/'+p[1]+'/'+p[0];
-      var text = "Olá, Jaqueline! Quero agendar:\n" +
-        "Serviço: " + svc.name + "\nDia: " + dataBr + " às " + chosenSlot +
-        "\nNome: " + name + "\nWhatsApp: " + document.getElementById('phone').value.trim() +
-        (notes ? "\nObservações: " + notes : "");
-
+      var dataBr = brDate(chosenDate);
+      var text = "Olá, Jaqueline! Quero agendar:\nServiço: " + svc.name + "\nDia: " + dataBr + " às " + chosenSlot +
+        "\nNome: " + name + "\nWhatsApp: " + phoneRaw + (notes ? "\nObservações: " + notes : "");
       var link = WHATSAPP_NUMBER ? "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text) : "";
       resEl.hidden = false;
-      resEl.innerHTML = '<h3>Pedido pronto!</h3>' +
-        '<p><b>' + esc(svc.name) + '</b><br>' + dataBr + ' às ' + chosenSlot + '<br>' + esc(name) + '</p>' +
+      resEl.innerHTML = '<h3>Horário reservado!</h3>' +
+        '<p><b>' + esc(svc.name) + '</b><br>' + dataBr + ' às ' + chosenSlot + ' (' + dur(svc.minutes) + ')<br>' + esc(name) + '</p>' +
+        '<p>Endereço: Av. General Asdrubal da Cunha, 643, Sala 5, Butantã.</p>' +
         (link
-          ? '<p>Toque abaixo para enviar o pedido pelo WhatsApp. O horário fica confirmado quando a Jaqueline responder.</p><a class="btn" href="'+link+'" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>'
-          : '<p>O WhatsApp oficial ainda não foi configurado neste site. Copie a mensagem abaixo e envie pelo direct do Instagram.</p>' +
+          ? '<p>Envie o pedido pelo WhatsApp para a Jaqueline confirmar com você.</p><a class="btn" href="'+link+'" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>'
+          : '<p>O WhatsApp oficial ainda não foi configurado. Copie a mensagem abaixo e envie pelo direct do Instagram.</p>' +
             '<p style="white-space:pre-line;background:#fff6f8;padding:12px 16px;border-radius:14px;color:#3A2E32">'+esc(text)+'</p>' +
             '<a class="btn" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">Abrir Instagram</a>');
+      chosenSlot = ""; renderSlots();
       resEl.scrollIntoView({behavior:'smooth', block:'center'});
+      renderPanel();
     });
+
+    // painel simples (abra o site com #painel no final do endereço)
+    var panel = document.getElementById('panel');
+    function renderPanel(){
+      if (location.hash !== '#'+PANEL_KEY) { panel.hidden = true; return; }
+      db = load(); panel.hidden = false;
+      var upcoming = db.bookings.filter(function(b){return b.date >= iso(today);}).sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time);});
+      panel.innerHTML = '<h3>Painel da agenda</h3>' +
+        '<p class="muted">Modelo base: as reservas ficam salvas só neste aparelho. Para valer para todos os celulares, será preciso conectar um banco de dados.</p>' +
+        (upcoming.length ? '<table><tr><th>Dia</th><th>Cliente</th><th>Serviço</th><th></th></tr>' + upcoming.map(function(b){
+          return '<tr><td>'+brDate(b.date)+'<br>'+b.time+'</td><td>'+esc(b.name)+'<br>'+esc(b.phone)+'</td><td>'+esc(b.service)+(b.notes?'<br><small>'+esc(b.notes)+'</small>':'')+'</td><td><button class="btn ghost" data-cancel="'+b.id+'">Cancelar</button></td></tr>';
+        }).join('') + '</table>' : '<p>Nenhuma reserva ainda.</p>') +
+        '<div class="row"><input type="date" id="blockdate" min="'+iso(today)+'"><button class="btn" id="blockbtn" type="button">Bloquear dia</button></div>' +
+        (db.blocked.length ? '<p class="muted">Dias bloqueados: ' + db.blocked.sort().map(function(d){return brDate(d)+' <a href="#painel" data-unblock="'+d+'">(liberar)</a>';}).join(', ') + '</p>' : '');
+    }
+    panel.addEventListener('click', function(e){
+      var c = e.target.closest('[data-cancel]'), u = e.target.closest('[data-unblock]');
+      if (c) { db = load(); db.bookings = db.bookings.filter(function(b){return String(b.id)!==c.dataset.cancel;}); save(db); }
+      else if (u) { e.preventDefault(); db = load(); db.blocked = db.blocked.filter(function(d){return d!==u.dataset.unblock;}); save(db); }
+      else if (e.target.id === 'blockbtn') { var v = document.getElementById('blockdate').value; if (!v) return; db = load(); if (db.blocked.indexOf(v)===-1) db.blocked.push(v); save(db); }
+      else return;
+      renderPanel(); renderCal(); renderSlots();
+    });
+    window.addEventListener('hashchange', renderPanel);
+
+    renderCal(); renderPanel();
   })();
 </script>
 </body>
