@@ -66,7 +66,7 @@
   .hero p.lead{max-width:44ch;color:var(--muted);font-size:1.15rem}
   .hero .actions{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
   .portrait{position:relative;width:min(380px,86%);justify-self:center}
-  .portrait img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--radius);box-shadow:0 0 0 6px var(--white),0 0 0 8px var(--gold),0 30px 60px rgba(194,24,91,.22)}
+  .portrait img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:50% 78%;border-radius:var(--radius);box-shadow:0 0 0 6px var(--white),0 0 0 8px var(--gold),0 30px 60px rgba(194,24,91,.22)}
   @media(min-width:860px){.hero{padding:80px 0 100px}.hero .wrap{grid-template-columns:1.1fr .9fr}}
 
   /* seções */
@@ -126,7 +126,7 @@
   .slot:hover{border-color:var(--pink)}
   .slot[aria-pressed=true]{background:var(--pink);border-color:var(--pink);color:#fff}
   .cal{margin-top:6px}
-  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;text-transform:capitalize}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
   .cal-head button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--nude);background:#fff6f8;color:var(--pink);font-size:1.3rem;cursor:pointer;line-height:1}
   .cal-head button:disabled{opacity:.35;cursor:not-allowed}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
@@ -491,7 +491,7 @@
 
     function renderCal(){
       var m = view.getMonth(), y = view.getFullYear();
-      monthLabel.textContent = view.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+      var ml = view.toLocaleDateString('pt-BR',{month:'long'}); monthLabel.textContent = ml.charAt(0).toUpperCase()+ml.slice(1)+' de '+y;
       prevBtn.disabled = (y===today.getFullYear() && m===today.getMonth());
       nextBtn.disabled = new Date(y,m+1,1) > lastDay;
       var html = ['D','S','T','Q','Q','S','S'].map(function(l){return '<div class="dow" aria-hidden="true">'+l+'</div>';}).join('');
