@@ -1,0 +1,28 @@
+/* Capas animadas dos módulos (área de membros) */
+.capa-mod{
+  position:relative;container-type:inline-size;aspect-ratio:4/3;border-radius:3.2cqw;overflow:hidden;
+  margin:10px 0 16px;background:#0b2e2b;box-shadow:0 12px 30px rgba(11,46,43,.28);isolation:isolate;
+}
+.capa-mod .fundo{position:absolute;inset:0;z-index:0}
+.capa-mod .fundo img{
+  width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 40%);display:block;
+  transform-origin:var(--org,50% 45%);animation:capa-zoom 18s ease-in-out infinite alternate;
+}
+@keyframes capa-zoom{from{transform:scale(1)}to{transform:scale(1.1) translate(-1.2%,-1%)}}
+.capa-mod .veu{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(4,22,20,.94) 0%,rgba(4,22,20,.5) 40%,rgba(4,22,20,0) 72%)}
+.capa-mod .brilho{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.2) 50%,transparent 58%);
+  background-size:260% 100%;background-position:160% 0;animation:capa-brilho 7s ease-in-out infinite;
+}
+@keyframes capa-brilho{0%{background-position:160% 0}55%,100%{background-position:-70% 0}}
+.capa-mod .txt{position:absolute;left:5.5cqw;right:5.5cqw;bottom:5.5cqw;z-index:3;color:#fff}
+.capa-mod .kick{font-size:3.4cqw;letter-spacing:.22em;text-transform:uppercase;color:#8fe3d6;font-weight:700}
+.capa-mod h2{font-size:7.2cqw;line-height:1.08;margin:1.6cqw 0 2.6cqw;color:#fff;font-weight:800}
+.capa-mod .chip{display:inline-block;font-size:3.2cqw;padding:1.1cqw 3.2cqw;border-radius:99px;
+  background:rgba(255,255,255,.14);color:#e6f3f1;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* módulo sem imagem: usa o gradiente animado do produto */
+.capa-mod.sem-img .fundo{background:var(--ag-c1)}
+.capa-mod.sem-img .fundo .ag{z-index:0}
+@media (prefers-reduced-motion:reduce){.capa-mod .fundo img,.capa-mod .brilho{animation:none}}

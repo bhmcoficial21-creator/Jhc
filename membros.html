@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Destrava — Área de Membros</title><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/efeitos.css"><link rel="stylesheet" href="assets/busca.css"><link rel="stylesheet" href="assets/entrada.css"><script>try{var R=document.documentElement;if(sessionStorage.getItem("pt"))R.classList.add("pt-arrive");else if(!sessionStorage.getItem("entrou")&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))R.classList.add("entrada")}catch(e){}</script></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Destrava — Área de Membros</title><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/efeitos.css"><link rel="stylesheet" href="assets/busca.css"><link rel="stylesheet" href="assets/entrada.css"><link rel="stylesheet" href="assets/capas.css"><script>try{var R=document.documentElement;if(sessionStorage.getItem("pt"))R.classList.add("pt-arrive");else if(!sessionStorage.getItem("entrou")&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))R.classList.add("entrada")}catch(e){}</script></head><body>
 <div id="entrada" role="dialog" aria-label="Entrada" tabindex="0"><canvas aria-hidden="true"></canvas><div class="tx"><h2 class="nome gw">Destrava</h2><p class="lema">Pausas de 3 minutos para o corpo de quem não para.</p><p class="dica">Toque para entrar</p></div></div>
 <header class="top ag-host"><div class="ag" aria-hidden="true"></div><div class="wrap"><h1 class="gw marca">Destrava</h1><p data-blur style="margin:.3em 0 0;color:#e6f3f1;font-size:1.1rem">Escolha o guia e faça na própria cadeira.</p></div></header>
 
@@ -25,7 +25,14 @@
 <p class="wrap aviso" id="aviso"></p>
 <script src="assets/guias.js"></script><script>
 document.getElementById("aviso").textContent=AVISO;
-document.getElementById("app").innerHTML=MODULOS.map(m=>`<div class="mod"><h2 data-blur>${m.nome}</h2>${m.guias.map(g=>`<a class="guia" href="guia.html?g=${g.id}"><span>${g.titulo}<br><small>${g.cards.length} cards</small></span><b>${g.tempo} ›</b></a>`).join("")}</div>`).join("");
+/* Capas dos módulos: imagem + zoom lento + brilho; sem imagem usa o gradiente animado */
+const CAPAS={2:["capa-modulo-2.jpg","50% 30%"],3:["capa-modulo-3.jpg","50% 42%"],4:["capa-modulo-4.jpg","50% 50%"],5:["capa-bonus.jpg","50% 32%"]};
+function capaMod(m){
+  const partes=m.nome.split(" — "),kick=partes.length>1?partes[0]:"",titulo=partes.length>1?partes[1]:m.nome,c=CAPAS[m.id];
+  const fundo=c?`<div class="fundo"><img src="assets/img/${c[0]}" alt="" style="--pos:${c[1]}" loading="lazy"></div>`:`<div class="fundo"><div class="ag" aria-hidden="true"></div></div>`;
+  return `<div class="capa-mod${c?"":" sem-img"}">${fundo}<div class="veu"></div><div class="brilho"></div><div class="txt"><div class="kick">${kick}</div><h2>${titulo}</h2><span class="chip">${m.guias.length} guias</span></div></div>`;
+}
+document.getElementById("app").innerHTML=MODULOS.map(m=>`<div class="mod">${capaMod(m)}${m.guias.map(g=>`<a class="guia" href="guia.html?g=${g.id}"><span>${g.titulo}<br><small>${g.cards.length} cards</small></span><b>${g.tempo} ›</b></a>`).join("")}</div>`).join("");
 
 /* Busca: guias e exercícios, sem diferenciar acentos nem maiúsculas */
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
