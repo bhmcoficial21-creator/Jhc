@@ -512,6 +512,26 @@
   .ig-cap{color:var(--muted);font-size:.95rem;margin:0}
   @media(prefers-reduced-motion:reduce){.dbtn,.dbtn *,.dbtn::before,.dbtn::after{transition:none!important;animation-duration:.01s!important}.ig-container,.ig-tooltip,.ig-layer,.ig-layer span{transition:none}}
 
+  /* ===== vídeo vertical (reel) ===== */
+  .reel{background:var(--graphite);color:var(--blush);padding:90px 0;overflow:hidden}
+  .reel-grid{display:grid;gap:44px;align-items:center}
+  @media(min-width:860px){.reel-grid{grid-template-columns:1fr 1fr;gap:72px}}
+  .reel-text .eyebrow{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .reel-text h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2.4rem,7vw,3.8rem);line-height:1;margin-top:10px;color:#fff;max-width:14ch}
+  .reel-text .body{margin-top:20px;max-width:40ch;color:#d9c3c9;font-size:1.05rem}
+  .reel-text .dbtn{margin-top:30px}
+  .reel-phone{position:relative;width:min(320px,80%);justify-self:center}
+  .reel-screen{position:relative;aspect-ratio:9/16;border-radius:36px;overflow:hidden;background:#000;box-shadow:0 0 0 8px #1b1315,0 0 0 10px var(--gold),0 40px 80px rgba(0,0,0,.55),0 0 80px rgba(194,24,91,.28)}
+  .reel-screen video{width:100%;height:100%;object-fit:cover;display:block}
+  .reel-ctrl{position:absolute;right:12px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:2}
+  .reel-ctrl button{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--pink);cursor:pointer;display:grid;place-items:center}
+  .reel-ctrl svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* entrada provisória: a tela abre de baixo para cima (será trocada pelo efeito escolhido) */
+  .js .reel-phone .reel-screen{clip-path:inset(100% 0 0 0 round 36px);transform:translateY(40px) scale(.94);transition:clip-path 1.2s cubic-bezier(.2,.8,.2,1),transform 1.2s cubic-bezier(.2,.8,.2,1)}
+  .js .reel-phone.in .reel-screen{clip-path:inset(-120px -120px -120px -120px round 36px);transform:none}
+  .reel-phone .spark{z-index:3}
+  @media(prefers-reduced-motion:reduce){.js .reel-phone .reel-screen{clip-path:none;transform:none;transition:none}}
+
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .btn{transition:none}
@@ -721,6 +741,31 @@
         </div>
         <p class="ig-cap">Veja mais trabalhos no Instagram</p>
       </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reel" id="reel">
+    <div class="wrap reel-grid">
+      <div class="reel-text">
+        <p class="eyebrow rv">Em movimento</p>
+        <h2 class="rv" style="--d:.08s">Veja o trabalho de perto</h2>
+        <hr class="rule">
+        <p class="body rv" style="--d:.16s">Cílios, sobrancelhas e o cuidado em cada detalhe, do começo ao resultado final.</p>
+        <a class="dbtn type--C rv" style="--d:.24s" href="#agendar"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Agendar horário</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
+      </div>
+      <div class="reel-phone" id="reelphone">
+        <svg class="spark a" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <svg class="spark b" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <div class="reel-screen">
+          <video id="reelv" poster="img/reel-poster.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Vídeo com trabalhos de cílios e sobrancelhas da Jaqueline">
+            <source src="video/reel.mp4" type="video/mp4">
+          </video>
+          <div class="reel-ctrl">
+            <button type="button" id="reelplay" aria-label="Pausar vídeo"></button>
+            <button type="button" id="reelsnd" aria-label="Ligar o som"></button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1140,7 +1185,10 @@
     refresh:'<path d="M20 11a8 8 0 0 0-14-4M4 13a8 8 0 0 0 14 4M6 3v4h4M18 21v-4h-4"/>',
     pill:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M9.500 9.500l5 5" />',
     menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
-    phone:'<rect x="7" y="2.500" width="10" height="19" rx="2.500"/><path d="M3 3l18 18"/>',
+    play:'<path d="M8 5l11 7-11 7V5Z"/>',
+    sound:'<path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.500 9a4.500 4.500 0 0 1 0 6M19 6.500a8 8 0 0 1 0 11"/>',
+    mute:'<path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M17 9l5 6M22 9l-5 6"/>',
+    phone:'<rect x="7" y="2.500" y="2.500" width="10" height="19" rx="2.500"/><path d="M3 3l18 18"/>',
     shield:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/>',
     timer:'<circle cx="12" cy="13" r="7.500"/><path d="M12 9v4l2.500 1.500M9.500 2.500h5"/>',
     steam:'<path d="M7 20h10M6 20v-5h12v5M9 11c-1-1.500 1-2.500 0-4.500M13 11c-1-1.500 1-2.500 0-4.500M17 11c-1-1.500 1-2.500 0-4.500"/>',
@@ -1182,6 +1230,7 @@
       ['#agendar','calendar','Agendar horário','Escolha dia e horário'],
       ['#sobrancelhas','brow','Sobrancelhas','Todas as técnicas'],
       ['#cilios','eye','Cílios','Todos os estilos'],
+      ['#reel','play','Vídeo','Assista ao trabalho'],
       ['#antes-depois','split','Antes e depois','Resultados das clientes'],
       ['#cuidados','heart','Cuidados','Antes e depois do procedimento'],
       ['#galeria','image','Galeria','Fotos e vídeo'],
@@ -1426,10 +1475,38 @@
     window.addEventListener('keydown', function(e){ if(!lb.classList.contains('on')) return; if(e.key==='Escape') hide(); if(e.key==='ArrowLeft') show(cur-1); if(e.key==='ArrowRight') show(cur+1); });
   })();
 
+  // ---------- vídeo vertical (reel) ----------
+  (function(){
+    var v = document.getElementById('reelv'); if (!v) return;
+    var bp = document.getElementById('reelplay'), bs = document.getElementById('reelsnd');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused = false;
+    function ui(){
+      bp.innerHTML = ico(v.paused ? 'play' : 'check').replace(/<path[^>]*\/>/, v.paused ? '<path d="M8 5l11 7-11 7V5Z"/>' : '<path d="M8 5v14M16 5v14"/>');
+      bp.setAttribute('aria-label', v.paused ? 'Tocar vídeo' : 'Pausar vídeo');
+      bs.innerHTML = ico(v.muted ? 'mute' : 'sound'); bs.setAttribute('aria-label', v.muted ? 'Ligar o som' : 'Desligar o som');
+    }
+    function tryPlay(){ var p = v.play(); if (p && p.catch) p.catch(ui); }
+    bp.addEventListener('click', function(){ if (v.paused){ userPaused=false; tryPlay(); } else { userPaused=true; v.pause(); } });
+    bs.addEventListener('click', function(){ v.muted = !v.muted; if (!v.muted && v.paused){ userPaused=false; tryPlay(); } ui(); });
+    v.addEventListener('play', ui); v.addEventListener('pause', ui); v.addEventListener('volumechange', ui);
+    // navegadores que bloqueiam vídeo embutido (data:) precisam de um blob
+    var src = v.querySelector('source');
+    if (src && src.getAttribute('src').indexOf('data:')===0 && window.fetch){
+      fetch(src.getAttribute('src')).then(function(r){return r.blob();}).then(function(bl){ v.src = URL.createObjectURL(bl); v.load(); }).catch(function(){});
+    }
+    // toca só quando está na tela
+    if ('IntersectionObserver' in window && !reduce){
+      new IntersectionObserver(function(es){ es.forEach(function(e){
+        if (e.isIntersecting){ if (!userPaused) tryPlay(); } else { v.pause(); }
+      }); },{threshold:.4}).observe(v);
+    }
+    ui();
+  })();
+
   // ---------- revelar ao rolar ----------
   (function(){
     document.documentElement.classList.add('js');
-    var els = document.querySelectorAll('.rv, .type');
+    var els = document.querySelectorAll('.rv, .type, .reel-phone');
     if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.15});
     els.forEach(function(e,i){ io.observe(e); });
