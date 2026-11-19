@@ -79,7 +79,7 @@
   .svc svg{animation:twinkle 4s ease-in-out infinite}
   .svc:nth-child(2) svg{animation-delay:.6s}.svc:nth-child(3) svg{animation-delay:1.2s}
   .svc{transition:transform .2s}.svc:hover{transform:translateY(-4px)}
-  .gallery-grid img{transition:transform .25s}.gallery-grid img:hover{transform:scale(1.03)}
+  .gallery-grid img{cursor:zoom-in;transition:transform .25s}.gallery-grid img:hover{transform:scale(1.03)}
   /* seções */
   section{padding:80px 0}
   h2{font-size:clamp(1.6rem,4.5vw,2.4rem);max-width:20ch}
@@ -277,6 +277,9 @@
   .type:hover{transform:translateY(-5px);box-shadow:0 0 0 2px var(--pink),0 20px 40px rgba(194,24,91,.15)}
   .art{border-radius:18px;background:linear-gradient(160deg,var(--blush),#fff);padding:10px}
   .art svg{display:block;width:100%;height:auto}
+  .art.photo{padding:0;background:none;overflow:hidden}
+  .art.photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .type:hover .art.photo img{transform:scale(1.05)}
   .type h3{font-size:1.2rem}
   .type .how{color:var(--muted)}
   .type .for{font-size:.95rem;padding:10px 12px;border-radius:12px;background:var(--blush)}
@@ -296,7 +299,9 @@
   @media(min-width:760px){.ba-grid.two{grid-template-columns:1fr 1fr}}
   .ba{position:relative;aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;--pos:50%;box-shadow:0 0 0 6px #fff,0 0 0 8px var(--gold);user-select:none;touch-action:pan-y;background:#fff}
   .ba-pane{position:absolute;inset:0}
-  .ba-pane img{width:100%;height:100%;object-fit:cover}
+  .ba-pane img{width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+  .ba.tall{aspect-ratio:3/4}
+  .ba-grid:not(.two){max-width:480px;margin-inline:auto}
   .ba-pane.before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
   .ba-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:20px;font-weight:600}
   .ba-ph svg{width:48px;height:48px;opacity:.7;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -358,6 +363,11 @@
   .note-hours{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
   .note-hours svg{width:20px;height:20px;flex:none}
 
+  .lb{position:fixed;inset:0;z-index:60;background:rgba(15,5,10,.92);display:none;align-items:center;justify-content:center;padding:20px}
+  .lb.on{display:flex;animation:fadein .25s both}
+  .lb img{max-width:100%;max-height:88vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .lb button{position:absolute;border:0;border-radius:50%;width:46px;height:46px;background:#fff;color:var(--pink);font-size:1.4rem;cursor:pointer}
+  .lb .x{top:16px;right:16px}.lb .p{left:12px;top:50%;margin-top:-23px}.lb .n{right:12px;top:50%;margin-top:-23px}
   /* ===== reserva: abas e horários ===== */
   .book .tabs{margin-top:12px}
   .book .tab{color:var(--pink);border-color:var(--nude);background:#fff6f8}
@@ -577,6 +587,14 @@
         <img src="img/trabalho-2.jpg" alt="Sobrancelha volumosa e cílios alongados em pele negra" loading="lazy">
         <img src="img/trabalho-3.jpg" alt="Sobrancelha castanha natural e cílios volumosos" loading="lazy">
         <img src="img/trabalho-4.jpg" alt="Design de sobrancelha com extensão de cílios em volume" loading="lazy">
+        <img src="img/galeria-1.jpg" alt="Sobrancelha desenhada e cílios em volume" loading="lazy">
+        <img src="img/galeria-2.jpg" alt="Sobrancelha natural e extensão de cílios" loading="lazy">
+        <img src="img/galeria-3.jpg" alt="Sobrancelha marcada e cílios em volume" loading="lazy">
+        <img src="img/galeria-4.jpg" alt="Extensão de cílios, vista com olhos fechados" loading="lazy">
+        <img src="img/galeria-5.jpg" alt="Sobrancelha com fios definidos" loading="lazy">
+        <img src="img/galeria-6.jpg" alt="Cílios em volume, close do olho" loading="lazy">
+        <img src="img/galeria-7.jpg" alt="Cílios com efeito texturizado, close" loading="lazy">
+        <img src="img/galeria-8.jpg" alt="Cílios volumosos, vista lateral" loading="lazy">
       </div>
       <div class="more">
         <a class="btn ghost" href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener">Ver mais no Instagram</a>
@@ -725,26 +743,28 @@
   // minutes: duração usada para calcular os horários livres. art: formato do desenho no cartão.
   var SERVICES = [
     { id:"design",   cat:"sobrancelhas", art:"clean",  name:"Design de sobrancelhas", minutes:40,  price:"", desc:"Limpeza e desenho dos fios, respeitando o formato natural do seu rosto.", forWho:"quer a sobrancelha alinhada e natural, sem mudar muito o visual." },
-    { id:"henna",    cat:"sobrancelhas", art:"henna",  name:"Design com henna",       minutes:60,  price:"", desc:"Design com henna que preenche falhas e dá cor à pele, por baixo dos fios.", forWho:"tem falhas ou fios claros e quer mais definição, sem pigmento permanente." },
-    { id:"lami",     cat:"sobrancelhas", art:"lami",   name:"Brow lamination",        minutes:60,  price:"", desc:"Alinha os fios para cima e dá efeito de sobrancelha cheia e penteada.", forWho:"tem fios rebeldes ou quer volume e um visual mais marcante." },
-    { id:"micro-fio",cat:"sobrancelhas", art:"micro",  name:"Micropigmentação fio a fio", minutes:150, price:"", desc:"Fios desenhados na pele, com aspecto natural e longa duração.", forWho:"quer fios bem naturais e quer acordar com a sobrancelha pronta." },
+    { id:"henna", photo:"img/card-henna.jpg",    cat:"sobrancelhas", art:"henna",  name:"Design com henna",       minutes:60,  price:"", desc:"Design com henna que preenche falhas e dá cor à pele, por baixo dos fios.", forWho:"tem falhas ou fios claros e quer mais definição, sem pigmento permanente." },
+    { id:"lami", photo:"img/card-lami.jpg",     cat:"sobrancelhas", art:"lami",   name:"Brow lamination",        minutes:60,  price:"", desc:"Alinha os fios para cima e dá efeito de sobrancelha cheia e penteada.", forWho:"tem fios rebeldes ou quer volume e um visual mais marcante." },
+    { id:"micro-fio", photo:"img/card-micro-fio.jpg",cat:"sobrancelhas", art:"micro",  name:"Micropigmentação fio a fio", minutes:150, price:"", desc:"Fios desenhados na pele, com aspecto natural e longa duração.", forWho:"quer fios bem naturais e quer acordar com a sobrancelha pronta." },
     { id:"micro-sombra",cat:"sobrancelhas", art:"shadow", name:"Micropigmentação sombreada", minutes:150, price:"", desc:"Efeito esfumado, como uma maquiagem leve que fica por mais tempo.", forWho:"prefere um acabamento mais marcado, de maquiagem." },
     { id:"micro-hib",cat:"sobrancelhas", art:"hybrid", name:"Micropigmentação fio + sombra", minutes:150, price:"", desc:"Une fios e sombreado: natural no começo, mais preenchida no corpo da sobrancelha.", forWho:"quer o melhor dos dois: naturalidade e preenchimento." },
 
     { id:"classico", cat:"cilios", art:"classico",   name:"Clássico (fio a fio)", minutes:120, price:"", desc:"Uma extensão sobre cada fio natural. Efeito delicado, como um rímel permanente.", forWho:"quer um olhar natural e leve." },
     { id:"hibrido",  cat:"cilios", art:"hibrido",    name:"Híbrido",              minutes:135, price:"", desc:"Mistura de fio a fio e volume: mais preenchimento, ainda leve.", forWho:"quer mais volume que o clássico, sem exagero." },
-    { id:"brasileiro",cat:"cilios", art:"brasileiro",name:"Volume brasileiro",    minutes:120, price:"", desc:"Fios em formato de Y, com volume suave e acabamento natural.", forWho:"quer volume suave e bem alinhado." },
-    { id:"russo",    cat:"cilios", art:"russo",      name:"Volume russo",         minutes:150, price:"", desc:"Leques de 3 a 6 fios finíssimos sobre cada cílio natural. Bem cheio e macio.", forWho:"quer um olhar cheio, mas leve." },
-    { id:"mega",     cat:"cilios", art:"mega",       name:"Mega volume",          minutes:180, price:"", desc:"Leques de 7 fios ou mais, para um efeito super denso e marcante.", forWho:"quer um olhar de impacto, bem preto e cheio." },
+    { id:"brasileiro", photo:"img/card-brasileiro.jpg",cat:"cilios", art:"brasileiro",name:"Volume brasileiro",    minutes:120, price:"", desc:"Fios em formato de Y, com volume suave e acabamento natural.", forWho:"quer volume suave e bem alinhado." },
+    { id:"russo", photo:"img/card-russo.jpg",    cat:"cilios", art:"russo",      name:"Volume russo",         minutes:150, price:"", desc:"Leques de 3 a 6 fios finíssimos sobre cada cílio natural. Bem cheio e macio.", forWho:"quer um olhar cheio, mas leve." },
+    { id:"mega", photo:"img/card-mega.jpg",     cat:"cilios", art:"mega",       name:"Mega volume",          minutes:180, price:"", desc:"Leques de 7 fios ou mais, para um efeito super denso e marcante.", forWho:"quer um olhar de impacto, bem preto e cheio." },
     { id:"gatinho",  cat:"cilios", art:"gatinho",    name:"Efeito gatinho (fox eyes)", minutes:150, price:"", desc:"Fios mais longos no canto externo, que alongam e levantam o olhar.", forWho:"quer um olhar alongado e sensual." },
-    { id:"wispy",    cat:"cilios", art:"wispy",      name:"Wispy",                minutes:150, price:"", desc:"Fios alternando comprimentos, com efeito texturizado e delicado.", forWho:"gosta do visual de cílios com pontas marcadas e pouco arrumadas." },
+    { id:"wispy", photo:"img/card-wispy.jpg",    cat:"cilios", art:"wispy",      name:"Wispy",                minutes:150, price:"", desc:"Fios alternando comprimentos, com efeito texturizado e delicado.", forWho:"gosta do visual de cílios com pontas marcadas e pouco arrumadas." },
     { id:"lifting",  cat:"cilios", art:"lifting",    name:"Lash lifting",         minutes:60,  price:"", desc:"Curva e levanta seus próprios cílios, sem extensão.", forWho:"tem cílios bons e quer só realçar a curvatura." },
     { id:"manutencao",cat:"cilios",art:"manutencao", name:"Manutenção de cílios", minutes:90,  price:"", desc:"Reposição dos fios que caíram, recomendada a cada 15 a 20 dias.", forWho:"já faz extensão e quer manter o resultado." }
   ];
 
   // Fotos de antes e depois. Quando a Jaqueline enviar, adicione assim:
   // { title:"Design com henna", before:"img/antes-1.jpg", after:"img/depois-1.jpg" }
-  var BEFORE_AFTER = [];
+  var BEFORE_AFTER = [
+    { title:"Microblading fio a fio", before:"img/antes-1.jpg", after:"img/depois-1.jpg" }
+  ];
 
   // Atendimento por dia da semana (0=domingo ... 6=sábado). Horas em "HH:MM". Dia sem linha = fechado.
   // Os textos de "Horário de funcionamento" do site são gerados daqui.
@@ -1121,8 +1141,8 @@
   // ---------- catálogo (sobrancelhas e cílios) ----------
   (function(){
     function card(s){
-      var art = s.cat==='sobrancelhas' ? browArt(s.art) : lashArt(s.art);
-      return '<article class="type" id="t-'+s.id+'"><div class="art">'+art+'</div><h3>'+esc(s.name)+'</h3>' +
+      var art = s.photo ? '<img src="'+esc(s.photo)+'" alt="Exemplo de '+esc(s.name)+'" loading="lazy">' : (s.cat==='sobrancelhas' ? browArt(s.art) : lashArt(s.art));
+      return '<article class="type" id="t-'+s.id+'"><div class="art'+(s.photo?' photo':'')+'">'+art+'</div><h3>'+esc(s.name)+'</h3>' +
         '<p class="how">'+esc(s.desc)+'</p><p class="for"><b>Combina com você se:</b> '+esc(s.forWho)+'</p>' +
         '<div class="meta"><span>'+durTxt(s.minutes)+(s.price?' · '+esc(s.price):'')+'</span><button type="button" class="btn pick" data-pick="'+s.id+'">Quero esta</button></div></article>';
     }
@@ -1147,7 +1167,7 @@
                       : '<div class="ba-pane before"><div class="ba-ph b">'+ico('image')+'Foto do ANTES</div></div>';
       var after = it ? '<div class="ba-pane"><img src="'+esc(it.after)+'" alt="Depois: '+esc(it.title||'')+'" loading="lazy"></div>'
                      : '<div class="ba-pane"><div class="ba-ph a">'+ico('sparkle')+'Foto do DEPOIS</div></div>';
-      return '<figure class="rv" style="margin:0"><div class="ba" data-ba>' + after + before +
+      return '<figure class="rv" style="margin:0"><div class="ba'+(it?' tall':'')+'" data-ba>' + after + before +
         '<span class="ba-tag l">Antes</span><span class="ba-tag r">Depois</span>' +
         '<input type="range" min="0" max="100" value="50" aria-label="Arraste para comparar antes e depois">' +
         '<div class="ba-handle"></div></div>' + (it && it.title ? '<figcaption class="ba-cap">'+esc(it.title)+'</figcaption>' : '') + '</figure>';
@@ -1220,6 +1240,20 @@
     tabs.innerHTML = CARE.map(function(c,i){ return '<button type="button" class="tab" role="tab" aria-selected="'+(i===0)+'" data-i="'+i+'">'+esc(c.label)+'</button>'; }).join('');
     tabs.addEventListener('click', function(e){ var b=e.target.closest('.tab'); if(!b) return; cur=+b.dataset.i; render(); });
     render();
+  })();
+
+  // ---------- ampliar fotos da galeria ----------
+  (function(){
+    var imgs = Array.prototype.slice.call(document.querySelectorAll('.gallery-grid img')); if (!imgs.length) return;
+    var lb = document.createElement('div'); lb.className='lb'; lb.setAttribute('role','dialog'); lb.setAttribute('aria-label','Foto ampliada');
+    lb.innerHTML = '<button class="x" type="button" aria-label="Fechar">✕</button><button class="p" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="n" type="button" aria-label="Próxima foto">›</button>';
+    document.body.appendChild(lb);
+    var big = lb.querySelector('img'), cur = 0;
+    function show(i){ cur=(i+imgs.length)%imgs.length; big.src=imgs[cur].src; big.alt=imgs[cur].alt; lb.classList.add('on'); }
+    function hide(){ lb.classList.remove('on'); }
+    imgs.forEach(function(im,i){ im.addEventListener('click', function(){ show(i); }); });
+    lb.addEventListener('click', function(e){ if (e.target===lb || e.target.classList.contains('x')) hide(); else if (e.target.classList.contains('p')) show(cur-1); else if (e.target.classList.contains('n')) show(cur+1); });
+    window.addEventListener('keydown', function(e){ if(!lb.classList.contains('on')) return; if(e.key==='Escape') hide(); if(e.key==='ArrowLeft') show(cur-1); if(e.key==='ArrowRight') show(cur+1); });
   })();
 
   // ---------- revelar ao rolar ----------
