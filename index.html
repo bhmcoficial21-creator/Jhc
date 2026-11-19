@@ -512,8 +512,16 @@
   .ig-cap{color:var(--muted);font-size:.95rem;margin:0}
   @media(prefers-reduced-motion:reduce){.dbtn,.dbtn *,.dbtn::before,.dbtn::after{transition:none!important;animation-duration:.01s!important}.ig-container,.ig-tooltip,.ig-layer,.ig-layer span{transition:none}}
 
-  /* ===== vídeo vertical (reel) ===== */
-  .reel{background:var(--graphite);color:var(--blush);padding:90px 0;overflow:hidden}
+  /* ===== vídeo vertical (reel): cortina de listras com faixa de luz ao centro ===== */
+  .reel{position:relative;color:var(--blush);padding:96px 0;overflow:hidden;background:#17080f;isolation:isolate}
+  .reel::before{content:"";position:absolute;inset:0;z-index:-2;background:
+    linear-gradient(180deg,rgba(0,0,0,.6),transparent 28%,transparent 72%,rgba(0,0,0,.65)),
+    repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 13px,rgba(194,24,91,.34) 13px 17px,rgba(60,6,30,.0) 17px 31px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 27px,rgba(247,214,220,.08) 27px 30px,rgba(0,0,0,.2) 30px 47px),
+    radial-gradient(45% 100% at 50% 50%,rgba(255,140,185,.38),transparent 72%),#1a0911}
+  .reel::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:140px;margin-left:-70px;z-index:-1;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,225,238,.55) 50%,transparent);filter:blur(10px);opacity:.28;transform-origin:center}
+  .js .reel.in::after{animation:seam 2.4s ease both}
+  @keyframes seam{0%{opacity:0;transform:scaleX(.15)}30%{opacity:1;transform:scaleX(1)}100%{opacity:.28;transform:scaleX(1)}}
   .reel-grid{display:grid;gap:44px;align-items:center}
   @media(min-width:860px){.reel-grid{grid-template-columns:1fr 1fr;gap:72px}}
   .reel-text .eyebrow{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}
@@ -526,11 +534,18 @@
   .reel-ctrl{position:absolute;right:12px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:2}
   .reel-ctrl button{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--pink);cursor:pointer;display:grid;place-items:center}
   .reel-ctrl svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  /* entrada provisória: a tela abre de baixo para cima (será trocada pelo efeito escolhido) */
-  .js .reel-phone .reel-screen{clip-path:inset(100% 0 0 0 round 36px);transform:translateY(40px) scale(.94);transition:clip-path 1.2s cubic-bezier(.2,.8,.2,1),transform 1.2s cubic-bezier(.2,.8,.2,1)}
-  .js .reel-phone.in .reel-screen{clip-path:inset(-120px -120px -120px -120px round 36px);transform:none}
+  /* entrada: o texto vai de desfocado a nítido e a tela abre a partir da faixa de luz do meio */
+  .js .reel-text .rv{opacity:0;transform:none;filter:blur(12px);transition:opacity 1.1s ease,filter 1.2s ease;transition-delay:calc(var(--d,0s) + .5s)}
+  .js .reel-text .rv.in{opacity:1;filter:none}
+  .js .reel-text h2.rv{letter-spacing:.16em;transition:opacity 1.1s ease,filter 1.2s ease,letter-spacing 1.4s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--d,0s) + .5s)}
+  .js .reel-text h2.rv.in{letter-spacing:0}
+  .js .reel-phone .reel-screen{clip-path:inset(0 50% 0 50% round 36px);opacity:0;transform:scale(.96);transition:clip-path 1.5s cubic-bezier(.65,0,.2,1),opacity .6s ease,transform 1.5s cubic-bezier(.2,.8,.2,1)}
+  .js .reel-phone.in .reel-screen{clip-path:inset(-120px -120px -120px -120px round 36px);opacity:1;transform:none}
+  .reel-big{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--pink);z-index:3;cursor:pointer;display:grid;place-items:center;box-shadow:0 0 0 10px rgba(255,255,255,.25);animation:pulse 1.8s ease-in-out infinite}
+  .reel-big[hidden]{display:none}
+  .reel-big svg{width:34px;height:34px;fill:currentColor;stroke:none;margin-left:4px}
   .reel-phone .spark{z-index:3}
-  @media(prefers-reduced-motion:reduce){.js .reel-phone .reel-screen{clip-path:none;transform:none;transition:none}}
+  @media(prefers-reduced-motion:reduce){.js .reel-phone .reel-screen{clip-path:none;opacity:1;transform:none;transition:none}.js .reel-text .rv{opacity:1;filter:none;letter-spacing:0;transition:none}.js .reel.in::after{animation:none}.reel-big{animation:none}}
 
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -758,9 +773,10 @@
         <svg class="spark a" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
         <svg class="spark b" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
         <div class="reel-screen">
-          <video id="reelv" poster="img/reel-poster.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Vídeo com trabalhos de cílios e sobrancelhas da Jaqueline">
+          <video id="reelv" poster="img/reel-poster.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto" aria-label="Vídeo com trabalhos de cílios e sobrancelhas da Jaqueline">
             <source src="video/reel.mp4" type="video/mp4">
           </video>
+          <button type="button" id="reelbig" class="reel-big" aria-label="Tocar vídeo" hidden></button>
           <div class="reel-ctrl">
             <button type="button" id="reelplay" aria-label="Pausar vídeo"></button>
             <button type="button" id="reelsnd" aria-label="Ligar o som"></button>
@@ -1475,38 +1491,53 @@
     window.addEventListener('keydown', function(e){ if(!lb.classList.contains('on')) return; if(e.key==='Escape') hide(); if(e.key==='ArrowLeft') show(cur-1); if(e.key==='ArrowRight') show(cur+1); });
   })();
 
-  // ---------- vídeo vertical (reel) ----------
+  // ---------- vídeo vertical (reel): começa sozinho, sem ninguém apertar nada ----------
   (function(){
     var v = document.getElementById('reelv'); if (!v) return;
-    var bp = document.getElementById('reelplay'), bs = document.getElementById('reelsnd');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused = false;
+    var bp = document.getElementById('reelplay'), bs = document.getElementById('reelsnd'), big = document.getElementById('reelbig');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused = false, inView = false;
+    big.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7V5Z"/></svg>';
     function ui(){
-      bp.innerHTML = ico(v.paused ? 'play' : 'check').replace(/<path[^>]*\/>/, v.paused ? '<path d="M8 5l11 7-11 7V5Z"/>' : '<path d="M8 5v14M16 5v14"/>');
+      bp.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + (v.paused ? '<path d="M8 5l11 7-11 7V5Z"/>' : '<path d="M8 5v14M16 5v14"/>') + '</svg>';
       bp.setAttribute('aria-label', v.paused ? 'Tocar vídeo' : 'Pausar vídeo');
       bs.innerHTML = ico(v.muted ? 'mute' : 'sound'); bs.setAttribute('aria-label', v.muted ? 'Ligar o som' : 'Desligar o som');
+      big.hidden = !(v.paused && !userPaused && inView && tried);
     }
-    function tryPlay(){ var p = v.play(); if (p && p.catch) p.catch(ui); }
+    var tried = false;
+    function tryPlay(){
+      v.muted = v.muted; var p; try { p = v.play(); } catch(e){}
+      tried = true;
+      if (p && p.then) p.then(ui).catch(function(){ ui(); }); else ui();
+    }
+    function kick(){ if (!userPaused && inView && v.paused && !reduce) tryPlay(); }
     bp.addEventListener('click', function(){ if (v.paused){ userPaused=false; tryPlay(); } else { userPaused=true; v.pause(); } });
+    big.addEventListener('click', function(){ userPaused=false; tryPlay(); });
     bs.addEventListener('click', function(){ v.muted = !v.muted; if (!v.muted && v.paused){ userPaused=false; tryPlay(); } ui(); });
     v.addEventListener('play', ui); v.addEventListener('pause', ui); v.addEventListener('volumechange', ui);
+    v.addEventListener('loadeddata', kick); v.addEventListener('canplay', kick);
+    // se o navegador barrar o início automático, o primeiro toque na página já inicia
+    ['touchend','pointerdown','keydown','wheel'].forEach(function(ev){ window.addEventListener(ev, kick, {passive:true}); });
+    document.addEventListener('visibilitychange', function(){ if (!document.hidden) kick(); });
     // navegadores que bloqueiam vídeo embutido (data:) precisam de um blob
     var src = v.querySelector('source');
     if (src && src.getAttribute('src').indexOf('data:')===0 && window.fetch){
       fetch(src.getAttribute('src')).then(function(r){return r.blob();}).then(function(bl){ v.src = URL.createObjectURL(bl); v.load(); }).catch(function(){});
     }
-    // toca só quando está na tela
+    // começa quando aparece na tela e pausa quando sai (economiza bateria)
     if ('IntersectionObserver' in window && !reduce){
       new IntersectionObserver(function(es){ es.forEach(function(e){
-        if (e.isIntersecting){ if (!userPaused) tryPlay(); } else { v.pause(); }
-      }); },{threshold:.4}).observe(v);
-    }
+        inView = e.isIntersecting;
+        if (inView){ kick(); } else { v.pause(); }
+        ui();
+      }); },{threshold:.2}).observe(document.getElementById('reelphone'));
+    } else if (!reduce) { inView = true; kick(); }
     ui();
   })();
 
   // ---------- revelar ao rolar ----------
   (function(){
     document.documentElement.classList.add('js');
-    var els = document.querySelectorAll('.rv, .type, .reel-phone');
+    var els = document.querySelectorAll('.rv, .type, .reel-phone, .reel');
     if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.15});
     els.forEach(function(e,i){ io.observe(e); });
