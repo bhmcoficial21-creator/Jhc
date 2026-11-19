@@ -49,6 +49,8 @@
   .logo{display:flex;align-items:center;gap:.6em;text-decoration:none;font-weight:600;line-height:1.1}
   .logo svg{width:44px;height:44px;flex:none}
   .logo small{display:block;font-weight:500;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .logo span{white-space:nowrap}
+  @media(max-width:520px){.logo small{display:none}.logo svg{width:38px;height:38px}}
   nav{display:none;gap:24px}
   nav a{text-decoration:none;font-weight:500;font-size:.95rem}
   nav a:hover{color:var(--pink)}
@@ -246,6 +248,160 @@
     .tile{transition:none}
   }
 
+  /* ===== revelar ao rolar ===== */
+  .js .rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+  .js .rv.in{opacity:1;transform:none}
+
+  /* ===== especialidades ===== */
+  .spec{background:var(--white);padding:76px 0}
+  .spec-grid{display:grid;gap:16px;margin-top:36px}
+  @media(min-width:700px){.spec-grid{grid-template-columns:1fr 1fr}}
+  .spec-card{position:relative;display:block;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;text-decoration:none;color:#fff;box-shadow:0 20px 40px rgba(58,46,50,.18)}
+  .spec-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+  .spec-card:hover img{transform:scale(1.06)}
+  .spec-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(30,10,20,.8))}
+  .spec-body{position:absolute;left:22px;right:22px;bottom:22px;z-index:1}
+  .spec-body .display{font-size:clamp(2.2rem,7vw,3rem);display:block}
+  .spec-body p{margin-top:8px;opacity:.92;max-width:34ch}
+  .spec-body .go{display:inline-flex;margin-top:14px;padding:.55em 1.2em;border-radius:999px;background:#fff;color:var(--pink);font-weight:600;font-size:.9rem}
+
+  /* ===== catálogo de técnicas ===== */
+  .types{padding:84px 0}
+  .types.brows{background:var(--blush)}
+  .types.lashes{background:var(--white)}
+  .types-grid{margin-top:40px;display:grid;gap:18px}
+  @media(min-width:640px){.types-grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:980px){.types-grid{grid-template-columns:repeat(3,1fr)}}
+  .type{display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:var(--radius);background:var(--white);box-shadow:0 0 0 1px rgba(201,162,77,.5);transition:transform .25s,box-shadow .25s}
+  .types.lashes .type{background:#fff6f8}
+  .type:hover{transform:translateY(-5px);box-shadow:0 0 0 2px var(--pink),0 20px 40px rgba(194,24,91,.15)}
+  .art{border-radius:18px;background:linear-gradient(160deg,var(--blush),#fff);padding:10px}
+  .art svg{display:block;width:100%;height:auto}
+  .type h3{font-size:1.2rem}
+  .type .how{color:var(--muted)}
+  .type .for{font-size:.95rem;padding:10px 12px;border-radius:12px;background:var(--blush)}
+  .type .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:6px;font-size:.9rem;color:var(--muted)}
+  .type .pick{padding:.55em 1.1em;font-size:.9rem}
+  .art .st{fill:none;stroke:var(--graphite);stroke-linecap:round}
+  .js .art [data-draw]{stroke-dasharray:1;stroke-dashoffset:1}
+  .js .art [data-pop]{opacity:0}
+  .js .type.in .art [data-draw]{animation:draw .8s calc(var(--i,0)*12ms) ease forwards}
+  .js .type.in .art [data-pop]{animation:fadein .6s calc(var(--i,0)*6ms) ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes fadein{to{opacity:1}}
+
+  /* ===== antes e depois ===== */
+  .ba-sec{background:var(--nude);padding:84px 0}
+  .ba-grid{margin-top:40px;display:grid;gap:26px}
+  @media(min-width:760px){.ba-grid.two{grid-template-columns:1fr 1fr}}
+  .ba{position:relative;aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;--pos:50%;box-shadow:0 0 0 6px #fff,0 0 0 8px var(--gold);user-select:none;touch-action:pan-y;background:#fff}
+  .ba-pane{position:absolute;inset:0}
+  .ba-pane img{width:100%;height:100%;object-fit:cover}
+  .ba-pane.before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+  .ba-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:20px;font-weight:600}
+  .ba-ph svg{width:48px;height:48px;opacity:.7;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .ba-ph.b{padding-right:54%;background:repeating-linear-gradient(135deg,#d9c2b5 0 14px,#e8cdbf 14px 28px);color:var(--graphite)}
+  .ba-ph.a{padding-left:54%;background:linear-gradient(135deg,#f7d6dc,#f2a9c3);color:var(--pink)}
+  .ba-tag{position:absolute;top:14px;padding:.3em .9em;border-radius:999px;background:rgba(58,46,50,.88);color:#fff;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;z-index:2}
+  .ba-tag.l{left:14px}.ba-tag.r{right:14px;background:var(--pink)}
+  .ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:4;margin:0}
+  .ba-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;background:#fff;transform:translateX(-50%);z-index:3;box-shadow:0 0 12px rgba(0,0,0,.3);pointer-events:none}
+  .ba-handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--pink);display:grid;place-items:center;font-size:1.3rem;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  .ba input:focus-visible ~ .ba-handle::after{outline:3px solid var(--pink);outline-offset:3px}
+  .ba-cap{margin-top:14px;text-align:center;color:var(--muted);font-size:.95rem}
+  .ba-note{margin:26px auto 0;max-width:52ch;text-align:center;color:var(--muted);font-size:.95rem}
+
+  /* ===== cuidados ===== */
+  .care{background:var(--graphite);color:var(--blush);padding:84px 0}
+  .care h2 .script{color:var(--gold)}
+  .care .intro{color:#d9c3c9}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+  .tab{font:inherit;font-weight:600;padding:.6em 1.2em;border-radius:999px;border:1.5px solid rgba(247,214,220,.4);background:transparent;color:var(--blush);cursor:pointer;transition:background .2s,color .2s,transform .2s}
+  .tab:hover{transform:translateY(-2px)}
+  .tab[aria-selected=true]{background:var(--pink);border-color:var(--pink);color:#fff}
+  .care-key{margin-top:28px;display:flex;gap:18px;align-items:center;padding:18px 22px;border-radius:22px;background:var(--pink);color:#fff;animation:careIn .6s both}
+  .care-key .display{font-size:clamp(2.4rem,9vw,3.4rem);line-height:1;color:#fff}
+  .care-key p{font-size:1rem}
+  .tl{list-style:none;padding:0;display:flex;justify-content:space-between;position:relative;margin-top:34px;text-align:center}
+  .tl::before{content:"";position:absolute;top:13px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--gold),var(--pink));transform-origin:left;animation:grow 1.3s .2s both ease}
+  .tl li{position:relative;flex:1;font-size:.85rem;padding-top:34px;color:#e8d5da;animation:careIn .6s calc(var(--i)*.25s + .3s) both}
+  .tl li::before{content:"";position:absolute;top:4px;left:50%;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(201,162,77,.25);animation:pulse 2.4s calc(var(--i)*.3s) infinite}
+  .tl li b{display:block;color:#fff;font-size:.95rem}
+  @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @keyframes careIn{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+  .care-list{margin-top:28px;display:grid;gap:14px}
+  @media(min-width:760px){.care-list{grid-template-columns:1fr 1fr}}
+  .care-item{display:flex;gap:16px;padding:18px;border-radius:22px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(247,214,220,.18);animation:careIn .6s calc(var(--i)*90ms + .15s) both cubic-bezier(.2,.8,.2,1);transition:background .2s,transform .2s}
+  .care-item:hover{background:rgba(255,255,255,.1);transform:translateY(-3px)}
+  .care-ic{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),#e7c97b);color:var(--graphite);animation:pulse 3s calc(var(--i)*.3s) ease-in-out infinite}
+  .care-ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .care-item h3{font-size:1.05rem;color:#fff;margin-bottom:4px}
+  .care-item p{color:#d9c3c9;font-size:.95rem;line-height:1.5}
+  .care-item img{border-radius:14px;margin-top:10px;width:100%}
+  .care-note{margin-top:24px;font-size:.85rem;color:#b9a3aa}
+
+  /* ===== horário de funcionamento ===== */
+  .hours{padding:24px;border-radius:var(--radius);background:var(--blush);box-shadow:inset 0 0 0 1px rgba(201,162,77,.5)}
+  .hours h3{color:var(--pink);font-size:1.1rem;margin-bottom:14px}
+  .hours ul{list-style:none;padding:0;display:grid;gap:12px}
+  .hours li{display:flex;gap:12px;align-items:center}
+  .hours .hrt{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--pink)}
+  .hours .hrt svg{width:16px;height:16px;fill:currentColor}
+  .hours li span small{display:block;color:var(--muted);font-size:.85rem}
+  .hours .alert{margin-top:16px;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:#fff;color:#7a4f00;font-weight:500;font-size:.95rem}
+  .hours .alert svg{width:24px;height:24px;flex:none;animation:pulse 2.2s infinite}
+  .hours.mini{padding:14px 16px;box-shadow:none;background:#fff}
+  .hours.mini h3{font-size:.95rem;margin-bottom:10px}
+  .hours.mini li{font-size:.9rem}
+  .place .wrap{align-items:start}
+  @media(min-width:860px){.place .wrap{grid-template-columns:1fr 1fr;gap:48px}}
+  .note-hours{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+  .note-hours svg{width:20px;height:20px;flex:none}
+
+  /* ===== reserva: abas e horários ===== */
+  .book .tabs{margin-top:12px}
+  .book .tab{color:var(--pink);border-color:var(--nude);background:#fff6f8}
+  .book .tab[aria-selected=true]{background:var(--pink);color:#fff;border-color:var(--pink)}
+  .selline{margin-top:14px;padding:10px 14px;border-radius:14px;background:var(--blush);font-size:.95rem}
+  .slotbox.pop{animation:careIn .5s both}
+  .slotbox .daylabel{margin-top:6px;font-weight:600;color:var(--graphite)}
+
+  /* ===== menu lateral ===== */
+  .edge{position:fixed;left:0;top:46%;z-index:30;transform:translateY(-50%);padding:16px 9px;border:0;border-radius:0 16px 16px 0;background:var(--pink);color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(194,24,91,.35);font:inherit;transition:padding .2s}
+  .edge:hover{padding-left:14px}
+  .edge svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+  .edge span{writing-mode:vertical-rl;transform:rotate(180deg);font-weight:600;letter-spacing:.22em;font-size:.72rem}
+  @media(max-width:860px){.edge{padding:12px 5px;gap:8px;border-radius:0 12px 12px 0}.edge svg{width:18px;height:18px}.edge span{font-size:.62rem}}
+  .menu-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--nude);background:#fff;color:var(--pink);cursor:pointer}
+  .menu-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+  @media(min-width:860px){.menu-btn{display:none}}
+  header .right{display:flex;align-items:center;gap:10px}
+  .drawer-bg{position:fixed;inset:0;z-index:40;background:rgba(30,10,20,.55);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+  .drawer{position:fixed;top:0;bottom:0;left:0;z-index:41;width:min(390px,90vw);background:var(--blush);padding:22px 18px 28px;overflow-y:auto;transform:translateX(-104%);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:20px 0 60px rgba(0,0,0,.3)}
+  body.menu-open .drawer{transform:none}
+  body.menu-open .drawer-bg{opacity:1;visibility:visible}
+  body.menu-open{overflow:hidden}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:0 6px}
+  .drawer-head strong{font-family:'Pinyon Script',cursive;font-weight:400;font-size:2rem;color:var(--pink)}
+  .drawer .close{width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:var(--pink);font-size:1.3rem;cursor:pointer}
+  .drawer ul.menu{list-style:none;padding:0;margin-top:14px;display:grid;gap:4px}
+  .drawer ul.menu li{opacity:0;transform:translateX(-16px);transition:opacity .4s,transform .4s;transition-delay:calc(var(--i)*45ms + .15s)}
+  body.menu-open .drawer ul.menu li{opacity:1;transform:none}
+  .drawer ul.menu a{display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:18px;text-decoration:none;font-weight:600;transition:background .2s}
+  .drawer ul.menu a:hover{background:#fff}
+  .drawer ul.menu a small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+  .dic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#d9b25f,var(--gold));color:#fff}
+  .dic svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .drawer .hours{margin-top:18px}
+
+  @media(prefers-reduced-motion:reduce){
+    .js .rv{opacity:1;transform:none;transition:none}
+    .js .art [data-draw]{stroke-dashoffset:0;animation:none!important}
+    .js .art [data-pop]{opacity:1;animation:none!important}
+    .care-item,.care-key,.tl li,.tl::before,.care-ic,.tl li::before,.slotbox.pop,.hours .alert svg{animation:none!important}
+    .drawer,.drawer-bg,.drawer ul.menu li{transition:none}
+  }
+
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .btn{transition:none}
@@ -284,12 +440,16 @@
       <span>Jaqueline Santana<small>Sobrancelhas &amp; Cílios</small></span>
     </a>
     <nav aria-label="Principal">
-      <a href="#servicos">Serviços</a>
-      <a href="#galeria">Galeria</a>
-      <a href="#sobre">Sobre</a>
+      <a href="#sobrancelhas">Sobrancelhas</a>
+      <a href="#cilios">Cílios</a>
+      <a href="#antes-depois">Antes e depois</a>
+      <a href="#cuidados">Cuidados</a>
       <a href="#local">Contato</a>
     </nav>
-    <a class="btn" href="#agendar">Agendar</a>
+    <div class="right">
+      <button class="menu-btn" id="menubtn" type="button" aria-label="Abrir menu completo" aria-controls="sidemenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <a class="btn" href="#agendar">Agendar</a>
+    </div>
   </div>
 </header>
 
@@ -350,27 +510,39 @@
     </div>
   </section>
 
-  <section class="services" id="servicos">
+  <section class="spec" id="servicos">
     <div class="wrap">
-      <h2><span class="script">com carinho</span>O que você encontra no estúdio</h2>
+      <h2 class="rv"><span class="script">duas especialidades</span>O que você encontra no estúdio</h2>
       <hr class="rule">
-      <div class="svc-grid">
-        <article class="svc">
-          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
-          <h3>Design de sobrancelhas</h3>
-          <p>Desenho pensado para o seu rosto, com fios alinhados e acabamento natural.</p>
-        </article>
-        <article class="svc">
-          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
-          <h3>Extensão de cílios</h3>
-          <p>Olhar marcante e leve, com manutenção periódica para durar mais.</p>
-        </article>
-        <article class="svc">
-          <svg viewBox="0 0 100 100"><use href="#star"/></svg>
-          <h3>Micropigmentação</h3>
-          <p>Sobrancelhas definidas por mais tempo, com resultado delicado.</p>
-        </article>
+      <p class="intro">Sobrancelhas e cílios são trabalhos diferentes, cada um com suas técnicas. Escolha por onde começar.</p>
+      <div class="spec-grid">
+        <a class="spec-card rv" href="#sobrancelhas">
+          <img src="img/trabalho-1.jpg" alt="Sobrancelha com fios definidos" loading="lazy" style="object-position:50% 70%">
+          <div class="spec-body"><span class="display">Sobrancelhas</span><p>Design, henna, lamination e micropigmentação.</p><span class="go">Ver técnicas →</span></div>
+        </a>
+        <a class="spec-card rv" href="#cilios" style="--d:.12s">
+          <img src="img/trabalho-4.jpg" alt="Cílios em volume" loading="lazy">
+          <div class="spec-body"><span class="display">Cílios</span><p>Do natural ao mega volume, e lash lifting.</p><span class="go">Ver estilos →</span></div>
+        </a>
       </div>
+    </div>
+  </section>
+
+  <section class="types brows" id="sobrancelhas">
+    <div class="wrap">
+      <h2 class="rv"><span class="script">para o seu olhar</span>Sobrancelhas</h2>
+      <hr class="rule">
+      <p class="intro">Veja com qual técnica você mais se identifica. Se ficar na dúvida, a Jaqueline avalia seu rosto e indica a melhor.</p>
+      <div class="types-grid" id="brow-grid"></div>
+    </div>
+  </section>
+
+  <section class="types lashes" id="cilios">
+    <div class="wrap">
+      <h2 class="rv"><span class="script">para o seu olhar</span>Cílios</h2>
+      <hr class="rule">
+      <p class="intro">Do mais natural ao mais marcante. Encontre o estilo que combina com o seu rosto e com a sua rotina.</p>
+      <div class="types-grid" id="lash-grid"></div>
     </div>
   </section>
 
@@ -412,6 +584,26 @@
     </div>
   </section>
 
+  <section class="ba-sec" id="antes-depois">
+    <div class="wrap">
+      <h2 class="rv"><span class="script">veja a diferença</span>Antes e depois</h2>
+      <hr class="rule">
+      <p class="intro">Trabalhos reais das clientes da Jaqueline. Arraste a barra para comparar.</p>
+      <div class="ba-grid" id="ba-grid"></div>
+    </div>
+  </section>
+
+  <section class="care" id="cuidados">
+    <div class="wrap">
+      <h2 class="rv"><span class="script">cuide bem do resultado</span>Cuidados</h2>
+      <hr class="rule">
+      <p class="intro">O que fazer antes e depois do procedimento para o resultado ficar lindo e durar mais.</p>
+      <div class="tabs" id="care-tabs" role="tablist" aria-label="Tipo de cuidado"></div>
+      <div id="care-body" aria-live="polite"></div>
+      <p class="care-note">Orientações gerais. A Jaqueline confirma com você o que vale para o seu procedimento.</p>
+    </div>
+  </section>
+
   <section class="about" id="sobre">
     <div class="wrap">
       <h2><span class="script">oi, eu sou a</span>Jaqueline</h2>
@@ -429,16 +621,21 @@
     <div class="wrap">
       <h2><span class="script">sua vez</span>Agende seu horário</h2>
       <hr class="rule">
-      <p class="intro">Escolha o serviço, o dia e o horário livre. Os horários já reservados somem da agenda, e você ainda confirma o pedido pelo WhatsApp.</p>
+      <p class="intro">Escolha o serviço e o dia. Os horários livres aparecem em seguida, e você ainda confirma o pedido pelo WhatsApp.</p>
 
       <form id="bookform" class="form" novalidate>
         <fieldset>
-          <legend>1. Serviço</legend>
+          <legend>1. Especialidade e serviço</legend>
+          <div class="tabs" id="svctabs" role="tablist" aria-label="Especialidade">
+            <button type="button" class="tab" role="tab" data-cat="sobrancelhas" aria-selected="true">Sobrancelhas</button>
+            <button type="button" class="tab" role="tab" data-cat="cilios" aria-selected="false">Cílios</button>
+          </div>
           <div id="services" class="opts"></div>
+          <p id="selline" class="selline" hidden></p>
         </fieldset>
 
         <fieldset>
-          <legend>2. Dia e horário</legend>
+          <legend>2. Escolha o dia</legend>
           <div class="cal" id="cal">
             <div class="cal-head">
               <button type="button" id="prevm" aria-label="Mês anterior">‹</button>
@@ -447,12 +644,17 @@
             </div>
             <div class="cal-grid" id="calgrid" role="grid" aria-label="Escolha o dia"></div>
           </div>
-          <p id="daylabel" class="muted" style="margin-top:14px"></p>
-          <div id="slots" class="slots" aria-live="polite"><p class="muted">Escolha um serviço e um dia para ver os horários.</p></div>
+          <p class="note-hours"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.500L23 21H1L12 2.500Z" fill="#E8A200"/><path d="M12 9v5.500M12 17.500h.01" stroke="#fff" stroke-width="2.200" stroke-linecap="round"/></svg><span id="hoursline"></span></p>
+        </fieldset>
+
+        <fieldset id="slotbox" class="slotbox" hidden>
+          <legend>3. Escolha o horário</legend>
+          <p id="daylabel" class="daylabel"></p>
+          <div id="slots" class="slots" aria-live="polite"></div>
         </fieldset>
 
         <fieldset>
-          <legend>3. Seus dados</legend>
+          <legend>4. Seus dados</legend>
           <label class="field">Nome
             <input type="text" id="name" autocomplete="name" maxlength="80" required>
           </label>
@@ -476,7 +678,7 @@
   <section class="place" id="local">
     <div class="wrap">
       <div>
-        <h2><span class="script">venha nos visitar</span>Como chegar</h2>
+        <h2 class="rv"><span class="script">venha nos visitar</span>Como chegar</h2>
         <hr class="rule">
         <address>
           Av. General Asdrubal da Cunha, 643, Sala 5<br>
@@ -487,6 +689,7 @@
           <a class="btn ghost" data-whatsapp href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener">Falar no WhatsApp</a>
         </div>
       </div>
+      <div class="hours rv" data-hours></div>
     </div>
   </section>
   <section class="links" aria-label="Contato">
@@ -518,23 +721,40 @@
   var WHATSAPP_NUMBER = "";
   var INSTAGRAM_URL = "https://www.instagram.com/jjaquelinesantanadesigner";
 
-  // Serviços. price: texto livre (ex.: "R$ 80"), deixe "" enquanto não houver preço definido.
+  // Serviços. cat: "sobrancelhas" ou "cilios". price: texto livre (ex.: "R$ 80"), "" enquanto não houver preço.
+  // minutes: duração usada para calcular os horários livres. art: formato do desenho no cartão.
   var SERVICES = [
-    { id:"sobrancelha", name:"Design de sobrancelhas", minutes:60,  price:"", desc:"Desenho e acabamento sob medida" },
-    { id:"cilios",      name:"Extensão de cílios",     minutes:120, price:"", desc:"Aplicação completa" },
-    { id:"manutencao",  name:"Manutenção de cílios",   minutes:90,  price:"", desc:"Recomendada a cada 15 a 20 dias" },
-    { id:"micro",       name:"Micropigmentação",       minutes:150, price:"", desc:"Consulte disponibilidade" }
+    { id:"design",   cat:"sobrancelhas", art:"clean",  name:"Design de sobrancelhas", minutes:40,  price:"", desc:"Limpeza e desenho dos fios, respeitando o formato natural do seu rosto.", forWho:"quer a sobrancelha alinhada e natural, sem mudar muito o visual." },
+    { id:"henna",    cat:"sobrancelhas", art:"henna",  name:"Design com henna",       minutes:60,  price:"", desc:"Design com henna que preenche falhas e dá cor à pele, por baixo dos fios.", forWho:"tem falhas ou fios claros e quer mais definição, sem pigmento permanente." },
+    { id:"lami",     cat:"sobrancelhas", art:"lami",   name:"Brow lamination",        minutes:60,  price:"", desc:"Alinha os fios para cima e dá efeito de sobrancelha cheia e penteada.", forWho:"tem fios rebeldes ou quer volume e um visual mais marcante." },
+    { id:"micro-fio",cat:"sobrancelhas", art:"micro",  name:"Micropigmentação fio a fio", minutes:150, price:"", desc:"Fios desenhados na pele, com aspecto natural e longa duração.", forWho:"quer fios bem naturais e quer acordar com a sobrancelha pronta." },
+    { id:"micro-sombra",cat:"sobrancelhas", art:"shadow", name:"Micropigmentação sombreada", minutes:150, price:"", desc:"Efeito esfumado, como uma maquiagem leve que fica por mais tempo.", forWho:"prefere um acabamento mais marcado, de maquiagem." },
+    { id:"micro-hib",cat:"sobrancelhas", art:"hybrid", name:"Micropigmentação fio + sombra", minutes:150, price:"", desc:"Une fios e sombreado: natural no começo, mais preenchida no corpo da sobrancelha.", forWho:"quer o melhor dos dois: naturalidade e preenchimento." },
+
+    { id:"classico", cat:"cilios", art:"classico",   name:"Clássico (fio a fio)", minutes:120, price:"", desc:"Uma extensão sobre cada fio natural. Efeito delicado, como um rímel permanente.", forWho:"quer um olhar natural e leve." },
+    { id:"hibrido",  cat:"cilios", art:"hibrido",    name:"Híbrido",              minutes:135, price:"", desc:"Mistura de fio a fio e volume: mais preenchimento, ainda leve.", forWho:"quer mais volume que o clássico, sem exagero." },
+    { id:"brasileiro",cat:"cilios", art:"brasileiro",name:"Volume brasileiro",    minutes:120, price:"", desc:"Fios em formato de Y, com volume suave e acabamento natural.", forWho:"quer volume suave e bem alinhado." },
+    { id:"russo",    cat:"cilios", art:"russo",      name:"Volume russo",         minutes:150, price:"", desc:"Leques de 3 a 6 fios finíssimos sobre cada cílio natural. Bem cheio e macio.", forWho:"quer um olhar cheio, mas leve." },
+    { id:"mega",     cat:"cilios", art:"mega",       name:"Mega volume",          minutes:180, price:"", desc:"Leques de 7 fios ou mais, para um efeito super denso e marcante.", forWho:"quer um olhar de impacto, bem preto e cheio." },
+    { id:"gatinho",  cat:"cilios", art:"gatinho",    name:"Efeito gatinho (fox eyes)", minutes:150, price:"", desc:"Fios mais longos no canto externo, que alongam e levantam o olhar.", forWho:"quer um olhar alongado e sensual." },
+    { id:"wispy",    cat:"cilios", art:"wispy",      name:"Wispy",                minutes:150, price:"", desc:"Fios alternando comprimentos, com efeito texturizado e delicado.", forWho:"gosta do visual de cílios com pontas marcadas e pouco arrumadas." },
+    { id:"lifting",  cat:"cilios", art:"lifting",    name:"Lash lifting",         minutes:60,  price:"", desc:"Curva e levanta seus próprios cílios, sem extensão.", forWho:"tem cílios bons e quer só realçar a curvatura." },
+    { id:"manutencao",cat:"cilios",art:"manutencao", name:"Manutenção de cílios", minutes:90,  price:"", desc:"Reposição dos fios que caíram, recomendada a cada 15 a 20 dias.", forWho:"já faz extensão e quer manter o resultado." }
   ];
 
-  // Atendimento por dia da semana (0=domingo ... 6=sábado). Horas em formato "HH:MM".
-  // Fora desta lista = fechado. "pause" = intervalo sem atendimento.
+  // Fotos de antes e depois. Quando a Jaqueline enviar, adicione assim:
+  // { title:"Design com henna", before:"img/antes-1.jpg", after:"img/depois-1.jpg" }
+  var BEFORE_AFTER = [];
+
+  // Atendimento por dia da semana (0=domingo ... 6=sábado). Horas em "HH:MM". Dia sem linha = fechado.
+  // Os textos de "Horário de funcionamento" do site são gerados daqui.
   var HOURS = {
-    1:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
-    2:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
-    3:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
-    4:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
-    5:{open:"09:00",close:"18:00",pause:["12:00","13:00"]},
-    6:{open:"09:00",close:"14:00",pause:null}
+    1:{open:"09:00",close:"19:00",pause:null},
+    2:{open:"09:00",close:"19:00",pause:null},
+    3:{open:"09:00",close:"19:00",pause:null},
+    4:{open:"09:00",close:"19:00",pause:null},
+    5:{open:"09:00",close:"19:00",pause:null},
+    6:{open:"07:00",close:"13:00",pause:null}
   };
   var STEP = 30;          // minutos entre horários oferecidos
   var BUFFER = 10;        // intervalo de arrumação entre clientes
@@ -740,16 +960,292 @@
     }, 4600);
   })();
 
+  // ---------- ícones (traços simples) ----------
+  var ICON = {
+    calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    brow:'<path d="M3 15C7 7 15 6 21 10"/><path d="M5 16C9 10 15 9 20 12" opacity=".5"/>',
+    eye:'<path d="M2 12C6 6 18 6 22 12 18 18 6 18 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+    split:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 4v16M7 12h2M15 12h2"/>',
+    heart:'<path d="M12 20S4 15 4 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.500C20 15 12 20 12 20Z"/>',
+    image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.600"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+    pin:'<path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.500"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    insta:'<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.800"/><circle cx="17" cy="7" r=".8"/>',
+    chat:'<path d="M4 5h16v11H9l-5 4V5Z"/>',
+    drop:'<path d="M12 3s6 6.500 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11Z"/>',
+    face:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 2 3 3 4 3s3-1 4-3M9 9.500h.01M15 9.500h.01"/>',
+    glasses:'<circle cx="7" cy="14" r="3.500"/><circle cx="17" cy="14" r="3.500"/><path d="M10.500 14h3M3.500 14L5 8M20.500 14L19 8"/>',
+    alertc:'<circle cx="12" cy="12" r="9"/><path d="M12 7.500v5M12 16h.01"/>',
+    brush:'<path d="M5 19l9-9M14 10l3-6 3 3-6 3M4 20c1-3 3-3 3-3"/>',
+    moon:'<path d="M20 14.500A8 8 0 1 1 9.500 4 6.500 6.500 0 0 0 20 14.500Z"/>',
+    hand:'<path d="M7 12V6a1.500 1.500 0 0 1 3 0v5M10 11V4.500a1.500 1.500 0 0 1 3 0V11M13 11V5.500a1.500 1.500 0 0 1 3 0V12M16 12V8.500a1.500 1.500 0 0 1 3 0V15a6 6 0 0 1-6 6H12a6 6 0 0 1-5-3l-2.500-4a1.500 1.500 0 0 1 2.500-1.500L7 12"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+    sparkle:'<path d="M12 3c.8 5 3 7.200 8 9-5 1.800-7.200 4-8 9-.8-5-3-7.200-8-9 5-1.800 7.200-4 8-9Z"/>',
+    check:'<path d="M5 12.500l4.500 4.500L19 7.500"/>',
+    refresh:'<path d="M20 11a8 8 0 0 0-14-4M4 13a8 8 0 0 0 14 4M6 3v4h4M18 21v-4h-4"/>',
+    pill:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M9.500 9.500l5 5" />',
+    menu:'<path d="M4 7h16M4 12h16M4 17h16"/>'
+  };
+  function ico(n){ return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICON[n]||'')+'</svg>'; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}); }
+
+  // ---------- horário de funcionamento (a partir da configuração) ----------
+  (function(){
+    var FULL=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+    var SHORT=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+    function fh(s){ var p=s.split(':'); return +p[0]+'h'+(p[1]!=='00'?p[1]:''); }
+    var order=[1,2,3,4,5,6,0], groups=[];
+    order.forEach(function(d){
+      var h=HOURS[d]; if(!h) return;
+      var key=h.open+'-'+h.close, g=groups[groups.length-1];
+      if (g && g.key===key && g.last===d-1) { g.last=d; g.days.push(d); } else groups.push({key:key,last:d,days:[d],h:h});
+    });
+    var rows = groups.map(function(g){
+      var a=g.days[0], b=g.days[g.days.length-1];
+      var label = a===b ? FULL[a] : SHORT[a].charAt(0).toUpperCase()+SHORT[a].slice(1)+' a '+SHORT[b];
+      return {label:label, time:fh(g.h.open)+' às '+fh(g.h.close)};
+    });
+    var heart = '<svg viewBox="0 0 24 24"><path d="M12 20S4 15 4 9.500A4.500 4.500 0 0 1 12 7a4.500 4.500 0 0 1 8 2.500C20 15 12 20 12 20Z"/></svg>';
+    var warn = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.500L23 21H1L12 2.500Z" fill="#E8A200"/><path d="M12 9v5.500M12 17.500h.01" stroke="#fff" stroke-width="2.200" stroke-linecap="round"/></svg>';
+    document.querySelectorAll('[data-hours]').forEach(function(el){
+      var mini = el.classList.contains('mini');
+      el.innerHTML = '<h3>Horário de funcionamento</h3><ul>' + rows.map(function(r){
+        return '<li><span class="hrt">'+heart+'</span><span><b>'+esc(r.time)+'</b><small>'+esc(r.label)+'</small></span></li>';
+      }).join('') + '</ul><div class="alert">'+warn+'<span>Podendo ter alterações</span></div>';
+    });
+  })();
+
+  // ---------- menu lateral ----------
+  (function(){
+    var items = [
+      ['#agendar','calendar','Agendar horário','Escolha dia e horário'],
+      ['#sobrancelhas','brow','Sobrancelhas','Todas as técnicas'],
+      ['#cilios','eye','Cílios','Todos os estilos'],
+      ['#antes-depois','split','Antes e depois','Resultados das clientes'],
+      ['#cuidados','heart','Cuidados','Antes e depois do procedimento'],
+      ['#galeria','image','Galeria','Fotos e vídeo'],
+      ['#sobre','user','Sobre a Jaqueline','Quem cuida de você'],
+      ['#local','pin','Horários e localização','Como chegar'],
+      [INSTAGRAM_URL,'insta','Instagram','@jjaquelinesantanadesigner'],
+      ['WA','chat','WhatsApp','Tire suas dúvidas']
+    ];
+    var bg = document.createElement('div'); bg.className='drawer-bg'; bg.id='drawerbg';
+    var dr = document.createElement('aside'); dr.className='drawer'; dr.id='sidemenu'; dr.setAttribute('aria-label','Menu completo'); dr.setAttribute('aria-hidden','true');
+    dr.innerHTML = '<div class="drawer-head"><strong>Menu</strong><button type="button" class="close" id="closemenu" aria-label="Fechar menu">✕</button></div>' +
+      '<ul class="menu">' + items.map(function(it,i){
+        var ext = it[0].charAt(0)!=='#';
+        var wa = it[0]==='WA';
+        var href = wa ? (WHATSAPP_NUMBER ? 'https://wa.me/'+WHATSAPP_NUMBER : INSTAGRAM_URL) : it[0];
+        return '<li style="--i:'+i+'"><a href="'+href+'"'+((ext||wa)?' target="_blank" rel="noopener"':'')+'><span class="dic">'+ico(it[1])+'</span><span>'+esc(it[2])+'<small>'+esc(it[3])+'</small></span></a></li>';
+      }).join('') + '</ul><div class="hours mini" data-hours></div>';
+    document.body.appendChild(bg); document.body.appendChild(dr);
+    var edge = document.createElement('button'); edge.type='button'; edge.className='edge'; edge.id='edgebtn';
+    edge.setAttribute('aria-label','Abrir menu completo'); edge.setAttribute('aria-controls','sidemenu'); edge.setAttribute('aria-expanded','false');
+    edge.innerHTML = ico('menu')+'<span>MENU</span>';
+    document.body.appendChild(edge);
+    var mb = document.getElementById('menubtn');
+    function open(){ document.body.classList.add('menu-open'); dr.setAttribute('aria-hidden','false'); edge.setAttribute('aria-expanded','true'); setTimeout(function(){ var a=dr.querySelector('a'); if(a) a.focus({preventScroll:true}); },350); }
+    function close(){ document.body.classList.remove('menu-open'); dr.setAttribute('aria-hidden','true'); edge.setAttribute('aria-expanded','false'); }
+    edge.addEventListener('click', open); if (mb) mb.addEventListener('click', open);
+    bg.addEventListener('click', close); document.getElementById('closemenu').addEventListener('click', close);
+    dr.addEventListener('click', function(e){ if (e.target.closest('a')) close(); });
+    window.addEventListener('keydown', function(e){ if (e.key==='Escape') close(); });
+    // preencher o horário dentro do menu
+    var h = dr.querySelector('[data-hours]'), src = document.querySelector('.hours[data-hours]:not(.mini)');
+    if (src) h.innerHTML = src.innerHTML;
+  })();
+
+  // ---------- desenhos das técnicas ----------
+  var uid = 0;
+  function seeded(s){ return function(){ s=(s*9301+49297)%233280; return s/233280; }; }
+  function browArt(style){
+    var P0=[12,64],C1=[55,24],C2=[125,14],P1=[190,42], rnd=seeded(style.length*77+3), id='g'+(++uid);
+    function bz(t){ var u=1-t; return [u*u*u*P0[0]+3*u*u*t*C1[0]+3*u*t*t*C2[0]+t*t*t*P1[0], u*u*u*P0[1]+3*u*u*t*C1[1]+3*u*t*t*C2[1]+t*t*t*P1[1]]; }
+    function tn(t){ var a=bz(Math.max(0,t-.01)), b=bz(Math.min(1,t+.01)), dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1; return [dx/l,dy/l]; }
+    function th(t){ return 17*(1-t)+5; }
+    var up=[],lo=[],i,t,p,k,n;
+    for (i=0;i<=16;i++){ t=i/16; p=bz(t); k=tn(t); n=[k[1],-k[0]]; up.push((p[0]+n[0]*th(t)/2).toFixed(1)+','+(p[1]+n[1]*th(t)/2).toFixed(1)); lo.push((p[0]-n[0]*th(t)/2).toFixed(1)+','+(p[1]-n[1]*th(t)/2).toFixed(1)); }
+    var poly = 'M'+up.join(' L')+' L'+lo.reverse().join(' L')+' Z', out='<defs><linearGradient id="'+id+'" x1="0" x2="1"><stop offset="0" stop-color="#3A2E32" stop-opacity=".75"/><stop offset="1" stop-color="#3A2E32" stop-opacity=".12"/></linearGradient></defs>', idx=0;
+    var cfg = {clean:{n:46,a0:.3,a1:1.0,w:1.2,L:1.35}, henna:{n:46,a0:.3,a1:1.0,w:1.1,L:1.35}, lami:{n:70,a0:.05,a1:.6,w:1.5,L:1.5}, micro:{n:84,a0:.35,a1:1.05,w:.9,L:1.1}, hybrid:{n:40,a0:.35,a1:1.0,w:.9,L:1.1}, shadow:{n:0}}[style];
+    if (style!=='shadow') out += '<path d="'+poly+'" fill="#3A2E32" fill-opacity=".1" data-pop style="--i:0"/>';
+    if (style==='henna') out += '<path d="'+poly+'" fill="#a8603c" fill-opacity=".38" data-pop style="--i:0"/>';
+    if (style==='shadow' || style==='hybrid') out += '<path d="'+poly+'" fill="url(#'+id+')" data-pop style="--i:0"/>';
+    if (cfg.n){
+      var N = style==='hybrid' ? cfg.n : cfg.n, lim = style==='hybrid' ? .55 : 1;
+      for (i=0;i<N;i++){
+        t = (i/N)*lim + (rnd()-.5)*.012; t=Math.max(0,Math.min(1,t)); p=bz(t); k=tn(t); n=[k[1],-k[0]];
+        var w=th(t), aa=cfg.a0+(cfg.a1-cfg.a0)*t, s=[p[0]-n[0]*w/2*.9, p[1]-n[1]*w/2*.9], d=[n[0]*Math.cos(aa)+k[0]*Math.sin(aa), n[1]*Math.cos(aa)+k[1]*Math.sin(aa)], L=(w*.8+5)*cfg.L*(1+.15*rnd());
+        var e=[s[0]+d[0]*L, s[1]+d[1]*L], c=[s[0]+d[0]*L*.5+k[0]*2.5, s[1]+d[1]*L*.5+k[1]*2.5];
+        out += '<path class="st" pathLength="1" data-draw style="--i:'+(idx++)+';stroke-width:'+cfg.w+'" d="M'+s[0].toFixed(1)+' '+s[1].toFixed(1)+' Q'+c[0].toFixed(1)+' '+c[1].toFixed(1)+' '+e[0].toFixed(1)+' '+e[1].toFixed(1)+'"/>';
+      }
+    }
+    if (style==='shadow' || style==='hybrid'){
+      var D = style==='shadow' ? 170 : 90, from = style==='shadow' ? 0 : .4;
+      for (i=0;i<D;i++){
+        t = from+(1-from)*rnd(); p=bz(t); k=tn(t); n=[k[1],-k[0]]; var off=(rnd()-.5)*th(t)*.95;
+        out += '<circle cx="'+(p[0]+n[0]*off).toFixed(1)+'" cy="'+(p[1]+n[1]*off).toFixed(1)+'" r="'+(.7+rnd()*.8).toFixed(1)+'" fill="#3A2E32" fill-opacity="'+(.35+rnd()*.5).toFixed(2)+'" data-pop style="--i:'+i+'"/>';
+      }
+    }
+    return '<svg viewBox="0 0 200 84" role="img" aria-label="Ilustração da técnica">'+out+'</svg>';
+  }
+  function lashArt(style){
+    var P0=[20,64],C=[100,6],P2=[180,64], rnd=seeded(style.length*53+7);
+    function bz(t){ var u=1-t; return [u*u*P0[0]+2*u*t*C[0]+t*t*P2[0], u*u*P0[1]+2*u*t*C[1]+t*t*P2[1]]; }
+    function tn(t){ var a=bz(Math.max(0,t-.01)), b=bz(Math.min(1,t+.01)), dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1; return [dx/l,dy/l]; }
+    var cfg = {
+      classico:{n:15,fan:1,sp:0,w:1.7,m:1,curl:.25}, hibrido:{n:19,fan:'mix',sp:.16,w:1.3,m:1,curl:.3},
+      brasileiro:{n:18,fan:2,sp:.14,w:1.4,m:1,curl:.3}, russo:{n:20,fan:3,sp:.2,w:1.1,m:1.05,curl:.3},
+      mega:{n:24,fan:5,sp:.24,w:.9,m:1.12,curl:.3}, gatinho:{n:16,fan:1,sp:0,w:1.6,m:1,curl:.3,cat:true},
+      wispy:{n:20,fan:2,sp:.1,w:1.3,m:1,curl:.3,zig:true}, lifting:{n:24,fan:1,sp:0,w:1.1,m:.8,curl:.75},
+      manutencao:{n:15,fan:1,sp:0,w:1.7,m:1,curl:.25}
+    }[style];
+    var out='<path class="eye" d="M20 64Q100 6 180 64Q100 100 20 64Z" fill="#fff" stroke="#3A2E32" stroke-width="1.6"/><circle cx="100" cy="58" r="17" fill="#7a5340"/><circle cx="100" cy="58" r="8" fill="#241a1c"/><circle cx="106" cy="52" r="3.200" fill="#fff" opacity=".85"/>', idx=0, i, f;
+    for (i=0;i<cfg.n;i++){
+      var t=(i+.5)/cfg.n, p=bz(t), k=tn(t), nrm=[k[1],-k[0]];
+      var L = cfg.cat ? 8+34*Math.pow(t,1.5) : 11+17*Math.sin(Math.PI*Math.pow(t,.85));
+      L *= cfg.m; if (cfg.zig) L *= (i%2? 1.45 : .95);
+      var base = -.45 + 1.2*t, fan = cfg.fan==='mix' ? (i%3===0?3:1) : cfg.fan;
+      for (f=0; f<fan; f++){
+        var off = fan===1 ? 0 : (f/(fan-1)-.5)*2*cfg.sp, a = base+off+ (cfg.cat? .25*t : 0);
+        var d=[nrm[0]*Math.cos(a)+k[0]*Math.sin(a), nrm[1]*Math.cos(a)+k[1]*Math.sin(a)];
+        var Lf = L*(1-Math.abs(off)*.6), e=[p[0]+d[0]*Lf, p[1]+d[1]*Lf];
+        var c=[p[0]+d[0]*Lf*.55-k[0]*Lf*cfg.curl*.35*-1, p[1]+d[1]*Lf*.55+k[1]*Lf*cfg.curl*.35];
+        out += '<path class="st" pathLength="1" data-draw style="--i:'+(idx++)+';stroke-width:'+cfg.w+'" d="M'+p[0].toFixed(1)+' '+p[1].toFixed(1)+' Q'+c[0].toFixed(1)+' '+c[1].toFixed(1)+' '+e[0].toFixed(1)+' '+e[1].toFixed(1)+'"/>';
+      }
+    }
+    if (style==='manutencao') out += '<g fill="none" stroke="#C2185B" stroke-width="2.400" stroke-linecap="round" data-pop style="--i:0"><path d="M170 14a12 12 0 1 1-3 14"/><path d="M164 8l6 6-7 3" /></g>';
+    return '<svg viewBox="0 0 200 100" role="img" aria-label="Ilustração do estilo">'+out+'</svg>';
+  }
+
+  // ---------- catálogo (sobrancelhas e cílios) ----------
+  (function(){
+    function card(s){
+      var art = s.cat==='sobrancelhas' ? browArt(s.art) : lashArt(s.art);
+      return '<article class="type" id="t-'+s.id+'"><div class="art">'+art+'</div><h3>'+esc(s.name)+'</h3>' +
+        '<p class="how">'+esc(s.desc)+'</p><p class="for"><b>Combina com você se:</b> '+esc(s.forWho)+'</p>' +
+        '<div class="meta"><span>'+durTxt(s.minutes)+(s.price?' · '+esc(s.price):'')+'</span><button type="button" class="btn pick" data-pick="'+s.id+'">Quero esta</button></div></article>';
+    }
+    function durTxt(m){ var h=Math.floor(m/60), r=m%60; return (h?h+'h':'')+(r?(h?' ':'')+r+'min':''); }
+    window.durTxt = durTxt;
+    ['sobrancelhas','cilios'].forEach(function(cat){
+      var g = document.getElementById(cat==='cilios'?'lash-grid':'brow-grid'); if (!g) return;
+      g.innerHTML = SERVICES.filter(function(s){return s.cat===cat;}).map(card).join('');
+    });
+    document.addEventListener('click', function(e){
+      var b = e.target.closest('[data-pick]'); if (b && window.pickService) window.pickService(b.dataset.pick);
+    });
+  })();
+
+  // ---------- antes e depois ----------
+  (function(){
+    var grid = document.getElementById('ba-grid'); if (!grid) return;
+    var list = BEFORE_AFTER.length ? BEFORE_AFTER : [null];
+    grid.classList.toggle('two', list.length>1);
+    grid.innerHTML = list.map(function(it,i){
+      var before = it ? '<div class="ba-pane before"><img src="'+esc(it.before)+'" alt="Antes: '+esc(it.title||'')+'" loading="lazy"></div>'
+                      : '<div class="ba-pane before"><div class="ba-ph b">'+ico('image')+'Foto do ANTES</div></div>';
+      var after = it ? '<div class="ba-pane"><img src="'+esc(it.after)+'" alt="Depois: '+esc(it.title||'')+'" loading="lazy"></div>'
+                     : '<div class="ba-pane"><div class="ba-ph a">'+ico('sparkle')+'Foto do DEPOIS</div></div>';
+      return '<figure class="rv" style="margin:0"><div class="ba" data-ba>' + after + before +
+        '<span class="ba-tag l">Antes</span><span class="ba-tag r">Depois</span>' +
+        '<input type="range" min="0" max="100" value="50" aria-label="Arraste para comparar antes e depois">' +
+        '<div class="ba-handle"></div></div>' + (it && it.title ? '<figcaption class="ba-cap">'+esc(it.title)+'</figcaption>' : '') + '</figure>';
+    }).join('');
+    if (!BEFORE_AFTER.length) grid.insertAdjacentHTML('afterend','<p class="ba-note">Aqui entram as fotos reais de antes e depois das clientes da Jaqueline. Arraste a barra para comparar.</p>');
+    grid.querySelectorAll('[data-ba]').forEach(function(el){
+      var inp = el.querySelector('input');
+      function set(v){ el.style.setProperty('--pos', v+'%'); }
+      inp.addEventListener('input', function(){ set(inp.value); });
+      // demonstração: a barra passeia uma vez quando a seção aparece
+      var done=false;
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        new IntersectionObserver(function(es,ob){ es.forEach(function(e){ if(e.isIntersecting && !done){ done=true; ob.disconnect();
+          var t0=performance.now(); (function step(n){ var t=(n-t0)/2200; if(t>=1||+inp.value!==50){ if(t>=1){inp.value=50;set(50);} return; } var v=50+30*Math.sin(t*Math.PI*2)*(1-t); inp.value=v; set(v); requestAnimationFrame(step); })(t0);
+        } }); },{threshold:.6}).observe(el);
+      }
+    });
+  })();
+
+  // ---------- cuidados ----------
+  (function(){
+    var box = document.getElementById('care-body'), tabs = document.getElementById('care-tabs'); if (!box) return;
+    var CARE = [
+      { id:'antes', label:'Antes dos cílios',
+        steps:[['Na véspera','Rosto sem maquiagem'],['No dia','Pele limpa e sem óleo'],['Na cadeira','Olhos fechados e relaxada']],
+        key:null,
+        items:[
+          ['face','Venha de rosto limpo','Sem maquiagem nos olhos, sem rímel e sem delineador. Lave bem a região antes de sair de casa.'],
+          ['drop','Nada de óleo ou creme','Evite hidratantes, protetor e produtos oleosos perto dos olhos no dia. A cola gruda melhor em pele limpa.'],
+          ['glasses','Tire as lentes de contato','Se usa lentes, tire antes de começar e leve o estojo ou os óculos.'],
+          ['brush','Sem curvex e sem cílios postiços','Deixe seus cílios naturais em paz nos dias anteriores, sem curvex nem cola de cílios postiços.'],
+          ['alertc','Conte sobre alergias','Avise sobre alergias, olhos sensíveis, colírios ou tratamentos nos olhos antes de começar.'],
+          ['clock','Reserve o tempo todo','Dependendo da técnica, leva de 1h a 3h. Vá ao banheiro antes e deixe o celular de lado para relaxar.']
+        ]},
+      { id:'depois', label:'Depois dos cílios',
+        steps:[['Hoje','Sem molhar'],['24 horas','Cola firme'],['48 horas','Rotina normal'],['15 a 20 dias','Manutenção']],
+        key:['24h','Primeiras 24 horas sem água, vapor ou suor, para a cola secar por completo.'],
+        items:[
+          ['drop','Evite molhar no começo','Nas primeiras 24 horas, nada de água, vapor, sauna ou treino pesado.'],
+          ['brush','Penteie todo dia','Passe a escovinha com delicadeza, de baixo para cima, uma ou duas vezes ao dia.'],
+          ['alertc','Sem rímel e sem óleo','Óleos e removedores oleosos enfraquecem a cola. Use demaquilante sem óleo e não use rímel.'],
+          ['hand','Não puxe nem esfregue','Não arranque, não esfregue os olhos e não use curvex. Os fios caem sozinhos junto com os naturais.'],
+          ['moon','Cuide do sono','Prefira dormir de barriga para cima ou de lado, sem esmagar o rosto no travesseiro.'],
+          ['refresh','Faça a manutenção','Volte a cada 15 a 20 dias para repor os fios e manter o olhar sempre cheio.']
+        ]},
+      { id:'sobr', label:'Sobrancelhas',
+        steps:[['Antes','Pele limpa'],['No dia','Design ou micro'],['Depois','Cicatrização e cuidado']],
+        key:null,
+        items:[
+          ['face','Pele limpa e sem produtos','Venha sem maquiagem na região e evite ácidos ou esfoliantes nos dias anteriores.'],
+          ['brow','Deixe os fios crescerem','Se possível, não tire os fios por 2 ou 3 semanas antes, para o desenho ficar mais fiel ao seu rosto.'],
+          ['alertc','Avise sobre sua saúde','Conte sobre alergias, medicamentos, gestação ou condições de pele, principalmente na micropigmentação.'],
+          ['sun','Proteja do sol','Depois do procedimento, evite sol forte e piscina por alguns dias.'],
+          ['hand','Não coce nem arranque','Na micropigmentação, não tire casquinhas e não coce. Deixe a pele cicatrizar sozinha.'],
+          ['drop','Siga a orientação de hidratação','Use apenas o produto indicado pela Jaqueline e evite molhar demais nas primeiras horas.']
+        ]}
+    ];
+    var cur = 0;
+    function render(){
+      var c = CARE[cur];
+      tabs.querySelectorAll('.tab').forEach(function(b,i){ b.setAttribute('aria-selected', i===cur ? 'true':'false'); });
+      var h = '';
+      if (c.key) h += '<div class="care-key"><span class="display">'+esc(c.key[0])+'</span><p>'+esc(c.key[1])+'</p></div>';
+      h += '<ol class="tl">'+c.steps.map(function(s,i){ return '<li style="--i:'+i+'"><b>'+esc(s[0])+'</b>'+esc(s[1])+'</li>'; }).join('')+'</ol>';
+      h += '<div class="care-list">'+c.items.map(function(it,i){
+        return '<article class="care-item" style="--i:'+i+'"><span class="care-ic" style="--i:'+i+'">'+ico(it[0])+'</span><div><h3>'+esc(it[1])+'</h3><p>'+esc(it[2])+'</p>'+(it[3]?'<img src="'+esc(it[3])+'" alt="" loading="lazy">':'')+'</div></article>';
+      }).join('')+'</div>';
+      box.innerHTML = h;
+    }
+    tabs.innerHTML = CARE.map(function(c,i){ return '<button type="button" class="tab" role="tab" aria-selected="'+(i===0)+'" data-i="'+i+'">'+esc(c.label)+'</button>'; }).join('');
+    tabs.addEventListener('click', function(e){ var b=e.target.closest('.tab'); if(!b) return; cur=+b.dataset.i; render(); });
+    render();
+  })();
+
+  // ---------- revelar ao rolar ----------
+  (function(){
+    document.documentElement.classList.add('js');
+    var els = document.querySelectorAll('.rv, .type');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.15});
+    els.forEach(function(e,i){ io.observe(e); });
+  })();
+
+
   // agendamento com agenda
   (function(){
     var STORE = "jaqueline_agenda_v1";
     var svcBox = document.getElementById('services');
+    var tabsEl = document.getElementById('svctabs'), selLine = document.getElementById('selline'), slotBox = document.getElementById('slotbox');
+    var svcId = '', catTab = 'sobrancelhas';
     var slotsEl = document.getElementById('slots');
     var errEl = document.getElementById('formerror');
     var resEl = document.getElementById('result');
     var calGrid = document.getElementById('calgrid');
     var monthLabel = document.getElementById('monthlabel');
     var dayLabel = document.getElementById('daylabel');
+    document.getElementById('hoursline').textContent = 'Atendimento '+hoursText()+'. Podendo ter alterações.';
+    function hoursText(){ var el=document.querySelector('.hours[data-hours]:not(.mini)'); if(!el) return ''; return Array.prototype.map.call(el.querySelectorAll('li'),function(li){ return li.querySelector('small').textContent.toLowerCase()+', '+li.querySelector('b').textContent; }).join(' · '); }
     var prevBtn = document.getElementById('prevm'), nextBtn = document.getElementById('nextm');
     var chosenSlot = "", chosenDate = "";
 
@@ -770,15 +1266,24 @@
     var lastDay = new Date(today); lastDay.setDate(lastDay.getDate()+DAYS_AHEAD);
     var view = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    svcBox.innerHTML = SERVICES.map(function(s){
-      return '<label class="opt"><input type="radio" name="svc" value="'+s.id+'">' +
-        '<span><b>'+esc(s.name)+'</b><small>'+esc(s.desc)+' · '+dur(s.minutes)+(s.price?' · '+esc(s.price):'')+'</small></span></label>';
-    }).join('');
-
-    function selectedService(){
-      var r = document.querySelector('input[name=svc]:checked');
-      return r ? svcById(r.value) : null;
+    function renderServices(){
+      tabsEl.querySelectorAll('.tab').forEach(function(t){ t.setAttribute('aria-selected', t.dataset.cat===catTab ? 'true':'false'); });
+      svcBox.innerHTML = SERVICES.filter(function(s){return s.cat===catTab;}).map(function(s){
+        return '<label class="opt"><input type="radio" name="svc" value="'+s.id+'"'+(s.id===svcId?' checked':'')+'>' +
+          '<span><b>'+esc(s.name)+'</b><small>'+esc(s.desc)+' · '+dur(s.minutes)+(s.price?' · '+esc(s.price):'')+'</small></span></label>';
+      }).join('');
+      var cur = svcById(svcId);
+      selLine.hidden = !cur;
+      if (cur) selLine.innerHTML = 'Selecionado: <b>'+esc(cur.name)+'</b> · '+dur(cur.minutes);
     }
+    function selectedService(){ return svcById(svcId); }
+    tabsEl.addEventListener('click', function(e){ var t=e.target.closest('.tab'); if(!t) return; catTab=t.dataset.cat; renderServices(); });
+    window.pickService = function(id){
+      var sv = svcById(id); if(!sv) return;
+      svcId = id; catTab = sv.cat; renderServices(); renderSlots();
+      document.getElementById('agendar').scrollIntoView({behavior:'smooth'});
+    };
+    renderServices();
 
     function isOpenDay(d){ return !!HOURS[d.getDay()] && db.blocked.indexOf(iso(d)) === -1; }
 
@@ -821,13 +1326,20 @@
 
     function renderSlots(){
       chosenSlot = "";
+      if (!chosenDate) { slotBox.hidden = true; return; }
+      var first = slotBox.hidden;
+      slotBox.hidden = false;
+      var dl = new Date(chosenDate+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      dayLabel.textContent = dl.charAt(0).toUpperCase()+dl.slice(1);
       var svc = selectedService();
-      if (chosenDate) dayLabel.textContent = new Date(chosenDate+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); else dayLabel.textContent = '';
-      if (!svc || !chosenDate) { slotsEl.innerHTML = '<p class="muted">Escolha um serviço e um dia para ver os horários.</p>'; return; }
-      var list = freeSlots(chosenDate, svc.minutes);
-      slotsEl.innerHTML = list.length
-        ? list.map(function(h){ return '<button type="button" class="slot" aria-pressed="false" data-h="'+h+'">'+h+'</button>'; }).join('')
-        : '<p class="muted">Sem horários livres nesse dia para este serviço. Escolha outro dia.</p>';
+      if (!svc) { slotsEl.innerHTML = '<p class="muted">Escolha um serviço no passo 1 para ver os horários livres desse dia.</p>'; }
+      else {
+        var list = freeSlots(chosenDate, svc.minutes);
+        slotsEl.innerHTML = list.length
+          ? list.map(function(h){ return '<button type="button" class="slot" aria-pressed="false" data-h="'+h+'">'+h+'</button>'; }).join('')
+          : '<p class="muted">Sem horários livres nesse dia para este serviço. Escolha outro dia.</p>';
+      }
+      if (first) { slotBox.classList.remove('pop'); void slotBox.offsetWidth; slotBox.classList.add('pop'); setTimeout(function(){ slotBox.scrollIntoView({behavior:'smooth', block:'nearest'}); },60); }
     }
 
     prevBtn.addEventListener('click', function(){ view = new Date(view.getFullYear(), view.getMonth()-1, 1); renderCal(); });
@@ -841,7 +1353,7 @@
       slotsEl.querySelectorAll('.slot').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
       b.setAttribute('aria-pressed','true'); chosenSlot = b.dataset.h;
     });
-    svcBox.addEventListener('change', renderSlots);
+    svcBox.addEventListener('change', function(e){ if (e.target && e.target.name==='svc'){ svcId = e.target.value; var cur=svcById(svcId); selLine.hidden=false; selLine.innerHTML='Selecionado: <b>'+esc(cur.name)+'</b> · '+dur(cur.minutes); renderSlots(); } });
 
     document.getElementById('bookform').addEventListener('submit', function(e){
       e.preventDefault();
