@@ -109,7 +109,7 @@
   .gallery-grid{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .gallery-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:22px;box-shadow:0 12px 30px rgba(58,46,50,.18)}
   @media(min-width:900px){.gallery-grid{grid-template-columns:repeat(4,1fr)}}
-  .more{margin-top:24px;display:flex;justify-content:center}
+  .more{margin-top:24px;display:flex;justify-content:center;grid-column:1/-1}
 
   /* sobre */
   .about{background:linear-gradient(180deg,var(--white),var(--blush));padding:90px 0}
@@ -439,6 +439,79 @@
     .drawer,.drawer-bg,.drawer ul.menu li{transition:none}
   }
 
+  /* ===== botão com linhas que se desenham (modelo Uiverse) ===== */
+  .type--A{--line_color:var(--graphite);--back_color:#F7D6DC}
+  .type--B{--line_color:var(--pink);--back_color:#ffc9da}
+  .type--C{--line_color:#fff;--back_color:var(--pink)}
+  .dbtn{--h:56px;--w:300px;position:relative;z-index:0;display:inline-block;width:var(--w);max-width:100%;height:var(--h);padding:0;border:0;background:none;cursor:pointer;text-decoration:none;font:700 13px/1 'Figtree',sans-serif;text-transform:uppercase;color:var(--line_color);letter-spacing:2px;transition:all .3s ease}
+  .dbtn.w-s{--w:170px;--h:46px;font-size:12px}
+  .dbtn__text{display:flex;justify-content:center;align-items:center;width:100%;height:100%;white-space:nowrap}
+  .dbtn::before,.dbtn::after,.dbtn__text::before,.dbtn__text::after{content:"";position:absolute;height:3px;border-radius:2px;background:var(--line_color);transition:all .5s ease}
+  .dbtn::before{top:0;left:calc(var(--h) - 2px);width:calc(100% - var(--h)*2 - 16px)}
+  .dbtn::after{top:0;right:calc(var(--h) - 2px);width:8px}
+  .dbtn__text::before{bottom:0;right:calc(var(--h) - 2px);width:calc(100% - var(--h)*2 - 16px)}
+  .dbtn__text::after{bottom:0;left:calc(var(--h) - 2px);width:8px}
+  .dbtn__line{position:absolute;top:0;width:var(--h);height:100%;overflow:hidden}
+  .dbtn__line::before{content:"";position:absolute;top:0;width:150%;height:100%;box-sizing:border-box;border-radius:300px;border:solid 3px var(--line_color)}
+  .dbtn__line:nth-child(1),.dbtn__line:nth-child(1)::before{left:0}
+  .dbtn__line:nth-child(2),.dbtn__line:nth-child(2)::before{right:0}
+  .dbtn:hover,.dbtn:focus-visible{letter-spacing:4px}
+  .dbtn:hover::before,.dbtn:hover .dbtn__text::before,.dbtn:focus-visible::before,.dbtn:focus-visible .dbtn__text::before{width:8px}
+  .dbtn:hover::after,.dbtn:hover .dbtn__text::after,.dbtn:focus-visible::after,.dbtn:focus-visible .dbtn__text::after{width:calc(100% - var(--h)*2 - 16px)}
+  .dbtn:focus-visible{outline:none}
+  .dbtn__drow1,.dbtn__drow2{position:absolute;z-index:-1;border-radius:16px;transform-origin:16px 16px}
+  .dbtn__drow1{top:-16px;left:40px;width:32px;height:0;transform:rotate(30deg)}
+  .dbtn__drow2{top:44px;left:77px;width:32px;height:0;transform:rotate(-127deg)}
+  .dbtn__drow1::before,.dbtn__drow1::after,.dbtn__drow2::before,.dbtn__drow2::after{content:"";position:absolute}
+  .dbtn__drow1::before{bottom:0;left:0;width:0;height:32px;border-radius:16px;transform-origin:16px 16px;transform:rotate(-60deg)}
+  .dbtn__drow1::after{top:-10px;left:45px;width:0;height:32px;border-radius:16px;transform-origin:16px 16px;transform:rotate(69deg)}
+  .dbtn__drow2::before{bottom:0;left:0;width:0;height:32px;border-radius:16px;transform-origin:16px 16px;transform:rotate(-146deg)}
+  .dbtn__drow2::after{bottom:26px;left:-40px;width:0;height:32px;border-radius:16px;transform-origin:16px 16px;transform:rotate(-262deg)}
+  .dbtn__drow1,.dbtn__drow1::before,.dbtn__drow1::after,.dbtn__drow2,.dbtn__drow2::before,.dbtn__drow2::after{background:var(--back_color)}
+  .dbtn:hover .dbtn__drow1{animation:drow1 ease-in .06s forwards}
+  .dbtn:hover .dbtn__drow1::before{animation:drow2 linear .08s .06s forwards}
+  .dbtn:hover .dbtn__drow1::after{animation:drow3 linear .03s .14s forwards}
+  .dbtn:hover .dbtn__drow2{animation:drow4 linear .06s .2s forwards}
+  .dbtn:hover .dbtn__drow2::before{animation:drow3 linear .03s .26s forwards}
+  .dbtn:hover .dbtn__drow2::after{animation:drow5 linear .06s .32s forwards}
+  @keyframes drow1{0%{height:0}100%{height:100px}}
+  @keyframes drow2{0%{width:0;opacity:0}10%{opacity:0}11%{opacity:1}100%{width:120px}}
+  @keyframes drow3{0%{width:0}100%{width:80px}}
+  @keyframes drow4{0%{height:0}100%{height:120px}}
+  @keyframes drow5{0%{width:0}100%{width:124px}}
+  .dbtn[disabled]{opacity:.5;cursor:not-allowed}
+  .hero .actions{gap:18px}
+  .type .meta .dbtn{flex:none}
+
+  /* ===== Instagram: cartão de perfil que aparece ao passar o mouse (modelo Uiverse) ===== */
+  .ig-wrap{display:flex;flex-direction:column;align-items:center;gap:26px;padding-top:150px;margin-top:-100px}
+  .ig-container{position:relative;cursor:pointer;transition:all .2s;font-size:17px;border-radius:10px;padding:0 24px 12px 0;z-index:6}
+  .ig-tooltip{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:10px;opacity:0;pointer-events:none;transition:all .3s;border-radius:15px;width:max-content;max-width:86vw;box-shadow:inset 5px 5px 5px rgba(0,0,0,.2),inset -5px -5px 15px rgba(255,255,255,.1),5px 5px 15px rgba(0,0,0,.3),-5px -5px 15px rgba(255,255,255,.1)}
+  .ig-profile{background:#2a2023;border-radius:10px 15px;padding:10px;border:1px solid var(--gold)}
+  .ig-container:hover .ig-tooltip,.ig-container:focus-within .ig-tooltip{top:-130px;opacity:1;visibility:visible;pointer-events:auto}
+  .ig-icon{text-decoration:none;color:#fff;display:block;position:relative}
+  .ig-layer{width:55px;height:55px;transition:transform .3s}
+  .ig-icon:hover .ig-layer,.ig-icon:focus-visible .ig-layer{transform:rotate(-35deg) skew(20deg)}
+  .ig-layer span{position:absolute;top:0;left:0;height:100%;width:100%;border:1px solid var(--pink);border-radius:15px;transition:all .3s;color:var(--pink)}
+  .ig-icon:hover .ig-layer span{box-shadow:-1px 1px 3px var(--pink)}
+  .ig-text{position:absolute;left:50%;bottom:-5px;opacity:0;font-weight:500;color:var(--pink);transform:translateX(-50%);transition:bottom .3s ease,opacity .3s ease}
+  .ig-icon:hover .ig-text,.ig-icon:focus-visible .ig-text{bottom:-35px;opacity:1}
+  .ig-icon:hover .ig-layer span:nth-child(1){opacity:.2}
+  .ig-icon:hover .ig-layer span:nth-child(2){opacity:.4;transform:translate(5px,-5px)}
+  .ig-icon:hover .ig-layer span:nth-child(3){opacity:.6;transform:translate(10px,-10px)}
+  .ig-icon:hover .ig-layer span:nth-child(4){opacity:.8;transform:translate(15px,-15px)}
+  .ig-icon:hover .ig-layer span:nth-child(5){opacity:1;transform:translate(20px,-20px)}
+  .ig-svg{font-size:25px;display:flex;align-items:center;justify-content:center;border-color:transparent!important;background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)}
+  .ig-user{display:flex;gap:10px}
+  .ig-img{width:50px;height:50px;border:1px solid var(--gold);border-radius:10px;overflow:hidden;background:#fff;flex:none}
+  .ig-img img{width:100%;height:100%;object-fit:cover;object-position:50% 14%}
+  .ig-name{font-size:17px;font-weight:700;color:var(--blush);white-space:nowrap}
+  .ig-username{font-size:.85rem;color:var(--gold)}
+  .ig-details{display:flex;flex-direction:column;gap:0;color:#fff}
+  .ig-about{color:#ccc;padding-top:5px;font-size:.9rem}
+  .ig-cap{color:var(--muted);font-size:.95rem;margin:0}
+  @media(prefers-reduced-motion:reduce){.dbtn,.dbtn *,.dbtn::before,.dbtn::after{transition:none!important;animation-duration:.01s!important}.ig-container,.ig-tooltip,.ig-layer,.ig-layer span{transition:none}}
+
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .btn{transition:none}
@@ -498,8 +571,8 @@
         <h1>Pratique a arte de se cuidar</h1>
         <p class="lead">Design de sobrancelhas, extensão de cílios e micropigmentação feitos com cuidado e olhar de detalhe, no Butantã.</p>
         <div class="actions">
-          <a class="btn" href="#agendar">Agendar meu horário</a>
-          <a class="btn ghost" href="#galeria">Ver resultados</a>
+          <a class="dbtn type--B" href="#agendar"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Agendar horário</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
+          <a class="dbtn type--A" href="#galeria"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Ver resultados</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
         </div>
       </div>
       <div class="portrait">
@@ -624,7 +697,30 @@
         <img src="img/galeria-8.jpg" alt="Cílios volumosos, vista lateral" loading="lazy">
       </div>
       <div class="more">
-        <a class="btn ghost" href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener">Ver mais no Instagram</a>
+        <div class="ig-wrap">
+        <div class="ig-container">
+          <div class="ig-tooltip">
+            <div class="ig-profile">
+              <div class="ig-user">
+                <div class="ig-img"><img src="img/jaqueline.jpg" alt="" width="50" height="50"></div>
+                <div class="ig-details">
+                  <div class="ig-name">Jaqueline Santana</div>
+                  <div class="ig-username">@jjaquelinesantanadesigner</div>
+                </div>
+              </div>
+              <div class="ig-about">Sobrancelhas e cílios · Butantã</div>
+            </div>
+          </div>
+          <a class="ig-icon" href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener" aria-label="Ver mais trabalhos da Jaqueline no Instagram">
+            <div class="ig-layer">
+              <span></span><span></span><span></span><span></span>
+              <span class="ig-svg"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r="1" fill="#fff" stroke="none"/></svg></span>
+            </div>
+            <div class="ig-text">Instagram</div>
+          </a>
+        </div>
+        <p class="ig-cap">Veja mais trabalhos no Instagram</p>
+      </div>
       </div>
     </div>
   </section>
@@ -668,7 +764,7 @@
           <li>Sobrancelhas e cílios</li>
           <li>Mais de 1.100 trabalhos postados</li>
         </ul>
-        <a class="btn rv" style="--d:.48s" href="#agendar">Agendar meu horário</a>
+        <a class="dbtn type--B rv" style="--d:.48s" href="#agendar"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Agendar horário</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
       </div>
     </div>
   </section>
@@ -723,7 +819,7 @@
         </fieldset>
 
         <p id="formerror" class="error" role="alert" hidden></p>
-        <button class="btn" type="submit" id="submitbtn">Enviar pedido de agendamento</button>
+        <button class="dbtn type--B" type="submit" id="submitbtn"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Enviar pedido</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></button>
       </form>
 
       <div id="result" class="result" hidden></div>
@@ -741,8 +837,8 @@
           Butantã, São Paulo, SP
         </address>
         <div class="actions">
-          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Av.+General+Asdrubal+da+Cunha+643+Butant%C3%A3+S%C3%A3o+Paulo" target="_blank" rel="noopener">Abrir rota</a>
-          <a class="btn ghost" data-whatsapp href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a class="dbtn type--B" href="https://www.google.com/maps/search/?api=1&query=Av.+General+Asdrubal+da+Cunha+643+Butant%C3%A3+S%C3%A3o+Paulo" target="_blank" rel="noopener"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Abrir rota</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
+          <a class="dbtn type--A" data-whatsapp href="https://www.instagram.com/jjaquelinesantanadesigner" target="_blank" rel="noopener"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">WhatsApp</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>
         </div>
       </div>
       <div class="hours rv" data-hours></div>
@@ -1188,7 +1284,7 @@
       var art = s.photo ? '<img src="'+esc(s.photo)+'" alt="Exemplo de '+esc(s.name)+'" loading="lazy">' : (s.cat==='sobrancelhas' ? browArt(s.art) : lashArt(s.art));
       return '<article class="type" id="t-'+s.id+'"><div class="art'+(s.photo?' photo':'')+'">'+art+'</div><h3>'+esc(s.name)+'</h3>' +
         '<p class="how">'+esc(s.desc)+'</p><p class="for"><b>Combina com você se:</b> '+esc(s.forWho)+'</p>' +
-        '<div class="meta"><span>'+durTxt(s.minutes)+(s.price?' · '+esc(s.price):'')+'</span><button type="button" class="btn pick" data-pick="'+s.id+'">Quero esta</button></div></article>';
+        '<div class="meta"><span>'+durTxt(s.minutes)+(s.price?' · '+esc(s.price):'')+'</span><button type="button" class="dbtn type--B w-s" data-pick="'+s.id+'"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Quero esta</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></button></div></article>';
     }
     function durTxt(m){ var h=Math.floor(m/60), r=m%60; return (h?h+'h':'')+(r?(h?' ':'')+r+'min':''); }
     window.durTxt = durTxt;
@@ -1488,10 +1584,10 @@
         '<p><b>' + esc(svc.name) + '</b><br>' + dataBr + ' às ' + chosenSlot + ' (' + dur(svc.minutes) + ')<br>' + esc(name) + '</p>' +
         '<p>Endereço: Av. General Asdrubal da Cunha, 643, Sala 5, Butantã.</p>' +
         (link
-          ? '<p>Envie o pedido pelo WhatsApp para a Jaqueline confirmar com você.</p><a class="btn" href="'+link+'" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>'
+          ? '<p>Envie o pedido pelo WhatsApp para a Jaqueline confirmar com você.</p><a class="dbtn type--B" href="'+link+'" target="_blank" rel="noopener"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Enviar no WhatsApp</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>'
           : '<p>O WhatsApp oficial ainda não foi configurado. Copie a mensagem abaixo e envie pelo direct do Instagram.</p>' +
             '<p style="white-space:pre-line;background:#fff6f8;padding:12px 16px;border-radius:14px;color:#3A2E32">'+esc(text)+'</p>' +
-            '<a class="btn" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">Abrir Instagram</a>');
+            '<a class="dbtn type--B" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener"><span class="dbtn__line"></span><span class="dbtn__line"></span><span class="dbtn__text">Abrir Instagram</span><span class="dbtn__drow1"></span><span class="dbtn__drow2"></span></a>');
       chosenSlot = ""; renderSlots();
       resEl.scrollIntoView({behavior:'smooth', block:'center'});
       renderPanel();
