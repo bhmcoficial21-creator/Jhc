@@ -7,7 +7,7 @@
 <meta name="description" content="Design de sobrancelhas, extensão de cílios e micropigmentação no Butantã, São Paulo. Pratique a arte de se cuidar. Agende seu horário online.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Pinyon+Script&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --blush:#F7D6DC;
@@ -112,11 +112,24 @@
   .more{margin-top:24px;display:flex;justify-content:center}
 
   /* sobre */
-  .about{background:var(--white)}
-  .about .wrap{max-width:760px}
-  .about p{color:var(--muted);margin-top:16px}
-  .facts{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}
-  .facts li{padding:.5em 1em;border-radius:999px;background:var(--blush);font-size:.95rem}
+  .about{background:linear-gradient(180deg,var(--white),var(--blush));padding:90px 0}
+  .about-grid{display:grid;gap:44px;align-items:center}
+  @media(min-width:860px){.about-grid{grid-template-columns:.9fr 1.1fr;gap:72px}}
+  .about-photo{position:relative;margin:0;width:min(400px,86%);justify-self:center}
+  .about-photo .arch{border-radius:999px 999px 28px 28px;overflow:hidden;aspect-ratio:4/5.2;background:#d8d0c7;box-shadow:0 30px 60px rgba(58,46,50,.22)}
+  .about-photo .arch img{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+  .about-photo::before{content:"";position:absolute;inset:-12px -12px 12px 12px;border:1.5px solid var(--gold);border-radius:999px 999px 28px 28px;z-index:-1}
+  .about-photo .seal{position:absolute;right:-14px;bottom:26px;width:92px;height:92px;filter:drop-shadow(0 10px 20px rgba(58,46,50,.3))}
+  .about-photo .spark{z-index:2}
+  .about-text .eyebrow{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .about-text h2.name{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,8vw,4.4rem);line-height:1;max-width:none;margin-top:10px;letter-spacing:-.01em;color:var(--graphite)}
+  .about-text .role{font-family:'Pinyon Script',cursive;color:var(--pink);font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.1;margin-top:6px}
+  .about-text blockquote{margin:26px 0 0;padding-left:20px;border-left:2px solid var(--gold);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(1.35rem,3.6vw,1.8rem);line-height:1.3;color:var(--graphite)}
+  .about-text p.body{color:var(--muted);margin-top:22px;max-width:52ch;font-size:1.05rem}
+  .about-text .btn{margin-top:28px}
+  .about p{color:var(--muted)}
+  .facts{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}
+  .facts li{padding:.5em 1em;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(201,162,77,.6);font-size:.92rem}
 
   /* agendamento */
   .book{background:var(--blush)}
@@ -637,15 +650,26 @@
   </section>
 
   <section class="about" id="sobre">
-    <div class="wrap">
-      <h2><span class="script">oi, eu sou a</span>Jaqueline</h2>
-      <hr class="rule">
-      <p>Trabalho com sobrancelhas e cílios no Butantã e acredito que se cuidar é uma forma de se amar. Meu foco é entregar um resultado natural, com atenção a cada detalhe e um atendimento acolhedor.</p>
-      <ul class="facts">
-        <li>Butantã, São Paulo</li>
-        <li>Sobrancelhas e cílios</li>
-        <li>Mais de 1.100 trabalhos postados</li>
-      </ul>
+    <div class="wrap about-grid">
+      <figure class="about-photo rv">
+        <svg class="spark a" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <svg class="spark b" viewBox="0 0 100 100" aria-hidden="true"><use href="#star"/></svg>
+        <div class="arch"><img src="img/jaqueline.jpg" alt="Jaqueline Santana, de jaleco branco com detalhes dourados, segurando pinças de cílios e um paquímetro rosa" width="1000" height="1344" loading="lazy"></div>
+        <svg class="seal" viewBox="0 0 120 120" aria-hidden="true"><use href="#logo"/></svg>
+      </figure>
+      <div class="about-text">
+        <p class="eyebrow rv">Sobre a profissional</p>
+        <h2 class="name rv" style="--d:.08s">Jaqueline Santana</h2>
+        <p class="role rv" style="--d:.16s">sobrancelhas &amp; cílios</p>
+        <blockquote class="rv" style="--d:.24s">“Pratique a arte de se cuidar.”</blockquote>
+        <p class="body rv" style="--d:.32s">Trabalho com sobrancelhas e cílios no Butantã e acredito que se cuidar é uma forma de se amar. Meu foco é entregar um resultado natural, com atenção a cada detalhe e um atendimento acolhedor.</p>
+        <ul class="facts rv" style="--d:.4s">
+          <li>Butantã, São Paulo</li>
+          <li>Sobrancelhas e cílios</li>
+          <li>Mais de 1.100 trabalhos postados</li>
+        </ul>
+        <a class="btn rv" style="--d:.48s" href="#agendar">Agendar meu horário</a>
+      </div>
     </div>
   </section>
 
