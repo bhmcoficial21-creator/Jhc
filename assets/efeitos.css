@@ -50,12 +50,14 @@ header.top h1.marca{font-size:clamp(1.7rem,7.6vw,2.6rem)}
 .subnome{margin:4px 0 12px;font-size:.85rem;letter-spacing:.24em;text-transform:uppercase;color:#8fe3d6;font-weight:600}
 
 /* ---------- Revelação de card: barra fina → painel → conteúdo ---------- */
-.rv::before{
+.rv::before,.rvf::before{
   content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
   background:var(--pt-bg);border-radius:inherit;
   clip-path:inset(100% 48% 0 48% round 2cqw);
 }
-.rv.in::before{animation:curtain 1.6s cubic-bezier(.7,0,.2,1) forwards}
+.rv.in::before,.rvf.in::before{animation:curtain 1.6s cubic-bezier(.7,0,.2,1) forwards}
+.rvf .content{opacity:0;transition:opacity .8s ease .95s,transform 300ms}
+.rvf.in .content{opacity:1}
 @keyframes curtain{
   0%{clip-path:inset(100% 48% 0 48% round 2cqw);opacity:1}
   28%{clip-path:inset(0 48% 0 48% round 2cqw);opacity:1}
@@ -85,6 +87,7 @@ html.pt-arrive::after{content:"";position:fixed;inset:0;z-index:9998;background:
 @media (prefers-reduced-motion:reduce){
   .ag::before,.ag::after,.gw{animation:none}
   .js [data-blur] .bw{opacity:1;filter:none;transform:none;transition:none}
-  .rv::before,.pt,html.pt-arrive::after{display:none}
+  .rv::before,.rvf::before,.pt,html.pt-arrive::after{display:none}
+  .rvf .content{opacity:1;transition:none}
   .rv>*{opacity:1;filter:none;transform:none;transition:none}
 }

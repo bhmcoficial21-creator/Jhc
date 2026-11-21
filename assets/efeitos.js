@@ -38,8 +38,9 @@
 
   /* ---- Revelação dos cards dos exercícios (não roda ao exportar PNG) ---- */
   if (!reduce && !document.body.classList.contains("export")) {
-    var cards = Array.prototype.slice.call(document.querySelectorAll(".stack .card, .capa-mod"));
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".stack .flip, .stack > .card, .capa-mod"));
     cards.forEach(function (c) {
+      if (c.classList.contains("flip")) { c.classList.add("rvf"); return; } // cartão que vira: só a cortina
       c.classList.add("rv");
       Array.prototype.slice.call(c.children).forEach(function (ch, i) { ch.style.setProperty("--d", (i * 0.09) + "s"); });
     });
