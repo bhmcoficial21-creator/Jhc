@@ -46,6 +46,7 @@
 @keyframes gw-flow{to{background-position:-300% 0}}
 .marca{font-size:clamp(2.2rem,9vw,3.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0 0 14px}
 
+header.top h1.marca{font-size:clamp(1.7rem,7.6vw,2.6rem)}
 .subnome{margin:4px 0 12px;font-size:.85rem;letter-spacing:.24em;text-transform:uppercase;color:#8fe3d6;font-weight:600}
 
 /* ---------- Revelação de card: barra fina → painel → conteúdo ---------- */
