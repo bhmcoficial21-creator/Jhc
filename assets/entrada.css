@@ -10,6 +10,9 @@ html.entrada body{overflow:hidden}
 #entrada .tx{position:relative;z-index:2;text-align:center;padding:0 24px 11vh;pointer-events:none}
 #entrada .nome{font-size:clamp(2.6rem,12vw,4.4rem);font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0;line-height:1.05;
   opacity:0;filter:blur(14px);transform:translateY(14px);transition:opacity 1s ease,filter 1s ease,transform 1s ease}
+#entrada .sub{margin:.6em 0 0;font-size:.9rem;letter-spacing:.32em;text-transform:uppercase;color:#8fe3d6;font-weight:600;
+  opacity:0;transition:opacity 1s ease .2s}
+#entrada.pronto .sub{opacity:1}
 #entrada .lema{margin:.8em auto 0;max-width:22em;color:#bfe3de;font-size:1.02rem;
   opacity:0;filter:blur(10px);transform:translateY(10px);transition:opacity 1s ease .35s,filter 1s ease .35s,transform 1s ease .35s}
 #entrada .dica{margin-top:1.6em;font-size:.82rem;letter-spacing:.08em;color:#8fb8b3;text-transform:uppercase;

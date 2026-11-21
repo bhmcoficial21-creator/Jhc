@@ -2,7 +2,7 @@
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function cardHTML(c,gid){
   switch(c.t){
-  case "capa": return `<div class="card capa"><div class="kick">Destrava</div><h3>${esc(c.titulo)}</h3>${IMG_CAPA[c.titulo]?`<div class="foto"><img src="assets/img/${IMG_CAPA[c.titulo]}" alt=""></div>`:""}<p class="meta">${esc(c.tempo)} · ${esc(c.para)}</p></div>`;
+  case "capa": return `<div class="card capa"><div class="kick">Destrava · Alongamento estático</div><h3>${esc(c.titulo)}</h3>${IMG_CAPA[c.titulo]?`<div class="foto"><img src="assets/img/${IMG_CAPA[c.titulo]}" alt=""></div>`:""}<p class="meta">${esc(c.tempo)} · ${esc(c.para)}</p></div>`;
   case "ex": return `<div class="card"><div class="kick">Movimento</div><h3>${esc(c.nome)}</h3>${c.medida?`<div class="big">${esc(c.medida)}</div>`:""}<div class="foto${IMG_LADO.includes(c.nome)?" lado":""}">${(IMG_EX[gid+"|"+c.nome]||IMG_EX[c.nome])?[].concat(IMG_EX[gid+"|"+c.nome]||IMG_EX[c.nome]).map(f=>`<img src="assets/img/${f}" alt="${esc(c.nome)}">`).join(""):`[${esc(c.foto)}]`}</div><p class="desc">${esc(c.desc)}</p><p class="resp">💨 ${esc(c.resp)}</p></div>`;
   case "erro": return `<div class="card seg"><div class="big">${c.n}</div><h3>${esc(c.titulo)}</h3></div>`;
   case "fecha-seg": return `<div class="card seg"><h3>Sinais de procurar um profissional</h3><p class="desc">Dor aguda, formigamento, perda de força ou dor após queda.</p></div>`;
