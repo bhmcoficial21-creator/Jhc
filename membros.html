@@ -36,7 +36,7 @@ function mostrarProgresso(){
 }
 function textoGuia(g){const [f,t]=AE.guia(g);return t?`${g.cards.length} cards · ${f}/${t} concluídos`:`${g.cards.length} cards`}
 /* Capas dos módulos: imagem + zoom lento + brilho; sem imagem usa o gradiente animado */
-const CAPAS={2:["capa-modulo-2.jpg","50% 30%"],3:["capa-modulo-3.jpg","50% 42%"],4:["capa-modulo-4.jpg","50% 50%"],5:["capa-bonus.jpg","50% 32%"]};
+const CAPAS={1:["capa-modulo-1.jpg","50% 20%"],2:["capa-modulo-2.jpg","50% 30%"],3:["capa-modulo-3.jpg","50% 42%"],4:["capa-modulo-4.jpg","50% 50%"],5:["capa-bonus.jpg","50% 32%"]};
 function capaMod(m){
   const partes=m.nome.split(" — "),kick=partes.length>1?partes[0]:"",titulo=partes.length>1?partes[1]:m.nome,c=CAPAS[m.id];
   const fundo=c?`<div class="fundo"><img src="assets/img/${c[0]}" alt="" style="--pos:${c[1]}" loading="lazy"></div>`:`<div class="fundo"><div class="ag" aria-hidden="true"></div></div>`;
