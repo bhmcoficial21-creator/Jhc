@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOME DA LOJA — Moda de Grife</title>
+<!-- TEMPLATE v0.1 — base do e-commerce. Ver BRIEFING_LOJA.md -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f1; --surface:#ffffff; --ink:#111; --muted:#777; --line:#e4e0d9;
+  --accent:#111; --accent-ink:#fff; --gold:#b89b5e; --sale:#b3261e;
+  --radius:2px; --serif:'Cormorant Garamond',serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1320px;margin:0 auto;padding:0 16px}
+
+/* barra topo */
+.topbar{background:var(--ink);color:#fff;font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:9px 16px}
+
+/* header */
+header{position:sticky;top:0;z-index:40;background:rgba(247,245,241,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hdr{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.18em;font-weight:600}
+.nav{display:flex;gap:26px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.nav button{padding:6px 0;border-bottom:1px solid transparent}
+.nav button.on,.nav button:hover{border-color:var(--ink)}
+.icons{display:flex;gap:18px;align-items:center}
+.bag-btn{position:relative;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.bag-count{position:absolute;top:-8px;right:-14px;background:var(--ink);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:grid;place-items:center}
+.menu-btn{display:none;font-size:22px}
+
+/* hero */
+.hero{position:relative;height:78vh;min-height:460px;display:grid;place-items:center;text-align:center;color:#fff;
+  background:linear-gradient(160deg,#1c1c1c,#3a342b 60%,#8a7650)}
+.hero::after{content:"FOTO / VÍDEO DE CAMPANHA";position:absolute;bottom:14px;right:16px;font-size:10px;letter-spacing:.2em;opacity:.5}
+.hero small{font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.8}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,8vw,96px);line-height:1;margin:14px 0 26px}
+.btn{display:inline-block;padding:15px 34px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:var(--radius);transition:.2s}
+.btn:hover{opacity:.85}
+.btn.light{background:#fff;color:var(--ink)}
+.btn.block{display:block;width:100%;text-align:center}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* categorias */
+.sec{padding:64px 0}
+.sec-h{display:flex;justify-content:space-between;align-items:end;margin-bottom:26px;gap:16px;flex-wrap:wrap}
+.sec-h h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4vw,40px)}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cat{aspect-ratio:3/4;position:relative;overflow:hidden;border-radius:var(--radius);display:flex;align-items:end;padding:18px;color:#fff;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
+.cat span{position:relative;z-index:1}
+.cat .ph{position:absolute;inset:0;transition:transform .6s}
+.cat:hover .ph{transform:scale(1.05)}
+
+/* filtros */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 14px;border:1px solid var(--line);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:40px;background:var(--surface)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+
+/* grid produtos */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 14px}
+.card{cursor:pointer}
+.card .img{aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:var(--radius);margin-bottom:12px}
+.card .img .ph{position:absolute;inset:0;transition:opacity .4s}
+.card .img .ph.b{opacity:0}
+.card:hover .img .ph.b{opacity:1}
+.tag{position:absolute;top:10px;left:10px;z-index:2;background:#fff;color:var(--ink);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 8px}
+.tag.sale{background:var(--sale);color:#fff}
+.card .brand{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.card .name{font-size:14px;margin:4px 0}
+.price{font-size:14px;font-weight:500}
+.price s{color:var(--muted);font-weight:400;margin-right:6px;font-size:12px}
+.inst{font-size:11px;color:var(--muted);margin-top:2px}
+.swatches{display:flex;gap:5px;margin-top:8px}
+.sw{width:12px;height:12px;border-radius:50%;border:1px solid var(--line)}
+
+/* placeholder de foto */
+.ph{background-size:cover;background-position:center;display:grid;place-items:center}
+.ph i{font-style:normal;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center;padding:8px;mix-blend-mode:difference}
+
+/* faixa diferenciais */
+.perks{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0;text-align:center;font-size:12px;letter-spacing:.06em}
+.perks b{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+
+/* overlay / gaveta / modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;opacity:0;pointer-events:none;transition:.3s}
+.ov.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--surface);z-index:60;transform:translateX(100%);transition:.35s;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer-h{display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.drawer-b{flex:1;overflow:auto;padding:20px}
+.drawer-f{padding:20px;border-top:1px solid var(--line)}
+.line{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.line .ph{width:76px;aspect-ratio:4/5;flex:none}
+.line .info{flex:1;font-size:13px}
+.line .meta{color:var(--muted);font-size:12px;margin:3px 0 8px}
+.qty{display:inline-flex;border:1px solid var(--line)}
+.qty button{width:28px;height:28px}
+.qty span{width:28px;display:grid;place-items:center;font-size:12px}
+.rm{font-size:11px;color:var(--muted);text-decoration:underline;margin-left:10px}
+.row{display:flex;justify-content:space-between;font-size:13px;margin:6px 0}
+.row.total{font-size:15px;font-weight:600;margin:12px 0 16px}
+.empty{text-align:center;color:var(--muted);padding:60px 0;font-size:14px}
+
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.modal-c{background:var(--surface);width:min(1100px,100%);max-height:92vh;overflow:auto;position:relative;border-radius:var(--radius)}
+.x{position:absolute;top:12px;right:14px;font-size:24px;z-index:5;width:36px;height:36px;background:var(--surface);border-radius:50%}
+.pdp{display:grid;grid-template-columns:1.15fr 1fr}
+.gal{display:grid;grid-template-columns:64px 1fr;gap:10px;padding:16px}
+.thumbs{display:flex;flex-direction:column;gap:8px}
+.thumbs .ph{aspect-ratio:4/5;cursor:pointer;opacity:.5;border:1px solid transparent}
+.thumbs .ph.on{opacity:1;border-color:var(--ink)}
+.main-img{aspect-ratio:4/5;overflow:hidden;cursor:zoom-in;position:relative}
+.main-img .ph{position:absolute;inset:0;transition:transform .2s}
+.main-img.zoom .ph{transform:scale(2)}
+.disc{font-size:10px;color:var(--muted);margin-top:6px;grid-column:2}
+.pinfo{padding:36px 32px 32px 16px}
+.pinfo .brand{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.pinfo h3{font-family:var(--serif);font-size:34px;font-weight:500;line-height:1.1;margin:8px 0 6px}
+.hook{font-style:italic;color:var(--muted);font-size:14px;margin-bottom:14px}
+.pinfo .price{font-size:20px}
+.lbl{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin:22px 0 10px}
+.lbl a{text-decoration:underline;letter-spacing:.06em;text-transform:none;color:var(--muted)}
+.colors{display:flex;gap:10px}
+.colors button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);outline-offset:3px}
+.colors button.on{outline:1px solid var(--ink)}
+.sizes{display:flex;flex-wrap:wrap;gap:8px}
+.sizes button{min-width:48px;height:42px;padding:0 10px;border:1px solid var(--line);font-size:13px}
+.sizes button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sizes button:disabled{color:#bbb;text-decoration:line-through;cursor:not-allowed}
+.stock{font-size:12px;color:var(--sale);margin-top:8px;min-height:16px}
+.model-note{font-size:12px;color:var(--muted);margin-top:6px}
+.tabs{margin-top:26px;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line);padding:15px 0}
+summary{cursor:pointer;list-style:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between}
+summary::after{content:"+"}
+details[open] summary::after{content:"–"}
+details p,details li{font-size:14px;line-height:1.7;color:#444;margin-top:10px}
+details ul{padding-left:18px}
+.cep{display:flex;gap:8px;margin-top:14px}
+.cep input,.field input,.field select{flex:1;padding:12px;border:1px solid var(--line);font:inherit;font-size:13px;width:100%;background:var(--surface);color:var(--ink)}
+
+/* checkout */
+.co{display:grid;grid-template-columns:1.4fr 1fr;gap:0}
+.co-f{padding:32px}
+.co-s{padding:32px;background:var(--bg)}
+.co h4{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:22px 0 12px}
+.co h4:first-of-type{margin-top:0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field.full{grid-column:1/-1}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pay button{border:1px solid var(--line);padding:14px 8px;font-size:12px;letter-spacing:.08em;background:var(--surface)}
+.pay button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.pay-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+/* newsletter e rodapé */
+.news{background:var(--ink);color:#fff;text-align:center;padding:64px 16px}
+.news h2{font-family:var(--serif);font-weight:500;font-size:36px;margin-bottom:10px}
+.news p{opacity:.7;font-size:14px;margin-bottom:22px}
+.news form{display:flex;max-width:440px;margin:0 auto;gap:8px}
+.news input{flex:1;padding:14px;border:1px solid #444;background:transparent;color:#fff;font:inherit}
+footer{padding:48px 0 24px;font-size:13px}
+.foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px}
+.foot h5{font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+.foot li{list-style:none;color:var(--muted);margin:7px 0}
+.copy{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+.wa{position:fixed;bottom:18px;right:18px;z-index:45;width:54px;height:54px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;font-size:13px;opacity:0;transition:.3s;z-index:90;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+/* mobile */
+@media (max-width:900px){
+  .nav{display:none;position:absolute;top:64px;left:0;right:0;background:var(--bg);flex-direction:column;padding:16px;gap:14px;border-bottom:1px solid var(--line)}
+  .nav.open{display:flex}
+  .menu-btn{display:block}
+  .cats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr);gap:22px 10px}
+  .perks{grid-template-columns:repeat(2,1fr)}
+  .pdp,.co{grid-template-columns:1fr}
+  .gal{grid-template-columns:1fr}
+  .thumbs{flex-direction:row;order:2}
+  .thumbs .ph{width:56px}
+  .disc{grid-column:1}
+  .pinfo{padding:8px 16px 28px}
+  .co-f,.co-s{padding:22px 16px}
+  .fields{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .modal{padding:0}
+  .modal-c{max-height:100vh;height:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">Frete grátis acima de R$ 999 · Até 10x sem juros · 100% original</div>
+
+<header>
+  <div class="wrap hdr">
+    <button class="menu-btn" onclick="document.querySelector('.nav').classList.toggle('open')" aria-label="Menu">☰</button>
+    <a class="logo" href="#">NOME DA LOJA</a>
+    <nav class="nav" id="nav"></nav>
+    <div class="icons">
+      <button class="bag-btn" onclick="openBag()">Sacola <span class="bag-count" id="bagCount">0</span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <small>Nova coleção · Drop 01</small>
+    <h1>Vista o que<br>poucos têm.</h1>
+    <a class="btn light" href="#catalogo">Comprar agora</a>
+  </div>
+</section>
+
+<section class="sec wrap">
+  <div class="sec-h"><h2>Categorias</h2></div>
+  <div class="cats" id="cats"></div>
+</section>
+
+<section class="wrap">
+  <div class="perks">
+    <div><b>Originais</b>Garantia de autenticidade</div>
+    <div><b>Envio rápido</b>Para todo o Brasil</div>
+    <div><b>Troca fácil</b>Primeira troca grátis</div>
+    <div><b>Pix</b>5% de desconto</div>
+  </div>
+</section>
+
+<section class="sec wrap" id="catalogo">
+  <div class="sec-h">
+    <h2 id="catTitle">Todos os produtos</h2>
+    <select id="sort" onchange="render()">
+      <option value="rel">Relevância</option>
+      <option value="new">Lançamentos</option>
+      <option value="asc">Menor preço</option>
+      <option value="desc">Maior preço</option>
+    </select>
+  </div>
+  <div class="filters" id="filters" style="margin-bottom:24px"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="news">
+  <h2>Acesso antecipado aos drops</h2>
+  <p>Cadastre-se e receba os lançamentos antes de todo mundo.</p>
+  <form onsubmit="event.preventDefault();toast('Cadastro feito!');this.reset()">
+    <input type="email" required placeholder="Seu e-mail">
+    <button class="btn light">Entrar</button>
+  </form>
+</section>
+
+<footer class="wrap">
+  <div class="foot">
+    <div><div class="logo" style="font-size:20px">NOME DA LOJA</div><p style="color:var(--muted);margin-top:10px;max-width:280px">Moda de grife com curadoria. Peças originais, entrega para todo o Brasil.</p></div>
+    <div><h5>Loja</h5><ul><li>Lançamentos</li><li>Tênis</li><li>Conjuntos</li><li>Acessórios</li></ul></div>
+    <div><h5>Ajuda</h5><ul><li>Trocas e devoluções</li><li>Guia de medidas</li><li>Autenticidade</li><li>FAQ</li></ul></div>
+    <div><h5>Contato</h5><ul><li>WhatsApp</li><li>Instagram</li><li>contato@loja.com.br</li></ul></div>
+  </div>
+  <div class="copy"><span>© 2026 NOME DA LOJA · CNPJ 00.000.000/0001-00</span><span>Pix · Cartão · Boleto · Site seguro (SSL)</span></div>
+</footer>
+
+<a class="wa" href="https://wa.me/5500000000000" target="_blank" aria-label="WhatsApp">WA</a>
+
+<!-- overlay, sacola, modais -->
+<div class="ov" id="ov" onclick="closeAll()"></div>
+
+<aside class="drawer" id="bag">
+  <div class="drawer-h">Sua sacola <button onclick="closeAll()" style="font-size:22px">×</button></div>
+  <div class="drawer-b" id="bagItems"></div>
+  <div class="drawer-f" id="bagFoot"></div>
+</aside>
+
+<div class="modal" id="pModal"><div class="modal-c"><button class="x" onclick="closeAll()">×</button><div id="pBody"></div></div></div>
+<div class="modal" id="cModal"><div class="modal-c"><button class="x" onclick="closeAll()">×</button><div id="cBody"></div></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   CATÁLOGO — substituir pelos produtos reais.
+   fotos: trocar o placeholder por URLs reais:  fotos:["img/tn-001-preto-1.webp", ...]
+   textos marcados [MONTANHAR] serão escritos pelo copywriter.
+   ========================================================= */
+const CATEGORIAS = [
+  {id:"tenis",nome:"Tênis"},{id:"conjuntos",nome:"Conjuntos"},{id:"camisetas",nome:"Camisetas"},
+  {id:"calcas",nome:"Calças"},{id:"shorts",nome:"Shorts"},{id:"cintos",nome:"Cintos"},
+  {id:"bolsas",nome:"Bags"},{id:"oculos",nome:"Óculos / Lupas"}
+];
+const TAM_ROUPA = ["PP","P","M","G","GG"], TAM_TENIS = ["37","38","39","40","41","42","43","44"], UNICO=["Único"];
+
+const PRODUTOS = [
+  {id:"tn-001",nome:"Tênis Runner Pro",marca:"Grife A",categoria:"tenis",preco:1299.9,precoAntigo:1499.9,tag:"Lançamento",novo:1,
+   tamanhos:TAM_TENIS,estoque:{"37":0,"38":2,"39":5,"40":1,"41":4,"42":3,"43":0,"44":2},
+   cores:[{nome:"Preto",hex:"#1a1a1a"},{nome:"Off-white",hex:"#e9e4da"}],
+   modelo:"Imagem com modelo digital · calçado mostrado no nº 41"},
+  {id:"cj-001",nome:"Conjunto Moletom Signature",marca:"Grife B",categoria:"conjuntos",preco:1890,tag:"Mais vendido",novo:0,
+   tamanhos:TAM_ROUPA,estoque:{PP:1,P:3,M:4,G:2,GG:0},
+   cores:[{nome:"Cinza mescla",hex:"#9a9a9a"},{nome:"Preto",hex:"#1a1a1a"},{nome:"Areia",hex:"#c8b79a"}],
+   modelo:"Modelo digital 1,72 m veste M"},
+  {id:"cm-001",nome:"Camiseta Logo Bordado",marca:"Grife A",categoria:"camisetas",preco:489.9,novo:1,
+   tamanhos:TAM_ROUPA,estoque:{PP:4,P:6,M:8,G:5,GG:3},
+   cores:[{nome:"Branco",hex:"#f4f4f2"},{nome:"Preto",hex:"#1a1a1a"}],
+   modelo:"Modelo digital 1,85 m veste G"},
+  {id:"cl-001",nome:"Calça Cargo Tech",marca:"Grife C",categoria:"calcas",preco:990,precoAntigo:1190,novo:0,
+   tamanhos:["38","40","42","44","46"],estoque:{"38":2,"40":3,"42":0,"44":2,"46":1},
+   cores:[{nome:"Verde militar",hex:"#4b5136"},{nome:"Preto",hex:"#1a1a1a"}],
+   modelo:"Modelo digital 1,80 m veste 42"},
+  {id:"sh-001",nome:"Short Nylon Monograma",marca:"Grife B",categoria:"shorts",preco:690,novo:1,tag:"Últimas peças",
+   tamanhos:TAM_ROUPA,estoque:{PP:0,P:1,M:2,G:1,GG:0},
+   cores:[{nome:"Azul marinho",hex:"#1f2a44"}],modelo:"Modelo digital 1,83 m veste M"},
+  {id:"ci-001",nome:"Cinto Couro Fivela Metal",marca:"Grife A",categoria:"cintos",preco:1150,novo:0,
+   tamanhos:["90","95","100","105"],estoque:{"90":2,"95":3,"100":3,"105":1},
+   cores:[{nome:"Preto/Dourado",hex:"#1a1a1a"},{nome:"Marrom/Prata",hex:"#5a3b25"}],modelo:"Imagem com modelo digital"},
+  {id:"bg-001",nome:"Shoulder Bag Couro",marca:"Grife C",categoria:"bolsas",preco:2490,novo:1,tag:"Lançamento",
+   tamanhos:UNICO,estoque:{"Único":3},cores:[{nome:"Preto",hex:"#1a1a1a"},{nome:"Caramelo",hex:"#a86b3c"}],
+   modelo:"Imagem com modelo digital"},
+  {id:"oc-001",nome:"Óculos Lupa Espelhado",marca:"Grife D",categoria:"oculos",preco:1390,novo:0,
+   tamanhos:UNICO,estoque:{"Único":4},cores:[{nome:"Prata/Azul",hex:"#8fa6c2"},{nome:"Dourado/Fogo",hex:"#c7843a"}],
+   modelo:"Imagem com modelo digital"}
+];
+/* textos padrão (placeholder) — cada produto pode ter os seus */
+const COPY_PADRAO = {
+  frase:"[MONTANHAR] Frase de impacto da peça — uma linha que vende o desejo.",
+  descricao:"[MONTANHAR] Descrição envolvente: a história da peça, o que ela transmite, para quem é e em que ocasiões brilha. Dois ou três parágrafos curtos.",
+  detalhes:["Material: [definir]","Caimento: [regular / oversized / slim]","Acabamento: [costura, bordado, ferragens]","Produto 100% original com nota fiscal"],
+  comoUsar:"[MONTANHAR] Sugestões de look e combinações com outras peças da loja.",
+  cuidados:"Lavar à mão ou ciclo delicado, não usar alvejante, secar à sombra."
+};
+
+/* ===================== UTIL ===================== */
+const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const $ = s => document.querySelector(s);
+function ph(hex, label, i=0){ // placeholder até ter foto real
+  const ang=[160,200,130,180,220][i%5];
+  return `<div class="ph" style="background-image:linear-gradient(${ang}deg,${hex},${shade(hex,i%2?40:-30)})"><i>${label}</i></div>`;
+}
+function shade(hex,amt){let n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+amt)),g=Math.min(255,Math.max(0,((n>>8)&255)+amt)),b=Math.min(255,Math.max(0,(n&255)+amt));return "#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0")}
+const FOTOS_LBL = ["Frente · modelo IA","Costas · modelo IA","Detalhe da peça","Foto real · still","Look completo"];
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200)}
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* ===================== CATÁLOGO ===================== */
+let filtro="todos";
+function renderNav(){
+  $("#nav").innerHTML=[{id:"todos",nome:"Novidades"},...CATEGORIAS].map(c=>`<button class="${filtro===c.id?'on':''}" onclick="setFiltro('${c.id}')">${c.nome}</button>`).join("");
+  $("#filters").innerHTML=[{id:"todos",nome:"Todos"},...CATEGORIAS].map(c=>`<button class="chip ${filtro===c.id?'on':''}" onclick="setFiltro('${c.id}')">${c.nome}</button>`).join("");
+}
+function renderCats(){
+  const cores=["#2b2b2b","#6b5a44","#3c4a3a","#1f2a44","#8a7650","#4a2f2a","#5a5a5a","#7a6a8a"];
+  $("#cats").innerHTML=CATEGORIAS.map((c,i)=>`<a class="cat" href="#catalogo" onclick="setFiltro('${c.id}')">${ph(cores[i],"",i)}<span>${c.nome}</span></a>`).join("");
+}
+function setFiltro(id){filtro=id;document.querySelector('.nav').classList.remove('open');render();document.getElementById("catalogo").scrollIntoView({behavior:"smooth"})}
+function render(){
+  renderNav();
+  let lista=PRODUTOS.filter(p=>filtro==="todos"||p.categoria===filtro);
+  const s=$("#sort").value;
+  if(s==="asc")lista.sort((a,b)=>a.preco-b.preco);
+  if(s==="desc")lista.sort((a,b)=>b.preco-a.preco);
+  if(s==="new")lista.sort((a,b)=>b.novo-a.novo);
+  $("#catTitle").textContent=filtro==="todos"?"Todos os produtos":CATEGORIAS.find(c=>c.id===filtro).nome;
+  $("#grid").innerHTML=lista.map(p=>{
+    const c=p.cores[0];
+    const tag=p.precoAntigo?`<span class="tag sale">-${Math.round((1-p.preco/p.precoAntigo)*100)}%</span>`:(p.tag?`<span class="tag">${p.tag}</span>`:"");
+    return `<article class="card" onclick="openProduct('${p.id}')">
+      <div class="img">${tag}${ph(c.hex,"Foto real + modelo IA",0)}<div class="ph b" style="background-image:linear-gradient(200deg,${shade(c.hex,30)},${c.hex})"><i>Detalhe</i></div></div>
+      <div class="brand">${p.marca}</div><div class="name">${p.nome}</div>
+      <div class="price">${p.precoAntigo?`<s>${brl(p.precoAntigo)}</s>`:""}${brl(p.preco)}</div>
+      <div class="inst">ou 10x de ${brl(p.preco/10)} sem juros</div>
+      <div class="swatches">${p.cores.map(x=>`<span class="sw" style="background:${x.hex}" title="${x.nome}"></span>`).join("")}</div>
+    </article>`}).join("");
+}
+
+/* ===================== PRODUTO ===================== */
+let sel={};
+function openProduct(id){
+  const p=PRODUTOS.find(x=>x.id===id);
+  sel={p,cor:0,tam:null,foto:0};
+  drawProduct();
+  $("#pModal").classList.add("on");$("#ov").classList.add("on");
+}
+function drawProduct(){
+  const {p,cor,tam,foto}=sel, c=p.cores[cor], tx={...COPY_PADRAO,...(p.copy||{})};
+  const qtd=tam?p.estoque[tam]:null;
+  $("#pBody").innerHTML=`<div class="pdp">
+    <div class="gal">
+      <div class="thumbs">${FOTOS_LBL.map((l,i)=>`<div class="${i===foto?'on':''}" onclick="sel.foto=${i};drawProduct()">${ph(c.hex,"",i).replace('class="ph"',`class="ph ${i===foto?'on':''}"`)}</div>`).join("")}</div>
+      <div class="main-img" onclick="this.classList.toggle('zoom')" onmousemove="zm(event,this)">${ph(c.hex,FOTOS_LBL[foto]+" · "+c.nome,foto)}</div>
+      <div class="disc">Toque na imagem para ampliar. ${p.modelo}.</div>
+    </div>
+    <div class="pinfo">
+      <div class="brand">${p.marca}</div>
+      <h3>${p.nome}</h3>
+      <p class="hook">${tx.frase}</p>
+      <div class="price">${p.precoAntigo?`<s>${brl(p.precoAntigo)}</s>`:""}${brl(p.preco)}</div>
+      <div class="inst">10x de ${brl(p.preco/10)} sem juros · ${brl(p.preco*.95)} no Pix</div>
+
+      <div class="lbl"><span>Cor: ${c.nome}</span></div>
+      <div class="colors">${p.cores.map((x,i)=>`<button class="${i===cor?'on':''}" style="background:${x.hex}" title="${x.nome}" onclick="sel.cor=${i};sel.foto=0;drawProduct()"></button>`).join("")}</div>
+
+      <div class="lbl"><span>Tamanho${tam?": "+tam:""}</span>${p.tamanhos!==UNICO?`<a href="#" onclick="event.preventDefault();toast('Guia de medidas — tabela a definir')">Guia de medidas</a>`:""}</div>
+      <div class="sizes">${p.tamanhos.map(t=>`<button class="${t===tam?'on':''}" ${!p.estoque[t]?'disabled':''} onclick="sel.tam='${t}';drawProduct()">${t}</button>`).join("")}</div>
+      <div class="stock">${qtd&&qtd<=2?`Restam apenas ${qtd} neste tamanho`:""}</div>
+
+      <button class="btn block" style="margin-top:14px" ${tam?"":"disabled"} onclick="addBag()">${tam?"Adicionar à sacola":"Selecione um tamanho"}</button>
+      <div class="cep"><input placeholder="Calcular frete: digite seu CEP" maxlength="9"><button class="chip" onclick="toast('Frete — integração Correios/Melhor Envio')">OK</button></div>
+
+      <div class="tabs">
+        <details open><summary>Descrição</summary><p>${tx.descricao}</p></details>
+        <details><summary>Detalhes e composição</summary><ul>${tx.detalhes.map(d=>`<li>${d}</li>`).join("")}</ul></details>
+        <details><summary>Como usar</summary><p>${tx.comoUsar}</p></details>
+        <details><summary>Cuidados</summary><p>${tx.cuidados}</p></details>
+        <details><summary>Trocas e autenticidade</summary><p>Produto original com nota fiscal. Primeira troca grátis em até 7 dias após o recebimento.</p></details>
+      </div>
+    </div></div>`;
+}
+function zm(e,el){if(!el.classList.contains("zoom"))return;const r=el.getBoundingClientRect();el.firstElementChild.style.transformOrigin=`${(e.clientX-r.left)/r.width*100}% ${(e.clientY-r.top)/r.height*100}%`}
+
+/* ===================== SACOLA ===================== */
+let bag=store.get("bag",[]);
+function saveBag(){store.set("bag",bag);$("#bagCount").textContent=bag.reduce((s,i)=>s+i.q,0)}
+function addBag(){
+  const {p,cor,tam}=sel, key=p.id+cor+tam, ex=bag.find(i=>i.key===key);
+  if(ex){if(ex.q<p.estoque[tam])ex.q++;else return toast("Estoque máximo atingido")}
+  else bag.push({key,id:p.id,cor,tam,q:1});
+  saveBag();closeAll();openBag();
+}
+function openBag(){drawBag();$("#bag").classList.add("on");$("#ov").classList.add("on")}
+function totals(){const sub=bag.reduce((s,i)=>s+PRODUTOS.find(p=>p.id===i.id).preco*i.q,0);return{sub,frete:sub>=999||!sub?0:39.9}}
+function drawBag(){
+  if(!bag.length){$("#bagItems").innerHTML=`<div class="empty">Sua sacola está vazia.</div>`;$("#bagFoot").innerHTML=`<button class="btn block" onclick="closeAll()">Continuar comprando</button>`;return}
+  $("#bagItems").innerHTML=bag.map((i,k)=>{const p=PRODUTOS.find(x=>x.id===i.id),c=p.cores[i.cor];
+    return `<div class="line">${ph(c.hex,"",0)}<div class="info"><div>${p.nome}</div><div class="meta">${c.nome} · ${i.tam}</div>
+    <div class="qty"><button onclick="chg(${k},-1)">−</button><span>${i.q}</span><button onclick="chg(${k},1)">+</button></div><button class="rm" onclick="chg(${k},-99)">remover</button></div>
+    <div class="price">${brl(p.preco*i.q)}</div></div>`}).join("");
+  const {sub,frete}=totals();
+  $("#bagFoot").innerHTML=`<div class="row"><span>Subtotal</span><span>${brl(sub)}</span></div>
+    <div class="row"><span>Frete</span><span>${frete?brl(frete):"Grátis"}</span></div>
+    <div class="row total"><span>Total</span><span>${brl(sub+frete)}</span></div>
+    <button class="btn block" onclick="openCheckout()">Finalizar compra</button>`;
+}
+function chg(k,d){const i=bag[k],max=PRODUTOS.find(p=>p.id===i.id).estoque[i.tam];i.q=Math.min(max,i.q+d);if(i.q<=0)bag.splice(k,1);saveBag();drawBag()}
+
+/* ===================== CHECKOUT (layout) =====================
+   Integração real: Mercado Pago Checkout Pro / PagSeguro / WooCommerce.
+   Em finalizar() o pedido deve ser enviado ao backend que cria a preferência de pagamento. */
+let pay="pix";
+function openCheckout(){closeAll();drawCheckout();$("#cModal").classList.add("on");$("#ov").classList.add("on")}
+function drawCheckout(){
+  const {sub,frete}=totals(), desc=pay==="pix"?sub*.05:0;
+  const notas={pix:"QR Code gerado na próxima etapa. 5% de desconto aplicado.",cartao:"Até 10x sem juros. Pagamento processado em ambiente seguro.",boleto:"Vencimento em 3 dias úteis. Pedido enviado após compensação."};
+  $("#cBody").innerHTML=`<div class="co">
+    <form class="co-f" onsubmit="event.preventDefault();finalizar()">
+      <h4>1. Seus dados</h4>
+      <div class="fields"><div class="field full"><input required placeholder="Nome completo"></div><div class="field"><input required type="email" placeholder="E-mail"></div><div class="field"><input required placeholder="WhatsApp"></div><div class="field full"><input required placeholder="CPF"></div></div>
+      <h4>2. Entrega</h4>
+      <div class="fields"><div class="field"><input required placeholder="CEP"></div><div class="field"><input required placeholder="Número"></div><div class="field full"><input required placeholder="Endereço"></div><div class="field"><input placeholder="Complemento"></div><div class="field"><input required placeholder="Cidade / UF"></div></div>
+      <h4>3. Pagamento</h4>
+      <div class="pay">${["pix","cartao","boleto"].map(m=>`<button type="button" class="${pay===m?'on':''}" onclick="pay='${m}';drawCheckout()">${{pix:"Pix",cartao:"Cartão",boleto:"Boleto"}[m]}</button>`).join("")}</div>
+      <p class="pay-note">${notas[pay]}</p>
+      <button class="btn block" style="margin-top:22px">Pagar ${brl(sub+frete-desc)}</button>
+    </form>
+    <div class="co-s">
+      <h4>Resumo</h4>
+      ${bag.map(i=>{const p=PRODUTOS.find(x=>x.id===i.id);return `<div class="row"><span>${i.q}× ${p.nome} (${i.tam})</span><span>${brl(p.preco*i.q)}</span></div>`}).join("")}
+      <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+      <div class="row"><span>Subtotal</span><span>${brl(sub)}</span></div>
+      <div class="row"><span>Frete</span><span>${frete?brl(frete):"Grátis"}</span></div>
+      ${desc?`<div class="row"><span>Desconto Pix</span><span>−${brl(desc)}</span></div>`:""}
+      <div class="row total"><span>Total</span><span>${brl(sub+frete-desc)}</span></div>
+      <input placeholder="Cupom de desconto" style="width:100%;padding:12px;border:1px solid var(--line);font:inherit">
+    </div></div>`;
+}
+function finalizar(){bag=[];saveBag();closeAll();toast("Pedido simulado! (pagamento real a integrar)")}
+
+function closeAll(){["#ov","#bag","#pModal","#cModal"].forEach(s=>$(s).classList.remove("on"))}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAll()});
+
+renderCats();render();saveBag();
+</script>
+</body>
+</html>
