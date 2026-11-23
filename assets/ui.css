@@ -132,9 +132,13 @@ html[data-theme="dark"] .card .foto{background:repeating-linear-gradient(45deg,#
 .flip .front{transform:rotateY(180deg);color:var(--ink)}
 .flip .front .card{height:100%;aspect-ratio:auto;box-shadow:none;border-radius:0}
 .flip .back-content svg{width:18cqw;height:18cqw;flex:none}
+.flip .back-content{gap:3.4cqw;padding:7cqw 8cqw}
+.flip .bimg{width:100%;aspect-ratio:1/1;flex:none;border-radius:3cqw;overflow:hidden;background:#e9eceb;display:flex}
+.flip .bimg img{width:100%;height:100%;object-fit:contain;display:block}
+.flip .bimg.lado img{width:50%}
 .flip .bk{font-size:3.6cqw;letter-spacing:.22em;text-transform:uppercase;color:#8fe3d6;font-weight:700}
-.flip .bn{font-size:8.6cqw;line-height:1.1}
-.flip .bm{font-size:10cqw;font-weight:800;color:#e8833a;line-height:1}
+.flip .bn{font-size:7.6cqw;line-height:1.1}
+.flip .bm{font-size:9cqw;font-weight:800;color:#e8833a;line-height:1}
 .flip .bd{font-size:4.2cqw;color:#8fb8b3;animation:ae-pulsa 2.4s ease-in-out infinite}
 @keyframes ae-pulsa{50%{opacity:.4}}
 .card .rodape{display:flex;align-items:center;gap:4cqw;margin-top:3cqw}

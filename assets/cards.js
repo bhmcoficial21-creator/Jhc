@@ -15,8 +15,12 @@ function concluir(gid,idx){
   return `<label class="container conc"><input type="checkbox" data-k="${k}"${on?" checked":""}><div class="checkmark"></div><span>Concluir</span></label>`;
 }
 /* Cartão que vira (Uiverse: ElSombrero2/tricky-robin-67): frente com o nome, verso com o exercício */
-function virar(c,h){
-  return `<div class="flip" tabindex="0" role="button" aria-label="Virar o cartão: ${esc(c.nome)}"><div class="content"><div class="back"><div class="back-content"><svg viewBox="0 0 24 24" fill="none" stroke="#8fe3d6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2.2"/><path d="M12 7v7M5 5l7 3 7-3M12 14l-4 7M12 14l4 7"/></svg><span class="bk">Movimento</span><strong class="bn">${esc(c.nome)}</strong>${c.medida?`<span class="bm">${esc(c.medida)}</span>`:""}<span class="bd">Toque para ver o exercício ›</span></div></div><div class="front">${h}</div></div></div>`;
+function virar(c,h,gid){
+  const imgs=[].concat(IMG_EX[gid+"|"+c.nome]||IMG_EX[c.nome]||[]);
+  const lado=IMG_LADO.includes(c.nome), mostra=lado?imgs:imgs.slice(0,1);
+  const foto=mostra.length?`<div class="bimg${lado?" lado":""}">${mostra.map(f=>`<img src="assets/img/${f}" alt="${esc(c.nome)}">`).join("")}</div>`
+    :`<svg viewBox="0 0 24 24" fill="none" stroke="#8fe3d6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2.2"/><path d="M12 7v7M5 5l7 3 7-3M12 14l-4 7M12 14l4 7"/></svg>`;
+  return `<div class="flip" tabindex="0" role="button" aria-label="Virar o cartão: ${esc(c.nome)}"><div class="content"><div class="back"><div class="back-content">${foto}<span class="bk">Movimento</span><strong class="bn">${esc(c.nome)}</strong>${c.medida?`<span class="bm">${esc(c.medida)}</span>`:""}<span class="bd">Toque para ver o exercício ›</span></div></div><div class="front">${h}</div></div></div>`;
 }
 function renderCards(g, el){
   const plano = document.body.classList.contains("export");
@@ -27,6 +31,6 @@ function renderCards(g, el){
           : c.t==="fim-fixo" ? `<div class="card fim"><h3 style="font-size:11cqw">Pronto.<br>Repita sempre que a fisgada voltar.</h3><p class="peq">${esc(AVISO)}</p></div>`
           : cardHTML(c,g.id,i+1,plano);
     h = h.replace(/<div class="card([^"]*)">/, `<div class="card$1" data-i="${i+1}"><span class="n">${i+1}/${cards.length}</span>`);
-    return (c.t==="ex" && !plano) ? virar(c,h) : h;
+    return (c.t==="ex" && !plano) ? virar(c,h,g.id) : h;
   }).join("");
 }
