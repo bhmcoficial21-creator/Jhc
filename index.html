@@ -3,62 +3,66 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NOME DA LOJA — Moda de Grife</title>
-<!-- TEMPLATE v0.1 — base do e-commerce. Ver BRIEFING_LOJA.md -->
+<title>CHEFIINHO DAS GRIFES — Moda de Grife</title>
+<!-- TEMPLATE v0.4 — fotos reais dos produtos (pasta img/) + espaço para modelo IA — base do e-commerce. Ver BRIEFING_LOJA.md -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f5f1; --surface:#ffffff; --ink:#111; --muted:#777; --line:#e4e0d9;
-  --accent:#111; --accent-ink:#fff; --gold:#b89b5e; --sale:#b3261e;
+  --bg:#0f0f0e; --surface:#1a1917; --ink:#f2efe9; --muted:#9b968d; --line:#2e2c29;
+  --accent:#c9a24a; --accent-ink:#111; --gold:#c9a24a; --sale:#c0392b;
+  --concrete:#3b3935; --concrete-2:#55524c; --led:#ffe7b0;
   --radius:2px; --serif:'Cormorant Garamond',serif; --sans:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased}
+body{background:var(--bg) radial-gradient(ellipse at top,#1d1c1a,transparent 70%);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1320px;margin:0 auto;padding:0 16px}
 
 /* barra topo */
-.topbar{background:var(--ink);color:#fff;font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:9px 16px}
+.topbar{background:#000;color:var(--gold);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:9px 16px}
 
 /* header */
-header{position:sticky;top:0;z-index:40;background:rgba(247,245,241,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:40;background:rgba(15,15,14,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .hdr{display:flex;align-items:center;justify-content:space-between;height:64px}
-.logo{font-family:var(--serif);font-size:26px;letter-spacing:.18em;font-weight:600}
+.logo{font-family:var(--serif);font-size:clamp(16px,2.4vw,24px);letter-spacing:.14em;font-weight:600}.logo b{color:var(--gold);font-weight:600}.logo{display:flex;align-items:center;gap:8px}.logo svg{width:22px;height:22px;color:var(--gold);flex:none}
 .nav{display:flex;gap:26px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
 .nav button{padding:6px 0;border-bottom:1px solid transparent}
 .nav button.on,.nav button:hover{border-color:var(--ink)}
 .icons{display:flex;gap:18px;align-items:center}
 .bag-btn{position:relative;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
-.bag-count{position:absolute;top:-8px;right:-14px;background:var(--ink);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:grid;place-items:center}
+.bag-count{position:absolute;top:-8px;right:-14px;background:var(--accent);color:#111;border-radius:50%;width:18px;height:18px;font-size:10px;display:grid;place-items:center}
 .menu-btn{display:none;font-size:22px}
 
 /* hero */
 .hero{position:relative;height:78vh;min-height:460px;display:grid;place-items:center;text-align:center;color:#fff;
-  background:linear-gradient(160deg,#1c1c1c,#3a342b 60%,#8a7650)}
-.hero::after{content:"FOTO / VÍDEO DE CAMPANHA";position:absolute;bottom:14px;right:16px;font-size:10px;letter-spacing:.2em;opacity:.5}
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,231,176,.18),transparent 55%),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 2px,transparent 2px 7px),
+  linear-gradient(180deg,#4a4741,#2a2825 70%,#151413)}
+.hero::before{content:"";position:absolute;top:16%;left:8%;right:8%;height:4px;border-radius:4px;background:linear-gradient(90deg,#777,#ddd,#777);box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.hero::after{content:"FOTO DE CAMPANHA · ARARA NA PAREDE DE CONCRETO";position:absolute;bottom:14px;right:16px;font-size:10px;letter-spacing:.2em;opacity:.5}
 .hero small{font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.8}
 .hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,8vw,96px);line-height:1;margin:14px 0 26px}
 .btn{display:inline-block;padding:15px 34px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:var(--radius);transition:.2s}
 .btn:hover{opacity:.85}
-.btn.light{background:#fff;color:var(--ink)}
+.btn.light{background:var(--gold);color:#111}
 .btn.block{display:block;width:100%;text-align:center}
 .btn:disabled{opacity:.35;cursor:not-allowed}
 
 /* categorias */
-.sec{padding:64px 0}
+.sec{padding-top:64px;padding-bottom:64px}
 .sec-h{display:flex;justify-content:space-between;align-items:end;margin-bottom:26px;gap:16px;flex-wrap:wrap}
 .sec-h h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4vw,40px)}
 .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .cat{aspect-ratio:3/4;position:relative;overflow:hidden;border-radius:var(--radius);display:flex;align-items:end;padding:18px;color:#fff;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
 .cat span{position:relative;z-index:1}
-.cat .ph{position:absolute;inset:0;transition:transform .6s}
+.cat .ph{position:absolute;inset:0;transition:transform .6s}.cat::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.7))}.cat .wm{display:none}
 .cat:hover .ph{transform:scale(1.05)}
 
 /* filtros */
 .filters{display:flex;gap:8px;flex-wrap:wrap}
 .chip{padding:8px 14px;border:1px solid var(--line);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:40px;background:var(--surface)}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.on{background:var(--gold);color:#111;border-color:var(--gold)}
 select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 
 /* grid produtos */
@@ -66,9 +70,9 @@ select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line)
 .card{cursor:pointer}
 .card .img{aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:var(--radius);margin-bottom:12px}
 .card .img .ph{position:absolute;inset:0;transition:opacity .4s}
-.card .img .ph.b{opacity:0}
+.card .img .ph.b{opacity:0}.card .img .ph.b>.ph{position:absolute;inset:0}
 .card:hover .img .ph.b{opacity:1}
-.tag{position:absolute;top:10px;left:10px;z-index:2;background:#fff;color:var(--ink);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 8px}
+.tag{position:absolute;top:10px;left:10px;z-index:2;background:var(--gold);color:#111;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 8px}
 .tag.sale{background:var(--sale);color:#fff}
 .card .brand{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .card .name{font-size:14px;margin:4px 0}
@@ -78,9 +82,32 @@ select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line)
 .swatches{display:flex;gap:5px;margin-top:8px}
 .sw{width:12px;height:12px;border-radius:50%;border:1px solid var(--line)}
 
+/* foto real */
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph{position:relative}
+.ph.soon{background:repeating-linear-gradient(135deg,#1c1b19 0 12px,#211f1d 12px 24px);border:1px dashed #4a463f}
+.ph.soon i{color:var(--gold);mix-blend-mode:normal;line-height:1.6}
+.thumbs .ph.soon i{font-size:6px;letter-spacing:.1em;padding:2px}
 /* placeholder de foto */
 .ph{background-size:cover;background-position:center;display:grid;place-items:center}
 .ph i{font-style:normal;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center;padding:8px;mix-blend-mode:difference}
+
+/* cenário padrão das fotos (igual ao Instagram) */
+.scene{position:absolute;inset:0;overflow:hidden}
+.scene.rack{background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 9px),linear-gradient(180deg,var(--concrete-2),var(--concrete) 70%,#2a2826)}
+.scene.rack::before{content:"";position:absolute;top:12%;left:6%;right:6%;height:3px;background:linear-gradient(90deg,#888,#e5e5e5,#888)}
+.scene.shelf{background:linear-gradient(180deg,#121212,#1c1b1a)}
+.scene.shelf::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 30%,#0a0a0a 30% 32%,rgba(255,231,176,.35) 32% 32.6%,transparent 32.6% 33.33%)}
+.scene .piece{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:58%;aspect-ratio:1/1.1;border-radius:6px 6px 4px 4px;box-shadow:0 18px 30px rgba(0,0,0,.45)}
+.scene.shelf .piece{width:62%;aspect-ratio:2.6/1;top:62%;border-radius:40% 55% 12px 12px;box-shadow:0 10px 18px rgba(0,0,0,.6),0 -6px 24px rgba(255,231,176,.15)}
+.scene i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-style:normal;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.wm{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:8px;letter-spacing:.2em;color:rgba(255,255,255,.35)}
+
+/* faixa de marcas */
+.brands{overflow:hidden;border-bottom:1px solid var(--line);background:#000}
+.brands div{display:flex;gap:48px;white-space:nowrap;padding:16px 0;animation:mq 30s linear infinite;width:max-content;font-family:var(--serif);font-size:20px;letter-spacing:.2em;color:var(--muted)}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.brands div{animation:none}}
 
 /* faixa diferenciais */
 .perks{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0;text-align:center;font-size:12px;letter-spacing:.06em}
@@ -95,7 +122,7 @@ select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line)
 .drawer-b{flex:1;overflow:auto;padding:20px}
 .drawer-f{padding:20px;border-top:1px solid var(--line)}
 .line{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
-.line .ph{width:76px;aspect-ratio:4/5;flex:none}
+.line .ph{width:76px;aspect-ratio:4/5;flex:none;overflow:hidden}
 .line .info{flex:1;font-size:13px}
 .line .meta{color:var(--muted);font-size:12px;margin:3px 0 8px}
 .qty{display:inline-flex;border:1px solid var(--line)}
@@ -114,7 +141,7 @@ select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line)
 .gal{display:grid;grid-template-columns:64px 1fr;gap:10px;padding:16px}
 .thumbs{display:flex;flex-direction:column;gap:8px}
 .thumbs .ph{aspect-ratio:4/5;cursor:pointer;opacity:.5;border:1px solid transparent}
-.thumbs .ph.on{opacity:1;border-color:var(--ink)}
+.thumbs .ph.on{opacity:1;border-color:var(--gold)}
 .main-img{aspect-ratio:4/5;overflow:hidden;cursor:zoom-in;position:relative}
 .main-img .ph{position:absolute;inset:0;transition:transform .2s}
 .main-img.zoom .ph{transform:scale(2)}
@@ -128,11 +155,11 @@ select{font:inherit;font-size:12px;padding:8px 10px;border:1px solid var(--line)
 .lbl a{text-decoration:underline;letter-spacing:.06em;text-transform:none;color:var(--muted)}
 .colors{display:flex;gap:10px}
 .colors button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);outline-offset:3px}
-.colors button.on{outline:1px solid var(--ink)}
+.colors button.on{outline:1px solid var(--gold)}
 .sizes{display:flex;flex-wrap:wrap;gap:8px}
 .sizes button{min-width:48px;height:42px;padding:0 10px;border:1px solid var(--line);font-size:13px}
-.sizes button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.sizes button:disabled{color:#bbb;text-decoration:line-through;cursor:not-allowed}
+.sizes button.on{background:var(--gold);color:#111;border-color:var(--gold)}
+.sizes button:disabled{color:#555;text-decoration:line-through;cursor:not-allowed}
 .stock{font-size:12px;color:var(--sale);margin-top:8px;min-height:16px}
 .model-note{font-size:12px;color:var(--muted);margin-top:6px}
 .tabs{margin-top:26px;border-top:1px solid var(--line)}
@@ -140,7 +167,7 @@ details{border-bottom:1px solid var(--line);padding:15px 0}
 summary{cursor:pointer;list-style:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between}
 summary::after{content:"+"}
 details[open] summary::after{content:"–"}
-details p,details li{font-size:14px;line-height:1.7;color:#444;margin-top:10px}
+details p,details li{font-size:14px;line-height:1.7;color:#cfcac1;margin-top:10px}
 details ul{padding-left:18px}
 .cep{display:flex;gap:8px;margin-top:14px}
 .cep input,.field input,.field select{flex:1;padding:12px;border:1px solid var(--line);font:inherit;font-size:13px;width:100%;background:var(--surface);color:var(--ink)}
@@ -155,11 +182,11 @@ details ul{padding-left:18px}
 .field.full{grid-column:1/-1}
 .pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .pay button{border:1px solid var(--line);padding:14px 8px;font-size:12px;letter-spacing:.08em;background:var(--surface)}
-.pay button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.pay button.on{border-color:var(--gold);background:var(--gold);color:#111}
 .pay-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
 
 /* newsletter e rodapé */
-.news{background:var(--ink);color:#fff;text-align:center;padding:64px 16px}
+.news{background:#000;color:#fff;border-top:1px solid var(--line);text-align:center;padding:64px 16px}
 .news h2{font-family:var(--serif);font-weight:500;font-size:36px;margin-bottom:10px}
 .news p{opacity:.7;font-size:14px;margin-bottom:22px}
 .news form{display:flex;max-width:440px;margin:0 auto;gap:8px}
@@ -171,7 +198,7 @@ footer{padding:48px 0 24px;font-size:13px}
 .copy{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
 .wa{position:fixed;bottom:18px;right:18px;z-index:45;width:54px;height:54px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2)}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;font-size:13px;opacity:0;transition:.3s;z-index:90;pointer-events:none}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gold);color:#111;padding:12px 20px;font-size:13px;opacity:0;transition:.3s;z-index:90;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
 
 /* mobile */
@@ -179,6 +206,10 @@ footer{padding:48px 0 24px;font-size:13px}
   .nav{display:none;position:absolute;top:64px;left:0;right:0;background:var(--bg);flex-direction:column;padding:16px;gap:14px;border-bottom:1px solid var(--line)}
   .nav.open{display:flex}
   .menu-btn{display:block}
+  .logo{letter-spacing:.06em;font-size:15px;gap:5px}
+  .logo svg{width:16px;height:16px}
+  .hdr{gap:10px}
+  .bag-btn{font-size:11px;margin-right:8px}
   .cats{grid-template-columns:repeat(2,1fr)}
   .grid{grid-template-columns:repeat(2,1fr);gap:22px 10px}
   .perks{grid-template-columns:repeat(2,1fr)}
@@ -198,12 +229,12 @@ footer{padding:48px 0 24px;font-size:13px}
 </head>
 <body>
 
-<div class="topbar">Frete grátis acima de R$ 999 · Até 10x sem juros · 100% original</div>
+<div class="topbar">Artigos de luxo premium · Produtos legítimos e originais ® · +2 mil clientes satisfeitos</div>
 
 <header>
   <div class="wrap hdr">
     <button class="menu-btn" onclick="document.querySelector('.nav').classList.toggle('open')" aria-label="Menu">☰</button>
-    <a class="logo" href="#">NOME DA LOJA</a>
+    <a class="logo" href="#"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8z"/></svg><span>CHEFIINHO <b>DAS GRIFES</b></span></a>
     <nav class="nav" id="nav"></nav>
     <div class="icons">
       <button class="bag-btn" onclick="openBag()">Sacola <span class="bag-count" id="bagCount">0</span></button>
@@ -213,11 +244,13 @@ footer{padding:48px 0 24px;font-size:13px}
 
 <section class="hero">
   <div>
-    <small>Nova coleção · Drop 01</small>
-    <h1>Vista o que<br>poucos têm.</h1>
+    <small>Nike · Moncler · Boss · Lacoste · Diesel · Prada</small>
+    <h1>Luxo de verdade.<br>Original de verdade.</h1>
     <a class="btn light" href="#catalogo">Comprar agora</a>
   </div>
 </section>
+
+<div class="brands" aria-label="Marcas"><div><span>NIKE</span><span>MONCLER</span><span>BOSS</span><span>LACOSTE</span><span>FRED PERRY</span><span>EA7</span><span>DIESEL</span><span>PRADA</span><span>GUCCI</span><span>ARMANI EXCHANGE</span><span>CALVIN KLEIN</span><span>TOMMY HILFIGER</span><span>MIZUNO</span><span>ADIDAS</span><span>NIKE</span><span>MONCLER</span><span>BOSS</span><span>LACOSTE</span><span>FRED PERRY</span><span>EA7</span><span>DIESEL</span><span>PRADA</span><span>GUCCI</span><span>ARMANI EXCHANGE</span><span>CALVIN KLEIN</span><span>TOMMY HILFIGER</span><span>MIZUNO</span><span>ADIDAS</span></div></div>
 
 <section class="sec wrap">
   <div class="sec-h"><h2>Categorias</h2></div>
@@ -226,9 +259,9 @@ footer{padding:48px 0 24px;font-size:13px}
 
 <section class="wrap">
   <div class="perks">
-    <div><b>Originais</b>Garantia de autenticidade</div>
+    <div><b>100% legítimo</b>Garantia de originalidade</div>
     <div><b>Envio rápido</b>Para todo o Brasil</div>
-    <div><b>Troca fácil</b>Primeira troca grátis</div>
+    <div><b>+2 mil clientes</b>Satisfeitos em todo o Brasil</div>
     <div><b>Pix</b>5% de desconto</div>
   </div>
 </section>
@@ -258,12 +291,12 @@ footer{padding:48px 0 24px;font-size:13px}
 
 <footer class="wrap">
   <div class="foot">
-    <div><div class="logo" style="font-size:20px">NOME DA LOJA</div><p style="color:var(--muted);margin-top:10px;max-width:280px">Moda de grife com curadoria. Peças originais, entrega para todo o Brasil.</p></div>
+    <div><div class="logo" style="font-size:20px"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8z"/></svg><span>CHEFIINHO <b>DAS GRIFES</b></span></div><p style="color:var(--muted);margin-top:10px;max-width:280px">Moda de grife com curadoria. Peças originais, entrega para todo o Brasil.</p></div>
     <div><h5>Loja</h5><ul><li>Lançamentos</li><li>Tênis</li><li>Conjuntos</li><li>Acessórios</li></ul></div>
     <div><h5>Ajuda</h5><ul><li>Trocas e devoluções</li><li>Guia de medidas</li><li>Autenticidade</li><li>FAQ</li></ul></div>
-    <div><h5>Contato</h5><ul><li>WhatsApp</li><li>Instagram</li><li>contato@loja.com.br</li></ul></div>
+    <div><h5>Contato</h5><ul><li>WhatsApp</li><li>@chefiinhodasgrife</li><li>contato@chefiinhodasgrifes.com.br</li></ul></div>
   </div>
-  <div class="copy"><span>© 2026 NOME DA LOJA · CNPJ 00.000.000/0001-00</span><span>Pix · Cartão · Boleto · Site seguro (SSL)</span></div>
+  <div class="copy"><span>© 2026 CHEFIINHO DAS GRIFES · CNPJ 00.000.000/0001-00</span><span>Pix · Cartão · Boleto · Site seguro (SSL)</span></div>
 </footer>
 
 <a class="wa" href="https://wa.me/5500000000000" target="_blank" aria-label="WhatsApp">WA</a>
@@ -296,35 +329,77 @@ const CATEGORIAS = [
 const TAM_ROUPA = ["PP","P","M","G","GG"], TAM_TENIS = ["37","38","39","40","41","42","43","44"], UNICO=["Único"];
 
 const PRODUTOS = [
-  {id:"tn-001",nome:"Tênis Runner Pro",marca:"Grife A",categoria:"tenis",preco:1299.9,precoAntigo:1499.9,tag:"Lançamento",novo:1,
-   tamanhos:TAM_TENIS,estoque:{"37":0,"38":2,"39":5,"40":1,"41":4,"42":3,"43":0,"44":2},
-   cores:[{nome:"Preto",hex:"#1a1a1a"},{nome:"Off-white",hex:"#e9e4da"}],
+  /* ===== PRODUTOS COM FOTO REAL (enviadas em 06/11) — preços/estoques ainda de exemplo ===== */
+  {id:"tn-270",nome:"Nike Air Max 270",marca:"Nike",categoria:"tenis",preco:899.9,tag:"Lançamento",novo:2,
+   tamanhos:TAM_TENIS,estoque:{"37":1,"38":2,"39":3,"40":3,"41":3,"42":2,"43":1,"44":1},
+   cores:[{nome:"Branco/Azul royal",hex:"#2a3fa8",fotos:["img/am270-branco-azul.webp","img/am270-lancamento.webp"]},
+          {nome:"Preto total",hex:"#151515",fotos:["img/am270-preto.webp"]},
+          {nome:"Branco/Preto/Turquesa",hex:"#3aa6b9",fotos:["img/am270-branco-turquesa.webp"]},
+          {nome:"Branco/Preto",hex:"#f1f0ec",fotos:["img/am270-branco-preto.webp"]},
+          {nome:"Preto/Branco",hex:"#2b2b2b",fotos:["img/am270-preto-branco.webp"]}],
+   fotos:["img/am270-vitrine.webp"],modelo:"Foto do produto em cenário ilustrativo",
+   copy:{frase:"[MONTANHAR] O maior Air da Nike, direto na sua passada.",
+     detalhes:["Unidade Air de 270° no calcanhar","Cabedal em mesh respirável","Solado de borracha","Produto 100% original com nota fiscal"]}},
+  {id:"cm-ea7",nome:"Camiseta EA7 Logo Circular",marca:"EA7 Emporio Armani",categoria:"camisetas",preco:399.9,novo:2,tag:"Lançamento",
+   tamanhos:TAM_ROUPA,estoque:{PP:1,P:3,M:4,G:3,GG:2},
+   cores:[{nome:"Vermelho",hex:"#a8261b",fotos:["img/ea7-vermelho.webp"]},{nome:"Branco",hex:"#f2f1ee",fotos:["img/ea7-branco.webp"]}],
+   fotos:["img/ea7-arara.webp"],modelo:"Frente e costas na foto · cenário ilustrativo",
+   copy:{detalhes:["Logo EA7 aplicado no peito","Estampa EA7 + Emporio Armani nas costas","Gola careca, malha de algodão","Produto 100% original com nota fiscal"]}},
+  {id:"cm-ck",nome:"Camiseta Box Logo",marca:"Calvin Klein Jeans",categoria:"camisetas",preco:349.9,novo:1,
+   tamanhos:TAM_ROUPA,estoque:{PP:1,P:2,M:4,G:3,GG:2},
+   cores:[{nome:"Off-white",hex:"#efece4"},{nome:"Preto",hex:"#151515"},{nome:"Azul claro",hex:"#a9cde8"},{nome:"Vermelho",hex:"#b3261e"}],
+   fotos:["img/ck-arara.webp"],modelo:"Todas as cores na foto · cenário ilustrativo"},
+  {id:"cm-lacoste",nome:"Camiseta LCST Big Logo",marca:"Lacoste",categoria:"camisetas",preco:549.9,novo:1,tag:"Mais pedido",
+   tamanhos:TAM_ROUPA,estoque:{PP:0,P:2,M:3,G:3,GG:1},
+   cores:[{nome:"Off-white",hex:"#efece4"},{nome:"Preto",hex:"#151515"},{nome:"Verde escuro",hex:"#1e3327"}],
+   fotos:["img/lacoste-arara.webp"],modelo:"Todas as cores na foto · cenário ilustrativo",
+   copy:{detalhes:["Letras LCST em estampa grande","Crocodilo bordado no peito","Malha de algodão encorpada","Produto 100% original com nota fiscal"]}},
+  {id:"cm-gucci",nome:"Camiseta 1921 Firenze Milano",marca:"Gucci",categoria:"camisetas",preco:1890,novo:1,tag:"Exclusivo",
+   tamanhos:TAM_ROUPA,estoque:{PP:0,P:1,M:2,G:2,GG:1},
+   cores:[{nome:"Branco",hex:"#f4f4f2"}],fotos:["img/gucci-1921.webp"],modelo:"Foto do produto",
+   copy:{detalhes:["Estampa 1921 Firenze · Milano com libélula e GG","Faixa Web verde e vermelha","Etiqueta Made in Italy","Produto 100% original com nota fiscal"]}},
+  /* ===== DEMAIS PRODUTOS (vistos no Instagram, aguardando foto) ===== */
+  {id:"tn-001",nome:"Nike Shox TL",marca:"Nike",categoria:"tenis",preco:1299.9,precoAntigo:1499.9,tag:"Mais pedido",novo:1,
+   tamanhos:TAM_TENIS,estoque:{"37":1,"38":2,"39":4,"40":3,"41":4,"42":3,"43":1,"44":0},
+   cores:[{nome:"Branco/Prata",hex:"#dcdcdc"},{nome:"Preto",hex:"#1c1c1c"},{nome:"Prata metálico",hex:"#a9adb3"}],
    modelo:"Imagem com modelo digital · calçado mostrado no nº 41"},
-  {id:"cj-001",nome:"Conjunto Moletom Signature",marca:"Grife B",categoria:"conjuntos",preco:1890,tag:"Mais vendido",novo:0,
-   tamanhos:TAM_ROUPA,estoque:{PP:1,P:3,M:4,G:2,GG:0},
-   cores:[{nome:"Cinza mescla",hex:"#9a9a9a"},{nome:"Preto",hex:"#1a1a1a"},{nome:"Areia",hex:"#c8b79a"}],
-   modelo:"Modelo digital 1,72 m veste M"},
-  {id:"cm-001",nome:"Camiseta Logo Bordado",marca:"Grife A",categoria:"camisetas",preco:489.9,novo:1,
-   tamanhos:TAM_ROUPA,estoque:{PP:4,P:6,M:8,G:5,GG:3},
-   cores:[{nome:"Branco",hex:"#f4f4f2"},{nome:"Preto",hex:"#1a1a1a"}],
-   modelo:"Modelo digital 1,85 m veste G"},
-  {id:"cl-001",nome:"Calça Cargo Tech",marca:"Grife C",categoria:"calcas",preco:990,precoAntigo:1190,novo:0,
-   tamanhos:["38","40","42","44","46"],estoque:{"38":2,"40":3,"42":0,"44":2,"46":1},
-   cores:[{nome:"Verde militar",hex:"#4b5136"},{nome:"Preto",hex:"#1a1a1a"}],
-   modelo:"Modelo digital 1,80 m veste 42"},
-  {id:"sh-001",nome:"Short Nylon Monograma",marca:"Grife B",categoria:"shorts",preco:690,novo:1,tag:"Últimas peças",
+  {id:"tn-002",nome:"Mizuno Wave Prophecy",marca:"Mizuno",categoria:"tenis",preco:1199.9,novo:1,tag:"Lançamento",
+   tamanhos:TAM_TENIS,estoque:{"37":0,"38":1,"39":3,"40":2,"41":3,"42":2,"43":1,"44":1},
+   cores:[{nome:"Branco/Dourado",hex:"#efe6d2"},{nome:"Preto/Dourado",hex:"#1a1a1a"},{nome:"Preto/Prata",hex:"#2a2a2a"}],
+   modelo:"Imagem com modelo digital · calçado mostrado no nº 41"},
+  {id:"tn-003",nome:"Nike Air Max 95",marca:"Nike",categoria:"tenis",preco:999.9,novo:0,
+   tamanhos:TAM_TENIS,estoque:{"37":2,"38":2,"39":3,"40":3,"41":2,"42":2,"43":1,"44":1},
+   cores:[{nome:"Cinza/Preto",hex:"#6d6f72"},{nome:"Bege",hex:"#d8c9ab"},{nome:"Branco/Verde",hex:"#e6eee8"}],
+   modelo:"Imagem com modelo digital · calçado mostrado no nº 41"},
+  {id:"cm-001",nome:"Camiseta Logo Circular",marca:"Moncler",categoria:"camisetas",preco:689.9,novo:1,tag:"Lançamento",
+   tamanhos:TAM_ROUPA,estoque:{PP:1,P:3,M:4,G:3,GG:1},
+   cores:[{nome:"Branco",hex:"#f1f0ec"},{nome:"Preto",hex:"#1a1a1a"},{nome:"Grafite",hex:"#4a4a4a"}],
+   modelo:"Modelo digital 1,80 m veste G"},
+  {id:"pl-001",nome:"Polo Faixa Contraste",marca:"Fred Perry",categoria:"camisetas",preco:549.9,novo:0,
+   tamanhos:TAM_ROUPA,estoque:{PP:2,P:3,M:5,G:4,GG:2},
+   cores:[{nome:"Verde",hex:"#1f3a2c"},{nome:"Branco",hex:"#f1f0ec"},{nome:"Marinho",hex:"#1c2338"},{nome:"Preto",hex:"#151515"},{nome:"Vermelho",hex:"#b3221f"},{nome:"Azul claro",hex:"#a9c6e4"}],
+   modelo:"Modelo digital 1,80 m veste M"},
+  {id:"cm-002",nome:"Camiseta Logo Bordado",marca:"Diesel",categoria:"camisetas",preco:459.9,precoAntigo:529.9,novo:0,
+   tamanhos:TAM_ROUPA,estoque:{PP:0,P:2,M:3,G:3,GG:1},
+   cores:[{nome:"Vermelho",hex:"#8e1c1c"},{nome:"Preto",hex:"#151515"},{nome:"Branco",hex:"#f1f0ec"}],
+   modelo:"Modelo digital 1,80 m veste M"},
+  {id:"cj-001",nome:"Conjunto Moletom Logo",marca:"Boss",categoria:"conjuntos",preco:1590,tag:"Mais vendido",novo:0,
+   tamanhos:TAM_ROUPA,estoque:{PP:0,P:2,M:3,G:2,GG:1},
+   cores:[{nome:"Preto",hex:"#141414"}],modelo:"Modelo digital 1,80 m veste M"},
+  {id:"cj-002",nome:"Conjunto Camiseta + Short",marca:"Prada",categoria:"conjuntos",preco:1890,novo:1,tag:"Últimas peças",
    tamanhos:TAM_ROUPA,estoque:{PP:0,P:1,M:2,G:1,GG:0},
-   cores:[{nome:"Azul marinho",hex:"#1f2a44"}],modelo:"Modelo digital 1,83 m veste M"},
-  {id:"ci-001",nome:"Cinto Couro Fivela Metal",marca:"Grife A",categoria:"cintos",preco:1150,novo:0,
+   cores:[{nome:"Preto",hex:"#141414"},{nome:"Branco",hex:"#f1f0ec"}],modelo:"Modelo digital 1,80 m veste M"},
+  {id:"cl-001",nome:"Calça Cargo Tech",marca:"Armani Exchange",categoria:"calcas",preco:990,novo:0,
+   tamanhos:["38","40","42","44","46"],estoque:{"38":2,"40":3,"42":0,"44":2,"46":1},
+   cores:[{nome:"Preto",hex:"#151515"}],modelo:"Modelo digital 1,80 m veste 42"},
+  {id:"ci-001",nome:"Cinto Couro Fivela Metal",marca:"Boss",categoria:"cintos",preco:690,novo:0,
    tamanhos:["90","95","100","105"],estoque:{"90":2,"95":3,"100":3,"105":1},
-   cores:[{nome:"Preto/Dourado",hex:"#1a1a1a"},{nome:"Marrom/Prata",hex:"#5a3b25"}],modelo:"Imagem com modelo digital"},
-  {id:"bg-001",nome:"Shoulder Bag Couro",marca:"Grife C",categoria:"bolsas",preco:2490,novo:1,tag:"Lançamento",
-   tamanhos:UNICO,estoque:{"Único":3},cores:[{nome:"Preto",hex:"#1a1a1a"},{nome:"Caramelo",hex:"#a86b3c"}],
-   modelo:"Imagem com modelo digital"},
-  {id:"oc-001",nome:"Óculos Lupa Espelhado",marca:"Grife D",categoria:"oculos",preco:1390,novo:0,
+   cores:[{nome:"Preto",hex:"#151515"},{nome:"Marrom",hex:"#5a3b25"}],modelo:"Imagem com modelo digital"},
+  {id:"oc-001",nome:"Óculos Lupa Espelhado",marca:"[marca]",categoria:"oculos",preco:890,novo:0,
    tamanhos:UNICO,estoque:{"Único":4},cores:[{nome:"Prata/Azul",hex:"#8fa6c2"},{nome:"Dourado/Fogo",hex:"#c7843a"}],
    modelo:"Imagem com modelo digital"}
 ];
+/* PREÇOS E ESTOQUES ACIMA SÃO EXEMPLO — substituir pelos reais da loja. */
 /* textos padrão (placeholder) — cada produto pode ter os seus */
 const COPY_PADRAO = {
   frase:"[MONTANHAR] Frase de impacto da peça — uma linha que vende o desejo.",
@@ -337,11 +412,20 @@ const COPY_PADRAO = {
 /* ===================== UTIL ===================== */
 const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const $ = s => document.querySelector(s);
-function ph(hex, label, i=0){ // placeholder até ter foto real
+function ph(hex, label, i=0, cat){ // placeholder até ter foto real
+  if(cat){ // cenário do Instagram: vitrine LED p/ tênis, arara no concreto p/ o resto
+    const t=cat==="tenis"?"shelf":"rack";
+    return `<div class="ph scene ${t}"><div class="piece" style="background:linear-gradient(${[160,200,130][i%3]}deg,${hex},${shade(hex,i%2?40:-30)})"></div><span class="wm">@CHEFIINHODASGRIFE</span><i>${label}</i></div>`;
+  }
   const ang=[160,200,130,180,220][i%5];
   return `<div class="ph" style="background-image:linear-gradient(${ang}deg,${hex},${shade(hex,i%2?40:-30)})"><i>${label}</i></div>`;
 }
 function shade(hex,amt){let n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+amt)),g=Math.min(255,Math.max(0,((n>>8)&255)+amt)),b=Math.min(255,Math.max(0,(n&255)+amt));return "#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0")}
+/* FOTOS: cada cor pode ter fotos próprias (c.fotos) + fotos gerais do produto (p.fotos).
+   A última posição é reservada para a foto com MODELO IA (p.modeloIA ou c.modeloIA). */
+function fotosDe(p,cor){const c=p.cores[cor];return [...(c.fotos||[]),...(p.fotos||[])]}
+function img(src,alt){return `<div class="ph"><img src="${src}" alt="${alt}" loading="lazy"></div>`}
+function slotIA(p,cor){const c=p.cores[cor],src=c.modeloIA||p.modeloIA;return src?img(src,p.nome+" vestido em modelo"):`<div class="ph soon"><i>Modelo IA vestindo<br>em breve</i></div>`}
 const FOTOS_LBL = ["Frente · modelo IA","Costas · modelo IA","Detalhe da peça","Foto real · still","Look completo"];
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200)}
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -353,8 +437,8 @@ function renderNav(){
   $("#filters").innerHTML=[{id:"todos",nome:"Todos"},...CATEGORIAS].map(c=>`<button class="chip ${filtro===c.id?'on':''}" onclick="setFiltro('${c.id}')">${c.nome}</button>`).join("");
 }
 function renderCats(){
-  const cores=["#2b2b2b","#6b5a44","#3c4a3a","#1f2a44","#8a7650","#4a2f2a","#5a5a5a","#7a6a8a"];
-  $("#cats").innerHTML=CATEGORIAS.map((c,i)=>`<a class="cat" href="#catalogo" onclick="setFiltro('${c.id}')">${ph(cores[i],"",i)}<span>${c.nome}</span></a>`).join("");
+  const cores=["#e6e6e6","#151515","#f1f0ec","#151515","#1c2338","#5a3b25","#2a2a2a","#8fa6c2"];
+  $("#cats").innerHTML=CATEGORIAS.map((c,i)=>`<a class="cat" href="#catalogo" onclick="setFiltro('${c.id}')">${ph(cores[i],"",i,c.id)}<span>${c.nome}</span></a>`).join("");
 }
 function setFiltro(id){filtro=id;document.querySelector('.nav').classList.remove('open');render();document.getElementById("catalogo").scrollIntoView({behavior:"smooth"})}
 function render(){
@@ -369,7 +453,7 @@ function render(){
     const c=p.cores[0];
     const tag=p.precoAntigo?`<span class="tag sale">-${Math.round((1-p.preco/p.precoAntigo)*100)}%</span>`:(p.tag?`<span class="tag">${p.tag}</span>`:"");
     return `<article class="card" onclick="openProduct('${p.id}')">
-      <div class="img">${tag}${ph(c.hex,"Foto real + modelo IA",0)}<div class="ph b" style="background-image:linear-gradient(200deg,${shade(c.hex,30)},${c.hex})"><i>Detalhe</i></div></div>
+      <div class="img">${tag}${(()=>{const f=fotosDe(p,0);return f.length?img(f[0],p.nome)+`<div class="ph b">${f[1]?img(f[1],p.nome):slotIA(p,0)}</div>`:ph(c.hex,"Foto real",0,p.categoria)+`<div class="ph b">${ph(c.hex,"Modelo IA vestindo",1)}</div>`})()}</div>
       <div class="brand">${p.marca}</div><div class="name">${p.nome}</div>
       <div class="price">${p.precoAntigo?`<s>${brl(p.precoAntigo)}</s>`:""}${brl(p.preco)}</div>
       <div class="inst">ou 10x de ${brl(p.preco/10)} sem juros</div>
@@ -388,10 +472,12 @@ function openProduct(id){
 function drawProduct(){
   const {p,cor,tam,foto}=sel, c=p.cores[cor], tx={...COPY_PADRAO,...(p.copy||{})};
   const qtd=tam?p.estoque[tam]:null;
+  const reais=fotosDe(p,cor).map(f=>img(f,p.nome+" "+c.nome));
+  const gal=reais.length?[...reais,slotIA(p,cor)]:FOTOS_LBL.map((l,i)=>i===3?ph(c.hex,l+" · "+c.nome,i,p.categoria):ph(c.hex,l+" · "+c.nome,i));
   $("#pBody").innerHTML=`<div class="pdp">
     <div class="gal">
-      <div class="thumbs">${FOTOS_LBL.map((l,i)=>`<div class="${i===foto?'on':''}" onclick="sel.foto=${i};drawProduct()">${ph(c.hex,"",i).replace('class="ph"',`class="ph ${i===foto?'on':''}"`)}</div>`).join("")}</div>
-      <div class="main-img" onclick="this.classList.toggle('zoom')" onmousemove="zm(event,this)">${ph(c.hex,FOTOS_LBL[foto]+" · "+c.nome,foto)}</div>
+      <div class="thumbs">${gal.map((g,i)=>`<div onclick="sel.foto=${i};drawProduct()">${g.replace('class="ph',`class="ph ${i===foto?'on':''}`)}</div>`).join("")}</div>
+      <div class="main-img" onclick="this.classList.toggle('zoom')" onmousemove="zm(event,this)">${gal[foto]||gal[0]}</div>
       <div class="disc">Toque na imagem para ampliar. ${p.modelo}.</div>
     </div>
     <div class="pinfo">
@@ -436,7 +522,7 @@ function totals(){const sub=bag.reduce((s,i)=>s+PRODUTOS.find(p=>p.id===i.id).pr
 function drawBag(){
   if(!bag.length){$("#bagItems").innerHTML=`<div class="empty">Sua sacola está vazia.</div>`;$("#bagFoot").innerHTML=`<button class="btn block" onclick="closeAll()">Continuar comprando</button>`;return}
   $("#bagItems").innerHTML=bag.map((i,k)=>{const p=PRODUTOS.find(x=>x.id===i.id),c=p.cores[i.cor];
-    return `<div class="line">${ph(c.hex,"",0)}<div class="info"><div>${p.nome}</div><div class="meta">${c.nome} · ${i.tam}</div>
+    const f=fotosDe(p,i.cor);return `<div class="line">${f.length?img(f[0],p.nome):ph(c.hex,"",0)}<div class="info"><div>${p.nome}</div><div class="meta">${c.nome} · ${i.tam}</div>
     <div class="qty"><button onclick="chg(${k},-1)">−</button><span>${i.q}</span><button onclick="chg(${k},1)">+</button></div><button class="rm" onclick="chg(${k},-99)">remover</button></div>
     <div class="price">${brl(p.preco*i.q)}</div></div>`}).join("");
   const {sub,frete}=totals();
