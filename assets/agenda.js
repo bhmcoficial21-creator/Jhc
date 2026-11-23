@@ -4,6 +4,18 @@
   if (!raiz || !window.AE) return;
   var MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
   var SEM = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+  // dentro de um guia: só aparece se o guia tem exercícios, e mostra quantos a pessoa já concluiu
+  var guiaId = raiz.getAttribute("data-guia"), guia = null;
+  if (guiaId && window.MODULOS) {
+    MODULOS.forEach(function (m) { m.guias.forEach(function (g) { if (g.id === guiaId) guia = g; }); });
+    if (!guia || AE.guia(guia)[1] === 0) { raiz.parentNode.removeChild(raiz); return; }
+  }
+  function cabecalho() {
+    if (!guia) return "";
+    var r = AE.guia(guia), todos = r[0] === r[1];
+    return '<div class="agenda-t"><b>' + (todos ? "Parabéns! Guia completo." : "Terminou os exercícios?") + "</b><span>" +
+      (todos ? "Marque o dia de hoje na sua agenda." : "Você concluiu " + r[0] + " de " + r[1] + " exercícios. Ao terminar, marque o dia de hoje na agenda.") + "</span></div>";
+  }
   var h = new Date(), base = h.getFullYear() * 12 + h.getMonth(), ver = base; // mês em exibição (a*12+m)
   function p2(n) { return (n < 10 ? "0" : "") + n; }
 
@@ -19,7 +31,7 @@
         "<small>" + d + '</small><input type="checkbox" data-d="' + k + '"' + (on ? " checked" : "") + (fut ? " disabled" : "") + '><div class="checkmark"></div></label>';
     }
     var seq = AE.sequencia();
-    raiz.innerHTML =
+    raiz.innerHTML = cabecalho() +
       '<div class="agenda">' +
         '<div class="topo"><div class="mes">' + MESES[m] + " " + a + "</div>" +
         '<div class="setas"><button type="button" data-v="-1" aria-label="Mês anterior"' + (ver <= base - 12 ? " disabled" : "") + '>‹</button>' +

@@ -49,9 +49,11 @@
     ["inicio", "Início", "membros.html"],
     ["buscar", "Buscar", "membros.html#busca"],
     ["guias", "Guias", "membros.html#modulos"],
-    ["agenda", "Agenda", "membros.html#agenda"],
+    ["agenda", "Agenda", "#agenda"],
     ["progresso", "Progresso", "membros.html#progresso"]
   ];
+  // a agenda fica no fim de cada guia com exercícios (não na lista inicial)
+  if (!document.getElementById("agenda")) ITENS = ITENS.filter(function (it) { return it[0] !== "agenda"; });
   var wrap = document.createElement("div");
   wrap.className = "ae-nav-wrap";
   wrap.innerHTML = '<nav class="ae-nav" aria-label="Navegação"><div class="itens">' + ITENS.map(function (it, n) {
@@ -72,6 +74,13 @@
     if (q && q.value) { q.value = ""; q.dispatchEvent(new Event("input")); }
     var el = document.getElementById({ guias: "modulos", agenda: "agenda", progresso: "progresso" }[alvo]);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  if (!noMembros) {
+    wrap.addEventListener("click", function (e) {
+      var a = e.target.closest('a[href="#agenda"]'); if (!a) return;
+      e.preventDefault(); var ag = document.getElementById("agenda");
+      if (ag) ag.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
   if (noMembros) {
     wrap.addEventListener("click", function (e) {
@@ -99,7 +108,7 @@
       var i = e.target; if (!i.matches || !i.matches(".conc input")) return;
       if (window.AE) {
         AE.marcar(i.getAttribute("data-k"), i.checked);
-        if (i.checked) AE.diaMarcar(AE.hoje(), true); // concluiu um exercício: o dia de hoje entra na agenda
+        if (window.renderAgenda) renderAgenda(); // atualiza "você concluiu X de Y" na agenda do fim do guia
       }
     });
   }

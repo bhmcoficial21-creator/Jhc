@@ -27,7 +27,7 @@ function renderCards(g, el){
   const cards = [...g.cards];
   if (g.cards[0].t !== "checklist") cards.push({t:"seg-fixo"},{t:"fim-fixo"});
   el.innerHTML = cards.map((c,i)=>{
-    let h = c.t==="seg-fixo" ? `<div class="card seg"><h3>Desconforto leve é normal.</h3><p class="desc">Dor aguda, formigamento ou perda de força: pare e procure um profissional.</p></div>`
+    let h = c.t==="seg-fixo" ? `<div class="card seg mascote"><h3>Desconforto leve é normal.</h3><p class="desc">Dor aguda, formigamento ou perda de força: pare e procure um profissional.</p></div>`
           : c.t==="fim-fixo" ? `<div class="card fim"><h3 style="font-size:11cqw">Pronto.<br>Repita sempre que a fisgada voltar.</h3><p class="peq">${esc(AVISO)}</p></div>`
           : cardHTML(c,g.id,i+1,plano);
     h = h.replace(/<div class="card([^"]*)">/, `<div class="card$1" data-i="${i+1}"><span class="n">${i+1}/${cards.length}</span>`);
