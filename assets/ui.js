@@ -41,6 +41,7 @@
     inicio: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
     buscar: '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>',
     guias: '<rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect>',
+    agenda: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>',
     progresso: '<path d="M21 21H4.6c-1.1 0-2-.9-2-2V3"></path><path d="M19 8l-7 6-4-4-4 4"></path>'
   };
   var noMembros = !!document.getElementById("q");
@@ -48,6 +49,7 @@
     ["inicio", "Início", "membros.html"],
     ["buscar", "Buscar", "membros.html#busca"],
     ["guias", "Guias", "membros.html#modulos"],
+    ["agenda", "Agenda", "membros.html#agenda"],
     ["progresso", "Progresso", "membros.html#progresso"]
   ];
   var wrap = document.createElement("div");
@@ -68,7 +70,7 @@
       if (q) setTimeout(function () { q.focus({ preventScroll: true }); }, 350); return;
     }
     if (q && q.value) { q.value = ""; q.dispatchEvent(new Event("input")); }
-    var el = document.getElementById(alvo === "guias" ? "modulos" : "progresso");
+    var el = document.getElementById({ guias: "modulos", agenda: "agenda", progresso: "progresso" }[alvo]);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   if (noMembros) {
@@ -77,7 +79,7 @@
       e.preventDefault(); e.stopPropagation(); ir(a.getAttribute("data-ir"));
     });
     var h = location.hash.replace("#", "");
-    var mapa = { busca: "buscar", modulos: "guias", progresso: "progresso" };
+    var mapa = { busca: "buscar", modulos: "guias", agenda: "agenda", progresso: "progresso" };
     if (mapa[h]) setTimeout(function () { ir(mapa[h]); }, 900);
   }
 
@@ -95,7 +97,10 @@
     });
     lista.addEventListener("change", function (e) {
       var i = e.target; if (!i.matches || !i.matches(".conc input")) return;
-      if (window.AE) AE.marcar(i.getAttribute("data-k"), i.checked);
+      if (window.AE) {
+        AE.marcar(i.getAttribute("data-k"), i.checked);
+        if (i.checked) AE.diaMarcar(AE.hoje(), true); // concluiu um exercício: o dia de hoje entra na agenda
+      }
     });
   }
 })();

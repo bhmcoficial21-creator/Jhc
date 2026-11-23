@@ -141,21 +141,63 @@ html[data-theme="dark"] .card .foto{background:repeating-linear-gradient(45deg,#
 .card .rodape .resp{margin:0;flex:1}
 @media (prefers-reduced-motion:reduce){.flip .back::before,.flip .bd{animation:none}.flip .content{transition:none}}
 
-/* ---------- Botão concluir ---------- */
-/* From Uiverse.io by gagan-gv - https://uiverse.io/gagan-gv/unlucky-yak-4
-   MIT License, Copyright (c) gagan-gv (Gagan Chordia) */
-.conc{display:flex;align-items:center;gap:3cqw;position:relative;cursor:pointer;user-select:none;font-size:26px;flex:none;padding:6px}
-.conc input{position:absolute;opacity:0;cursor:pointer;height:0;width:0}
+/* ---------- Botão de feito (exercícios) e dias da agenda ---------- */
+/* From Uiverse.io by MikeAndrewDesigner - https://uiverse.io/MikeAndrewDesigner/jolly-gecko-33
+   MIT License, Copyright (c) MikeAndrewDesigner (Mike Andrew) */
+.conc input,.dia input{position:absolute;opacity:0;cursor:pointer;height:0;width:0}
+.conc{display:flex;align-items:center;gap:3cqw;position:relative;cursor:pointer;user-select:none;font-size:24px;flex:none;padding:6px}
 .conc span{order:-1;font-size:3.8cqw;color:var(--mut);font-weight:600}
-.conc .checkmark{position:relative;top:0;left:0;height:1.3em;width:1.3em;background:black;border-radius:50px;transition:all .7s;--spread:20px;flex:none}
-.conc input:checked ~ .checkmark{
-  background:black;
-  box-shadow:-10px -10px var(--spread) 0px #1f6f68,0 -10px var(--spread) 0px #8fe3d6,10px -10px var(--spread) 0px #d9f2ee,10px 0 var(--spread) 0px #e8833a,10px 10px var(--spread) 0px #ffb37a,0 10px var(--spread) 0px #8fe3d6,-10px 10px var(--spread) 0px #1f6f68;
+.conc .checkmark,.dia .checkmark{
+  position:relative;top:0;left:0;height:1.6em;width:1.6em;border-radius:50%;background:#ffeded38;
+  box-shadow:inset 0 0 0 0.1em #1f6f68;transition:all 0.2s ease;flex:none;opacity:.4;
 }
-.conc input:focus-visible ~ .checkmark{outline:3px solid #8fe3d6;outline-offset:3px}
-.conc .checkmark:after{content:"";position:absolute;display:none}
-.conc input:checked ~ .checkmark:after{display:block}
-.conc .checkmark:after{left:0.45em;top:0.25em;width:0.25em;height:0.5em;border:solid #f0f0f0;border-width:0 0.15em 0.15em 0;transform:rotate(45deg)}
+html[data-theme="dark"] .conc .checkmark,html[data-theme="dark"] .dia .checkmark{box-shadow:inset 0 0 0 0.1em #6cc3ba}
+.conc input:checked ~ .checkmark,.dia input:checked ~ .checkmark{
+  background:linear-gradient(144deg,#1f6f68,#8fe3d6 50%,#e8833a);box-shadow:none;opacity:.9;transition:all 0.2s ease;
+}
+.conc input:focus-visible ~ .checkmark,.dia input:focus-visible ~ .checkmark{outline:3px solid #8fe3d6;outline-offset:3px}
+.conc .checkmark:after,.dia .checkmark:after{content:"";position:absolute;display:none}
+.conc input:checked ~ .checkmark:after,.dia input:checked ~ .checkmark:after{display:block}
+.conc .checkmark:after,.dia .checkmark:after{left:0.61em;top:0.43em;width:0.25em;height:0.5em;border:solid rgb(255,255,255);border-width:0 0.15em 0.15em 0;transform:rotate(45deg)}
+
+/* ---------- Agenda de hábito ---------- */
+.agenda{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:8px 0 6px}
+.agenda .topo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.agenda .mes{font-weight:800;font-size:1.15rem}
+.agenda .setas{display:flex;gap:8px}
+.agenda .setas button{background:none;border:1px solid var(--line);color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1.15rem;line-height:1}
+.agenda .setas button:disabled{opacity:.3;cursor:default}
+.agenda .resumo{color:var(--mut);font-size:.92rem;margin:6px 0 0}
+.agenda .resumo b{color:var(--brand)}
+.agenda .grade{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px;text-align:center}
+.agenda .sem{font-size:.72rem;color:var(--mut);font-weight:700;text-transform:uppercase;padding-bottom:2px}
+.agenda .dica{color:var(--mut);font-size:.82rem;margin:12px 0 0}
+.dia{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;cursor:pointer;border-radius:12px;font-size:17px;position:relative;user-select:none;-webkit-tap-highlight-color:transparent}
+.dia small{font-size:.74rem;color:var(--mut);font-weight:600}
+.dia.hoje{background:rgba(31,111,104,.12)}
+.dia.hoje small{color:var(--brand);font-weight:800}
+.dia.futuro{opacity:.35;pointer-events:none}
+
+/* ---------- Barra de pesquisa ---------- */
+/* From Uiverse.io by ahmedyasserdev - https://uiverse.io/ahmedyasserdev/funny-treefrog-48
+   MIT License, Copyright (c) ahmedyasserdev (Ahmed Yasser) */
+.busca-nova{display:flex;justify-content:center;padding:34px 20px 22px}
+.busca-nova .form{position:relative;width:100%;max-width:340px}
+.busca-nova .botao-busca,.busca-nova .botao-limpar{position:absolute;top:50%;transform:translateY(-50%);padding:.25rem;background:none;border:0;cursor:pointer;color:var(--ink);opacity:.75;display:flex}
+.busca-nova .botao-busca{left:.5rem}
+.busca-nova .botao-limpar{right:.75rem}
+.busca-nova svg{width:1.25rem;height:1.25rem}
+.busca-nova .input{
+  width:100%;border-radius:9999px;padding:.75rem 2rem;border:2px solid transparent;outline:none;font-size:1rem;font-family:inherit;
+  background:var(--card);color:var(--ink);transition:all .3s;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+}
+.busca-nova .input::placeholder{color:#9ca3af}
+.busca-nova .input:focus{border-color:#1f6f68}
+html[data-theme="dark"] .busca-nova .input:focus{border-color:#6cc3ba}
+.busca-nova .input::-webkit-search-cancel-button{display:none}
+#res .vazio{color:var(--mut);padding:18px 4px;text-align:center}
+#res{display:none}#res.on{display:block}
+#res .cont{color:var(--mut);font-size:.9rem;margin:8px 2px}
 
 /* ---------- Barra de navegação com dicas ---------- */
 /* From Uiverse.io by themrsami - https://uiverse.io/themrsami/bad-bear-23
@@ -205,4 +247,4 @@ body.com-nav{padding-bottom:104px}
 .prog .barra i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#1f6f68,#8fe3d6,#e8833a);transition:width 1s ease}
 .guia small{color:var(--mut)}
 
-body.export .conc,body.export .ae-nav-wrap,body.export #carregando{display:none}
+body.export .conc,body.export #agenda,body.export .ae-nav-wrap,body.export #carregando{display:none}
